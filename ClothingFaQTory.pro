@@ -8,15 +8,10 @@ CONFIG += c++17
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES = $$files(*.cpp, true) \
-    core/model.cpp \
-    utils/calculator.cpp
-HEADERS = $$files(*.h, true) \
-    core/model.h \
-    utils/calculator.h
+SOURCES = $$files("src/*.cpp", true)
+HEADERS = $$files("src/*.h", true)
 
-FORMS += \
-    mainwindow.ui
+FORMS += $$files("src/*.ui", true)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
