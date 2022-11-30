@@ -7,7 +7,9 @@ namespace Models::ClothingItems {
   class Overalls: public TShirt, public Jeans
   {
     public:
-      Overalls();
+      Overalls(string color, list<Material> materials,
+	       Size size, int availableQuantity,
+	       int soldQuantity, bool sustainableMaterials);
       double computePrice() const override;
       Overalls* clone() const override;
   };

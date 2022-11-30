@@ -6,8 +6,8 @@ using std::string;
 using Models::Product;
 using Models::Material;
 
-Product::Product(string color, list<Material> materials, Size size)
-  : color(color), materials(materials), size(size){};
+Product::Product(string color, list<Material> materials, Size size, int availableQuantity, int soldQuantity)
+  : color(color), materials(materials), size(size), availableQuantity(availableQuantity), soldQuantity(soldQuantity){};
 
 list<Material> Product::getMaterials() const {
   return materials;

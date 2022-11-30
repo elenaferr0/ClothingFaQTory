@@ -18,10 +18,13 @@ namespace Models {
       string color;
       list<Material> materials;
       Size size;
+      int availableQuantity;
+      int soldQuantity;
 
     public:
       virtual list<Material> getMaterials() const;
-      Product(string color, list<Material> materials, Size size);
+      Product(string color, list<Material> materials, Size size, int availableQuantity, int soldQuantity);
+      Product(){};
       virtual double computePrice() const = 0;
       virtual ~Product(){};
   };

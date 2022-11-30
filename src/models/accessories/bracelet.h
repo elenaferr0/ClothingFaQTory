@@ -9,10 +9,8 @@ namespace Models::Accessories {
       unsigned int pearlNumber;
       double pearlDiameter;
 
-      // assumption: the material of the bracelet is either of GOLD, SILVER or WOOD
-
     public:
-      Bracelet(string color, list<Material> materials, unsigned int pearlNumber, double pearlDiameter);
+      Bracelet(string color, list<Material> materials, unsigned int pearlNumber, double pearlDiameter = .75);
       Bracelet* clone() const override;
       double computePrice() const override;
   };

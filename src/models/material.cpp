@@ -12,3 +12,11 @@ Material::Material(Material::Name name, Material::UnitOfMeasure unitOfMeasure, d
 Material* Material::clone() const {
    return new Material(*this);
 }
+
+Material::Name Material::getName() const {
+  return name;
+}
+
+double Material::getCostPerUnit() const {
+  return costPerUnit;
+}

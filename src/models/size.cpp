@@ -2,11 +2,11 @@
 
 using Models::Size;
 
-double Size::getExtraPercentageOfMaterial() {
+double Size::getExtraPercentageOfMaterial() const {
   return extraPercentageOfMaterial;
 }
 
-double Size::getValue() {
+double Size::getValue() const {
   return value;
 }
 

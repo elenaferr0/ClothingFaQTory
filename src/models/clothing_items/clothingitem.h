@@ -5,15 +5,13 @@
 namespace Models {
   class ClothingItem : public Product
   {
-    private:
-      double computeLength(bool, Size) const;
-      double computeWidth(bool, Size) const;
-
     protected:
-      double length;
-      double width;
-
-    public:
+      double computeLegLength() const;
+      double computeTrunkLength() const;
+      double computeLegWidth() const;
+      double computeTrunkWidth() const;
+      bool sustainableMaterials;
+\
       // constants used for top part clothing
       static const double SMALLEST_SIZE_TRUNK_WIDTH;
       static const double SMALLEST_SIZE_TRUNK_LENGTH;
@@ -21,7 +19,12 @@ namespace Models {
       // constants used for bottom part clothing
       static const double SMALLEST_SIZE_LEG_WIDTH;
       static const double SMALLEST_SIZE_LEG_LENGTH;
-      ClothingItem(string color, list<Material> materials, Size size, bool isTopClothingItem);
+
+    public:
+      ClothingItem(string color, list<Material> materials,
+		   Size size, int availableQuantity,
+		   int soldQuantity, bool sustainableMaterials);
+      ClothingItem(){};
   };
 }
 

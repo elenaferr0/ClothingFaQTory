@@ -9,10 +9,11 @@ namespace Models {
   {
     public:
       enum Value {XS, S, M, L, XL, ONE_SIZE};
-      double getExtraPercentageOfMaterial();
-      double getValue();
+      double getExtraPercentageOfMaterial() const;
+      double getValue() const;
       Size(Value sizeName, double extraPercentageOfMaterial = 0)
 	: value(sizeName), extraPercentageOfMaterial(extraPercentageOfMaterial){};
+      Size(){};
 
     private:
       Value value;
