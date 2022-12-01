@@ -6,8 +6,8 @@ using Models::Material;
 using Models::Accessories::Bracelet;
 using Utils::Calculator;
 
-Bracelet::Bracelet(string color, list<Material> materials, unsigned int pearlNumber, double pearlDiameter)
-  : Accessory(color, materials), pearlNumber(pearlNumber), pearlDiameter(pearlDiameter){}
+Bracelet::Bracelet(string color, list<Material> materials, unsigned int pearlNumber, double pearlDiameter, int availableQuantity, int soldQuantity)
+  : Accessory(color, materials, availableQuantity, soldQuantity), pearlNumber(pearlNumber), pearlDiameter(pearlDiameter){}
 
 Bracelet* Bracelet::clone() const {
   return new Bracelet(*this);

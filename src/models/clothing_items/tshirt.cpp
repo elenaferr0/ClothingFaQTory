@@ -4,6 +4,11 @@
 using Models::ClothingItems::TShirt;
 using Utils::Calculator;
 
+TShirt::TShirt(string color, list<Material> materials,
+	       Size size, int availableQuantity,
+	       int soldQuantity, bool sustainableMaterials)
+  :ClothingItem(color, materials, size, availableQuantity, soldQuantity, sustainableMaterials){}
+
 TShirt* TShirt::clone() const {
   return new TShirt(*this);
 }

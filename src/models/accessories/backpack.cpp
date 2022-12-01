@@ -6,8 +6,8 @@ using Utils::Calculator;
 const double BackPack::BACKPACK_HEIGHT = 30;
 const double BackPack::BACKPACK_WIDTH = 20;
 
-BackPack::BackPack(string color, list<Material> materials, double capacity)
-  : Accessory(color, materials), capacity(capacity){};
+BackPack::BackPack(string color, list<Material> materials, double capacity, int availableQuantity, int soldQuantity)
+  : Accessory(color, materials, availableQuantity, soldQuantity), capacity(capacity){};
 
 BackPack* BackPack::clone() const {
   return new BackPack(*this);

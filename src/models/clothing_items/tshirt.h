@@ -6,7 +6,9 @@ namespace Models::ClothingItems {
   class TShirt : public virtual ClothingItem
   {
     public:
-      TShirt();
+      TShirt(string color, list<Material> materials,
+	     Size size, int availableQuantity,
+	     int soldQuantity, bool sustainableMaterials);
       double computePrice() const override;
       TShirt* clone() const override;
   };

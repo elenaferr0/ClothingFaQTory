@@ -20,7 +20,7 @@ namespace Models::Accessories {
 
       double capacity; // in liters
     public:
-      BackPack(string color, list<Material> materials, double capacity);
+      BackPack(string color, list<Material> materials, double capacity, int availableQuantity, int soldQuantity);
       BackPack* clone() const override;
       double computePrice() const override;
   };

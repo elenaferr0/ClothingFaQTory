@@ -7,7 +7,7 @@ namespace Core {
     private:
       unsigned long long id;
     public:
-      Model();
+      Model() : id(0){};
       unsigned long long getId() const;
       virtual Model* clone() const = 0;
   };

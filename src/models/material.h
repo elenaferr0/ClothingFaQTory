@@ -15,7 +15,10 @@ namespace Models {
       static const double SILVER_SPECIFIC_WEIGHT;
       static const double WOOD_SPECIFIC_WEIGHT;
 
-      Material(Material::Name name, UnitOfMeasure unitOfMeasure, double costPerUnit);
+      Material(Material::Name name = COTTON,
+	       UnitOfMeasure unitOfMeasure = CENTIMETER,
+	       double costPerUnit = 0);
+
       Material* clone() const override;
       Name getName() const;
       double getCostPerUnit() const;

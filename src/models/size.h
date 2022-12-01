@@ -11,9 +11,8 @@ namespace Models {
       enum Value {XS, S, M, L, XL, ONE_SIZE};
       double getExtraPercentageOfMaterial() const;
       double getValue() const;
-      Size(Value sizeName, double extraPercentageOfMaterial = 0)
+      Size(Value sizeName = Value::ONE_SIZE, double extraPercentageOfMaterial = 0)
 	: value(sizeName), extraPercentageOfMaterial(extraPercentageOfMaterial){};
-      Size(){};
 
     private:
       Value value;

@@ -41,7 +41,7 @@ namespace Containers {
             friend class Map;
 
         public:
-            Node(K key, V value, Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
+	    Node(K key = K(), V value = V(), Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
                  Node* right = nullptr) :
                     key(key),
                     value(value),
@@ -143,7 +143,7 @@ namespace Containers {
 
 
     template<class K, class V>
-    typename Map<K, V>::Node* const Map<K, V>::TNULL = new Node(0, 0);
+    typename Map<K, V>::Node* const Map<K, V>::TNULL = new Node();
 
     template<class K, class V>
     void Map<K, V>::destroy(Node* node) {  // Must always be called from the root

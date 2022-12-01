@@ -6,9 +6,7 @@ Overalls::Overalls(string color, list<Material> materials,
 		   Size size, int availableQuantity,
 		   int soldQuantity, bool sustainableMaterials)
   : ClothingItem(color, materials, size, availableQuantity, soldQuantity, sustainableMaterials),
-    TShirt(), Jeans(color, materials.front(), size, false){
-
-}
+    TShirt(color, materials, size, availableQuantity, soldQuantity, sustainableMaterials), Jeans(color, materials, size, availableQuantity, soldQuantity, sustainableMaterials, false){}
 
 Overalls* Overalls::clone() const {
   return new Overalls(*this);

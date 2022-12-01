@@ -23,8 +23,7 @@ namespace Models {
     public:
       ClothingItem(string color, list<Material> materials,
 		   Size size, int availableQuantity,
-		   int soldQuantity, bool sustainableMaterials);
-      ClothingItem(){};
+		   int soldQuantity, bool sustainableMaterials = false);
   };
 }
 

@@ -10,7 +10,7 @@ namespace Models::Accessories {
       double pearlDiameter;
 
     public:
-      Bracelet(string color, list<Material> materials, unsigned int pearlNumber, double pearlDiameter = .75);
+      Bracelet(string color, list<Material> materials, unsigned int pearlNumber, double pearlDiameter, int availableQuantity, int soldQuantity);
       Bracelet* clone() const override;
       double computePrice() const override;
   };

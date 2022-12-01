@@ -6,8 +6,9 @@ using Models::ClothingItems::Jeans;
 using Models::Material;
 using Utils::Calculator;
 
-Jeans::Jeans(string color, Material material, Size size, bool shorts)
-  : ClothingItem(color, list(1, material), size, shorts),
+Jeans::Jeans(string color, list<Material> materials, Size size, int availableQuantity,
+	     int soldQuantity, bool sustainableMaterials, bool shorts)
+  : ClothingItem(color, materials, size, availableQuantity, soldQuantity, sustainableMaterials),
     shorts(shorts){}
 
 Jeans* Jeans::clone() const {
@@ -16,9 +17,12 @@ Jeans* Jeans::clone() const {
 
 double Jeans::computePrice() const{
   // the surface of jeans is estimated with 2 cilinders
-  double legLength = shorts ? length / 2 :  length;
+  double computedLength = computeLegLength();
+  double computedWidth = computeLegWidth();
 
-  double surface = 2 * Calculator::computeCilinderSurface(width, legLength);
+  double legLength = shorts ?  computedLength / 2 : computedLength;
 
+  double surface = 2 * Calculator::computeCilinderSurface(computedWidth, legLength);
 
+  return surface * getMaterials().front().getCostPerUnit();
 }

@@ -6,7 +6,7 @@ namespace Models {
   class Accessory : public Product
   {
     public:
-      Accessory(string color, list<Material> materials);
+      Accessory(string color, list<Material> materials, int availableQuantity, int soldQuantity);
   };
 }
 #endif // ACCESSORY_H
