@@ -3,138 +3,140 @@
 
 #include <string>
 #include <iostream>
+#include <optional>
 
 using std::string;
 using std::ostream;
 using std::cout;
-using std::pair;
-
+using std::optional;
 
 namespace Containers {
     template<class K, class V>
     class Map;
 
-    template<class K, class V>
-    ostream& operator<<(ostream&, const Map<K, V>&);
+    /*template<class K, class V>
+    ostream& operator<<(ostream&, const Map<K, V>&);*/
 
     template<class K, class V>
     class Map {
     private:
-	class Node {
+        class Node {
 
-	private:
-	    enum Color {
-		RED,
-		BLACK,
-	    };
+        private:
+            enum Color {
+                RED,
+                BLACK,
+            };
 
-	    K key;
-	    V value;
-	    Color color;
-	    Node* parent;
-	    Node* left;
-	    Node* right;
+            K key;
+            V value;
+            Color color;
+            Node* parent;
+            Node* left;
+            Node* right;
 
-	    friend class Map;
+            friend class Map;
 
-	public:
-	    Node(K key, V value, Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
-		 Node* right = nullptr) :
-		    key(key),
-		    value(value),
-		    color(color),
-		    parent(parent),
-		    left(left),
-		    right(right) {};
-	};
+        public:
+            Node(K key, V value, Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
+                 Node* right = nullptr) :
+                    key(key),
+                    value(value),
+                    color(color),
+                    parent(parent),
+                    left(left),
+                    right(right) {};
+        };
 
-	Node* root;
-	unsigned int size;
-	static Node* const TNULL;
+        Node* root;
+        unsigned int size;
+        static Node* const TNULL;
 
-	void inOrderHelper(Node* node) const;
+        void inOrderHelper(Node* node) const;
 
-	Node* searchTreeHelper(Node* node, K key) const;
+        Node* searchTreeHelper(Node* node, K key) const;
 
-	void fixErase(Node* x);
+        void fixErase(Node* x);
 
-	void transplant(Node* u, Node* v);
+        void transplant(Node* u, Node* v);
 
-	void eraseNodeHelper(Node* node, K key);
+        void eraseNodeHelper(Node* node, K key);
 
-	void fixPut(Node* k);
+        void fixPut(Node* k);
 
-	void printHelper(ostream& os, Node* root, string indent = "", bool visitRight = true) const;
+        void printHelper(ostream& os, Node* root, string indent = "", bool visitRight = true) const;
 
-	static Node* predecessor(Node* x);
+        static Node* predecessor(Node* x);
 
-	void leftRotate(Node* x);
+        void leftRotate(Node* x);
 
-	void rightRotate(Node* x);
+        void rightRotate(Node* x);
 
-	static Node* minimum(Node* node);
+        static Node* minimum(Node* node);
 
-	static Node* maximum(Node* node);
+        static Node* maximum(Node* node);
 
-	static Node* successor(Node* x);
+        static Node* successor(Node* x);
 
     public:
-	Map() : root(TNULL), size(0) {};
+        Map() : root(TNULL), size(0) {};
 
-	Map(const Map<K, V>& map) : root(inOrderCopy(map.root)), size(map.size) {};
+        Map(const Map<K, V>& map) : root(inOrderCopy(map.root)), size(map.size) {};
 
-	~Map();
+        ~Map();
 
-	bool empty() const;
+        bool empty() const;
 
-	Map& operator=(const Map&);
+        Map& operator=(const Map&);
 
-	static void destroy(Node*);
+        static void destroy(Node*);
 
-	static Node* inOrderCopy(Node*);
+        static Node* inOrderCopy(Node*);
 
-	void inOrderTraversal() const;
+        void inOrderTraversal() const;
 
-	void put(K key, V value);
+        const V& put(const K& key, const V& value);
 
-	void erase(K key);
+        void erase(K key);
 
-	int get(K key) const;
+        optional<V> get(K key) const;
 
-	unsigned int getSize() const;
+        bool hasKey(const K&) const;
 
-	friend ostream& operator
-	<<<K, V>(ostream&, const Map<K, V>&);
+        unsigned int getSize() const;
 
-	class MapIterator {
-	private:
-	    Map::Node* node;
-	    bool isPastTheEnd;
-	    bool isBeforeTheStart;
-	public:
-	    MapIterator(Map::Node* n) : node(n), isPastTheEnd(false), isBeforeTheStart(false) {};
+        // Not used
+        /*friend ostream& operator
+        <<<K, V>(ostream&, const Map<K, V>&);*/
 
-	    bool operator==(const MapIterator& i) const;
+//        V& operator[](const K&);
 
-	    bool operator!=(const MapIterator& i) const;
+        class MapIterator {
+        private:
+            Map::Node* node;
+            bool isPastTheEnd;
+            bool isBeforeTheStart;
+        public:
+            MapIterator(Map::Node* n) : node(n), isPastTheEnd(false), isBeforeTheStart(false) {};
 
-	    MapIterator operator++(int);  // postfix
-	    MapIterator& operator++();    // prefix
+            bool operator==(const MapIterator& i) const;
 
-	    MapIterator operator--(int);  // postfix
-	    MapIterator& operator--();    // prefix
+            bool operator!=(const MapIterator& i) const;
 
-	    pair<K, V> operator*() const;
+            const MapIterator operator++(int);  // postfix
+            MapIterator& operator++();    // prefix
 
-	    friend class Map<K, V>;
-	};
+            const MapIterator operator--(int);  // postfix
+            MapIterator& operator--();    // prefix
 
-	MapIterator begin();
+            V& operator*() const;
 
-	MapIterator end();
+            friend class Map<K, V>;
+        };
 
-	friend ostream& operator
-	<<<K, V>(ostream&, const Map<K, V>&);
+        MapIterator begin();
+
+        MapIterator end();
     };
 }
 
