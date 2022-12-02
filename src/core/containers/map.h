@@ -139,6 +139,10 @@ namespace Containers {
         MapIterator begin();
 
         MapIterator end();
+
+	MapIterator cbegin() const;
+
+	MapIterator cend() const;
     };
 
 
@@ -158,7 +162,7 @@ namespace Containers {
 
     template<class K, class V>
     typename Map<K, V>::Node* Map<K, V>::inOrderCopy(Node* node) {
-        if (node != TNULL) {
+	if (node == TNULL) {
             return TNULL;
         }
 
@@ -650,6 +654,16 @@ namespace Containers {
     template<class K, class V>
     typename Map<K, V>::MapIterator Map<K, V>::end() {
         return {TNULL};
+    }
+
+    template<class K, class V>
+    typename Map<K, V>::MapIterator Map<K, V>::cbegin() const {
+	return {minimum(root)};
+    }
+
+    template<class K, class V>
+    typename Map<K, V>::MapIterator Map<K, V>::cend() const {
+	return {TNULL};
     }
 
     template<class K, class V>

@@ -8,12 +8,13 @@ using std::string;
 using Containers::Map;
 using std::vector;
 
-namespace Core{
+namespace Utils::Orm {
 class QueryBuilder
 {
     string query;
   public:
-    enum JoinType {INNER, OUTER, LEFT, RIGHT};
+    enum Join {INNER, OUTER, LEFT, RIGHT};
+    enum Order {ASC, DESC};
 
     QueryBuilder() : query(){};
 
@@ -22,7 +23,7 @@ class QueryBuilder
 
     // qb.select({("username", "u"), ("email", "e")});
     // takes fields with aliases as input (the alias can also be empty)
-    QueryBuilder& select(Map<string, string> fields);
+    QueryBuilder& select(const Map<string, string>& fields);
 
     // does not override previous select
     QueryBuilder& addSelect(string field = "*", string alias = "");
@@ -37,40 +38,39 @@ class QueryBuilder
     QueryBuilder& set(string field, string value);
 
     // qb.set({("username", "u"), ("email", "e")})
-    QueryBuilder& set(Map<string, string> fields);
+    QueryBuilder& set(const Map<string, string>& fields);
 
     // qb.from("User", "u");
     QueryBuilder& from(string from, string alias = "");
 
     // qb.join("User", "u.username = 'foo'");
-    QueryBuilder& join(JoinType type, string table, string condition);
+    QueryBuilder& join(Join type, string table, string condition);
 
     // overrides previous where statements
     // qb.where("u.username" = 'foo')
-    QueryBuilder& where(string condition);
+    QueryBuilder& where(string evaluation);
 
-    // does not override previous statements
-    // qb.where("u.username" = 'foo').andWhere("u.age > 1");
-    QueryBuilder& andWhere(string condition);
-
-    // does not override previous statements
-    // qb.where("u.username" = 'foo').orWhere("u.age > 1");
-    QueryBuilder& orWhere(string condition);
+    QueryBuilder& andCondition(string evaluation);
+    QueryBuilder& orCondition(string evaluation);
+    QueryBuilder& notCondition(string evaluation);
 
     // qb.orderBy("u.username")
     // qb.orderBy("u.username", "DESC")
-    QueryBuilder& orderBy(string field, string order = "ASC");
+    QueryBuilder& orderBy(string field, Order order = Order::ASC);
 
     // qb.limit(1);
     QueryBuilder& limit(int maxResults);
 
     // qb.setParameter("id", 1);
-    QueryBuilder& setParameter(string key, string value);
+    QueryBuilder& bindParameter(string key, string value);
 
-    QueryBuilder& setParameters(Map<string, string> parameters);
+    QueryBuilder& bindParameters(const Map<string, string>& params);
 
 
     string build();
+
+    string toString(Join joinType);
+    string toString(Order order);
 };
 }
 

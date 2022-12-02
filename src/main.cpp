@@ -1,19 +1,12 @@
 //#include "mainwindow.h"
 
 //#include <QApplication>
-#include <QtDebug>
-
-#include "src/core/containers/map.h"
-#include "src/models/clothing_items/jeans.h"
-#include "src/models/size.h"
-
 #include <iostream>
-using Containers::Map;
-using Models::ClothingItems::Jeans;
-using Models::Material;
-using Models::Size;
+#include <string>
+#include "src/utils/querybuilder.h"
+using Utils::QueryBuilder;
 using std::cout;
-using std::endl;
+using std::to_string;
 
 int main()
 {
@@ -21,4 +14,22 @@ int main()
   //    MainWindow w;
   //    w.show();
   //    return a.exec();
+
+  QueryBuilder qb = QueryBuilder();
+  Map<string, string> params;
+  params["username"] = "foo";
+  params["age"] = to_string(13);
+  params["name"] = "dog";
+
+  string query = qb.select("username", "u")
+      .from("users", "u")
+      .join(QueryBuilder::INNER, "animals", "a.user_id = u.id")
+      .where("u.username = :username")
+      .andCondition("a.name = :name")
+      .andCondition("u.age > :age")
+      .limit(10)
+      .bindParameters(params)
+      .build();
+
+  cout << query;
 }

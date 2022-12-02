@@ -1,0 +1,1 @@
+CMakeLists.txt not found in /home/elena/docs/dev/cpp/qt/ClothingFaQTory Select CMakeLists.txt
