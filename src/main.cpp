@@ -1,7 +1,7 @@
 //#include "mainwindow.h"
 
 //#include <QApplication>
-//#include <QtDebug>
+#include <QtDebug>
 
 #include "src/core/containers/map.h"
 #include "src/models/clothing_items/jeans.h"
@@ -25,5 +25,5 @@ int main()
   Material m = Material(Material::Name::DENIM, Material::UnitOfMeasure::CENTIMETER, 10);
 
   Jeans j = Jeans("red", list(1, m), s, 10, 10, true, true);
-  cout << "ciao";
+  qInfo() << "ciao";
 }
