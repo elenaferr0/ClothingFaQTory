@@ -4,20 +4,18 @@
 
 using std::to_string;
 using std::regex;
-using Utils::Orm::QueryBuilder;
+using Core::Orm::QueryBuilder;
 
 QueryBuilder& QueryBuilder::select(string field, string alias){
   if(field == ""){
     return *this;
   }
 
-  query = "SELECT " + (field == "" ? "*" : field);
-
-  if(alias != ""){
-    query += " AS " + alias;
+  if(alias == ""){
+    alias = field[0];
   }
 
-  query += "\n";
+  query = "SELECT " + field + (field == "*" ? "" : " AS " + alias) + "\n";
   return *this;
 }
 
@@ -32,11 +30,8 @@ QueryBuilder& QueryBuilder::select(const Map<string, string>& fields){
   for(auto f = fields.cbegin(); f != fields.cend(); ++f){
 
     query += (*f).first;
-
-    if((*f).second != ""){
-      query += " AS " + (*f).second;
-    }
-
+    // create automatically the alias if the second parameter is not present
+    query += " AS " + (*f).second == "" ? to_string((*f).first[0]) : (*f).second;
     query += ", ";
   }
 
@@ -50,13 +45,11 @@ QueryBuilder& QueryBuilder::addSelect(string field, string alias){
     return *this;
   }
 
-  query += ", " + field;
-
-  if(alias != ""){
-    query += " AS " + alias;
+  if(alias == ""){
+    alias = field[0];
   }
 
-  query += "\n";
+  query += ", " + field + " AS " + alias + "\n";
   return *this;
 }
 
@@ -81,14 +74,14 @@ QueryBuilder& QueryBuilder::set(string field, string value){
   return *this;
 }
 
-QueryBuilder& QueryBuilder::set(Map<string, string> fields){
+QueryBuilder& QueryBuilder::set(const Map<string, string>& fields){
   if(fields.empty()){
     return *this;
   }
 
   query += "SET ";
 
-  for(auto f = fields.begin(); f != fields.end(); ++f){
+  for(auto f = fields.cbegin(); f != fields.cend(); ++f){
     query += (*f).first + " = " + (*f).second + ", ";
   }
 
@@ -98,60 +91,34 @@ QueryBuilder& QueryBuilder::set(Map<string, string> fields){
 }
 
 QueryBuilder& QueryBuilder::from(string from, string alias){
-  query += "FROM " + from;
-
-  if (alias != ""){
-    query += " AS " + alias;
+  if(from == "" || (alias == "" && from == "*")){
+    return *this;
   }
 
-  query += "\n";
+  if (alias == ""){
+    alias = from[0];
+  }
+
+  query += "FROM " + from + " AS " + alias + "\n";
   return *this;
 }
 
 
-QueryBuilder& QueryBuilder::join(Join type, string table, string condition){
-  if(table != "" || condition != ""){
-    query += toString(type) + " JOIN " + table + " ON " + condition + "\n";
+QueryBuilder& QueryBuilder::join(Join type, string table, const Expr& x){
+  if(table != ""){
+    query += "  " + toString(type) + " JOIN " + table + " ON " + x + "\n";
   }
   return *this;
 }
 
-QueryBuilder& QueryBuilder::where(string evaluation){
-  if(evaluation != ""){
-    query += "WHERE " + evaluation + "\n";
-  }
-
+QueryBuilder& QueryBuilder::where(const Expr& x){
+  query += "WHERE " + x + "\n";
   return *this;
 }
-
-QueryBuilder& QueryBuilder::andCondition(string evaluation){
-  if(evaluation != ""){
-    query += "AND " + evaluation + "\n";
-  }
-
-  return *this;
-}
-
-QueryBuilder& QueryBuilder::orCondition(string evaluation){
-  if(evaluation != ""){
-    query += "OR " + evaluation + "\n";
-  }
-
-  return *this;
-}
-
-QueryBuilder& QueryBuilder::notCondition(string evaluation){
-  if(evaluation != ""){
-    query += "NOT " + evaluation + "\n";
-  }
-
-  return *this;
-}
-
 
 QueryBuilder& QueryBuilder::orderBy(string field, Order order){
   if (field != ""){
-    query += "ORDER BY " + field + " " + toString(order);
+    query += "ORDER BY " + field + " " + toString(order) + "\n";
   }
   return *this;
 }
@@ -164,8 +131,23 @@ QueryBuilder& QueryBuilder::limit(int maxResults){
   return *this;
 }
 
+QueryBuilder& QueryBuilder::andX(const Expr& x){
+  query += "AND " + x + "\n";
+  return *this;
+}
+
+QueryBuilder& QueryBuilder::orX(const Expr& x){
+  query += "OR " + x + "\n";
+  return *this;
+}
+
+QueryBuilder& QueryBuilder::notX(const Expr& x){
+  query += "NOT " + x + "\n";
+  return *this;
+}
+
 QueryBuilder& QueryBuilder::bindParameter(string key, string value){
-  query = regex_replace(query, regex(":" + key), "\"" + value + "\"");
+  query = regex_replace(query, regex(":" + key), value);
   return *this;
 }
 

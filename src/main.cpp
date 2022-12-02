@@ -3,8 +3,10 @@
 //#include <QApplication>
 #include <iostream>
 #include <string>
-#include "src/utils/querybuilder.h"
-using Utils::QueryBuilder;
+#include "src/core/orm/querybuilder.h"
+#include "src/core/orm/expression.h"
+using Core::Orm::QueryBuilder;
+using Core::Orm::Expr;
 using std::cout;
 using std::to_string;
 
@@ -21,12 +23,19 @@ int main()
   params["age"] = to_string(13);
   params["name"] = "dog";
 
-  string query = qb.select("username", "u")
-      .from("users", "u")
-      .join(QueryBuilder::INNER, "animals", "a.user_id = u.id")
-      .where("u.username = :username")
-      .andCondition("a.name = :name")
-      .andCondition("u.age > :age")
+  string query = qb.select()
+      .from("users", "us")
+      .join(QueryBuilder::Join::INNER,
+	    "animals",
+	    Expr("a.user_id").equals({"u.id"}).andX(Expr("u.id").equals({"4"})))
+      .where(
+	Expr("u.username").equals({":username"})
+	  .andX(
+	    Expr("u.stupid")
+	    .orX(Expr("u.age").geq({":age"}))
+	  )
+      )
+      .orderBy("a.user_id", QueryBuilder::ASC)
       .limit(10)
       .bindParameters(params)
       .build();

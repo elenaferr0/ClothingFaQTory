@@ -1,29 +1,32 @@
-#ifndef EXPRESSION_H
-#define EXPRESSION_H
+#ifndef Expr_H
+#define Expr_H
 #include <string>
 
 using std::string;
 
-class Expression
+namespace Core::Orm{
+class Expr
 {
   private:
     string expression;
   public:
-    friend string operator+(string, const Expression&);
+    friend string operator+(string, const Expr&);
 
-    Expression(string initial = "") : expression(initial){};
-    Expression& andX(const Expression&);
-    Expression& orX(const Expression&);
-    Expression& notX(const Expression&);
-    Expression& equal(const Expression&);
-//    Expression& notEqual(const Expression&);
-//    Expression& gt(const Expression&);	// greater than
-//    Expression& geq(const Expression&); // greater or eq than
-//    Expression& lt(const Expression&);	// less than
-//    Expression& leq(const Expression&); // less or eq than
-//    Expression& isNull(const Expression&);
-//    Expression& isNotNull();
-//    Expression& like();
+    // allows implicit constructor
+    Expr(string initial = "") : expression(initial){};
+    Expr& andX(const Expr&);
+    Expr& orX(const Expr&);
+    Expr& notX();
+    Expr& equals(const Expr&);
+    Expr& notEquals(const Expr&);
+    Expr& gt(const Expr&);	// greater than
+    Expr& geq(const Expr&); // greater or eq than
+    Expr& lt(const Expr&);	// less than
+    Expr& leq(const Expr&); // less or eq than
+    Expr& isNull();
+    Expr& isNotNull();
+    Expr& like(string);
 };
+}
 
-#endif // EXPRESSION_H
+#endif // Expr_H

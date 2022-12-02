@@ -1,25 +1,69 @@
 #include "expression.h"
+#include <string>
+using std::string;
+using Core::Orm::Expr;
 
-string operator+(string s, const Expression& x){
-    return s + x.expression;
+namespace Core::Orm {
+  string operator+(string s, const Expr& x){
+      return s + x.expression;
+  }
 }
 
-Expression& Expression::andX(const Expression& x){
-  expression += " AND " + x;
+Expr& Expr::andX(const Expr& x){
+  expression = "(" + expression + " AND " + x + ")";
   return *this;
 }
 
-Expression& Expression::orX(const Expression& x){
-  expression += " OR " + x;
+Expr& Expr::orX(const Expr& x){
+  expression = "(" + expression + " OR " + x + ")";
   return *this;
 }
 
-Expression& Expression::notX(const Expression& x){
-  expression += " OR " + x;
+Expr& Expr::notX(){
+  expression += " (NOT " + expression + ") ";
   return *this;
 }
 
-Expression& Expression::equal(const Expression& x){
-  expression += " = " + x;
+Expr& Expr::equals(const Expr& x){
+  expression = "(" + expression + " = " + x + ")";
   return *this;
+}
+
+Expr& Expr::notEquals(const Expr& x){
+  expression = "(NOT" + expression + " = " + x + ")";
+  return *this;
+}
+
+Expr& Expr::gt(const Expr& x){
+  expression = "(" + expression + " > " + x + ")";
+  return *this;
+}
+
+Expr& Expr::geq(const Expr& x){
+  expression = "(" + expression + " >= " + x + ")";
+  return *this;
+}
+
+Expr& Expr::lt(const Expr& x){
+  expression = "(" + expression + " < " + x + ")";
+  return *this;
+}
+
+Expr& Expr::leq(const Expr& x){
+  expression = "(" + expression + " <= " + x + ")";
+  return *this;
+}
+
+Expr& Expr::isNull(){
+  expression = "(" + expression + " IS NULL)";
+  return *this;
+}
+
+Expr& Expr::isNotNull(){
+  expression = "(" + expression + " IS NOT NULL)";
+  return *this;
+}
+
+Expr& Expr::like(string s){
+  expression = "(" + expression + " LIKE " + s + ")";
 }

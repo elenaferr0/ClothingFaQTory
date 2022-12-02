@@ -3,12 +3,14 @@
 #include <string>
 #include <vector>
 #include "src/core/containers/map.h"
+#include "src/core/orm/expression.h"
 
 using std::string;
-using Containers::Map;
+using Core::Containers::Map;
 using std::vector;
 
-namespace Utils::Orm {
+
+namespace Core::Orm {
 class QueryBuilder
 {
     string query;
@@ -44,15 +46,15 @@ class QueryBuilder
     QueryBuilder& from(string from, string alias = "");
 
     // qb.join("User", "u.username = 'foo'");
-    QueryBuilder& join(Join type, string table, string condition);
+    QueryBuilder& join(Join type, string table, const Expr&);
 
     // overrides previous where statements
     // qb.where("u.username" = 'foo')
-    QueryBuilder& where(string evaluation);
+    QueryBuilder& where(const Expr&);
 
-    QueryBuilder& andCondition(string evaluation);
-    QueryBuilder& orCondition(string evaluation);
-    QueryBuilder& notCondition(string evaluation);
+    QueryBuilder& andX(const Expr&);
+    QueryBuilder& orX(const Expr&);
+    QueryBuilder& notX(const Expr&);
 
     // qb.orderBy("u.username")
     // qb.orderBy("u.username", "DESC")
@@ -73,5 +75,4 @@ class QueryBuilder
     string toString(Order order);
 };
 }
-
 #endif // QUERYBUILDER_H
