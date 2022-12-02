@@ -21,9 +21,4 @@ int main()
   //    MainWindow w;
   //    w.show();
   //    return a.exec();
-  Size s = Size(Size::Value::S, 10);
-  Material m = Material(Material::Name::DENIM, Material::UnitOfMeasure::CENTIMETER, 10);
-
-  Jeans j = Jeans("red", list(1, m), s, 10, 10, true, true);
-  qInfo() << "ciao";
 }

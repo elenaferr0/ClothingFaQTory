@@ -129,7 +129,7 @@ namespace Containers {
             const MapIterator operator--(int);  // postfix
             MapIterator& operator--();    // prefix
 
-            V& operator*() const;
+	    pair<K,V> operator*() const;
 
             friend class Map<K, V>;
         };
@@ -663,8 +663,8 @@ namespace Containers {
 
 
     template<class K, class V>
-    V& Containers::Map<K, V>::MapIterator::operator*() const {
-        return node->value;
+    pair<K,V> Containers::Map<K, V>::MapIterator::operator*() const {
+	return pair(node->key, node->value);
     }
 
     template<class K, class V>
