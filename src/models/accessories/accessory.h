@@ -1,12 +1,28 @@
 #ifndef ACCESSORY_H
 #define ACCESSORY_H
+
 #include "src/models/product.h"
 
 namespace Models {
-  class Accessory : public Product
-  {
+    class Accessory : public Product {
+
     public:
-      Accessory(string color, list<Material> materials, int availableQuantity, int soldQuantity);
-  };
+        enum Category {
+            BAGS, JEWELRY, HATS, GENERAL
+        };
+
+        Accessory(unsigned long id = 0,
+                  string code = "",
+                  string color = "",
+                  list <Material> materials = list<Material>(),
+                  Size size = Size(),
+                  int availableQuantity = 0,
+                  int soldQuantity = 0,
+                  string description = "",
+                  Category category = Category::GENERAL);
+
+    protected:
+        Category category;
+    };
 }
 #endif // ACCESSORY_H

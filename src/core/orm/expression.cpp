@@ -66,4 +66,5 @@ Expr& Expr::isNotNull(){
 
 Expr& Expr::like(string s){
   expression = "(" + expression + " LIKE " + s + ")";
+  return *this;
 }

@@ -5,9 +5,9 @@ namespace Core {
   class Model
   {
     private:
-      unsigned long long id;
+      unsigned long id;
     public:
-      Model() : id(0){};
+      Model(unsigned long id) : id(id){};
       unsigned long long getId() const;
       virtual Model* clone() const = 0;
   };

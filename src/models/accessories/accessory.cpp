@@ -6,5 +6,22 @@ using Models::Accessory;
 using Models::Product;
 using std::string;
 
-Accessory::Accessory(string color, list<Material> materials,int availableQuantity, int soldQuantity)
-  :Product(color, materials, Size::ONE_SIZE, availableQuantity, soldQuantity){}
+Accessory::Accessory(
+        unsigned long id,
+        string code,
+        string color,
+        list <Material> materials,
+        Size size,
+        int availableQuantity,
+        int soldQuantity,
+        string description,
+        Category category)
+        : Product(id,
+                  code,
+                  color,
+                  materials,
+                  size,
+                  availableQuantity,
+                  soldQuantity,
+                  description),
+          category(category) {}

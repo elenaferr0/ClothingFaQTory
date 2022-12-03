@@ -11,8 +11,27 @@ const double ClothingItem::SMALLEST_SIZE_TRUNK_LENGTH = 10;
 const double ClothingItem::SMALLEST_SIZE_LEG_WIDTH = 10;
 const double ClothingItem::SMALLEST_SIZE_LEG_LENGTH= 10;
 
-ClothingItem::ClothingItem(string color, list<Material> materials, Size size, int availableQuantity, int soldQuantity, bool sustainableMaterials)
-  : Product(color, materials, size, availableQuantity, soldQuantity), sustainableMaterials(sustainableMaterials){};
+ClothingItem::ClothingItem(
+        unsigned long id,
+        string code,
+        string color,
+        list <Material> materials,
+        Size size,
+        int availableQuantity,
+        int soldQuantity,
+        string description,
+        bool sustainableMaterials,
+        Gender gender)
+  : Product(id,
+            code,
+            color,
+            materials,
+            size,
+            availableQuantity,
+            soldQuantity,
+            description),
+  sustainableMaterials(sustainableMaterials),
+  gender(gender){};
 
 /*
  * compute length and compute width calculate the length of the current

@@ -2,16 +2,45 @@
 
 using Models::ClothingItems::Overalls;
 
-Overalls::Overalls(string color, list<Material> materials,
-		   Size size, int availableQuantity,
-		   int soldQuantity, bool sustainableMaterials)
-  : ClothingItem(color, materials, size, availableQuantity, soldQuantity, sustainableMaterials),
-    TShirt(color, materials, size, availableQuantity, soldQuantity, sustainableMaterials), Jeans(color, materials, size, availableQuantity, soldQuantity, sustainableMaterials, false){}
+Overalls::Overalls(unsigned long id,
+                   string code,
+                   string color,
+                   list <Material> materials,
+                   Size size,
+                   int availableQuantity,
+                   int soldQuantity,
+                   string description,
+                   bool sustainableMaterials,
+                   Gender gender,
+                   bool shorts,
+                   bool hasButtons)
+        : Vest(id,
+               code,
+               color,
+               materials,
+               size,
+               availableQuantity,
+               soldQuantity,
+               description,
+               sustainableMaterials,
+               gender,
+               hasButtons),
+          Jeans(id,
+                code,
+                color,
+                materials,
+                size,
+                availableQuantity,
+                soldQuantity,
+                description,
+                sustainableMaterials,
+                gender,
+		shorts){};
 
 Overalls* Overalls::clone() const {
-  return new Overalls(*this);
+    return new Overalls(*this);
 }
 
 double Overalls::computePrice() const {
-  return Jeans::computePrice() + TShirt::computePrice();
+    return Jeans::computePrice() + Vest::computePrice();
 }
