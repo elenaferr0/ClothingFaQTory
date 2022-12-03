@@ -56,3 +56,7 @@ double Bracelet::computePrice() const {
 
     return totalWeight * material.getCostPerUnit();
 }
+
+string Bracelet::getTableName() const {
+    return "bracelet";
+}

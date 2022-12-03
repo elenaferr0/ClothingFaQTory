@@ -21,6 +21,8 @@ namespace Models {
                   string description = "",
                   Category category = Category::GENERAL);
 
+        string getTableName() const override;
+
     protected:
         Category category;
     };

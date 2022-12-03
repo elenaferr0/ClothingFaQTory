@@ -24,6 +24,8 @@ namespace Models::Accessories {
 
         Bracelet* clone() const override;
 
+        string getTableName() const override;
+
         double computePrice() const override;
     };
 }

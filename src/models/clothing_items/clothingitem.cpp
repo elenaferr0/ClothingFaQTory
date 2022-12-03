@@ -55,3 +55,7 @@ double ClothingItem::computeTrunkLength() const {
 double ClothingItem::computeTrunkWidth() const {
   return SMALLEST_SIZE_TRUNK_WIDTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
 }
+
+string ClothingItem::getTableName() const {
+    return "clothing_item";
+}

@@ -27,3 +27,7 @@ Material::Name Material::getName() const {
 double Material::getCostPerUnit() const {
   return costPerUnit;
 }
+
+string Material::getTableName() const {
+    return "material";
+}

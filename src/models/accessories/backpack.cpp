@@ -48,3 +48,7 @@ double BackPack::computePrice() const {
 
     return price;
 }
+
+string BackPack::getTableName() const {
+    return "backpack";
+}

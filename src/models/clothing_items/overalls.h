@@ -20,6 +20,9 @@ namespace Models::ClothingItems {
                bool shorts = false,
                bool hasButtons = false);
       double computePrice() const override;
+
+      string getTableName() const override;
+
       Overalls* clone() const override;
   };
 }

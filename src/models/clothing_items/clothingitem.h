@@ -21,6 +21,7 @@ namespace Models {
                      bool sustainableMaterials = false,
                      Gender gender = Gender::UNISEX);
 
+        string getTableName() const override;
     protected:
         double computeLegLength() const;
 

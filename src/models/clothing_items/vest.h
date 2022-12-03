@@ -22,6 +22,8 @@ namespace Models::ClothingItems {
 
         double computePrice() const override;
 
+        string getTableName() const override;
+
         Vest* clone() const override;
     };
 

@@ -22,3 +22,7 @@ Product::Product(unsigned long id,
           availableQuantity(availableQuantity),
           soldQuantity(soldQuantity),
           description(description){};
+
+string Product::getTableName() {
+    return "product";
+}

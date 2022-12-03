@@ -24,6 +24,8 @@ namespace Models {
       Name getName() const;
       double getCostPerUnit() const;
 
+      string getTableName() const override;
+
     private:
       Name name;
       UnitOfMeasure unitOfMeasure;

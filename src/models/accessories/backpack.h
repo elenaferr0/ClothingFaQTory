@@ -32,6 +32,8 @@ namespace Models::Accessories {
                double capacity = 0);
       BackPack* clone() const override;
       double computePrice() const override;
+
+      string getTableName() const override;
   };
 }
 

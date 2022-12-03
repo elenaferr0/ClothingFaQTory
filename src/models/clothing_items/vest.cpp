@@ -49,3 +49,7 @@ double Vest::computePrice() const {
 
     return price;
 }
+
+string Vest::getTableName() const {
+    return "vest";
+}

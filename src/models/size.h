@@ -20,6 +20,8 @@ namespace Models {
              Value name = Value::ONE_SIZE,
              double extraPercentageOfMaterial = 0);
 
+        string getTableName() const override;
+
     private:
         Value name;
         double extraPercentageOfMaterial;

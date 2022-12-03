@@ -44,3 +44,7 @@ double Jeans::computePrice() const {
 
     return surface * materials.front().getCostPerUnit();
 }
+
+string Jeans::getTableName() const {
+    return "jeans";
+}

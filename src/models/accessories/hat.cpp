@@ -30,3 +30,7 @@ Hat* Hat::clone() const {
 double Hat::computePrice() const {
   return 0;
 }
+
+string Hat::getTableName() const {
+    return "hat";
+}

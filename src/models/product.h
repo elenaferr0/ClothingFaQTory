@@ -35,6 +35,7 @@ namespace Models {
 
         virtual double computePrice() const = 0;
 
+        string getTableName() const override;
         virtual ~Product() {};
     };
 }

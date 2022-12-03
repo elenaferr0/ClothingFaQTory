@@ -44,3 +44,7 @@ Overalls* Overalls::clone() const {
 double Overalls::computePrice() const {
     return Jeans::computePrice() + Vest::computePrice();
 }
+
+string Overalls::getTableName() const {
+    return "overalls";
+}

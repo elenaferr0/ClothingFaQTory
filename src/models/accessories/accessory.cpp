@@ -25,3 +25,7 @@ Accessory::Accessory(
                   soldQuantity,
                   description),
           category(category) {}
+
+string Accessory::getTableName() const {
+    return "accessory";
+}
