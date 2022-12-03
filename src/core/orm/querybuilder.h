@@ -17,11 +17,14 @@ class QueryBuilder
   public:
     enum Join {INNER, OUTER, LEFT, RIGHT};
     enum Order {ASC, DESC};
+    friend string operator+(string, const list<string>&);
 
     QueryBuilder() : query(){};
 
     // qb.select("u");
     QueryBuilder& select(string field = "*", string alias = "");
+
+    QueryBuilder& count(string field = "*");
 
     // qb.select({("username", "u"), ("email", "e")});
     // takes fields with aliases as input (the alias can also be empty)
@@ -30,8 +33,8 @@ class QueryBuilder
     // does not override previous select
     QueryBuilder& addSelect(string field = "*", string alias = "");
 
-    // qb.delete("u");
-    QueryBuilder& deleteEntity(string entity);
+    // qb.delete();
+    QueryBuilder& deleteT();
 
     // qb.update("username", "u");
     QueryBuilder& update(string entity);

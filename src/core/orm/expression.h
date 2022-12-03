@@ -1,8 +1,10 @@
 #ifndef Expr_H
 #define Expr_H
 #include <string>
+#include <list>
 
 using std::string;
+using std::list;
 
 namespace Core::Orm{
 class Expr
@@ -11,6 +13,7 @@ class Expr
     string expression;
   public:
     friend string operator+(string, const Expr&);
+    friend string operator+(string, list<int>&);
 
     // allows implicit constructor
     Expr(string initial = "") : expression(initial){};
@@ -19,6 +22,7 @@ class Expr
     Expr& notX();
     Expr& equals(const Expr&);
     Expr& notEquals(const Expr&);
+    Expr& in(list<int>&);
     Expr& gt(const Expr&);	// greater than
     Expr& geq(const Expr&); // greater or eq than
     Expr& lt(const Expr&);	// less than
