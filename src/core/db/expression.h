@@ -6,17 +6,17 @@
 using std::string;
 using std::list;
 
-namespace Core::Orm{
-class Expr
-{
-  private:
-    string expression;
-  public:
-    friend string operator+(string, const Expr&);
-    friend string operator+(string, list<int>&);
+namespace Core::Db {
+    class Expr {
+    private:
+        string expression;
+    public:
+        friend string operator+(string, const Expr&);
 
-    // allows implicit constructor
-    Expr(string initial = "") : expression(initial){};
+        friend string operator+(string, list<int>&);
+
+        // allows implicit constructor
+        Expr(string initial = "") : expression(initial) {};
     Expr& andX(const Expr&);
     Expr& orX(const Expr&);
     Expr& notX();

@@ -4,7 +4,7 @@
 
 using std::to_string;
 using std::regex;
-using Core::Orm::QueryBuilder;
+using Core::Db::QueryBuilder;
 
 QueryBuilder& QueryBuilder::select(string field, string alias) {
     if (field == "") {

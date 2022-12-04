@@ -4,15 +4,15 @@
 #include <list>
 #include <optional>
 #include <string>
-#include "src/core/orm/querybuilder.h"
+#include "src/core/db/querybuilder.h"
 
 using std::list;
 using std::optional;
 using std::string;
 using std::to_string;
-using Core::Orm::QueryBuilder;
+using Core::Db::QueryBuilder;
 
-namespace Core::Orm {
+namespace Core::Db {
     template<class T>
     class Repository {
     private:

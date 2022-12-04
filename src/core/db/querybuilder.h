@@ -3,23 +3,27 @@
 #include <string>
 #include <vector>
 #include "src/core/containers/map.h"
-#include "src/core/orm/expression.h"
+#include "src/core/db/expression.h"
 
 using std::string;
 using Core::Containers::Map;
 using std::vector;
 
 
-namespace Core::Orm {
-class QueryBuilder
-{
-    string query;
-  public:
-    enum Join {INNER, OUTER, LEFT, RIGHT};
-    enum Order {ASC, DESC};
-    friend string operator+(string, const list<string>&);
+namespace Core::Db {
+    class QueryBuilder {
+        string query;
+    public:
+        enum Join {
+            INNER, OUTER, LEFT, RIGHT
+        };
+        enum Order {
+            ASC, DESC
+        };
 
-    QueryBuilder() : query(){};
+        friend string operator+(string, const list <string>&);
+
+        QueryBuilder() : query() {};
 
     // qb.select("u");
     QueryBuilder& select(string field = "*", string alias = "");

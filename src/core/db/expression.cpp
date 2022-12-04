@@ -2,18 +2,18 @@
 #include <string>
 using std::string;
 using std::to_string;
-using Core::Orm::Expr;
+using Core::Db::Expr;
 
-namespace Core::Orm {
-  string operator+(string s, const Expr& x){
-      return s + x.expression;
-  }
-
-  string operator+(string s, const list<int>& expr){
-
-    for(auto it = expr.begin(); it != expr.end(); it++){
-      s += to_string(*it) + ", ";
+namespace Core::Db {
+    string operator+(string s, const Expr& x) {
+        return s + x.expression;
     }
+
+    string operator+(string s, const list<int>& expr) {
+
+        for (auto it = expr.begin(); it != expr.end(); it++) {
+            s += to_string(*it) + ", ";
+        }
 
     return s.substr(0, s.size() - 2); // remove last comma
   }
