@@ -3,14 +3,16 @@
 
 #include <optional>
 #include <variant>
+#include <functional>
 
 using std::variant;
 using std::get;
 using std::holds_alternative;
 using std::optional;
 using std::nullopt;
+using std::function;
 
-template<class L, class R>// R = right (correct result), L exception
+template<class L, class R>// R = right (correct result), L error
 class Either {
 private:
     variant <L, R> value;
@@ -30,6 +32,9 @@ public:
     static Either ofLeft(const L& left);
 
     static Either ofRight(const R& right);
+
+    template<class B>
+    B fold(function<B(void)> ifLeft, function<B(void)> ifRight) const;
 };
 
 template<class L, class R>
@@ -78,4 +83,12 @@ Either<L, R> Either<L, R>::ofRight(const R& right) {
     return Either<L, R>(right);
 }
 
+template<class L, class R>
+template<class B>
+B Either<L, R>::fold(function<B(void)> ifLeft, function<B(void)> ifRight) const {
+    if (holds_alternative<L>(value)) {
+        return ifLeft();
+    }
+    return ifRight();
+}
 #endif //EITHER_H
