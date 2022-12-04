@@ -41,7 +41,7 @@ namespace Core::Containers {
             friend class Map;
 
         public:
-	    Node(K key = K(), V value = V(), Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
+            Node(K key = K(), V value = V(), Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
                  Node* right = nullptr) :
                     key(key),
                     value(value),
@@ -129,7 +129,7 @@ namespace Core::Containers {
             const MapIterator operator--(int);  // postfix
             MapIterator& operator--();    // prefix
 
-	    pair<K,V> operator*() const;
+            pair <K, V> operator*() const;
 
             friend class Map<K, V>;
         };
@@ -139,10 +139,6 @@ namespace Core::Containers {
         MapIterator begin();
 
         MapIterator end();
-
-	MapIterator cbegin() const;
-
-	MapIterator cend() const;
     };
 
 
@@ -162,7 +158,7 @@ namespace Core::Containers {
 
     template<class K, class V>
     typename Map<K, V>::Node* Map<K, V>::inOrderCopy(Node* node) {
-	if (node == TNULL) {
+        if (node == TNULL) {
             return TNULL;
         }
 
@@ -201,9 +197,8 @@ namespace Core::Containers {
         return searchTreeHelper(node->right, key);
     }
 
-// fix the rb tree modified by the delete operation
     template<class K, class V>
-    void Map<K, V>::fixErase(Node* x) {
+    void Map<K, V>::fixErase(Node* x) { // fix the tree colors (rebalance after delete)
         Node* s;
         while (x != root && x->color == Node::BLACK) {
             if (x == x->parent->left) {
@@ -283,7 +278,6 @@ namespace Core::Containers {
         v->parent = u->parent;
     }
 
-// find the node containing key
     template<class K, class V>
     void Map<K, V>::eraseNodeHelper(Node* node, K key) {
         Node* z = TNULL;
@@ -338,8 +332,8 @@ namespace Core::Containers {
         size--;
     }
 
-// fix the Node::RED-Node::BLACK tree
     template<class K, class V>
+    // fix the insertion (balance the red-black colors)
     void Map<K, V>::fixPut(Node* k) {
         Node* u;
         while (k->parent->color == Node::RED) {
@@ -413,35 +407,30 @@ namespace Core::Containers {
         inOrderHelper(this->root);
     }
 
-// search the tree for the key
-// and return the corresponding value
     template<class K, class V>
     optional <V> Map<K, V>::get(K key) const {
         Node* n = searchTreeHelper(this->root, key);
         return (n && n != TNULL) ? optional(n->value) : nullopt;
     }
 
-// find the node with the minimum key
     template<class K, class V>
-    typename Map<K, V>::Node* Map<K, V>::minimum(Node* node) {
+    typename Map<K, V>::Node* Map<K, V>::minimum(Node* node) { // find the node with the minimum key
         while (node->left != TNULL) {
             node = node->left;
         }
         return node;
     }
 
-// find the node with the maximum key
     template<class K, class V>
-    typename Map<K, V>::Node* Map<K, V>::maximum(Node* node) {
+    typename Map<K, V>::Node* Map<K, V>::maximum(Node* node) {// find the node with the maximum key
         while (node->right != TNULL) {
             node = node->right;
         }
         return node;
     }
 
-// find the successor of a given node
     template<class K, class V>
-    typename Map<K, V>::Node* Map<K, V>::successor(Node* x) {
+    typename Map<K, V>::Node* Map<K, V>::successor(Node* x) {// find the successor of a given node in the inorder visit
         // if the right subtree is not null,
         // the successor is the leftmost node in the
         // right subtree
@@ -462,9 +451,10 @@ namespace Core::Containers {
         return parent ? parent : TNULL;
     }
 
-// find the predecessor of a given node
+
     template<class K, class V>
-    typename Map<K, V>::Node* Map<K, V>::predecessor(Node* x) {
+    typename Map<K, V>::Node*
+    Map<K, V>::predecessor(Node* x) { // find the predecessor of a given node in the inorder visit
         // if the left subtree is not null,
         // the predecessor is the rightmost node in the
         // left subtree
@@ -481,9 +471,9 @@ namespace Core::Containers {
         return parent ? parent : TNULL;
     }
 
-// rotate left at node x
+
     template<class K, class V>
-    void Map<K, V>::leftRotate(Node* x) {
+    void Map<K, V>::leftRotate(Node* x) { // rotate left at node x
         Node* y = x->right;
         x->right = y->left;
         if (y->left != TNULL) {
@@ -501,9 +491,8 @@ namespace Core::Containers {
         x->parent = y;
     }
 
-// rotate right at node x
     template<class K, class V>
-    void Map<K, V>::rightRotate(Node* x) {
+    void Map<K, V>::rightRotate(Node* x) { // rotate right at node x
         Node* y = x->left;
         x->left = y->right;
         if (y->right != TNULL) {
@@ -658,16 +647,16 @@ namespace Core::Containers {
 
     template<class K, class V>
     typename Map<K, V>::MapIterator Map<K, V>::cbegin() const {
-	return {minimum(root)};
+        return {minimum(root)};
     }
 
     template<class K, class V>
     typename Map<K, V>::MapIterator Map<K, V>::cend() const {
-	return {TNULL};
+        return {TNULL};
     }
 
     template<class K, class V>
-    V& Map<K, V>::operator[](const K& key) {
+    V& Map<K, V>::operator[](const K& key) { // insert the element if it doesn't exist or return it if it does
         optional <V> v = get(key);
         if (v.has_value()) {
             return v.value();
@@ -677,8 +666,8 @@ namespace Core::Containers {
 
 
     template<class K, class V>
-    pair<K,V> Containers::Map<K, V>::MapIterator::operator*() const {
-	return pair(node->key, node->value);
+    pair <K, V> Containers::Map<K, V>::MapIterator::operator*() const {
+        return pair(node->key, node->value);
     }
 
     template<class K, class V>
