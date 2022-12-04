@@ -1,6 +1,10 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <string>
+
+using std::string;
+
 namespace Core {
     class Model {
     private:

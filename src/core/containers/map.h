@@ -136,9 +136,9 @@ namespace Core::Containers {
 
         pair<MapIterator, bool> put(const K& key, const V& value);
 
-        MapIterator begin();
+	MapIterator begin() const;
 
-        MapIterator end();
+        MapIterator end() const;
     };
 
 
@@ -636,22 +636,12 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    typename Map<K, V>::MapIterator Map<K, V>::begin() {
+    typename Map<K, V>::MapIterator Map<K, V>::begin() const {
         return {minimum(root)};
     }
 
     template<class K, class V>
-    typename Map<K, V>::MapIterator Map<K, V>::end() {
-        return {TNULL};
-    }
-
-    template<class K, class V>
-    typename Map<K, V>::MapIterator Map<K, V>::cbegin() const {
-        return {minimum(root)};
-    }
-
-    template<class K, class V>
-    typename Map<K, V>::MapIterator Map<K, V>::cend() const {
+    typename Map<K, V>::MapIterator Map<K, V>::end() const {
         return {TNULL};
     }
 

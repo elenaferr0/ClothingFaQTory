@@ -2,9 +2,9 @@
 #include <string>
 using std::string;
 using std::to_string;
-using Core::Db::Expr;
+using Core::Db::Query::Expr;
 
-namespace Core::Db {
+namespace Core::Db::Query {
     string operator+(string s, const Expr& x) {
         return s + x.expression;
     }

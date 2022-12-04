@@ -6,7 +6,7 @@
 using std::string;
 using std::list;
 
-namespace Core::Db {
+namespace Core::Db::Query {
     class Expr {
     private:
         string expression;

@@ -15,14 +15,14 @@ Product::Product(unsigned long id,
                  int soldQuantity,
                  string description)
         : Model(id),
-          code(code),
           color(color),
           materials(materials),
           size(size),
           availableQuantity(availableQuantity),
           soldQuantity(soldQuantity),
-          description(description){};
+          description(description),
+          code(code) {};
 
-string Product::getTableName() {
+string Product::getTableName() const {
     return "product";
 }

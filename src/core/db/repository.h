@@ -10,7 +10,7 @@ using std::list;
 using std::optional;
 using std::string;
 using std::to_string;
-using Core::Db::QueryBuilder;
+using Core::Db::Query::QueryBuilder;
 
 namespace Core::Db {
     template<class T>

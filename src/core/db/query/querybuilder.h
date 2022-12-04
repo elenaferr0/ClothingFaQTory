@@ -3,14 +3,15 @@
 #include <string>
 #include <vector>
 #include "src/core/containers/map.h"
-#include "src/core/db/expression.h"
+#include "src/core/db/query/expression.h"
 
 using std::string;
 using Core::Containers::Map;
 using std::vector;
+using Core::Db::Query::Expr;
 
 
-namespace Core::Db {
+namespace Core::Db::Query {
     class QueryBuilder {
         string query;
     public:

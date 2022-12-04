@@ -4,7 +4,7 @@
 
 using std::to_string;
 using std::regex;
-using Core::Db::QueryBuilder;
+using Core::Db::Query::QueryBuilder;
 
 QueryBuilder& QueryBuilder::select(string field, string alias) {
     if (field == "") {
@@ -31,7 +31,7 @@ QueryBuilder& QueryBuilder::select(const Map <string, string>& fields) {
 
     query = "SELECT ";
 
-    for (auto f = fields.cbegin(); f != fields.cend(); ++f) {
+    for (auto f = fields.begin(); f != fields.end(); ++f) {
 
         query += (*f).first;
         // create automatically the alias if the second parameter is not present
@@ -83,7 +83,7 @@ QueryBuilder& QueryBuilder::set(const Map <string, string>& fields) {
 
     query += "SET ";
 
-    for (auto f = fields.cbegin(); f != fields.cend(); ++f) {
+    for (auto f = fields.begin(); f != fields.end(); ++f) {
         query += (*f).first + " = " + (*f).second + ", ";
     }
 
@@ -154,7 +154,7 @@ QueryBuilder& QueryBuilder::bindParameter(string key, string value) {
 }
 
 QueryBuilder& QueryBuilder::bindParameters(const Map <string, string>& params) {
-    for (auto it = params.cbegin(); it != params.cend(); it++) {
+    for (auto it = params.begin(); it != params.end(); it++) {
         bindParameter((*it).first, (*it).second);
     }
 
