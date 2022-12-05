@@ -5,15 +5,21 @@
 
 using std::string;
 
+namespace Core {
 class Error {
-private:
-    string message;
-public:
+  private:
+    string userMessage;
+    string cause;
+  public:
     // allow implicit construction
-    Error(string message = "");
+    Error(
+	string cause = "",
+	string userMessage = "Generic error"
+	);
 
     string getMessage() const;
 };
+}
 
 
 #endif //ERROR_H

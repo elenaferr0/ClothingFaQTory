@@ -8,15 +8,16 @@ using std::string;
 namespace Core {
     class Model {
     private:
-        unsigned long id;
+	long long id;
     public:
-        Model(unsigned long id) : id(id) {};
+	// -1 means some kind of error has occurred to the upper level
+	Model(long long id = -1) : id(id) {};
 
-        unsigned long long getId() const;
+	long long getId() const;
 
         virtual Model* clone() const = 0;
 
-        virtual string getTableName() const = 0;
+	virtual string getTableName() const = 0;
     };
 }
 

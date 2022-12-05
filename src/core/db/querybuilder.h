@@ -3,28 +3,27 @@
 #include <string>
 #include <vector>
 #include "src/core/containers/map.h"
-#include "src/core/db/query/expression.h"
+#include "src/core/db/expression.h"
 
 using std::string;
 using Core::Containers::Map;
 using std::vector;
-using Core::Db::Query::Expr;
+using Core::Db::Expr;
 
 
-namespace Core::Db::Query {
-    class QueryBuilder {
-        string query;
-    public:
-        enum Join {
-            INNER, OUTER, LEFT, RIGHT
-        };
-        enum Order {
-            ASC, DESC
-        };
+namespace Core::Db {
+class QueryBuilder {
+  public:
+    enum Join {
+      INNER, OUTER, LEFT, RIGHT
+    };
+    enum Order {
+      ASC, DESC
+    };
 
-        friend string operator+(string, const list <string>&);
+    friend string operator+(string, const list <string>&);
 
-        QueryBuilder() : query() {};
+    QueryBuilder() : query() {};
 
     // qb.select("u");
     QueryBuilder& select(string field = "*", string alias = "");
@@ -78,9 +77,10 @@ namespace Core::Db::Query {
 
 
     string build();
-
+  private:
     string toString(Join joinType);
     string toString(Order order);
+    string query;
 };
 }
 #endif // QUERYBUILDER_H

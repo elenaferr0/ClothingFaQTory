@@ -5,25 +5,32 @@
 #include <optional>
 #include <string>
 #include "src/core/db/querybuilder.h"
+#include "src/core/errors/either.h"
+#include "src/core/errors/error.h"
+#include "src/services/entity_mapper.h"
 
 using std::list;
 using std::optional;
 using std::string;
 using std::to_string;
-using Core::Db::Query::QueryBuilder;
+using Core::Db::QueryBuilder;
+using Services::EntityMapper;
+using Core::Either;
+using Core::Error;
 
-namespace Core::Db {
+namespace Services {
     template<class T>
     class Repository {
-    private:
+    protected:
         string table;
         QueryBuilder queryBuilder;
+	EntityMapper entityMapper;
     public:
         Repository(string table);
 
-        T save(T entity) = 0;
+	virtual Either<Error, T> save(T entity) = 0;
 
-        list <T> saveAll(list <T> entities) = 0;
+	virtual list <T> saveAll(list <T> entities) = 0;
 
         optional <T> findById(int id);
 
@@ -31,11 +38,11 @@ namespace Core::Db {
 
         list <T> findAll();
 
-        long count();
+	long count(string field);
 
         void deleteById(int id);
 
-        void deleteT(T entity) = 0;
+	virtual void deleteT(T entity) = 0;
 
         void deleteAllById(list<int>& id);
 

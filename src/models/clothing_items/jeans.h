@@ -1,7 +1,7 @@
 #ifndef JEANS_H
 #define JEANS_H
 
-#include "src/models/clothing_items/clothingitem.h"
+#include "src/models/clothing_items/clothing_item.h"
 #include<list>
 
 using std::list;

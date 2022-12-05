@@ -1,4 +1,4 @@
-#include "clothingitem.h"
+#include "clothing_item.h"
 #include<string>
 
 using std::string;

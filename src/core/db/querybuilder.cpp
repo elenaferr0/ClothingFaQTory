@@ -4,7 +4,7 @@
 
 using std::to_string;
 using std::regex;
-using Core::Db::Query::QueryBuilder;
+using Core::Db::QueryBuilder;
 
 QueryBuilder& QueryBuilder::select(string field, string alias) {
     if (field == "") {
@@ -15,12 +15,12 @@ QueryBuilder& QueryBuilder::select(string field, string alias) {
         alias = field[0];
     }
 
-    query = "SELECT " + field + (field == "*" ? "" : " AS " + alias) + "\n";
+    query = "SELECT " + field + (field == "*" ? "" : " " + alias) + " ";
     return *this;
 }
 
 QueryBuilder& QueryBuilder::count(string field) {
-    query = "COUNT (" + field + ")\n";
+    query = "COUNT (" + field + ") ";
     return *this;
 }
 
@@ -35,12 +35,12 @@ QueryBuilder& QueryBuilder::select(const Map <string, string>& fields) {
 
         query += (*f).first;
         // create automatically the alias if the second parameter is not present
-        query += " AS " + (*f).second == "" ? to_string((*f).first[0]) : (*f).second;
+        query += " " + (*f).second == "" ? to_string((*f).first[0]) : (*f).second;
         query += ", ";
     }
 
     // remove the last comma
-    query = query.substr(0, query.length() - 2) + "\n";
+    query = query.substr(0, query.length() - 2) + " ";
     return *this;
 }
 
@@ -53,18 +53,18 @@ QueryBuilder& QueryBuilder::addSelect(string field, string alias) {
         alias = field[0];
     }
 
-    query += ", " + field + " AS " + alias + "\n";
+    query += ", " + field + " " + alias + " ";
     return *this;
 }
 
 QueryBuilder& QueryBuilder::deleteT() {
-    query = "DELETE \n";
+    query = "DELETE ";
     return *this;
 }
 
 QueryBuilder& QueryBuilder::update(string entity) {
     if (entity != "") {
-        query = "UPDATE " + entity + "\n";
+	query = "UPDATE " + entity + " ";
     }
     return *this;
 }
@@ -88,7 +88,7 @@ QueryBuilder& QueryBuilder::set(const Map <string, string>& fields) {
     }
 
     // remove the last comma
-    query = query.substr(0, query.length() - 2) + "\n";
+    query = query.substr(0, query.length() - 2) + " ";
     return *this;
 }
 
@@ -101,26 +101,26 @@ QueryBuilder& QueryBuilder::from(string from, string alias) {
         alias = from[0];
     }
 
-    query += "FROM " + from + " AS " + alias + "\n";
+    query += "FROM " + from + " " + alias + " ";
     return *this;
 }
 
 
 QueryBuilder& QueryBuilder::join(Join type, string table, const Expr& x) {
     if (table != "") {
-        query += "  " + toString(type) + " JOIN " + table + " ON " + x + "\n";
+	query += toString(type) + " JOIN " + table + " " + table[0] + " ON " + x + " ";
     }
     return *this;
 }
 
 QueryBuilder& QueryBuilder::where(const Expr& x) {
-    query += "WHERE " + x + "\n";
+    query += "WHERE " + x + " ";
     return *this;
 }
 
 QueryBuilder& QueryBuilder::orderBy(string field, Order order) {
     if (field != "") {
-        query += "ORDER BY " + field + " " + toString(order) + "\n";
+	query += "ORDER BY " + field + " " + toString(order) + " ";
     }
     return *this;
 }
@@ -134,17 +134,17 @@ QueryBuilder& QueryBuilder::limit(int maxResults) {
 }
 
 QueryBuilder& QueryBuilder::andX(const Expr& x) {
-    query += "AND " + x + "\n";
+    query += "AND " + x + " ";
     return *this;
 }
 
 QueryBuilder& QueryBuilder::orX(const Expr& x) {
-    query += "OR " + x + "\n";
+    query += "OR " + x + " ";
     return *this;
 }
 
 QueryBuilder& QueryBuilder::notX(const Expr& x) {
-    query += "NOT " + x + "\n";
+    query += "NOT " + x + " ";
     return *this;
 }
 

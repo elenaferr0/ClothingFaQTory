@@ -3,6 +3,11 @@
 #include <QDebug>
 #include<iostream>
 #include <QSqlQuery>
+#include <QSqlRecord>
+#include "src/core/db/querybuilder.h"
+#include "src/core/db/expression.h"
+using Core::Db::QueryBuilder;
+using Core::Db::Expr;
 
 MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -17,11 +22,19 @@ MainWindow::MainWindow(QWidget* parent)
 
   if (db.open()) {
     //        QMessageBox::information(this, "Connection", "Database connection success");
+    QueryBuilder builder;
 
-    QSqlQuery query = db.exec("select * from \"size\"");
+    QSqlQuery query;
+    QString sql = QString::fromStdString(builder.select()
+						.from("size")
+						.join(QueryBuilder::INNER, "product", Expr("s.id").equals({"p.size_id"}))
+						.build());
+    qInfo() << sql;
+    query.exec(sql);
 
     while (query.next()) {
-      QString q = query.value(1).toString();
+      QString q = query.value("id").toString();
+      q = query.value("id").toString();
       qDebug() << q;
     }
 
