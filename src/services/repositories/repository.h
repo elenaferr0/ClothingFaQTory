@@ -1,6 +1,6 @@
 #ifndef REPOSITORY_H
 #define REPOSITORY_H
-
+#include <QDebug>
 #include <list>
 #include <optional>
 #include <string>
@@ -24,91 +24,76 @@ namespace Services {
     protected:
         string table;
         QueryBuilder queryBuilder;
-	EntityMapper entityMapper;
+        EntityMapper entityMapper;
+
+        QSqlQuery exec(const string&, const QVariant&);
+
+        QSqlQuery exec(const string&);
+
     public:
-        Repository(string table);
+        Repository(const string& table);
 
-	virtual Either<Error, T> save(T entity) = 0;
+        virtual Either <Error, T> save(T& entity) = 0;
 
-	virtual list <T> saveAll(list <T> entities) = 0;
+        virtual Either <Error, list<T>> saveAll(list <T>& entities) = 0;
 
-        optional <T> findById(int id);
+        virtual Either <Error, T> findById(int id) = 0;
 
-        list <T> findAllById(list<int>& ids);
+        virtual Either <Error, list<T>> findAll() = 0;
 
-        list <T> findAll();
+        virtual void deleteT(const T& entity) = 0;
 
-	long count(string field);
-
-        void deleteById(int id);
-
-	virtual void deleteT(T entity) = 0;
-
-        void deleteAllById(list<int>& id);
-
-        void deleteAll();
+        virtual ~Repository();
     };
 
     template<class T>
-    Repository<T>::Repository(string table): table(table) {};
+    Repository<T>::~Repository() {}
 
     template<class T>
-    optional <T> Repository<T>::findById(int id) {
-        string query = queryBuilder.select()
-                .from(table)
-                .where(Expr("id").equals({":id"}))
-                .bindParameter(":id", to_string(id))
-                .build();
+    QSqlQuery Repository<T>::exec(const string& sql, const QVariant& param) {
+        QSqlQuery query;
+        query.prepare(QString::fromStdString(sql));
+        query.addBindValue(param);
+        query.exec();
+        qInfo() << query.lastQuery();
+        return query;
     }
 
     template<class T>
-    list <T> Repository<T>::findAllById(list<int>& ids) {
-        string query = queryBuilder.select()
-                .from(table)
-                .where(Expr("id").in(ids))
-                .build();
+    QSqlQuery Repository<T>::exec(const string& sql) {
+        QSqlQuery query;
+        query.exec(QString::fromStdString(sql));
+        qInfo() << query.lastQuery();
+        return query;
     }
 
     template<class T>
-    list <T> Repository<T>::findAll() {
-        string query = queryBuilder
-                .select()
-                .from(table)
-                .build();
-    }
+    Repository<T>::Repository(const string& table): table(table) {};
 
-    template<class T>
-    long Repository<T>::count(string field) {
-        string query = queryBuilder
-                .count(field)
-                .from(table)
-                .build();
-    }
+//    template<class T>
+//    void Repository<T>::deleteById(int id) {
+//	string sql = queryBuilder
+//                .deleteT()
+//		.where(Expr("id").equals(to_string(id)))
+//                .build();
+//    }
 
-    template<class T>
-    void Repository<T>::deleteById(int id) {
-        string query = queryBuilder
-                .deleteT()
-                .where(Expr("id").eq(to_string(id)))
-                .build();
-    }
+//    template<class T>
+//    void Repository<T>::deleteAllById(const list<int>& ids) {
+//	string sql = queryBuilder
+//                .deleteT()
+//                .from(table)
+//                .where(Expr("id").in(ids))
+//                .build();
+//    }
 
-    template<class T>
-    void Repository<T>::deleteAllById(list<int>& ids) {
-        string query = queryBuilder
-                .deleteT()
-                .from(table)
-                .where(Expr("id").in(ids))
-                .build();
-    }
-
-    template<class T>
-    void Repository<T>::deleteAll() {
-        string query = queryBuilder
-                .deleteT()
-                .from(table)
-                .build();
-    }
+//    template<class T>
+//    void Repository<T>::deleteAll() {
+//	string sql = queryBuilder
+//                .deleteT()
+//                .from(table)
+//                .build();
+//    }
 }
 
 #endif // REPOSITORY_H

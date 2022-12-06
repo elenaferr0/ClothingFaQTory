@@ -1,10 +1,12 @@
 #include "querybuilder.h"
+#include "src/core/containers/map.h"
 #include <string>
 #include <regex>
 
 using std::to_string;
 using std::regex;
 using Core::Db::QueryBuilder;
+using Core::Containers::Map;
 
 QueryBuilder& QueryBuilder::select(string field, string alias) {
     if (field == "") {
@@ -57,6 +59,23 @@ QueryBuilder& QueryBuilder::addSelect(string field, string alias) {
     return *this;
 }
 
+QueryBuilder& QueryBuilder::insertInto(string entity, const Map<string, string>& fields) {
+    query = "INSERT INTO " + entity; // + "()"
+    string names = "(", values = "(";
+    auto f = fields.begin();
+
+    for (; f != --fields.end(); ++f) {
+        names += (*f).first + ",";
+        values += (*f).second + ",";
+    }
+
+    names += (*f).first + ")";
+    values += (*f).second + ")";
+
+    query += names + " VALUES " + values;
+    return *this;
+}
+
 QueryBuilder& QueryBuilder::deleteT() {
     query = "DELETE ";
     return *this;
@@ -64,7 +83,7 @@ QueryBuilder& QueryBuilder::deleteT() {
 
 QueryBuilder& QueryBuilder::update(string entity) {
     if (entity != "") {
-	query = "UPDATE " + entity + " ";
+        query = "UPDATE " + entity + " ";
     }
     return *this;
 }
@@ -82,13 +101,13 @@ QueryBuilder& QueryBuilder::set(const Map <string, string>& fields) {
     }
 
     query += "SET ";
+    auto f = fields.begin();
 
-    for (auto f = fields.begin(); f != fields.end(); ++f) {
+    for (; f != --fields.end(); ++f) {
         query += (*f).first + " = " + (*f).second + ", ";
     }
 
-    // remove the last comma
-    query = query.substr(0, query.length() - 2) + " ";
+    query += (*f).first + " = " + (*f).second;
     return *this;
 }
 
@@ -108,7 +127,7 @@ QueryBuilder& QueryBuilder::from(string from, string alias) {
 
 QueryBuilder& QueryBuilder::join(Join type, string table, const Expr& x) {
     if (table != "") {
-	query += toString(type) + " JOIN " + table + " " + table[0] + " ON " + x + " ";
+        query += toString(type) + " JOIN " + table + " " + table[0] + " ON " + x + " ";
     }
     return *this;
 }
@@ -120,7 +139,7 @@ QueryBuilder& QueryBuilder::where(const Expr& x) {
 
 QueryBuilder& QueryBuilder::orderBy(string field, Order order) {
     if (field != "") {
-	query += "ORDER BY " + field + " " + toString(order) + " ";
+        query += "ORDER BY " + field + " " + toString(order) + " ";
     }
     return *this;
 }
@@ -149,7 +168,7 @@ QueryBuilder& QueryBuilder::notX(const Expr& x) {
 }
 
 QueryBuilder& QueryBuilder::bindParameter(string key, string value) {
-    query = regex_replace(query, regex(":" + key), value);
+    query = regex_replace(query, regex(key), value);
     return *this;
 }
 

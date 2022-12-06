@@ -32,7 +32,7 @@ class QueryBuilder {
 
     // qb.select({("username", "u"), ("email", "e")});
     // takes fields with aliases as input (the alias can also be empty)
-    QueryBuilder& select(const Map<string, string>& fields);
+    QueryBuilder& select(const Map <string, string>& fields);
 
     // does not override previous select
     QueryBuilder& addSelect(string field = "*", string alias = "");
@@ -43,11 +43,14 @@ class QueryBuilder {
     // qb.update("username", "u");
     QueryBuilder& update(string entity);
 
+    // qb.insertInto("username");
+    QueryBuilder& insertInto(string entity, const Map <string, string>& fields);
+
     // qb.set("u.username", "foo");
     QueryBuilder& set(string field, string value);
 
     // qb.set({("username", "u"), ("email", "e")})
-    QueryBuilder& set(const Map<string, string>& fields);
+    QueryBuilder& set(const Map <string, string>& fields);
 
     // qb.from("User", "u");
     QueryBuilder& from(string from, string alias = "");

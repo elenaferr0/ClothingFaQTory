@@ -6,8 +6,10 @@
 #include <QSqlRecord>
 #include "src/core/db/querybuilder.h"
 #include "src/core/db/expression.h"
+#include "src/services/repositories/sizerepository.h"
 using Core::Db::QueryBuilder;
 using Core::Db::Expr;
+using Services::SizeRepository;
 
 MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -21,23 +23,14 @@ MainWindow::MainWindow(QWidget* parent)
   db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
   if (db.open()) {
-    //        QMessageBox::information(this, "Connection", "Database connection success");
-    QueryBuilder builder;
+//    QMessageBox::information(this, "Connection", "Database connection success");
+      QueryBuilder builder;
+      SizeRepository sr = SizeRepository("size");
+      Either <Error, Size> size = sr.findById(1);
+      Either <Error, list<Size>> sizes = sr.findAll();
+      if (size.isLeft()) {
 
-    QSqlQuery query;
-    QString sql = QString::fromStdString(builder.select()
-						.from("size")
-						.join(QueryBuilder::INNER, "product", Expr("s.id").equals({"p.size_id"}))
-						.build());
-    qInfo() << sql;
-    query.exec(sql);
-
-    while (query.next()) {
-      QString q = query.value("id").toString();
-      q = query.value("id").toString();
-      qDebug() << q;
-    }
-
+      }
   } else {
     QMessageBox::information(this, "Not connected", "Database Connected Failed");
   }

@@ -44,9 +44,9 @@ Expr& Expr::notEquals(const Expr& x){
   return *this;
 }
 
-Expr& Expr::in(list<int>& s){
-  expression += " IN (" + s + ")";
-  return *this;
+Expr& Expr::in(const list<int>& s) {
+    expression += " IN (" + s + ")";
+    return *this;
 }
 
 Expr& Expr::gt(const Expr& x){

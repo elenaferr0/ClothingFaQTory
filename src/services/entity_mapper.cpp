@@ -17,8 +17,6 @@ using Core::Error;
 
 string toString(const QSqlError::ErrorType& errorType) {
     switch (errorType) {
-        case QSqlError::NoError:
-            return "";
         case QSqlError::ConnectionError:
             return "Connection Error";
         case QSqlError::StatementError:
@@ -27,6 +25,8 @@ string toString(const QSqlError::ErrorType& errorType) {
             return "Transaction Error";
         case QSqlError::UnknownError:
             return "Unknown Error";
+        default:
+            return "";
     }
 }
 
@@ -43,28 +43,29 @@ Either<Error, bool> EntityMapper::boolean(QSqlQuery& query) {
 
 Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
     /*
-       * id int
-       * name string
-       * extra_percentage_of_material double
-       */
+         * id int
+         * name string
+         * extra_percentage_of_material double
+         */
 
     QSqlError error = query.lastError();
-    if (!query.isValid() || error.isValid()) { // error occurred
+
+    if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
         return Either<Error, Size>::ofLeft({toString(error.type()),
-                                            "Error while getting backpack"});
+                                            "Error while getting size"});
     }
 
     QSqlRecord record = query.record();
 
-    if(query.size() == 0){ //
-      return Either<Error, Size>::ofRight(Size());
+    if (query.size() == 0) {
+        return Either<Error, Size>::ofRight(Size());
     }
 
     return Either<Error, Size>::ofRight(
             Size(
                     record.value("id").toInt(),
                     record.value("name").toString().toStdString(),
-		    record.value("extra_percentage_of_material").toFloat()
+                    record.value("extra_percentage_of_material").toFloat()
             )
     );
 }

@@ -22,8 +22,10 @@ namespace Core::Db {
     Expr& notX();
     Expr& equals(const Expr&);
     Expr& notEquals(const Expr&);
-    Expr& in(list<int>&);
-    Expr& gt(const Expr&);	// greater than
+
+        Expr& in(const list<int>&);
+
+        Expr& gt(const Expr&);	// greater than
     Expr& geq(const Expr&); // greater or eq than
     Expr& lt(const Expr&);	// less than
     Expr& leq(const Expr&); // less or eq than
