@@ -29,8 +29,8 @@ MainWindow::MainWindow(QWidget* parent)
 	Either <Error, Size> eos = sr.findById(1);
 	if (eos.isRight()) {
 	    Size size = eos.right().value();
-	    size.setName("XS");
-	    size.setExtraPercentageOfMaterial(0);
+	    size.setName("XdddddddddS");
+        size.setExtraPercentageOfMaterial(0);
 	    eos = sr.save(size);
 	    qInfo() << eos.isLeft();
 	}

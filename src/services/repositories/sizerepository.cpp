@@ -14,7 +14,7 @@ Either <Error, Size> SizeRepository::findById(int id) {
     string sql = queryBuilder.select()
             .from(table)
             .where(Expr("id").equals({"?"}))
-	    .build();
+            .build();
     QSqlQuery query = exec(sql, QVariant::fromValue<int>(id));
     query.next(); // is needed so the record can be read
     return entityMapper.size(query);
@@ -29,45 +29,42 @@ Either <Error, Size> SizeRepository::save(Size& entity) {
     list <string> fields = {"name", "extra_percentage_of_material"};
 
     if (entity.getId() == -1) { // does not exist => create a new Size
-	Size size = Size();
-	size.setName(entity.getName());
+        Size size = Size();
+        size.setName(entity.getName());
         size.setExtraPercentageOfMaterial(entity.getExtraPercentageOfMaterial());
 
         string sql = queryBuilder.insertInto("size", fields).build();
         query = exec(sql);
-	query.next();
-	Either <Error, Size> result = entityMapper.size(query);
-	if (result.isLeft()) {
-	    QSqlDatabase::database().rollback();
-	} else {
-	    QSqlDatabase::database().commit();
-	}
+        query.next();
+        Either <Error, Size> result = entityMapper.size(query);
+        if (result.isLeft()) {
+            QSqlDatabase::database().rollback();
+        } else {
+            QSqlDatabase::database().commit();
+        }
 
-	return result;
+        return result;
     }
 
     // exists => should update all the fields
     sql = queryBuilder.update("size")
-	    .set(fields)
-	    .where(Expr("id").equals({"?"}))
-	    .build();
+            .set(fields)
+            .where(Expr("id").equals({"?"}))
+            .build();
 
     QVariantList params;
     params << QString::fromStdString(entity.getName())
-	   << entity.getExtraPercentageOfMaterial()
-	   << entity.getId();
+           << entity.getExtraPercentageOfMaterial()
+           << entity.getId();
 
     query = exec(sql, params);
-    //    query.next();
-    //    qInfo() << query.isValid() << " " << query.isActive();
-    //    optional<Error> hasError = entityMapper.hasError(query);
-	qInfo() << query.lastError();
-    //    qInfo() << query.lastError().type();
+    query.next();
+    optional <Error> hasError = entityMapper.hasError(query);
 
-    //    if (hasError.has_value()) {
-    //	QSqlDatabase::database().rollback();
-    //	return Either<Error, Size>::ofLeft(hasError.value());
-    //    }
+    if (hasError.has_value()) {
+        QSqlDatabase::database().rollback();
+        return Either<Error, Size>::ofLeft(hasError.value());
+    }
 
     QSqlDatabase::database().commit();
     return Either<Error, Size>::ofRight(entity);

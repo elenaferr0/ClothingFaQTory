@@ -32,9 +32,9 @@ string toString(const QSqlError::ErrorType& errorType) {
 
 optional<Error> EntityMapper::hasError(QSqlQuery& query) {
     QSqlError error = query.lastError();
-    if(!query.isValid() || error.type() != QSqlError::NoError){
-      return optional<Error>({toString(error.type()),
-			      error.text().toStdString()});
+    if (error.type() != QSqlError::NoError) {
+        return optional<Error>({toString(error.type()),
+                                error.text().toStdString()});
     }
     return nullopt;
 }
