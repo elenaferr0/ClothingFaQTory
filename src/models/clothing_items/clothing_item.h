@@ -10,7 +10,7 @@ namespace Models {
             MEN, WOMEN, UNISEX
         };
 
-        ClothingItem(unsigned long id = 0,
+        ClothingItem(long id = -1,
                      string code = "",
                      string color = "",
                      list <Material> materials = list<Material>(),

@@ -7,7 +7,7 @@ namespace Models::ClothingItems {
   class Overalls: public Vest, public Jeans
   {
     public:
-      Overalls(unsigned long id = 0,
+      Overalls(long id = -1,
                string code = "",
                string color = "",
                list <Material> materials = list<Material>(),

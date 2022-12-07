@@ -2,7 +2,7 @@
 
 using Models::Size;
 
-Size::Size(unsigned long id,
+Size::Size(long id,
 	   string name,
            double extraPercentageOfMaterial)
         : Model(id),

@@ -6,7 +6,7 @@ using Models::ClothingItems::Jeans;
 using Models::Material;
 using Utils::Calculator;
 
-Jeans::Jeans(unsigned long id,
+Jeans::Jeans(long id,
              string code,
              string color,
              list <Material> materials,

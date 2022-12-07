@@ -11,7 +11,7 @@ namespace Models {
             BAGS, JEWELRY, HATS, GENERAL
         };
 
-        Accessory(unsigned long id = 0,
+	Accessory(long id = -1,
                   string code = "",
                   string color = "",
                   list <Material> materials = list<Material>(),

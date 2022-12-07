@@ -8,7 +8,7 @@ namespace Models::ClothingItems {
     private:
         bool hasButtons;
     public:
-        Vest(unsigned long id,
+        Vest(long id,
              string code,
              string color,
              list <Material> materials,

@@ -13,10 +13,6 @@ QueryBuilder& QueryBuilder::select(string field, string alias) {
         return *this;
     }
 
-    if (alias == "") {
-        alias = field[0];
-    }
-
     query = "SELECT " + field + (field == "*" ? "" : " " + alias) + " ";
     return *this;
 }
@@ -59,19 +55,16 @@ QueryBuilder& QueryBuilder::addSelect(string field, string alias) {
     return *this;
 }
 
-QueryBuilder& QueryBuilder::insertInto(string entity, const Map<string, string>& fields) {
+QueryBuilder& QueryBuilder::insertInto(string entity, const list<string>& fieldNames) {
     query = "INSERT INTO " + entity; // + "()"
     string names = "(", values = "(";
-    auto f = fields.begin();
 
-    for (; f != --fields.end(); ++f) {
-        names += (*f).first + ",";
-        values += (*f).second + ",";
+    for (auto f = fieldNames.begin(); f != fieldNames.end(); ++f) {
+	names += (*f) + ",";
+	values += ":" + (*f) + ",";
     }
 
-    names += (*f).first + ")";
-    values += (*f).second + ")";
-
+    query = query.substr(0, query.size() - 1); // remove last comma
     query += names + " VALUES " + values;
     return *this;
 }
@@ -95,19 +88,19 @@ QueryBuilder& QueryBuilder::set(string field, string value) {
     return *this;
 }
 
-QueryBuilder& QueryBuilder::set(const Map <string, string>& fields) {
-    if (fields.empty()) {
+QueryBuilder& QueryBuilder::set(const list<string>& fieldNames) {
+    if (fieldNames.empty()) {
         return *this;
     }
 
     query += "SET ";
-    auto f = fields.begin();
+    auto f = fieldNames.begin();
 
-    for (; f != --fields.end(); ++f) {
-        query += (*f).first + " = " + (*f).second + ", ";
+    for (; f != fieldNames.end(); ++f) {
+	query += (*f) + " = ?, ";
     }
 
-    query += (*f).first + " = " + (*f).second;
+    query = query.substr(0, query.size() - 2) + " "; // remove last comma
     return *this;
 }
 

@@ -7,7 +7,7 @@ using Models::Accessories::Bracelet;
 using Utils::Calculator;
 
 Bracelet::Bracelet(
-        unsigned long id,
+        long id,
         string code,
         string color,
         list <Material> materials,

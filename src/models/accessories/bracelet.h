@@ -11,7 +11,7 @@ namespace Models::Accessories {
 
     public:
         Bracelet(
-                unsigned long id = 0,
+                long id = -1,
                 string code = "",
                 string color = "",
                 list <Material> materials = list<Material>(),

@@ -1,5 +1,6 @@
 #ifndef REPOSITORY_H
 #define REPOSITORY_H
+
 #include <QDebug>
 #include <list>
 #include <optional>
@@ -26,7 +27,9 @@ namespace Services {
         QueryBuilder queryBuilder;
         EntityMapper entityMapper;
 
-        QSqlQuery exec(const string&, const QVariant&);
+        QSqlQuery exec(const string&, const QVariantList&);
+
+	QSqlQuery exec(const string&, const QVariant&);
 
         QSqlQuery exec(const string&);
 
@@ -50,13 +53,23 @@ namespace Services {
     Repository<T>::~Repository() {}
 
     template<class T>
-    QSqlQuery Repository<T>::exec(const string& sql, const QVariant& param) {
+    QSqlQuery Repository<T>::exec(const string& sql, const QVariantList& params) {
         QSqlQuery query;
         query.prepare(QString::fromStdString(sql));
-        query.addBindValue(param);
-        query.exec();
-        qInfo() << query.lastQuery();
+	for(int i = 0; i < params.count(); i++){
+	  query.bindValue(i, params.at(i));
+	}
+	query.exec();
         return query;
+    }
+
+    template<class T>
+    QSqlQuery Repository<T>::exec(const string& sql, const QVariant& param) {
+      QSqlQuery query;
+      query.prepare(QString::fromStdString(sql));
+      query.addBindValue(param);
+      query.exec();
+      return query;
     }
 
     template<class T>

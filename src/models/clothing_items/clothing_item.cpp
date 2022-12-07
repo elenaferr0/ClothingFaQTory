@@ -12,7 +12,7 @@ const double ClothingItem::SMALLEST_SIZE_LEG_WIDTH = 10;
 const double ClothingItem::SMALLEST_SIZE_LEG_LENGTH= 10;
 
 ClothingItem::ClothingItem(
-        unsigned long id,
+        long id,
         string code,
         string color,
         list <Material> materials,

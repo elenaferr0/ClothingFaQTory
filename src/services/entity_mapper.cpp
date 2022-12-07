@@ -30,15 +30,13 @@ string toString(const QSqlError::ErrorType& errorType) {
     }
 }
 
-Either<Error, bool> EntityMapper::boolean(QSqlQuery& query) {
+optional<Error> EntityMapper::hasError(QSqlQuery& query) {
     QSqlError error = query.lastError();
-    if (!query.isValid() || error.isValid()) { // error occurred
-        return Either<Error, bool>::ofLeft({toString(error.type()),
-                                            "Error while getting bool"});
+    if(!query.isValid() || error.type() != QSqlError::NoError){
+      return optional<Error>({toString(error.type()),
+			      error.text().toStdString()});
     }
-
-    // if the query has next at least one result was found
-    return Either<Error, bool>::ofRight(query.next());
+    return nullopt;
 }
 
 Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
@@ -52,7 +50,7 @@ Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
 
     if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
         return Either<Error, Size>::ofLeft({toString(error.type()),
-                                            "Error while getting size"});
+					    error.text().toStdString()});
     }
 
     QSqlRecord record = query.record();

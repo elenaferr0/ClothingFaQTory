@@ -2,7 +2,7 @@
 
 using Models::ClothingItems::Overalls;
 
-Overalls::Overalls(unsigned long id,
+Overalls::Overalls(long id,
                    string code,
                    string color,
                    list <Material> materials,

@@ -20,7 +20,7 @@ namespace Models::Accessories {
 
       double capacity; // in liters
     public:
-      BackPack(unsigned long id = 0,
+      BackPack(long id = -1,
                string code = "",
                string color = "",
                list <Material> materials = list<Material>(),

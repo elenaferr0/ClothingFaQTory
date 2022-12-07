@@ -14,9 +14,9 @@ Either <Error, Size> SizeRepository::findById(int id) {
     string sql = queryBuilder.select()
             .from(table)
             .where(Expr("id").equals({"?"}))
-//	  .bindParameter(":id", to_string(id))
-            .build();
+	    .build();
     QSqlQuery query = exec(sql, QVariant::fromValue<int>(id));
+    query.next(); // is needed so the record can be read
     return entityMapper.size(query);
 }
 
@@ -24,45 +24,53 @@ Either <Error, Size> SizeRepository::save(Size& entity) {
     // check if that size already exist
     QSqlDatabase::database().transaction();
 
-    string sql = queryBuilder.select("id")
-            .from(table)
-            .where(Expr("id").equals({":id"}))
-            .build();
-    QSqlQuery query = exec(sql, QVariant::fromValue<int>(entity.getId()));
+    QSqlQuery query;
+    string sql;
+    list <string> fields = {"name", "extra_percentage_of_material"};
 
-    Either <Error, Size> result = entityMapper.size(query);
+    if (entity.getId() == -1) { // does not exist => create a new Size
+	Size size = Size();
+	size.setName(entity.getName());
+        size.setExtraPercentageOfMaterial(entity.getExtraPercentageOfMaterial());
 
-    if (result.isLeft()) {
-        QSqlDatabase::database().rollback();
-        return result;
-    }
-
-    Size size = result.right().value();
-    size.setName(entity.getName());
-    size.setExtraPercentageOfMaterial(entity.getExtraPercentageOfMaterial());
-    Map <string, string> fields;
-    fields["name"] = size.getName();
-    fields["extra_percentage_of_material"] = size.getExtraPercentageOfMaterial();
-
-    if (size.getId() == -1) { // does not exist => create a new Size
-        sql = queryBuilder.insertInto("size", fields).build();
+        string sql = queryBuilder.insertInto("size", fields).build();
         query = exec(sql);
-    } else { // exists => should update all the fields
-        sql = queryBuilder.update("size")
-                .set(fields)
-                .where(Expr("id").equals({":id"}))
-                .build();
-        query = exec(sql, QVariant::fromValue<int>(entity.getId()));
+	query.next();
+	Either <Error, Size> result = entityMapper.size(query);
+	if (result.isLeft()) {
+	    QSqlDatabase::database().rollback();
+	} else {
+	    QSqlDatabase::database().commit();
+	}
+
+	return result;
     }
 
-    result = entityMapper.size(query);
-    if (result.isLeft()) {
-        QSqlDatabase::database().rollback();
-    } else {
-        QSqlDatabase::database().commit();
-    }
+    // exists => should update all the fields
+    sql = queryBuilder.update("size")
+	    .set(fields)
+	    .where(Expr("id").equals({"?"}))
+	    .build();
 
-    return result;
+    QVariantList params;
+    params << QString::fromStdString(entity.getName())
+	   << entity.getExtraPercentageOfMaterial()
+	   << entity.getId();
+
+    query = exec(sql, params);
+    //    query.next();
+    //    qInfo() << query.isValid() << " " << query.isActive();
+    //    optional<Error> hasError = entityMapper.hasError(query);
+	qInfo() << query.lastError();
+    //    qInfo() << query.lastError().type();
+
+    //    if (hasError.has_value()) {
+    //	QSqlDatabase::database().rollback();
+    //	return Either<Error, Size>::ofLeft(hasError.value());
+    //    }
+
+    QSqlDatabase::database().commit();
+    return Either<Error, Size>::ofRight(entity);
 }
 
 Either <Error, list<Size>> SizeRepository::saveAll(list <Size>& entities) {
@@ -85,7 +93,9 @@ void SizeRepository::deleteT(const Size& entity) {
             .from(table)
             .where(Expr("id").equals({":id"}))
             .build();
-    exec(sql, QVariant::fromValue<int>(entity.getId()));
+    QVariantList params;
+    params << QVariant::fromValue<int>(entity.getId());
+    exec(sql, params);
 }
 
 Either <Error, list<Size>> SizeRepository::findAll() {

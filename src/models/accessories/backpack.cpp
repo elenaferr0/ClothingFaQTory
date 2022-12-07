@@ -6,7 +6,7 @@ using Utils::Calculator;
 const double BackPack::BACKPACK_HEIGHT = 30;
 const double BackPack::BACKPACK_WIDTH = 20;
 
-BackPack::BackPack(unsigned long id,
+BackPack::BackPack(long id,
                    string code,
                    string color,
                    list <Material> materials,

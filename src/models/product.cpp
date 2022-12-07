@@ -6,7 +6,7 @@ using std::string;
 using Models::Product;
 using Models::Material;
 
-Product::Product(unsigned long id,
+Product::Product(long id,
                  string code,
                  string color,
                  list <Material> materials,

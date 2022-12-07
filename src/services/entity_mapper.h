@@ -34,7 +34,7 @@ namespace Services {
       private:
 	static string errorType(const QSqlError::ErrorType& errorType);
       public:
-	static Either<Error, bool> boolean(QSqlQuery&);
+	static optional<Error> hasError(QSqlQuery&);
 	static Either<Error, Size> size(const QSqlQuery&);
 
 //        static Accessory accessory(const QSqlQuery&);

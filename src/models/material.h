@@ -15,7 +15,7 @@ namespace Models {
       static const double SILVER_SPECIFIC_WEIGHT;
       static const double WOOD_SPECIFIC_WEIGHT;
 
-      Material(unsigned long id = 0,
+      Material(long id = -1,
 	       Material::Name name = COTTON,
 	       UnitOfMeasure unitOfMeasure = CENTIMETER,
 	       double costPerUnit = 0);

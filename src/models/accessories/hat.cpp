@@ -2,7 +2,7 @@
 
 using Models::Accessories::Hat;
 
-Hat::Hat(unsigned long id,
+Hat::Hat(long id,
          string code,
          string color,
          list <Material> materials,

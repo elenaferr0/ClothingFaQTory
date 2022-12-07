@@ -7,7 +7,7 @@ using Models::Product;
 using std::string;
 
 Accessory::Accessory(
-        unsigned long id,
+        long id,
         string code,
         string color,
         list <Material> materials,

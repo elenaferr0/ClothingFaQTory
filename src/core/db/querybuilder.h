@@ -44,13 +44,13 @@ class QueryBuilder {
     QueryBuilder& update(string entity);
 
     // qb.insertInto("username");
-    QueryBuilder& insertInto(string entity, const Map <string, string>& fields);
+    QueryBuilder& insertInto(string entity, const list<string>& fieldNames);
 
     // qb.set("u.username", "foo");
     QueryBuilder& set(string field, string value);
 
     // qb.set({("username", "u"), ("email", "e")})
-    QueryBuilder& set(const Map <string, string>& fields);
+    QueryBuilder& set(const list<string>& fieldNames);
 
     // qb.from("User", "u");
     QueryBuilder& from(string from, string alias = "");

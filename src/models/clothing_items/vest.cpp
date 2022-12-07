@@ -4,7 +4,7 @@
 using Models::ClothingItems::Vest;
 using Utils::Calculator;
 
-Vest::Vest(unsigned long id,
+Vest::Vest(long id,
            string code,
            string color,
            list <Material> materials,

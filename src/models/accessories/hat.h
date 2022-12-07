@@ -8,7 +8,7 @@ namespace Models::Accessories {
     private:
         bool isBaseballHat;
     public:
-        Hat(unsigned long id = 0,
+        Hat(long id = -1,
             string code = "",
             string color = "",
             list <Material> materials = list<Material>(),
