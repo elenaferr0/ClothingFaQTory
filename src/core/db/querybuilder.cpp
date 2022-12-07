@@ -64,7 +64,8 @@ QueryBuilder& QueryBuilder::insertInto(string entity, const list<string>& fieldN
 	values += ":" + (*f) + ",";
     }
 
-    query = query.substr(0, query.size() - 1); // remove last comma
+    names = names.substr(0, names.size() - 1) + ")"; // remove last comma
+    values = values.substr(0, values.size() - 1) + ")";
     query += names + " VALUES " + values;
     return *this;
 }

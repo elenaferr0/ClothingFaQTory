@@ -26,29 +26,12 @@ MainWindow::MainWindow(QWidget* parent)
     if (db.open()) {
 //    QMessageBox::information(this, "Connection", "Database connection success");
 	SizeRepository sr("size");
-	Either <Error, Size> eos = sr.findById(1);
-	if (eos.isRight()) {
-	    Size size = eos.right().value();
-	    size.setName("XdddddddddS");
-        size.setExtraPercentageOfMaterial(0);
-	    eos = sr.save(size);
-	    qInfo() << eos.isLeft();
-	}
+	Size s;
+	s.setName("test");
+	s.setExtraPercentageOfMaterial(100);
+	Either<Error, Size> e = sr.save(s);
+	qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
 
-	QSqlQuery query;
-	QVariantList list;
-	list << "2oee" << 0 << 7;
-	query.prepare("update size set name = ?, extra_percentage_of_material = ? where (id = ?);");
-
-//	for(int i = 0; i < list.count(); i++){
-//	  query.bindValue(i, list.at(i));
-//	}
-//	query.exec();
-
-	query.addBindValue(list);
-	query.execBatch();
-	qInfo() << query.lastError() << query.lastError().type() << query.lastError().text();
-	qInfo() << query.isValid();
     } else {
         QMessageBox::information(this, "Not connected", "Database Connected Failed");
     }
