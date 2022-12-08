@@ -10,11 +10,11 @@ BackPack::BackPack(long id,
                    string code,
                    string color,
                    list <Material> materials,
-		   Size size,
+                   Size size,
                    int availableQuantity,
                    int soldQuantity,
                    string description,
-		   Category category,
+                   Category category,
                    double capacity)
         : Accessory(id,
                     code,
@@ -23,9 +23,9 @@ BackPack::BackPack(long id,
                     size,
                     availableQuantity,
                     soldQuantity,
-		    description,
-		    category),
-	  capacity(capacity){};
+                    description,
+                    category),
+          capacity(capacity) {};
 
 BackPack* BackPack::clone() const {
     return new BackPack(*this);

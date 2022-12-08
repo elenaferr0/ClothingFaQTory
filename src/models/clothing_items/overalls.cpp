@@ -35,7 +35,7 @@ Overalls::Overalls(long id,
                 description,
                 sustainableMaterials,
                 gender,
-		shorts){};
+                shorts) {};
 
 Overalls* Overalls::clone() const {
     return new Overalls(*this);

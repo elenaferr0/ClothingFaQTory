@@ -31,11 +31,13 @@ using Core::Error;
 
 namespace Services {
     class EntityMapper {
-      private:
-	static string errorType(const QSqlError::ErrorType& errorType);
-      public:
-	static optional<Error> hasError(QSqlQuery&);
-	static Either<Error, Size> size(const QSqlQuery&);
+    private:
+        static string errorType(const QSqlError::ErrorType& errorType);
+
+    public:
+        static optional <Error> hasError(QSqlQuery&);
+
+        static Either <Error, Size> size(const QSqlQuery&);
 
 //        static Accessory accessory(const QSqlQuery&);
 

@@ -29,7 +29,7 @@ namespace Services {
 
         QSqlQuery exec(const string&, const QVariantList&);
 
-	QSqlQuery exec(const string&, const QVariant&);
+        QSqlQuery exec(const string&, const QVariant&);
 
         QSqlQuery exec(const string&);
 
@@ -44,7 +44,9 @@ namespace Services {
 
         virtual Either <Error, list<T>> findAll() = 0;
 
-        virtual void deleteT(const T& entity) = 0;
+        virtual optional <Error> deleteT(const T& entity) = 0;
+
+        virtual optional <Error> deleteById(int id) = 0;
 
         virtual ~Repository();
     };
@@ -56,20 +58,20 @@ namespace Services {
     QSqlQuery Repository<T>::exec(const string& sql, const QVariantList& params) {
         QSqlQuery query;
         query.prepare(QString::fromStdString(sql));
-	for(int i = 0; i < params.count(); i++){
-	  query.bindValue(i, params.at(i));
-	}
-	query.exec();
+        for (int i = 0; i < params.count(); i++) {
+            query.bindValue(i, params.at(i));
+        }
+        query.exec();
         return query;
     }
 
     template<class T>
     QSqlQuery Repository<T>::exec(const string& sql, const QVariant& param) {
-      QSqlQuery query;
-      query.prepare(QString::fromStdString(sql));
-      query.addBindValue(param);
-      query.exec();
-      return query;
+        QSqlQuery query;
+        query.prepare(QString::fromStdString(sql));
+        query.addBindValue(param);
+        query.exec();
+        return query;
     }
 
     template<class T>
@@ -88,15 +90,6 @@ namespace Services {
 //	string sql = queryBuilder
 //                .deleteT()
 //		.where(Expr("id").equals(to_string(id)))
-//                .build();
-//    }
-
-//    template<class T>
-//    void Repository<T>::deleteAllById(const list<int>& ids) {
-//	string sql = queryBuilder
-//                .deleteT()
-//                .from(table)
-//                .where(Expr("id").in(ids))
 //                .build();
 //    }
 

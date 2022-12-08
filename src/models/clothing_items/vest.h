@@ -17,7 +17,7 @@ namespace Models::ClothingItems {
              int soldQuantity,
              string description,
              bool sustainableMaterials = false,
-	     Gender gender = Gender::UNISEX,
+             Gender gender = Gender::UNISEX,
              bool hasButtons = false);
 
         double computePrice() const override;

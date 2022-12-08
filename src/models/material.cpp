@@ -7,25 +7,25 @@ const double Material::SILVER_SPECIFIC_WEIGHT = 10.490;
 const double Material::WOOD_SPECIFIC_WEIGHT = 0.750;
 
 Material::Material(
-    long id,
-    Material::Name name,
-    Material::UnitOfMeasure unitOfMeasure,
-    double costPerUnit)
-  : Model(id),
-    name(name),
-    unitOfMeasure(unitOfMeasure),
-    costPerUnit(costPerUnit){};
+        long id,
+        Material::Name name,
+        Material::UnitOfMeasure unitOfMeasure,
+        double costPerUnit)
+        : Model(id),
+          name(name),
+          unitOfMeasure(unitOfMeasure),
+          costPerUnit(costPerUnit) {};
 
 Material* Material::clone() const {
-  return new Material(*this);
+    return new Material(*this);
 }
 
 Material::Name Material::getName() const {
-  return name;
+    return name;
 }
 
 double Material::getCostPerUnit() const {
-  return costPerUnit;
+    return costPerUnit;
 }
 
 string Material::getTableName() const {

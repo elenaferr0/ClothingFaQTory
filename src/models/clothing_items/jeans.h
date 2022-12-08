@@ -12,17 +12,17 @@ namespace Models::ClothingItems {
         // if shorts is true, when calculating the price half the length will be used
         bool shorts;
     public:
-	Jeans(long id = -1,
-	      string code = "",
-	      string color = "",
-	      list <Material> materials = list<Material>(),
-	      Size size = Size(),
-	      int availableQuantity = 0,
-	      int soldQuantity = 0,
-	      string description = "",
+        Jeans(long id = -1,
+              string code = "",
+              string color = "",
+              list <Material> materials = list<Material>(),
+              Size size = Size(),
+              int availableQuantity = 0,
+              int soldQuantity = 0,
+              string description = "",
               bool sustainableMaterials = false,
               Gender gender = Gender::UNISEX,
-	      bool shorts = false
+              bool shorts = false
         );
 
         double computePrice() const override;

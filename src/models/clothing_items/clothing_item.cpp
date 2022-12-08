@@ -9,7 +9,7 @@ const double ClothingItem::SMALLEST_SIZE_TRUNK_WIDTH = 10;
 const double ClothingItem::SMALLEST_SIZE_TRUNK_LENGTH = 10;
 
 const double ClothingItem::SMALLEST_SIZE_LEG_WIDTH = 10;
-const double ClothingItem::SMALLEST_SIZE_LEG_LENGTH= 10;
+const double ClothingItem::SMALLEST_SIZE_LEG_LENGTH = 10;
 
 ClothingItem::ClothingItem(
         long id,
@@ -22,16 +22,16 @@ ClothingItem::ClothingItem(
         string description,
         bool sustainableMaterials,
         Gender gender)
-  : Product(id,
-            code,
-            color,
-            materials,
-            size,
-            availableQuantity,
-            soldQuantity,
-            description),
-  sustainableMaterials(sustainableMaterials),
-  gender(gender){};
+        : Product(id,
+                  code,
+                  color,
+                  materials,
+                  size,
+                  availableQuantity,
+                  soldQuantity,
+                  description),
+          sustainableMaterials(sustainableMaterials),
+          gender(gender) {};
 
 /*
  * compute length and compute width calculate the length of the current
@@ -41,19 +41,19 @@ ClothingItem::ClothingItem(
  */
 
 double ClothingItem::computeLegLength() const {
-  return SMALLEST_SIZE_LEG_LENGTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
+    return SMALLEST_SIZE_LEG_LENGTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
 }
 
 double ClothingItem::computeLegWidth() const {
-  return SMALLEST_SIZE_LEG_WIDTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
+    return SMALLEST_SIZE_LEG_WIDTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
 }
 
 double ClothingItem::computeTrunkLength() const {
-  return SMALLEST_SIZE_TRUNK_LENGTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
+    return SMALLEST_SIZE_TRUNK_LENGTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
 }
 
 double ClothingItem::computeTrunkWidth() const {
-  return SMALLEST_SIZE_TRUNK_WIDTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
+    return SMALLEST_SIZE_TRUNK_WIDTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
 }
 
 string ClothingItem::getTableName() const {

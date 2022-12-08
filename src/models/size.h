@@ -11,18 +11,22 @@ namespace Models {
 
         double getExtraPercentageOfMaterial() const;
 
-	string getName() const;
+        string getName() const;
 
-	Size(long id = -1,
-	     string name = "",
+        Size(long id = -1,
+             string name = "",
              double extraPercentageOfMaterial = 0);
 
         string getTableName() const override;
-	string fromString(string) const;
-	void setName(string name);
-	void setExtraPercentageOfMaterial(double extraPercentageOfMaterial);
+
+        string fromString(string) const;
+
+        void setName(string name);
+
+        void setExtraPercentageOfMaterial(double extraPercentageOfMaterial);
+
     private:
-	string name;
+        string name;
         double extraPercentageOfMaterial;
 
         Size* clone() const override;

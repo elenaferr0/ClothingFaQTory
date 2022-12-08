@@ -30,7 +30,7 @@ string toString(const QSqlError::ErrorType& errorType) {
     }
 }
 
-optional<Error> EntityMapper::hasError(QSqlQuery& query) {
+optional <Error> EntityMapper::hasError(QSqlQuery& query) {
     QSqlError error = query.lastError();
     if (error.type() != QSqlError::NoError) {
         return optional<Error>({toString(error.type()),
@@ -50,7 +50,7 @@ Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
 
     if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
         return Either<Error, Size>::ofLeft({toString(error.type()),
-					    error.text().toStdString()});
+                                            error.text().toStdString()});
     }
 
     QSqlRecord record = query.record();

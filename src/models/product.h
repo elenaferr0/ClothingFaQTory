@@ -24,7 +24,7 @@ namespace Models {
         string code;
 
     public:
-	Product(long id = -1,
+        Product(long id = -1,
                 string code = "",
                 string color = "",
                 list <Material> materials = list<Material>(),

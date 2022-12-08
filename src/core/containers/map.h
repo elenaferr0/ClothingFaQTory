@@ -136,7 +136,7 @@ namespace Core::Containers {
 
         pair<MapIterator, bool> put(const K& key, const V& value);
 
-	MapIterator begin() const;
+        MapIterator begin() const;
 
         MapIterator end() const;
     };

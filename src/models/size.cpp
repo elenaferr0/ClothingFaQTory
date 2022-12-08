@@ -3,7 +3,7 @@
 using Models::Size;
 
 Size::Size(long id,
-	   string name,
+           string name,
            double extraPercentageOfMaterial)
         : Model(id),
           name(name),
@@ -25,10 +25,10 @@ string Size::getTableName() const {
     return "size";
 }
 
-void Size::setName(string name){
-  this->name = name;
+void Size::setName(string name) {
+    this->name = name;
 }
 
-void Size::setExtraPercentageOfMaterial(double extraPercentageOfMaterial){
-  this->extraPercentageOfMaterial = extraPercentageOfMaterial;
+void Size::setExtraPercentageOfMaterial(double extraPercentageOfMaterial) {
+    this->extraPercentageOfMaterial = extraPercentageOfMaterial;
 }

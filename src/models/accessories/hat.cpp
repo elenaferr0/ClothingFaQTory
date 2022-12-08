@@ -10,7 +10,7 @@ Hat::Hat(long id,
          int availableQuantity,
          int soldQuantity,
          string description,
-	 Category category,
+         Category category,
          bool isBaseballHat)
         : Accessory(id,
                     code,
@@ -19,16 +19,16 @@ Hat::Hat(long id,
                     size,
                     availableQuantity,
                     soldQuantity,
-		    description,
-		    category),
-	  isBaseballHat(isBaseballHat){};
+                    description,
+                    category),
+          isBaseballHat(isBaseballHat) {};
 
 Hat* Hat::clone() const {
     return new Hat(*this);
 }
 
 double Hat::computePrice() const {
-  return 0;
+    return 0;
 }
 
 string Hat::getTableName() const {

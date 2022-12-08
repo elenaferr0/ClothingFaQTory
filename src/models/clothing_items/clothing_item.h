@@ -22,6 +22,7 @@ namespace Models {
                      Gender gender = Gender::UNISEX);
 
         string getTableName() const override;
+
     protected:
         double computeLegLength() const;
 

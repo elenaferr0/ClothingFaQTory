@@ -23,7 +23,7 @@ Vest::Vest(long id,
                        availableQuantity,
                        soldQuantity,
                        description,
-		       sustainableMaterials,
+                       sustainableMaterials,
                        gender),
           hasButtons(hasButtons) {}
 

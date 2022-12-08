@@ -16,19 +16,19 @@ using Services::Repository;
 
 namespace Services {
 
-class SizeRepository : public Repository<Size> {
-public:
-    SizeRepository(const string& tableName);
+    class SizeRepository : public Repository<Size> {
+    public:
+        SizeRepository(const string& tableName);
 
-    Either <Error, Size> save(Size& entity) override;
+        Either <Error, Size> save(Size& entity) override;
 
-    Either <Error, list<Size>> saveAll(list <Size>& entities) override;
+        Either <Error, list<Size>> saveAll(list <Size>& entities) override;
 
-    void deleteT(const Size& entity) override;
+        optional <Error> deleteT(const Size& entity) override;
 
-    Either <Error, Size> findById(int id) override;
+        Either <Error, Size> findById(int id) override;
 
-    Either <Error, list<Size>> findAll() override;
-};
+        Either <Error, list<Size>> findAll() override;
+    };
 }
 #endif // SIZEREPOSITORY_H
