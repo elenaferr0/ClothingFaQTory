@@ -22,12 +22,13 @@ MainWindow::MainWindow(QWidget* parent)
     db.setPort(5432);
     db.setUserName("qtuser");
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
-    qDebug() << "ciao";
-    qInfo() << "ciao";
-    qWarning() << "ciao";
-    qCritical() << "ciao";
-//    qFatal() << "ciao";
-//    if (db.open()) {
+
+    qDebug("debug");
+    qInfo("info");
+    qWarning("warning");
+    qCritical("warning");
+    qFatal("Error");
+    if (db.open()) {
 //    QMessageBox::information(this, "Connection", "Database connection success");
 //	SizeRepository sr("size");
 //	Size s;
@@ -36,9 +37,9 @@ MainWindow::MainWindow(QWidget* parent)
 //	Either<Error, Size> e = sr.save(s);
 //	qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
 
-//    } else {
-//        QMessageBox::information(this, "Not connected", "Database Connected Failed");
-//    }
+    } else {
+	QMessageBox::information(this, "Not connected", "Database Connected Failed");
+    }
 }
 
 MainWindow::~MainWindow() {
