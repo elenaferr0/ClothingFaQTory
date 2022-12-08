@@ -6,7 +6,10 @@
 namespace Models::Accessories {
     class Hat : public Accessory {
     private:
-        bool isBaseballHat;
+        bool isBaseballCap;
+        static const unsigned double DIAMETER = 15.5;
+        static const unsigned double VISOR_LENGTH = 10.25;
+        static const unsigned double VISOR_WIDTH = 5.25;
     public:
         Hat(long id = -1,
             string code = "",
@@ -17,7 +20,7 @@ namespace Models::Accessories {
             int soldQuantity = 0,
             string description = "",
             Category category = Category::GENERAL,
-            bool isBaseballHat = false);
+            bool isBaseballCap = false);
 
         Hat* clone() const override;
 

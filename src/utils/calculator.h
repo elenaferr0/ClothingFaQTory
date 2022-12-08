@@ -8,6 +8,10 @@ namespace Utils {
 
         static double computeSphereVolume(double radius);
 
+        static double computeSphereSurface(double radius);
+
+        static double computeRectangleArea(double height, double width);
+
         static double computeCilinderSurface(double radius, double height);
 
         static double computeCubeSideFromVolume(double volume);

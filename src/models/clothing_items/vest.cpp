@@ -38,14 +38,13 @@ double Vest::computePrice() const {
     // the surface of the Vest is estimated with the surface of a cilinder
     double surface = Calculator::computeCilinderSurface(trunkWidth, trunkLength);
 
-    int nMaterials = materials.size();
-
     double price = 0;
     for (auto i = materials.begin(); i != materials.end(); i++) {
-        price += (*i).getCostPerUnit() * surface / nMaterials;
+        price += (*i).getCostPerUnit() * surface / materials.size();
     }
 
     // TODO: add the cost of the buttons if present
+    // suppose the buttons are made of polyester
 
     return price;
 }

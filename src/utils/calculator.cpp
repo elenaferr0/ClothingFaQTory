@@ -11,6 +11,14 @@ double Calculator::computeSphereVolume(double radius) {
     return 4 / 3 * M_PI * pow(radius, 3);
 }
 
+double Calculator::computeSphereSurface(double radius) {
+    return 4 * M_PI * pow(radius, 2);
+}
+
+double Calculator::computeRectangleArea(double height, double width) {
+    return height * width;
+}
+
 double Calculator::computeCilinderSurface(double radius, double height) {
     return 2 * M_PI * radius * height;
 }
@@ -18,6 +26,8 @@ double Calculator::computeCilinderSurface(double radius, double height) {
 double Calculator::computeCubeSideFromVolume(double volume) {
     return cbrt(volume); // cube root
 }
+
+double Calculator::c
 
 double Calculator::computeTrapezoidalBasedPrismSurfaceFrom(double prismHeight, double baseHeight) {
     /*
