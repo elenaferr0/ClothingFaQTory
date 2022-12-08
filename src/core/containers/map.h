@@ -113,7 +113,7 @@ namespace Core::Containers {
 
         class MapIterator {
         private:
-            const Map::Node* node;
+	    Map::Node* node;
             bool isPastTheEnd;
             bool isBeforeTheStart;
         public:
