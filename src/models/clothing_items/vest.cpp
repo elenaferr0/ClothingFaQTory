@@ -1,8 +1,13 @@
 #include "vest.h"
 #include "src/utils/calculator.h"
+#include "src/models/material.h"
+#include "src/models/size.h"
+#include "clothing_item.h"
+#include <string>
 
 using Models::ClothingItems::Vest;
 using Utils::Calculator;
+using std::string;
 
 Vest::Vest(long id,
            string code,

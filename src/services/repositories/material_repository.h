@@ -13,7 +13,7 @@ using Services::Repository;
 namespace Services{
 class MaterialRepository : public Repository<Material> {
 public:
-    MaterialRepository(const string& tableName);
+    MaterialRepository();
 
     Either <Error, Material> save(Material& entity) override;
 

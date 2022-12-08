@@ -1,6 +1,12 @@
 #include "hat.h"
 #include "src/utils/calculator.h"
+#include "src/models/material.h"
+#include "src/models/size.h"
+#include <string>
+#include <list>
 
+using std::string;
+using std::list;
 using Models::Accessories::Hat;
 using Utils::Calculator;
 

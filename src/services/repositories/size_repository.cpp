@@ -6,8 +6,8 @@ using std::list;
 using Models::Size;
 using Services::SizeRepository;
 
-SizeRepository::SizeRepository(const string& table)
-        : Repository(table) {};
+SizeRepository::SizeRepository()
+	: Repository("size") {};
 
 
 Either <Error, Size> SizeRepository::findById(int id) {

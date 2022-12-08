@@ -6,11 +6,11 @@
 #include <QSqlRecord>
 #include "src/core/db/querybuilder.h"
 #include "src/core/db/expression.h"
-#include "src/services/repositories/size_repository.h"
+#include "src/services/repositories/material_repository.h"
 
 using Core::Db::QueryBuilder;
 using Core::Db::Expr;
-using Services::SizeRepository;
+using Services::MaterialRepository;
 
 MainWindow::MainWindow(QWidget* parent)
         : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -25,11 +25,13 @@ MainWindow::MainWindow(QWidget* parent)
 
     if (db.open()) {
 //	QMessageBox::information(this, "Connection", "Database connection success");
-	SizeRepository sr("size");
-	Size s;
-	s.setName("test");
-	s.setExtraPercentageOfMaterial(100);
-	Either<Error, Size> e = sr.save(s);
+	MaterialRepository mr;
+	Material m;
+	m.setName("WOOL");
+	m.setCostPerUnit(20);
+	m.setUnitOfMeasure("cm");
+
+	Either<Error, Material> e = mr.save(m);
 	qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
 
     } else {
