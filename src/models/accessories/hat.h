@@ -7,9 +7,9 @@ namespace Models::Accessories {
     class Hat : public Accessory {
     private:
         bool isBaseballCap;
-        static const unsigned double DIAMETER = 15.5;
-        static const unsigned double VISOR_LENGTH = 10.25;
-        static const unsigned double VISOR_WIDTH = 5.25;
+        static const double DIAMETER;
+        static const double VISOR_LENGTH;
+        static const double VISOR_WIDTH;
     public:
         Hat(long id = -1,
             string code = "",

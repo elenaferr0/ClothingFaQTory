@@ -27,8 +27,6 @@ double Calculator::computeCubeSideFromVolume(double volume) {
     return cbrt(volume); // cube root
 }
 
-double Calculator::c
-
 double Calculator::computeTrapezoidalBasedPrismSurfaceFrom(double prismHeight, double baseHeight) {
     /*
      * To simplify the calculations, we assume that the trapezoid placed on the prism base is

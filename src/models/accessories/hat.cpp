@@ -4,6 +4,10 @@
 using Models::Accessories::Hat;
 using Utils::Calculator;
 
+const double Hat::DIAMETER = 15.5;
+const double Hat::VISOR_LENGTH = 10.25;
+const double Hat::VISOR_WIDTH = 5.25;
+
 Hat::Hat(long id,
          string code,
          string color,
