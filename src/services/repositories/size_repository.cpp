@@ -1,4 +1,4 @@
-#include "sizerepository.h"
+#include "size_repository.h"
 #include <list>
 #include <QDebug>
 
@@ -67,21 +67,20 @@ Either <Error, Size> SizeRepository::save(Size& entity) {
     }
 
     QSqlDatabase::database().commit();
-    return Either<Error, Size>::ofRight(entity);
+    return entity;
 }
 
 Either <Error, list<Size>> SizeRepository::saveAll(list <Size>& entities) {
     for (auto en = entities.begin(); en != entities.end(); en++) {
         Either <Error, Size> sizeOrError = save(*en);
         if (sizeOrError.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    sizeOrError.left().value().getMessage());
-            return Either < Error, list < Size >> ::ofLeft(sizeOrError.left().value());
+	    qCritical() << QString::fromStdString(sizeOrError.left().value().getMessage());
+	    return sizeOrError.left().value();
         }
 
         *en = sizeOrError.right().value();
     }
-    return Either < Error, list < Size >> ::ofRight(entities);
+    return entities;
 }
 
 optional <Error> SizeRepository::deleteT(const Size& entity) {
@@ -112,9 +111,8 @@ Either <Error, list<Size>> SizeRepository::findAll() {
     while (query.next()) {
         Either <Error, Size> sizeOrError = entityMapper.size(query);
         if (sizeOrError.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    sizeOrError.left().value().getMessage());
-            return Either < Error, list < Size >> ::ofLeft(sizeOrError.left().value());
+            qCritical() << QString::fromStdString(sizeOrError.left().value().getMessage());
+	    return sizeOrError.left().value();
         }
         sizes.push_back(sizeOrError.right().value());
     }

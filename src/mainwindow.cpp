@@ -6,7 +6,7 @@
 #include <QSqlRecord>
 #include "src/core/db/querybuilder.h"
 #include "src/core/db/expression.h"
-#include "src/services/repositories/sizerepository.h"
+#include "src/services/repositories/size_repository.h"
 
 using Core::Db::QueryBuilder;
 using Core::Db::Expr;
@@ -23,19 +23,14 @@ MainWindow::MainWindow(QWidget* parent)
     db.setUserName("qtuser");
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
-    qDebug("debug");
-    qInfo("info");
-    qWarning("warning");
-    qCritical("warning");
-    qFatal("Error");
     if (db.open()) {
-//    QMessageBox::information(this, "Connection", "Database connection success");
-//	SizeRepository sr("size");
-//	Size s;
-//	s.setName("test");
-//	s.setExtraPercentageOfMaterial(100);
-//	Either<Error, Size> e = sr.save(s);
-//	qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
+//	QMessageBox::information(this, "Connection", "Database connection success");
+	SizeRepository sr("size");
+	Size s;
+	s.setName("test");
+	s.setExtraPercentageOfMaterial(100);
+	Either<Error, Size> e = sr.save(s);
+	qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
 
     } else {
 	QMessageBox::information(this, "Not connected", "Database Connected Failed");

@@ -46,7 +46,7 @@ namespace Services {
 
         virtual optional <Error> deleteT(const T& entity) = 0;
 
-        virtual optional <Error> deleteById(int id) = 0;
+//        virtual optional <Error> deleteById(int id) = 0;
 
         virtual ~Repository();
     };

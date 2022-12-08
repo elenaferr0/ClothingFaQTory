@@ -12,12 +12,14 @@
 #include "src/models/clothing_items/vest.h"
 #include "src/core/errors/error.h"
 #include "src/core/errors/either.h"
+#include "src/models/material.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
 
 using Models::Size;
 using Models::Product;
+using Models::Material;
 using Models::Accessory;
 using Models::Accessories::BackPack;
 using Models::Accessories::Bracelet;
@@ -33,11 +35,13 @@ namespace Services {
     class EntityMapper {
     private:
         static string errorType(const QSqlError::ErrorType& errorType);
+	static Either<Error, QSqlRecord> checkQuery(const QSqlQuery&);
 
     public:
         static optional <Error> hasError(QSqlQuery&);
 
         static Either <Error, Size> size(const QSqlQuery&);
+	static Either <Error, Material> material(const QSqlQuery&);
 
 //        static Accessory accessory(const QSqlQuery&);
 

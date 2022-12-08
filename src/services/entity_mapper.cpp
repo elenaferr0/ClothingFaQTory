@@ -30,6 +30,17 @@ string toString(const QSqlError::ErrorType& errorType) {
     }
 }
 
+Either<Error, QSqlRecord> EntityMapper::checkQuery(const QSqlQuery& query){
+  // avoids error checking code duplication
+  QSqlError error = query.lastError();
+
+  if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
+      return Error({toString(error.type()), error.text().toStdString()});
+  }
+
+  return query.record();
+}
+
 optional <Error> EntityMapper::hasError(QSqlQuery& query) {
     QSqlError error = query.lastError();
     if (error.type() != QSqlError::NoError) {
@@ -45,27 +56,21 @@ Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
          * name string
          * extra_percentage_of_material double
          */
+    Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
-    QSqlError error = query.lastError();
-
-    if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
-        return Either<Error, Size>::ofLeft({toString(error.type()),
-                                            error.text().toStdString()});
+    if(recordOrError.isLeft()){
+      return Either<Error, Size>::ofLeft(recordOrError.left().value());
     }
-
-    QSqlRecord record = query.record();
 
     if (query.size() == 0) {
         return Either<Error, Size>::ofRight(Size());
     }
 
-    return Either<Error, Size>::ofRight(
-            Size(
-                    record.value("id").toInt(),
-                    record.value("name").toString().toStdString(),
-                    record.value("extra_percentage_of_material").toFloat()
-            )
-    );
+    QSqlRecord record = recordOrError.right().value();
+
+    return Size(record.value("id").toInt(),
+		record.value("name").toString().toStdString(),
+		record.value("extra_percentage_of_material").toFloat());
 }
 
 //Either<BackPack, Error> EntityMapper::backPack(const QSqlQuery& query) {

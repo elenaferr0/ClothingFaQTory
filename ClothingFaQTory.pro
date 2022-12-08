@@ -5,8 +5,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++17
 CONFIG += console
 
-SOURCES = $$files("src/*.cpp", true)
-HEADERS = $$files("src/*.h", true)
+SOURCES = $$files("src/*.cpp", true) \
+    src/services/repositories/material_repository.cpp
+HEADERS = $$files("src/*.h", true) \
+    src/services/repositories/material_repository.h
 
 FORMS += $$files("src/*.ui", true)
 

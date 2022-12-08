@@ -15,7 +15,6 @@ using Models::Size;
 using Services::Repository;
 
 namespace Services {
-
     class SizeRepository : public Repository<Size> {
     public:
         SizeRepository(const string& tableName);
