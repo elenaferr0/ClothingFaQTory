@@ -8,7 +8,7 @@ using Utils::Calculator;
 Jeans::Jeans(long id,
              string code,
              string color,
-             list<Material> materials,
+             Material material,
              Size size,
              int availableQuantity,
              int soldQuantity,
@@ -19,7 +19,7 @@ Jeans::Jeans(long id,
         : ClothingItem(id,
                        code,
                        color,
-                       materials,
+                       material,
                        size,
                        availableQuantity,
                        soldQuantity,
@@ -41,7 +41,7 @@ double Jeans::computePrice() const {
 
     double surface = 2 * Calculator::computeCilinderSurface(computedWidth, legLength);
 
-    return surface * materials.front().getCostPerUnit();
+    return surface * material.getCostPerUnit();
 }
 
 string Jeans::getTableName() const {

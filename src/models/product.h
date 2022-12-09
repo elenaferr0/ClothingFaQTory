@@ -16,7 +16,7 @@ namespace Models {
     class Product : public Model {
     protected:
         string color;
-        list <Material> materials;
+        Material material;
         Size size;
         int availableQuantity;
         int soldQuantity;
@@ -27,7 +27,7 @@ namespace Models {
         Product(long id = -1,
                 string code = "",
                 string color = "",
-                list <Material> materials = list<Material>(),
+                Material material = Material(),
                 Size size = Size(),
                 int availableQuantity = 0,
                 int soldQuantity = 0,
@@ -41,7 +41,7 @@ namespace Models {
 
         const string& getColor() const;
 
-        const list <Material>& getMaterials() const;
+        const Material& getMaterial() const;
 
         const Size& getSize() const;
 
@@ -55,7 +55,7 @@ namespace Models {
 
         void setColor(const string& color);
 
-        void setMaterials(const list <Material>& materials);
+        void setMaterial(const Material& material);
 
         void setSize(const Size& size);
 

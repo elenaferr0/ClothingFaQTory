@@ -26,6 +26,8 @@ namespace Services {
         Either<Error, Material> findById(int id) override;
 
         Either<Error, list<Material>> findAll() override;
+
+        optional<Error> deleteById(int) override {};
     };
 }
 #endif // MATERIAL_REPOSITORY_H

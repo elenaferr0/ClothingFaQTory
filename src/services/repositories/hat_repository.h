@@ -25,6 +25,8 @@ namespace Services {
 
         optional<Error> deleteT(const Hat& entity) override;
 
+        optional <Error> deleteById(int id) override;
+
         Either<Error, Hat> findById(int id) override;
 
         Either<Error, list<Hat>> findAll() override;

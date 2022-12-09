@@ -13,7 +13,7 @@ using Models::ClothingItems::Overalls;
 using Models::ClothingItems::Vest;
 using Core::Error;
 
-string toString(const QSqlError::ErrorType& errorType) {
+string EntityMapper::toString(const QSqlError::ErrorType& errorType) {
     switch (errorType) {
         case QSqlError::ConnectionError:
             return "Connection Error";
@@ -127,13 +127,13 @@ Either<Error, Hat> EntityMapper::hat(const QSqlQuery& query) {
             record.value("id").toInt(),
             record.value("code").toString().toStdString(),
             record.value("color").toString().toStdString(),
-            list(0, Material()),
-            size(query).right().value(),
+            Material(),
+            Size(),
             record.value("available_quantity").toInt(),
             record.value("sold_quantity").toInt(),
             record.value("description").toString().toStdString(),
             record.value("category").toString().toStdString(),
-            record.value("is_baseball_cap").toBool()
+            record.value("is_baseball_hat").toBool()
     );
 }
 

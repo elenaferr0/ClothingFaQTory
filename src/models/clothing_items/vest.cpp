@@ -10,7 +10,7 @@ using std::string;
 Vest::Vest(long id,
            string code,
            string color,
-           list<Material> materials,
+           Material material,
            Size size,
            int availableQuantity,
            int soldQuantity,
@@ -21,7 +21,7 @@ Vest::Vest(long id,
         : ClothingItem(id,
                        code,
                        color,
-                       materials,
+                       material,
                        size,
                        availableQuantity,
                        soldQuantity,
@@ -41,15 +41,8 @@ double Vest::computePrice() const {
     // the surface of the Vest is estimated with the surface of a cilinder
     double surface = Calculator::computeCilinderSurface(trunkWidth, trunkLength);
 
-    double price = 0;
-    for (auto i = materials.begin(); i != materials.end(); i++) {
-        price += (*i).getCostPerUnit() * surface / materials.size();
-    }
-
     // TODO: add the cost of the buttons if present
-    // suppose the buttons are made of polyester
-
-    return price;
+    return material.getCostPerUnit() * surface;
 }
 
 string Vest::getTableName() const {

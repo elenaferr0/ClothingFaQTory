@@ -60,7 +60,7 @@ QueryBuilder& QueryBuilder::insertInto(string entity, const list<string>& fieldN
 
     for (auto f = fieldNames.begin(); f != fieldNames.end(); ++f) {
         names += (*f) + ",";
-        values += ":" + (*f) + ",";
+        values += "?,";
     }
 
     names = names.substr(0, names.size() - 1) + ")"; // remove last comma

@@ -15,7 +15,7 @@ const double Hat::VISOR_WIDTH = 5.25;
 Hat::Hat(long id,
          string code,
          string color,
-         list<Material> materials,
+         Material material,
          Size size,
          int availableQuantity,
          int soldQuantity,
@@ -25,8 +25,8 @@ Hat::Hat(long id,
         : Accessory(id,
                     code,
                     color,
-                    materials,
-                    size,
+                  material,
+                  size,
                     availableQuantity,
                     soldQuantity,
                     description,
@@ -46,12 +46,7 @@ double Hat::computePrice() const {
         surface += Calculator::computeRectangleArea(VISOR_LENGTH, VISOR_WIDTH);
     }
 
-    double price = 0;
-    for (auto i = materials.begin(); i != materials.end(); i++) {
-        price += (*i).getCostPerUnit() * surface / materials.size();
-    }
-
-    return price;
+    return material.getCostPerUnit() * surface;
 }
 
 string Hat::getTableName() const {

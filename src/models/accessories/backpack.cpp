@@ -14,7 +14,7 @@ const double BackPack::BACKPACK_WIDTH = 20;
 BackPack::BackPack(long id,
                    string code,
                    string color,
-                   list<Material> materials,
+                   Material material,
                    Size size,
                    int availableQuantity,
                    int soldQuantity,
@@ -24,8 +24,8 @@ BackPack::BackPack(long id,
         : Accessory(id,
                     code,
                     color,
-                    materials,
-                    size,
+                  material,
+                  size,
                     availableQuantity,
                     soldQuantity,
                     description,
@@ -41,17 +41,7 @@ double BackPack::computePrice() const {
     double backpackDepth = capacity / (BACKPACK_HEIGHT * BACKPACK_WIDTH);
     double surface = Calculator::computeTrapezoidalBasedPrismSurfaceFrom(BACKPACK_HEIGHT, backpackDepth);
 
-    // if the backpack is made of different material, we suppose that
-    // the percentage of the composition is the same for each of them
-
-    int nMaterials = materials.size();
-
-    double price = 0;
-    for (auto i = materials.begin(); i != materials.end(); i++) {
-        price += (*i).getCostPerUnit() * surface / nMaterials;
-    }
-
-    return price;
+    return material.getCostPerUnit() * surface;
 }
 
 string BackPack::getTableName() const {

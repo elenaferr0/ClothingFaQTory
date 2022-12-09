@@ -9,14 +9,14 @@ using Models::Material;
 Product::Product(long id,
                  string code,
                  string color,
-                 list<Material> materials,
+                 Material material,
                  Size size,
                  int availableQuantity,
                  int soldQuantity,
                  string description)
         : Model(id),
           color(color),
-          materials(materials),
+          material(material),
           size(size),
           availableQuantity(availableQuantity),
           soldQuantity(soldQuantity),
@@ -29,10 +29,6 @@ string Product::getTableName() const {
 
 const string& Product::getColor() const {
     return color;
-}
-
-const list<Material>& Product::getMaterials() const {
-    return materials;
 }
 
 const Models::Size& Product::getSize() const {
@@ -59,10 +55,6 @@ void Product::setColor(const string& color) {
     Product::color = color;
 }
 
-void Product::setMaterials(const list<Material>& materials) {
-    Product::materials = materials;
-}
-
 void Product::setSize(const Models::Size& size) {
     Product::size = size;
 }
@@ -81,4 +73,12 @@ void Product::setDescription(const string& description) {
 
 void Product::setCode(const string& code) {
     Product::code = code;
+}
+
+const Material& Product::getMaterial() const {
+    return material;
+}
+
+void Models::Product::setMaterial(const Material& material) {
+    this->material = material;
 }

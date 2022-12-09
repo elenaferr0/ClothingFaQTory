@@ -9,7 +9,7 @@ Bracelet::Bracelet(
         long id,
         string code,
         string color,
-        list<Material> materials,
+        Material material,
         Size size,
         int availableQuantity,
         int soldQuantity,
@@ -20,7 +20,7 @@ Bracelet::Bracelet(
         : Accessory(id,
                     code,
                     color,
-                    materials,
+                    material,
                     size,
                     availableQuantity,
                     soldQuantity,
@@ -38,7 +38,6 @@ double Bracelet::computePrice() const {
 
     // first assumption: the material of the bracelet is either of GOLD, SILVER or WOOD
     // second assumption: each pearl can only be made of a single material
-    Material material = materials.front();
 
     double specificWeight;
     switch (material.getName()) {

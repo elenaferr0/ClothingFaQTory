@@ -28,6 +28,9 @@ namespace Services {
         Either<Error, Size> findById(int id) override;
 
         Either<Error, list<Size>> findAll() override;
+
+        optional<Error> deleteById(int) override {};
+
     };
 }
 #endif // SIZEREPOSITORY_H

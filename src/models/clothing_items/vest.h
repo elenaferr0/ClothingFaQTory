@@ -12,7 +12,7 @@ namespace Models::ClothingItems {
         Vest(long id,
              string code,
              string color,
-             list<Material> materials,
+             Material material,
              Size size,
              int availableQuantity,
              int soldQuantity,

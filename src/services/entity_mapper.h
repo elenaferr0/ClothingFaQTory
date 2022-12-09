@@ -32,7 +32,7 @@ using Core::Error;
 namespace Services {
     class EntityMapper {
     private:
-        static string errorType(const QSqlError::ErrorType& errorType);
+        static string toString(const QSqlError::ErrorType& errorType);
 
         static Either<Error, QSqlRecord> checkQuery(const QSqlQuery&);
 

@@ -6,11 +6,15 @@
 #include <QSqlRecord>
 #include "./core/db/querybuilder.h"
 #include "./core/db/expression.h"
+#include "./services/repositories/hat_repository.h"
 #include "./services/repositories/material_repository.h"
+#include "./services/repositories/size_repository.h"
 
 using Core::Db::QueryBuilder;
 using Core::Db::Expr;
+using Services::HatRepository;
 using Services::MaterialRepository;
+using Services::SizeRepository;
 
 MainWindow::MainWindow(QWidget* parent)
         : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -24,10 +28,16 @@ MainWindow::MainWindow(QWidget* parent)
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
     if (db.open()) {
-//	QMessageBox::information(this, "Connection", "Database connection success");
+        HatRepository hr;
         MaterialRepository mr;
-        Either<Error, Material> e = mr.findById(1);
-        qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
+        SizeRepository sr;
+        Material m = mr.findById(1).right().value();
+        Size s = sr.findById(1).right().value();
+
+        optional<Error> e = hr.deleteById(2);
+        qInfo() << e.has_value();
+        qInfo() << QString::fromStdString(e.has_value() ? e.value().getMessage() : "");
+//        qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
 
     } else {
         QMessageBox::information(this, "Not connected", "Database Connected Failed");
