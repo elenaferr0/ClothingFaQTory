@@ -28,8 +28,8 @@ MainWindow::MainWindow(QWidget* parent)
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
     if (db.open()) {
-        SizeRepository sr;
-        Either<Error, list<Size>> er = sr.findAll();
+        Either<Error, list<Size>> er = SizeRepository::getInstance()->findAll();
+        Either<Error, list<Size>> e2 = SizeRepository::getInstance()->findAll();
         qInfo() << er.isLeft();
     } else {
         QMessageBox::information(this, "Not connected", "Database Connected Failed");

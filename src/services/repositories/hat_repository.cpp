@@ -3,6 +3,8 @@
 
 using Services::HatRepository;
 
+HatRepository* HatRepository::instance;
+
 HatRepository::HatRepository()
         : CRUDRepository("hat") {};
 
@@ -181,4 +183,11 @@ optional<Error> Services::HatRepository::deleteById(int id) {
     }
 
     return hasError;
+}
+
+HatRepository* Services::HatRepository::getInstance() {
+    if(instance == nullptr){
+        instance = new HatRepository();
+    }
+    return instance;
 }

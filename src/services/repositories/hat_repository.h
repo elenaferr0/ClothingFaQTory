@@ -16,8 +16,17 @@ using Services::CRUDRepository;
 
 namespace Services {
     class HatRepository : public CRUDRepository<Hat> {
-    public:
+    protected:
         HatRepository();
+
+        static HatRepository* instance;
+    public:
+
+        HatRepository(HatRepository&) = delete;
+
+        void operator=(const HatRepository&) = delete;
+
+        static HatRepository* getInstance();
 
         Either<Error, Hat> save(Hat& entity) override;
 
@@ -25,7 +34,7 @@ namespace Services {
 
         optional<Error> deleteT(const Hat& entity) override;
 
-        optional <Error> deleteById(int id) override;
+        optional<Error> deleteById(int id) override;
 
         Either<Error, Hat> findById(int id) override;
 

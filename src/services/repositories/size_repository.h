@@ -15,12 +15,19 @@ using Models::Size;
 
 namespace Services {
     class SizeRepository : public ReadOnlyRepository<Size> {
-    public:
+    protected:
         SizeRepository();
+        static SizeRepository* instance;
+    public:
+        SizeRepository(SizeRepository&) = delete;
 
+        void operator=(const SizeRepository&) = delete;
+        
         Either<Error, Size> findById(int id) override;
 
         Either<Error, list<Size>> findAll() override;
+
+        static SizeRepository* getInstance();
 
     };
 }
