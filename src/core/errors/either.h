@@ -16,11 +16,11 @@ namespace Core {
     template<class L, class R>// R = right (correct result), L error
     class Either {
     private:
-        variant <L, R> value;
+        variant<L, R> value;
     public:
-        optional <L> left() const;
+        optional<L> left() const;
 
-        optional <R> right() const;
+        optional<R> right() const;
 
         bool isRight() const;
 
@@ -49,7 +49,7 @@ namespace Core {
     }
 
     template<class L, class R>
-    optional <L> Either<L, R>::left() const {
+    optional<L> Either<L, R>::left() const {
         if (holds_alternative<L>(value)) {
             return optional(get<L>(value));
         }
@@ -57,7 +57,7 @@ namespace Core {
     }
 
     template<class L, class R>
-    optional <R> Either<L, R>::right() const {
+    optional<R> Either<L, R>::right() const {
         if (holds_alternative<R>(value)) {
             return optional(get<R>(value));
         }

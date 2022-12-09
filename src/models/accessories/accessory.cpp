@@ -14,7 +14,7 @@ Accessory::Accessory(
         int availableQuantity,
         int soldQuantity,
         string description,
-	string category)
+        string category)
         : Product(id,
                   code,
                   color,
@@ -23,7 +23,7 @@ Accessory::Accessory(
                   availableQuantity,
                   soldQuantity,
                   description),
-	  category(categoryFromString(category)) {}
+          category(categoryFromString(category)) {}
 
 string Accessory::getTableName() const {
     return "accessory";

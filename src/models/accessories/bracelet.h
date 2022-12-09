@@ -14,12 +14,12 @@ namespace Models::Accessories {
                 long id = -1,
                 string code = "",
                 string color = "",
-                list <Material> materials = list<Material>(),
+                list<Material> materials = list<Material>(),
                 Size size = Size(),
                 int availableQuantity = 0,
                 int soldQuantity = 0,
                 string description = "",
-		string category = "",
+                string category = "",
                 unsigned int pearlNumber = 0,
                 double pearlDiameter = 0.75);
 

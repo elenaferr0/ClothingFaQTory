@@ -34,15 +34,15 @@ namespace Services {
     public:
         Repository(const string& table);
 
-        virtual Either <Error, T> save(T& entity) = 0;
+        virtual Either<Error, T> save(T& entity) = 0;
 
-        virtual Either <Error, list<T>> saveAll(list <T>& entities) = 0;
+        virtual Either<Error, list<T>> saveAll(list<T>& entities) = 0;
 
-        virtual Either <Error, T> findById(int id) = 0;
+        virtual Either<Error, T> findById(int id) = 0;
 
-        virtual Either <Error, list<T>> findAll() = 0;
+        virtual Either<Error, list<T>> findAll() = 0;
 
-        virtual optional <Error> deleteT(const T& entity) = 0;
+        virtual optional<Error> deleteT(const T& entity) = 0;
 
 //        virtual optional <Error> deleteById(int id) = 0;
 

@@ -113,7 +113,7 @@ namespace Core::Containers {
 
         class MapIterator {
         private:
-	    Map::Node* node;
+            Map::Node* node;
             bool isPastTheEnd;
             bool isBeforeTheStart;
         public:
@@ -647,7 +647,7 @@ namespace Core::Containers {
 
     template<class K, class V>
     V& Map<K, V>::operator[](const K& key) { // insert the element if it doesn't exist or return it if it does
-        optional <V> v = get(key);
+        optional<V> v = get(key);
         if (v.has_value()) {
             return v.value();
         }

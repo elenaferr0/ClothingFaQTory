@@ -9,7 +9,7 @@ using Models::Material;
 Product::Product(long id,
                  string code,
                  string color,
-                 list <Material> materials,
+                 list<Material> materials,
                  Size size,
                  int availableQuantity,
                  int soldQuantity,
@@ -31,7 +31,7 @@ const string& Product::getColor() const {
     return color;
 }
 
-const list <Material>& Product::getMaterials() const {
+const list<Material>& Product::getMaterials() const {
     return materials;
 }
 
@@ -59,7 +59,7 @@ void Product::setColor(const string& color) {
     Product::color = color;
 }
 
-void Product::setMaterials(const list <Material>& materials) {
+void Product::setMaterials(const list<Material>& materials) {
     Product::materials = materials;
 }
 

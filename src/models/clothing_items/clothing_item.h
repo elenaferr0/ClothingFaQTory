@@ -14,7 +14,7 @@ namespace Models {
         ClothingItem(long id = -1,
                      string code = "",
                      string color = "",
-                     list <Material> materials = list<Material>(),
+                     list<Material> materials = list<Material>(),
                      Size size = Size(),
                      int availableQuantity = 0,
                      int soldQuantity = 0,

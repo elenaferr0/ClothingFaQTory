@@ -6,7 +6,7 @@
 namespace Models::Accessories {
     class Hat : public Accessory {
     private:
-	bool baseballCap;
+        bool baseballCap;
         static const double DIAMETER;
         static const double VISOR_LENGTH;
         static const double VISOR_WIDTH;
@@ -14,12 +14,12 @@ namespace Models::Accessories {
         Hat(long id = -1,
             string code = "",
             string color = "",
-            list <Material> materials = list<Material>(),
+            list<Material> materials = list<Material>(),
             Size size = Size(),
             int availableQuantity = 0,
             int soldQuantity = 0,
             string description = "",
-	    string category = "",
+            string category = "",
             bool isBaseballCap = false);
 
         Hat* clone() const override;
@@ -28,7 +28,7 @@ namespace Models::Accessories {
 
         string getTableName() const override;
 
-	bool isBaseballCap() const;
+        bool isBaseballCap() const;
 
         void setIsBaseballCap(bool isBaseballCap);
 

@@ -23,12 +23,12 @@ namespace Models::Accessories {
         BackPack(long id = -1,
                  string code = "",
                  string color = "",
-                 list <Material> materials = list<Material>(),
+                 list<Material> materials = list<Material>(),
                  Size size = Size(),
                  int availableQuantity = 0,
                  int soldQuantity = 0,
                  string description = "",
-		 string category = "",
+                 string category = "",
                  double capacity = 0);
 
         BackPack* clone() const override;

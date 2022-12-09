@@ -15,7 +15,7 @@ ClothingItem::ClothingItem(
         long id,
         string code,
         string color,
-        list <Material> materials,
+        list<Material> materials,
         Size size,
         int availableQuantity,
         int soldQuantity,

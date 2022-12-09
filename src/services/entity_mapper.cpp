@@ -28,18 +28,18 @@ string toString(const QSqlError::ErrorType& errorType) {
     }
 }
 
-Either<Error, QSqlRecord> EntityMapper::checkQuery(const QSqlQuery& query){
-  // avoids error checking code duplication
-  QSqlError error = query.lastError();
+Either<Error, QSqlRecord> EntityMapper::checkQuery(const QSqlQuery& query) {
+    // avoids error checking code duplication
+    QSqlError error = query.lastError();
 
-  if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
-      return Error({toString(error.type()), error.text().toStdString()});
-  }
+    if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
+        return Error({toString(error.type()), error.text().toStdString()});
+    }
 
-  return query.record();
+    return query.record();
 }
 
-optional <Error> EntityMapper::hasError(QSqlQuery& query) {
+optional<Error> EntityMapper::hasError(QSqlQuery& query) {
     QSqlError error = query.lastError();
     if (error.type() != QSqlError::NoError) {
         return optional<Error>({toString(error.type()),
@@ -48,7 +48,7 @@ optional <Error> EntityMapper::hasError(QSqlQuery& query) {
     return nullopt;
 }
 
-Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
+Either<Error, Size> EntityMapper::size(const QSqlQuery& query) {
     /*
 	 * id int
 	 * name string
@@ -56,8 +56,8 @@ Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
 	 */
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
-    if(recordOrError.isLeft()){
-      return Either<Error, Size>::ofLeft(recordOrError.left().value());
+    if (recordOrError.isLeft()) {
+        return Either<Error, Size>::ofLeft(recordOrError.left().value());
     }
 
     if (query.size() == 0) {
@@ -114,26 +114,26 @@ Either<Error, Hat> EntityMapper::hat(const QSqlQuery& query) {
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
-	return recordOrError.left().value();
+        return recordOrError.left().value();
     }
 
     if (query.size() == 0) {
-	return Hat();
+        return Hat();
     }
 
     QSqlRecord record = recordOrError.right().value();
 
     return Hat(
-	    record.value("id").toInt(),
-	    record.value("code").toString().toStdString(),
-	    record.value("color").toString().toStdString(),
-	    list(0, Material()),
-	    size(query).right().value(),
-	    record.value("available_quantity").toInt(),
-	    record.value("sold_quantity").toInt(),
-	    record.value("description").toString().toStdString(),
-	    record.value("category").toString().toStdString(),
-	    record.value("is_baseball_cap").toBool()
+            record.value("id").toInt(),
+            record.value("code").toString().toStdString(),
+            record.value("color").toString().toStdString(),
+            list(0, Material()),
+            size(query).right().value(),
+            record.value("available_quantity").toInt(),
+            record.value("sold_quantity").toInt(),
+            record.value("description").toString().toStdString(),
+            record.value("category").toString().toStdString(),
+            record.value("is_baseball_cap").toBool()
     );
 }
 

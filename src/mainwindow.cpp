@@ -25,12 +25,12 @@ MainWindow::MainWindow(QWidget* parent)
 
     if (db.open()) {
 //	QMessageBox::information(this, "Connection", "Database connection success");
-	MaterialRepository mr;
-	Either<Error, Material> e = mr.findById(1);
-	qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
+        MaterialRepository mr;
+        Either<Error, Material> e = mr.findById(1);
+        qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
 
     } else {
-	QMessageBox::information(this, "Not connected", "Database Connected Failed");
+        QMessageBox::information(this, "Not connected", "Database Connected Failed");
     }
 }
 

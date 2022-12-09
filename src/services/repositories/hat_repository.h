@@ -19,15 +19,15 @@ namespace Services {
     public:
         HatRepository();
 
-        Either <Error, Hat> save(Hat& entity) override;
+        Either<Error, Hat> save(Hat& entity) override;
 
-        Either <Error, list<Hat>> saveAll(list <Hat>& entities) override;
+        Either<Error, list<Hat>> saveAll(list<Hat>& entities) override;
 
-        optional <Error> deleteT(const Hat& entity) override;
+        optional<Error> deleteT(const Hat& entity) override;
 
-        Either <Error, Hat> findById(int id) override;
+        Either<Error, Hat> findById(int id) override;
 
-        Either <Error, list<Hat>> findAll() override;
+        Either<Error, list<Hat>> findAll() override;
     };
 }
 #endif // HATREPOSITORY_H

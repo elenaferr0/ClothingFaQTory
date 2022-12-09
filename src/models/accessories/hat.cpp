@@ -15,12 +15,12 @@ const double Hat::VISOR_WIDTH = 5.25;
 Hat::Hat(long id,
          string code,
          string color,
-         list <Material> materials,
+         list<Material> materials,
          Size size,
          int availableQuantity,
          int soldQuantity,
          string description,
-	 string category,
+         string category,
          bool isBaseballCap)
         : Accessory(id,
                     code,
@@ -31,7 +31,7 @@ Hat::Hat(long id,
                     soldQuantity,
                     description,
                     category),
-	  baseballCap(isBaseballCap) {};
+          baseballCap(isBaseballCap) {};
 
 Hat* Hat::clone() const {
     return new Hat(*this);

@@ -9,12 +9,12 @@ Bracelet::Bracelet(
         long id,
         string code,
         string color,
-        list <Material> materials,
+        list<Material> materials,
         Size size,
         int availableQuantity,
         int soldQuantity,
         string description,
-	string category,
+        string category,
         unsigned int pearlNumber,
         double pearlDiameter)
         : Accessory(id,
@@ -24,8 +24,8 @@ Bracelet::Bracelet(
                     size,
                     availableQuantity,
                     soldQuantity,
-		    description,
-		    category),
+                    description,
+                    category),
           pearlNumber(pearlNumber),
           pearlDiameter(pearlDiameter) {}
 
