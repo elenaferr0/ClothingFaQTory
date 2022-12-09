@@ -2,7 +2,7 @@
 #define BACKPACK_H
 
 #include <string>
-#include "src/models/accessories/accessory.h"
+#include "accessory.h"
 
 using std::string;
 
@@ -28,7 +28,7 @@ namespace Models::Accessories {
                  int availableQuantity = 0,
                  int soldQuantity = 0,
                  string description = "",
-                 Category category = Category::GENERAL,
+		 string category = "",
                  double capacity = 0);
 
         BackPack* clone() const override;

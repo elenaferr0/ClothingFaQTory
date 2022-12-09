@@ -1,7 +1,7 @@
 #ifndef Vest_H
 #define Vest_H
 
-#include "src/models/clothing_items/clothing_item.h"
+#include "clothing_item.h"
 
 namespace Models::ClothingItems {
     class Vest : public virtual ClothingItem {
@@ -12,7 +12,7 @@ namespace Models::ClothingItems {
         Vest(long id,
              string code,
              string color,
-             list <Material> materials,
+             list<Material> materials,
              Size size,
              int availableQuantity,
              int soldQuantity,

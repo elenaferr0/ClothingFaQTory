@@ -1,9 +1,9 @@
 #ifndef PRODUCT_H
 #define PRODUCT_H
 
-#include "src/models/material.h"
-#include "src/models/size.h"
-#include "src/core/model.h"
+#include "./material.h"
+#include "./size.h"
+#include "../core/model.h"
 
 #include<string>
 #include<list>
@@ -38,6 +38,34 @@ namespace Models {
         string getTableName() const override;
 
         virtual ~Product() {};
+
+        const string& getColor() const;
+
+        const list <Material>& getMaterials() const;
+
+        const Size& getSize() const;
+
+        int getAvailableQuantity() const;
+
+        int getSoldQuantity() const;
+
+        const string& getDescription() const;
+
+        const string& getCode() const;
+
+        void setColor(const string& color);
+
+        void setMaterials(const list <Material>& materials);
+
+        void setSize(const Size& size);
+
+        void setAvailableQuantity(int availableQuantity);
+
+        void setSoldQuantity(int soldQuantity);
+
+        void setDescription(const string& description);
+
+        void setCode(const string& code);
     };
 }
 #endif // PRODUCT_H

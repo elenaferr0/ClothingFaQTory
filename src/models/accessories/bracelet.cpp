@@ -1,6 +1,5 @@
 #include "bracelet.h"
-#include "src/models/material.h"
-#include "src/utils/calculator.h"
+#include "../../utils/calculator.h"
 
 using Models::Material;
 using Models::Accessories::Bracelet;
@@ -15,6 +14,7 @@ Bracelet::Bracelet(
         int availableQuantity,
         int soldQuantity,
         string description,
+	string category,
         unsigned int pearlNumber,
         double pearlDiameter)
         : Accessory(id,
@@ -24,7 +24,8 @@ Bracelet::Bracelet(
                     size,
                     availableQuantity,
                     soldQuantity,
-                    description),
+		    description,
+		    category),
           pearlNumber(pearlNumber),
           pearlDiameter(pearlDiameter) {}
 

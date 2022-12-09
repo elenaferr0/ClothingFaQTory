@@ -1,8 +1,8 @@
 #ifndef OVERALLS_H
 #define OVERALLS_H
 
-#include "src/models/clothing_items/vest.h"
-#include "src/models/clothing_items/jeans.h"
+#include "vest.h"
+#include "jeans.h"
 
 namespace Models::ClothingItems {
     class Overalls : public Vest, public Jeans {

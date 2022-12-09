@@ -1,7 +1,9 @@
 #include "size_repository.h"
+#include "../../core/db/expression.h"
 #include <list>
 #include <QDebug>
 
+using Core::Db::Expr;
 using std::list;
 using Models::Size;
 using Services::SizeRepository;
@@ -39,24 +41,23 @@ Either <Error, Size> SizeRepository::save(Size& entity) {
            << entity.getExtraPercentageOfMaterial();
 
     if (entity.getId() == -1) { // does not exist => create a new Size
-        Size size = Size();
-        size.setName(entity.getName());
-        size.setExtraPercentageOfMaterial(entity.getExtraPercentageOfMaterial());
-
-        sql = queryBuilder.insertInto("size", fields).build();
-
+	sql = queryBuilder.insertInto(entity.getTableName(), fields).build();
+	query = exec(sql, params);
+	query.next();
+	entity.setId(query.lastInsertId().toLongLong());
     } else {
         // exists => should update all the fields
-        sql = queryBuilder.update("size")
+	sql = queryBuilder.update(entity.getTableName())
                 .set(fields)
                 .where(Expr("id").equals({"?"}))
                 .build();
 
         params << entity.getId();
+	query = exec(sql, params);
+	query.next();
     }
 
-    query = exec(sql, params);
-    query.next();
+
     optional <Error> hasError = entityMapper.hasError(query);
 
     if (hasError.has_value()) {

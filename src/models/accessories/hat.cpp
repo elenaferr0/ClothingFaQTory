@@ -1,7 +1,5 @@
 #include "hat.h"
-#include "src/utils/calculator.h"
-#include "src/models/material.h"
-#include "src/models/size.h"
+#include "../../utils/calculator.h"
 #include <string>
 #include <list>
 
@@ -22,7 +20,7 @@ Hat::Hat(long id,
          int availableQuantity,
          int soldQuantity,
          string description,
-         Category category,
+	 string category,
          bool isBaseballCap)
         : Accessory(id,
                     code,
@@ -33,7 +31,7 @@ Hat::Hat(long id,
                     soldQuantity,
                     description,
                     category),
-          isBaseballCap(isBaseballCap) {};
+	  baseballCap(isBaseballCap) {};
 
 Hat* Hat::clone() const {
     return new Hat(*this);
@@ -44,7 +42,7 @@ double Hat::computePrice() const {
     // if it's a baseball hat, the cost of the visor part surface is added.
     double surface = Calculator::computeSphereSurface(DIAMETER / 2) / 2;
 
-    if (isBaseballCap) {
+    if (baseballCap) {
         surface += Calculator::computeRectangleArea(VISOR_LENGTH, VISOR_WIDTH);
     }
 
@@ -58,4 +56,12 @@ double Hat::computePrice() const {
 
 string Hat::getTableName() const {
     return "hat";
+}
+
+bool Hat::isBaseballCap() const {
+    return baseballCap;
+}
+
+void Hat::setIsBaseballCap(bool isBaseballCap) {
+    isBaseballCap = isBaseballCap;
 }

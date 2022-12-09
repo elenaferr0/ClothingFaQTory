@@ -1,7 +1,5 @@
 #include "entity_mapper.h"
 #include "qvariant.h"
-#include "src/core/errors/error.h"
-#include "src/core/errors/either.h"
 
 using Services::EntityMapper;
 using Models::Product;
@@ -97,6 +95,45 @@ Either<Error, Material> EntityMapper::material(const QSqlQuery& query) {
             record.value("name").toString().toStdString(),
             record.value("unit_of_measure").toString().toStdString(),
             record.value("cost_per_unit").toFloat()
+    );
+}
+
+Either<Error, Hat> EntityMapper::hat(const QSqlQuery& query) {
+    /*
+     * id int
+     * code string
+     * color string
+     * sold_quantity int
+     * available_quantity int
+     * description string
+     * size_id int
+     * name string
+     * category string
+     * is_baseball_cap bool
+     */
+    Either<Error, QSqlRecord> recordOrError = checkQuery(query);
+
+    if (recordOrError.isLeft()) {
+	return recordOrError.left().value();
+    }
+
+    if (query.size() == 0) {
+	return Hat();
+    }
+
+    QSqlRecord record = recordOrError.right().value();
+
+    return Hat(
+	    record.value("id").toInt(),
+	    record.value("code").toString().toStdString(),
+	    record.value("color").toString().toStdString(),
+	    list(0, Material()),
+	    size(query).right().value(),
+	    record.value("available_quantity").toInt(),
+	    record.value("sold_quantity").toInt(),
+	    record.value("description").toString().toStdString(),
+	    record.value("category").toString().toStdString(),
+	    record.value("is_baseball_cap").toBool()
     );
 }
 

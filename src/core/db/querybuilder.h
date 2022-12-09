@@ -3,8 +3,8 @@
 
 #include <string>
 #include <vector>
-#include "src/core/containers/map.h"
-#include "src/core/db/expression.h"
+#include "expression.h"
+#include "../containers/map.h"
 
 using std::string;
 using Core::Containers::Map;
@@ -22,7 +22,7 @@ namespace Core::Db {
             ASC, DESC
         };
 
-        friend string operator+(string, const list <string>&);
+        friend string operator+(string, const list<string>&);
 
         QueryBuilder() : query() {};
 
@@ -45,13 +45,13 @@ namespace Core::Db {
         QueryBuilder& update(string entity);
 
         // qb.insertInto("username");
-        QueryBuilder& insertInto(string entity, const list <string>& fieldNames);
+        QueryBuilder& insertInto(string entity, const list<string>& fieldNames);
 
         // qb.set("u.username", "foo");
         QueryBuilder& set(string field, string value);
 
         // qb.set({("username", "u"), ("email", "e")})
-        QueryBuilder& set(const list <string>& fieldNames);
+        QueryBuilder& set(const list<string>& fieldNames);
 
         // qb.from("User", "u");
         QueryBuilder& from(string from, string alias = "");

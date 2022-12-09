@@ -1,7 +1,7 @@
 #ifndef SIZE_H
 #define SIZE_H
 
-#include "src/core/model.h"
+#include "../core/model.h"
 
 using Core::Model;
 

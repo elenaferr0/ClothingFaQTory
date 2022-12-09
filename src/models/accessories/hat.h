@@ -6,7 +6,7 @@
 namespace Models::Accessories {
     class Hat : public Accessory {
     private:
-        bool isBaseballCap;
+	bool baseballCap;
         static const double DIAMETER;
         static const double VISOR_LENGTH;
         static const double VISOR_WIDTH;
@@ -19,7 +19,7 @@ namespace Models::Accessories {
             int availableQuantity = 0,
             int soldQuantity = 0,
             string description = "",
-            Category category = Category::GENERAL,
+	    string category = "",
             bool isBaseballCap = false);
 
         Hat* clone() const override;
@@ -27,6 +27,10 @@ namespace Models::Accessories {
         double computePrice() const override;
 
         string getTableName() const override;
+
+	bool isBaseballCap() const;
+
+        void setIsBaseballCap(bool isBaseballCap);
 
     };
 }

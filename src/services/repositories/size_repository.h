@@ -1,13 +1,13 @@
 #ifndef SIZEREPOSITORY_H
 #define SIZEREPOSITORY_H
 
-#include "src/models/size.h"
-#include "src/core/errors/either.h"
-#include "src/core/errors/error.h"
-#include "src/services/repositories/repository.h"
 #include <QSqlQuery>
 #include <QVariant>
 #include <QtDebug>
+#include "../../core/errors/either.h"
+#include "../../core/errors/error.h"
+#include "../../models/size.h"
+#include "repository.h"
 
 using Core::Either;
 using Core::Error;

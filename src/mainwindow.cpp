@@ -4,9 +4,9 @@
 #include<iostream>
 #include <QSqlQuery>
 #include <QSqlRecord>
-#include "src/core/db/querybuilder.h"
-#include "src/core/db/expression.h"
-#include "src/services/repositories/material_repository.h"
+#include "./core/db/querybuilder.h"
+#include "./core/db/expression.h"
+#include "./services/repositories/material_repository.h"
 
 using Core::Db::QueryBuilder;
 using Core::Db::Expr;
@@ -26,12 +26,7 @@ MainWindow::MainWindow(QWidget* parent)
     if (db.open()) {
 //	QMessageBox::information(this, "Connection", "Database connection success");
 	MaterialRepository mr;
-	Material m;
-	m.setName("WOOL");
-	m.setCostPerUnit(20);
-	m.setUnitOfMeasure("cm");
-
-	Either<Error, Material> e = mr.save(m);
+	Either<Error, Material> e = mr.findById(1);
 	qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
 
     } else {

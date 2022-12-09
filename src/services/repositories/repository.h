@@ -5,10 +5,8 @@
 #include <list>
 #include <optional>
 #include <string>
-#include "src/core/db/querybuilder.h"
-#include "src/core/errors/either.h"
-#include "src/core/errors/error.h"
-#include "src/services/entity_mapper.h"
+#include "../entity_mapper.h"
+#include "../../core/db/querybuilder.h"
 
 using std::list;
 using std::optional;

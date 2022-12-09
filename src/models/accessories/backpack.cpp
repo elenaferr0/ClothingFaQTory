@@ -1,6 +1,11 @@
-#include "src/models/accessories/backpack.h"
-#include "src/utils/calculator.h"
 
+#include "backpack.h"
+#include "../../utils/calculator.h"
+#include "../material.h"
+#include "../size.h"
+#include <list>
+
+using std::list;
 using Models::Accessories::BackPack;
 using Utils::Calculator;
 const double BackPack::BACKPACK_HEIGHT = 30;
@@ -9,12 +14,12 @@ const double BackPack::BACKPACK_WIDTH = 20;
 BackPack::BackPack(long id,
                    string code,
                    string color,
-                   list <Material> materials,
+                   list<Material> materials,
                    Size size,
                    int availableQuantity,
                    int soldQuantity,
                    string description,
-                   Category category,
+                   string category,
                    double capacity)
         : Accessory(id,
                     code,

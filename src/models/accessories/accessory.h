@@ -1,7 +1,9 @@
 #ifndef ACCESSORY_H
 #define ACCESSORY_H
 
-#include "src/models/product.h"
+#include "../product.h"
+#include "../material.h"
+#include "../size.h"
 
 namespace Models {
     class Accessory : public Product {
@@ -14,17 +16,25 @@ namespace Models {
         Accessory(long id = -1,
                   string code = "",
                   string color = "",
-                  list <Material> materials = list<Material>(),
+                  list<Material> materials = list<Material>(),
                   Size size = Size(),
                   int availableQuantity = 0,
                   int soldQuantity = 0,
                   string description = "",
-                  Category category = Category::GENERAL);
+                  string category = "");
 
         string getTableName() const override;
 
+        string getCategoryAsString() const;
+
+        static Category categoryFromString(const string&);
+
     protected:
         Category category;
+    public:
+        Category getCategory() const;
+
+        void setCategory(const string&);
     };
 }
 #endif // ACCESSORY_H

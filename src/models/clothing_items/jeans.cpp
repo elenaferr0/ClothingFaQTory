@@ -1,6 +1,5 @@
 #include "jeans.h"
-#include "src/utils/calculator.h"
-#include "src/models/material.h"
+#include "../../utils/calculator.h"
 
 using Models::ClothingItems::Jeans;
 using Models::Material;
@@ -9,7 +8,7 @@ using Utils::Calculator;
 Jeans::Jeans(long id,
              string code,
              string color,
-             list <Material> materials,
+             list<Material> materials,
              Size size,
              int availableQuantity,
              int soldQuantity,

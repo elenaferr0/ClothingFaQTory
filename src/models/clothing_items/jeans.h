@@ -1,10 +1,14 @@
 #ifndef JEANS_H
 #define JEANS_H
 
-#include "src/models/clothing_items/clothing_item.h"
+#include "clothing_item.h"
+#include "../material.h"
+#include "../size.h"
 #include<list>
+#include<string>
 
 using std::list;
+using std::string;
 
 namespace Models::ClothingItems {
     class Jeans : public virtual ClothingItem {
@@ -15,7 +19,7 @@ namespace Models::ClothingItems {
         Jeans(long id = -1,
               string code = "",
               string color = "",
-              list <Material> materials = list<Material>(),
+              list<Material> materials = list<Material>(),
               Size size = Size(),
               int availableQuantity = 0,
               int soldQuantity = 0,

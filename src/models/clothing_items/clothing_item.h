@@ -1,7 +1,8 @@
 #ifndef CLOTHINGITEM_H
 #define CLOTHINGITEM_H
 
-#include "src/models/product.h"
+#include "../product.h"
+#include "../material.h"
 
 namespace Models {
     class ClothingItem : public Product {

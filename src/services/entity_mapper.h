@@ -1,21 +1,19 @@
 #ifndef ENTITY_MAPPER_H
 #define ENTITY_MAPPER_H
 
-#include "src/models/product.h"
-#include "src/models/accessories/accessory.h"
-#include "src/models/accessories/backpack.h"
-#include "src/models/accessories/bracelet.h"
-#include "src/models/accessories/hat.h"
-#include "src/models/clothing_items/clothing_item.h"
-#include "src/models/clothing_items/jeans.h"
-#include "src/models/clothing_items/overalls.h"
-#include "src/models/clothing_items/vest.h"
-#include "src/core/errors/error.h"
-#include "src/core/errors/either.h"
-#include "src/models/material.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
+#include "../core/errors/either.h"
+#include "../core/errors/error.h"
+#include "../models/size.h"
+#include "../models/size.h"
+#include "../models/accessories/backpack.h"
+#include "../models/accessories/bracelet.h"
+#include "../models/accessories/hat.h"
+#include "../models/clothing_items/jeans.h"
+#include "../models/clothing_items/overalls.h"
+#include "../models/clothing_items/vest.h"
 
 using Models::Size;
 using Models::Product;
@@ -35,13 +33,15 @@ namespace Services {
     class EntityMapper {
     private:
         static string errorType(const QSqlError::ErrorType& errorType);
-	static Either<Error, QSqlRecord> checkQuery(const QSqlQuery&);
+
+        static Either<Error, QSqlRecord> checkQuery(const QSqlQuery&);
 
     public:
-        static optional <Error> hasError(QSqlQuery&);
+        static optional<Error> hasError(QSqlQuery&);
 
-        static Either <Error, Size> size(const QSqlQuery&);
-	static Either <Error, Material> material(const QSqlQuery&);
+        static Either<Error, Size> size(const QSqlQuery&);
+
+        static Either<Error, Material> material(const QSqlQuery&);
 
 //        static Accessory accessory(const QSqlQuery&);
 
@@ -49,7 +49,7 @@ namespace Services {
 
 //        static Bracelet bracelet(const QSqlQuery&);
 
-//        static Hat hat(const QSqlQuery&);
+        static Either<Error, Hat> hat(const QSqlQuery&);
 
 //        static ClothingItem clothingItem(const QSqlQuery&);
 

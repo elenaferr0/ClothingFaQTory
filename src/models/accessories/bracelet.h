@@ -1,7 +1,7 @@
 #ifndef BRACELET_H
 #define BRACELET_H
 
-#include "src/models/accessories/accessory.h"
+#include "accessory.h"
 
 namespace Models::Accessories {
     class Bracelet : public Accessory {
@@ -19,6 +19,7 @@ namespace Models::Accessories {
                 int availableQuantity = 0,
                 int soldQuantity = 0,
                 string description = "",
+		string category = "",
                 unsigned int pearlNumber = 0,
                 double pearlDiameter = 0.75);
 

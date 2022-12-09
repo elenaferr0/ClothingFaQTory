@@ -1,6 +1,6 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
-#include "src/core/model.h"
+#include "../core/model.h"
 
 using Core::Model;
 

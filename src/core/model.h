@@ -14,6 +14,7 @@ namespace Core {
         Model(long long id = -1) : id(id) {};
 
         long long getId() const;
+	void setId(long long id);
 
         virtual Model* clone() const = 0;
 
