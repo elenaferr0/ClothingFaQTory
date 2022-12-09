@@ -23,7 +23,7 @@ namespace Services {
         SizeRepository(SizeRepository&) = delete;
 
         void operator=(const SizeRepository&) = delete;
-        
+
         Either<Error, Size> findById(int id) override;
 
         Either<Error, Size> findByName(const Size::Name&);
