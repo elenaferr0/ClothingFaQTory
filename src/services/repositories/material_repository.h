@@ -14,12 +14,21 @@ using Services::ReadOnlyRepository;
 
 namespace Services {
     class MaterialRepository : public ReadOnlyRepository<Material> {
-    public:
+    protected:
         MaterialRepository();
+
+        static MaterialRepository* instance;
+    public:
+        MaterialRepository(MaterialRepository&) = delete;
+
+        void operator=(const MaterialRepository&) = delete;
 
         Either<Error, Material> findById(int id) override;
 
         Either<Error, list<Material>> findAll() override;
+
+        static MaterialRepository* getInstance();
+
     };
 }
 #endif // MATERIAL_REPOSITORY_H

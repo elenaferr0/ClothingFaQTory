@@ -8,6 +8,8 @@ using std::list;
 using Models::Size;
 using Services::SizeRepository;
 
+SizeRepository* SizeRepository::instance;
+
 SizeRepository::SizeRepository()
         : ReadOnlyRepository("size") {};
 
@@ -26,6 +28,13 @@ Either<Error, Size> SizeRepository::findById(int id) {
                 errorOrSize.left().value().getMessage());
     }
     return errorOrSize;
+}
+
+SizeRepository* Services::SizeRepository::getInstance() {
+    if (instance == nullptr) {
+        instance = new SizeRepository();
+    }
+    return instance;
 }
 
 Either<Error, list<Size>> SizeRepository::findAll() {
