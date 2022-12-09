@@ -52,10 +52,10 @@ optional <Error> EntityMapper::hasError(QSqlQuery& query) {
 
 Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
     /*
-         * id int
-         * name string
-         * extra_percentage_of_material double
-         */
+	 * id int
+	 * name string
+	 * extra_percentage_of_material double
+	 */
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if(recordOrError.isLeft()){
@@ -69,8 +69,35 @@ Either <Error, Size> EntityMapper::size(const QSqlQuery& query) {
     QSqlRecord record = recordOrError.right().value();
 
     return Size(record.value("id").toInt(),
-		record.value("name").toString().toStdString(),
-		record.value("extra_percentage_of_material").toFloat());
+                record.value("name").toString().toStdString(),
+                record.value("extra_percentage_of_material").toFloat());
+}
+
+Either<Error, Material> EntityMapper::material(const QSqlQuery& query) {
+    /*
+     * id int
+     * name string
+     * unit_of_measure string
+     * cost_per_unit double
+     */
+    Either<Error, QSqlRecord> recordOrError = checkQuery(query);
+
+    if (recordOrError.isLeft()) {
+        return recordOrError.left().value();
+    }
+
+    if (query.size() == 0) {
+        return Material();
+    }
+
+    QSqlRecord record = recordOrError.right().value();
+
+    return Material(
+            record.value("id").toInt(),
+            record.value("name").toString().toStdString(),
+            record.value("unit_of_measure").toString().toStdString(),
+            record.value("cost_per_unit").toFloat()
+    );
 }
 
 //Either<BackPack, Error> EntityMapper::backPack(const QSqlQuery& query) {

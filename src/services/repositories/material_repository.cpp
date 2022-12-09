@@ -1,4 +1,4 @@
-#include "src/material_repository.h"
+#include "src/services/repositories/material_repository.h"
 #include <list>
 #include <QDebug>
 
@@ -34,15 +34,15 @@ Either <Error, Material> MaterialRepository::save(Material& entity) {
     list <string> fields = {"name", "cost_per_unit", "unit_of_measure"};
 
     QVariantList params; // id will later be added only if the entity should be updated
-    params << QString::fromStdString(entity.getName())
-	   << entity.getCostPerUnit()
-	   << QString::fromStdString(entity.getUnitOfMeasure());
+    params << QString::fromStdString(entity.getNameAsString())
+           << entity.getCostPerUnit()
+           << QString::fromStdString(entity.getUnitOfMeasureAsString());
 
     if (entity.getId() == -1) { // does not exist => create a new Material
 	Material material = Material();
-	material.setName(entity.getName());
-	material.setCostPerUnit(entity.getCostPerUnit());
-	material.setUnitOfMeasure(entity.getUnitOfMeasure());
+        material.setName(entity.getNameAsString());
+        material.setCostPerUnit(entity.getCostPerUnit());
+        material.setUnitOfMeasure(entity.getUnitOfMeasureAsString());
 
 	sql = queryBuilder.insertInto("material", fields).build();
 
