@@ -19,7 +19,7 @@ using Core::Error;
 
 namespace Services {
     template<class T>
-    class Repository {
+    class ReadOnlyRepository {
     protected:
         string table;
         QueryBuilder queryBuilder;
@@ -32,28 +32,20 @@ namespace Services {
         QSqlQuery exec(const string&);
 
     public:
-        Repository(const string& table);
-
-        virtual Either<Error, T> save(T& entity) = 0;
-
-        virtual Either<Error, list<T>> saveAll(list<T>& entities) = 0;
+        explicit ReadOnlyRepository(const string& table);
 
         virtual Either<Error, T> findById(int id) = 0;
 
         virtual Either<Error, list<T>> findAll() = 0;
 
-        virtual optional<Error> deleteT(const T& entity) = 0;
-
-        virtual optional <Error> deleteById(int id) = 0;
-
-        virtual ~Repository();
+        virtual ~ReadOnlyRepository();
     };
 
     template<class T>
-    Repository<T>::~Repository() {}
+    ReadOnlyRepository<T>::~ReadOnlyRepository() {}
 
     template<class T>
-    QSqlQuery Repository<T>::exec(const string& sql, const QVariantList& params) {
+    QSqlQuery ReadOnlyRepository<T>::exec(const string& sql, const QVariantList& params) {
         QSqlQuery query;
         query.prepare(QString::fromStdString(sql));
         for (int i = 0; i < params.count(); i++) {
@@ -64,16 +56,17 @@ namespace Services {
     }
 
     template<class T>
-    QSqlQuery Repository<T>::exec(const string& sql, const QVariant& param) {
+    QSqlQuery ReadOnlyRepository<T>::exec(const string& sql, const QVariant& param) {
         QSqlQuery query;
         query.prepare(QString::fromStdString(sql));
         query.addBindValue(param);
         query.exec();
+        qInfo() << query.lastQuery();
         return query;
     }
 
     template<class T>
-    QSqlQuery Repository<T>::exec(const string& sql) {
+    QSqlQuery ReadOnlyRepository<T>::exec(const string& sql) {
         QSqlQuery query;
         query.exec(QString::fromStdString(sql));
         qInfo() << query.lastQuery();
@@ -81,23 +74,7 @@ namespace Services {
     }
 
     template<class T>
-    Repository<T>::Repository(const string& table): table(table) {};
-
-//    template<class T>
-//    void Repository<T>::deleteById(int id) {
-//	string sql = queryBuilder
-//                .deleteT()
-//		.where(Expr("id").equals(to_string(id)))
-//                .build();
-//    }
-
-//    template<class T>
-//    void Repository<T>::deleteAll() {
-//	string sql = queryBuilder
-//                .deleteT()
-//                .from(table)
-//                .build();
-//    }
+    ReadOnlyRepository<T>::ReadOnlyRepository(const string& table): table(table) {};
 }
 
 #endif // REPOSITORY_H

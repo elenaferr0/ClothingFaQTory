@@ -7,15 +7,15 @@
 #include "../../core/errors/either.h"
 #include "../../core/errors/error.h"
 #include "../../models/accessories/hat.h"
-#include "repository.h"
+#include "crud_repository.h"
 
 using Core::Either;
 using Core::Error;
 using Models::Accessories::Hat;
-using Services::Repository;
+using Services::CRUDRepository;
 
 namespace Services {
-    class HatRepository : public Repository<Hat> {
+    class HatRepository : public CRUDRepository<Hat> {
     public:
         HatRepository();
 

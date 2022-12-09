@@ -1,10 +1,10 @@
 #include "hat_repository.h"
+#include "crud_repository.h"
 
 using Services::HatRepository;
 
 HatRepository::HatRepository()
-        : Repository("hat") {};
-
+        : CRUDRepository("hat") {};
 
 Either<Error, Hat> HatRepository::findById(int id) {
 
@@ -68,6 +68,7 @@ Either<Error, Hat> HatRepository::findById(int id) {
     hat.setMaterial(errorOrMaterial.right().value());
     return hat;
 }
+
 
 Either<Error, Hat> HatRepository::save(Hat& entity) {
     // check if that hat already exist
@@ -161,6 +162,7 @@ Either<Error, list<Hat>> HatRepository::findAll() {
     }
     return hats;
 }
+
 
 optional<Error> Services::HatRepository::deleteById(int id) {
     string sql = queryBuilder.deleteT()

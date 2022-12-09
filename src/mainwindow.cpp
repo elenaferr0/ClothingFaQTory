@@ -28,17 +28,9 @@ MainWindow::MainWindow(QWidget* parent)
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
     if (db.open()) {
-        HatRepository hr;
-        MaterialRepository mr;
         SizeRepository sr;
-        Material m = mr.findById(1).right().value();
-        Size s = sr.findById(1).right().value();
-
-        optional<Error> e = hr.deleteById(2);
-        qInfo() << e.has_value();
-        qInfo() << QString::fromStdString(e.has_value() ? e.value().getMessage() : "");
-//        qInfo() << QString::fromStdString(e.isLeft() ? e.left().value().getMessage() : "");
-
+        Either<Error, list<Size>> er = sr.findAll();
+        qInfo() << er.isLeft();
     } else {
         QMessageBox::information(this, "Not connected", "Database Connected Failed");
     }
