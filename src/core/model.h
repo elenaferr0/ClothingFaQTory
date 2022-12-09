@@ -20,6 +20,8 @@ namespace Core {
         virtual Model* clone() const = 0;
 
         virtual string getTableName() const = 0;
+
+        bool found() const;
     };
 }
 

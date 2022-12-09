@@ -8,6 +8,9 @@ using Core::Model;
 namespace Models {
     class Size : public Model {
     public:
+        enum Name { // contains the corresponding ids in the db
+            XS = 1, S = 2, M = 3, L = 4, XL = 5, XXL = 6, ONE_SIZE = 7
+        };
 
         double getExtraPercentageOfMaterial() const;
 
@@ -19,14 +22,15 @@ namespace Models {
 
         string getTableName() const override;
 
-        string fromString(string) const;
-
         void setName(string name);
 
         void setExtraPercentageOfMaterial(double extraPercentageOfMaterial);
 
+        string getNameAsString() const;
+        static Name nameFromString(const string&);
+
     private:
-        string name;
+        Name name;
         double extraPercentageOfMaterial;
 
         Size* clone() const override;

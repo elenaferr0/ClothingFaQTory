@@ -16,6 +16,10 @@ MaterialRepository::MaterialRepository()
         : ReadOnlyRepository("material") {};
 
 Either<Error, Material> MaterialRepository::findById(int id) {
+    if (materials.hasKey(id)) {
+        return materials.get(id).value();
+    }
+
     string sql = queryBuilder.select()
             .from(table)
             .where(Expr("id").equals({"?"}))
@@ -28,6 +32,8 @@ Either<Error, Material> MaterialRepository::findById(int id) {
         qCritical() << QString::fromStdString(
                 errorOrMaterial.left().value().getMessage());
     }
+
+    materials[id] = errorOrMaterial.right().value();
     return errorOrMaterial;
 }
 
@@ -53,4 +59,8 @@ MaterialRepository* Services::MaterialRepository::getInstance() {
         MaterialRepository::instance = new MaterialRepository();
     }
     return MaterialRepository::instance;
+}
+
+Either<Error, Material> Services::MaterialRepository::findByName(const Material::Name& name) {
+    return findById(name);
 }

@@ -18,12 +18,17 @@ namespace Services {
         MaterialRepository();
 
         static MaterialRepository* instance;
+
+        Map<int, Material> materials; // is not static since there's only an instance
+
     public:
         MaterialRepository(MaterialRepository&) = delete;
 
         void operator=(const MaterialRepository&) = delete;
 
         Either<Error, Material> findById(int id) override;
+
+        Either<Error, Material> findByName(const Material::Name&);
 
         Either<Error, list<Material>> findAll() override;
 

@@ -18,12 +18,15 @@ namespace Services {
     protected:
         SizeRepository();
         static SizeRepository* instance;
+        Map<int, Size> sizes; // is not static since there's only an instance
     public:
         SizeRepository(SizeRepository&) = delete;
 
         void operator=(const SizeRepository&) = delete;
         
         Either<Error, Size> findById(int id) override;
+
+        Either<Error, Size> findByName(const Size::Name&);
 
         Either<Error, list<Size>> findAll() override;
 

@@ -632,7 +632,7 @@ namespace Core::Containers {
 
     template<class K, class V>
     bool Map<K, V>::hasKey(const K& key) const {
-        return searchTreeHelper(root, key);
+        return searchTreeHelper(root, key) != TNULL;
     }
 
     template<class K, class V>

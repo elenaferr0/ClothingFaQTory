@@ -9,7 +9,13 @@ namespace Models {
     class Material : public Model {
     public:
         enum Name { // contains database ids corresponding to this materials
-            DENIM, WOOL, POLYESTER, COTTON, GOLD, SILVER, WOOD
+            DENIM = 1,
+            WOOL = 2,
+            POLYESTER = 3,
+            COTTON = 4,
+            GOLD = 5,
+            SILVER = 6,
+            WOOD = 7
         };
 
         enum UnitOfMeasure {

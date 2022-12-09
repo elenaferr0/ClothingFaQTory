@@ -15,6 +15,10 @@ SizeRepository::SizeRepository()
 
 
 Either<Error, Size> SizeRepository::findById(int id) {
+    if (sizes.hasKey(id)) {
+        return sizes.get(id).value();
+    }
+
     string sql = queryBuilder.select()
             .from(table)
             .where(Expr("id").equals({"?"}))
@@ -27,6 +31,7 @@ Either<Error, Size> SizeRepository::findById(int id) {
         qCritical() << QString::fromStdString(
                 errorOrSize.left().value().getMessage());
     }
+    sizes[id] = errorOrSize.right().value();
     return errorOrSize;
 }
 
@@ -42,14 +47,21 @@ Either<Error, list<Size>> SizeRepository::findAll() {
             .from(table)
             .build();
     QSqlQuery query = exec(sql);
-    list<Size> sizes;
+    list<Size> dbSizes;
     while (query.next()) {
-        Either<Error, Size> sizeOrError = entityMapper.size(query);
-        if (sizeOrError.isLeft()) {
-            qCritical() << QString::fromStdString(sizeOrError.left().value().getMessage());
-            return sizeOrError.left().value();
+        Either<Error, Size> errorOrSize = entityMapper.size(query);
+        if (errorOrSize.isLeft()) {
+            qCritical() << QString::fromStdString(
+                    errorOrSize.left().value().getMessage());
+            return errorOrSize.left().value();
         }
-        sizes.push_back(sizeOrError.right().value());
+        Size size = errorOrSize.right().value();
+        dbSizes.push_back(size);
+        sizes[size.getId()] = errorOrSize.right().value();
     }
-    return sizes;
+    return dbSizes;
+}
+
+Either<Error, Size> Services::SizeRepository::findByName(const Size::Name& name) {
+    return findById(name);
 }
