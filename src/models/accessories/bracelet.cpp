@@ -52,7 +52,7 @@ double Bracelet::computePrice() const {
             specificWeight = Material::WOOD_SPECIFIC_WEIGHT;
     }
 
-    double totalWeight = specificWeight * (pearlVolume * pearlNumber);
+    double totalWeight = Calculator::computeWeightFrom(pearlVolume * pearlVolume, specificWeight);
 
     return totalWeight * material.getCostPerUnit();
 }

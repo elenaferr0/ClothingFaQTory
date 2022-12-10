@@ -7,6 +7,9 @@ using Models::ClothingItems::Vest;
 using Utils::Calculator;
 using std::string;
 
+const unsigned int Vest::N_BUTTONS = 4;
+const double Vest::BUTTON_DIAMETER = 1;
+
 Vest::Vest(long id,
            string code,
            string color,
@@ -41,8 +44,16 @@ double Vest::computePrice() const {
     // the surface of the Vest is estimated with the surface of a cilinder
     double surface = Calculator::computeCilinderSurface(trunkWidth, trunkLength);
 
-    // TODO: add the cost of the buttons if present
-    return material.getCostPerUnit() * surface;
+    double price = surface * material.getCostPerUnit();
+
+    if (hasButtons) {
+        // the volume of each button is half a wooden sphere
+        double buttonVolume = Calculator::computeSphereVolume(BUTTON_DIAMETER / 2) / 2;
+        double buttonWeight = Calculator::computeWeightFrom(buttonVolume, Material::WOOD_SPECIFIC_WEIGHT);
+
+        price += N_BUTTONS * buttonWeight * material.getCostPerUnit();
+    }
+    return price;
 }
 
 string Vest::getTableName() const {

@@ -7,7 +7,8 @@ namespace Models::ClothingItems {
     class Vest : public virtual ClothingItem {
     private:
         bool hasButtons;
-        static const unsigned int nButtons = 4;
+        static const unsigned int N_BUTTONS;
+        static const double BUTTON_DIAMETER;
     public:
         Vest(long id,
              string code,
