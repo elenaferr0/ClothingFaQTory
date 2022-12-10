@@ -1,5 +1,8 @@
 #include "material_repository.h"
 #include "crud_repository.h"
+#include "../../models/material.h"
+#include "../../core/errors/error.h"
+#include "../../core/db/expression.h"
 #include <list>
 #include <QDebug>
 
@@ -9,8 +12,6 @@ using Services::MaterialRepository;
 using Services::CRUDRepository;
 using Core::Error;
 using Core::Db::Expr;
-
-MaterialRepository* MaterialRepository::instance;
 
 MaterialRepository::MaterialRepository()
         : ReadOnlyRepository("material") {};
