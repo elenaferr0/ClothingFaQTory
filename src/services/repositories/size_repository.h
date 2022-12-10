@@ -20,6 +20,7 @@ namespace Services {
 
         static SizeRepository* instance; // no need for destructor since it's static
         Map<int, Size> sizes; // not static since there's only an instance
+
     public:
         SizeRepository(SizeRepository&) = delete;
 

@@ -26,15 +26,15 @@ namespace Services {
 
         void operator=(const MaterialRepository&) = delete;
 
-        Either<Error, Material> findById(int id) override;
-
-        Either<Error, list<Material>> findAll() override;
-
         static MaterialRepository* getInstance();
 
         Either<Error, Material> findByName(const Material::Name&);
 
         Either<Error, Material> saveCostPerUnit(const Material&);
+
+        Either<Error, Material> findById(int id) override;
+
+        Either<Error, list<Material>> findAll() override;
     };
 }
 #endif // MATERIAL_REPOSITORY_H

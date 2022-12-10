@@ -1,5 +1,6 @@
 #include "hat_repository.h"
 #include "crud_repository.h"
+#include <QSqlRecord>
 
 using Services::HatRepository;
 
@@ -7,67 +8,6 @@ HatRepository* HatRepository::instance;
 
 HatRepository::HatRepository()
         : CRUDRepository("hat") {};
-
-Either<Error, Hat> HatRepository::findById(int id) {
-
-    string hatSql = queryBuilder.select()
-            .from(table)
-            .join(QueryBuilder::Join::INNER, "material", Expr("m.id").equals({"h.material_id"}))
-            .where(Expr("h.id").equals({"?"}))
-            .build();
-
-    string sizeSql = queryBuilder.select("s.*")
-            .from(table)
-            .join(QueryBuilder::Join::INNER, "size", Expr("s.id").equals({"h.size_id"}))
-            .where(Expr("h.id").equals({"?"}))
-            .build();
-
-    string materialSql = queryBuilder.select("m.*")
-            .from(table)
-            .join(QueryBuilder::Join::INNER, "material", Expr("m.id").equals({"h.material_id"}))
-            .where(Expr("h.id").equals({"?"}))
-            .build();
-
-    // get the hat
-    QSqlQuery hatQuery = exec(hatSql, QVariant::fromValue<int>(id));
-    hatQuery.next();
-    Either<Error, Hat> errorOrHat = entityMapper.hat(hatQuery);
-
-    if (errorOrHat.isLeft()) {
-        qCritical() << QString::fromStdString(
-                errorOrHat.forceLeft().getMessage());
-        QSqlDatabase::database().rollback();
-        return errorOrHat; // return the error
-    }
-
-    // get the size
-    QSqlQuery sizeQuery = exec(sizeSql, QVariant::fromValue<int>(id));
-    sizeQuery.next();
-    Either<Error, Size> errorOrSize = entityMapper.size(sizeQuery);
-
-    if (errorOrSize.isLeft()) {
-        qCritical() << QString::fromStdString(
-                errorOrSize.forceLeft().getMessage());
-        QSqlDatabase::database().rollback();
-        return errorOrSize.forceLeft(); // return the error
-    }
-
-    errorOrHat.forceRight().setSize(errorOrSize.forceRight());
-
-    // get the material
-    QSqlQuery materialQuery = exec(materialSql, QVariant::fromValue<int>(id));
-    materialQuery.next();
-    Either<Error, Material> errorOrMaterial = entityMapper.material(materialQuery);
-
-    if (errorOrMaterial.isLeft()) {
-        qCritical() << QString::fromStdString(
-                errorOrMaterial.forceLeft().getMessage());
-        return errorOrMaterial.forceLeft(); // return the error
-    }
-
-    errorOrHat.forceRight().setMaterial(errorOrMaterial.forceRight());
-    return errorOrHat.forceRight();
-}
 
 
 Either<Error, Hat> HatRepository::save(Hat& entity) {
@@ -117,7 +57,7 @@ Either<Error, Hat> HatRepository::save(Hat& entity) {
         query.next();
     }
 
-    optional<Error> hasError = entityMapper.hasError(query);
+    optional<Error> hasError = CRUDRepository::hasError(query);
 
     if (hasError.has_value()) {
         QSqlDatabase::database().rollback();
@@ -142,50 +82,17 @@ Either<Error, list<Hat>> HatRepository::saveAll(list<Hat>& entities) {
     return entities;
 }
 
-optional<Error> HatRepository::deleteT(const Hat& entity) {
-    return deleteById(entity.getId());
-}
-
-Either<Error, list<Hat>> HatRepository::findAll() {
-    string sql = queryBuilder.select()
-            .from(table)
-            .build();
-    QSqlQuery query = exec(sql);
-    list<Hat> hats;
-    while (query.next()) {
-        Either<Error, Hat> hatOrError = entityMapper.hat(query);
-        if (hatOrError.isLeft()) {
-            qCritical() << QString::fromStdString(hatOrError.forceLeft().getMessage());
-            return hatOrError.forceLeft();
-        }
-        hats.push_back(hatOrError.forceRight());
-    }
-    return hats;
-}
-
-
-optional<Error> Services::HatRepository::deleteById(int id) {
-    string sql = queryBuilder.deleteT()
-            .from(table)
-            .where(Expr("id").equals({"?"}))
-            .build();
-
-    QSqlQuery query = exec(sql, QVariant::fromValue<int>(id));
-    query.next();
-
-    optional<Error> hasError = entityMapper.hasError(query);
-
-    if (hasError.has_value()) {
-        qCritical() << QString::fromStdString(
-                hasError.value().getMessage());
-    }
-
-    return hasError;
-}
-
 HatRepository* Services::HatRepository::getInstance() {
-    if(instance == nullptr){
+    if (instance == nullptr) {
         instance = new HatRepository();
     }
     return instance;
+}
+
+Either<Error, Hat> Services::HatRepository::findById(int id) {
+    return ReadOnlyRepository<Hat>::findById(id, entityMapper.hat);
+}
+
+Either<Error, list<Hat>> Services::HatRepository::findAll() {
+    return ReadOnlyRepository<Hat>::findAll(entityMapper.hat);
 }

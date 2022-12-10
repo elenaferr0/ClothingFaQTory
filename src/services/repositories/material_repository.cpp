@@ -1,10 +1,9 @@
 #include "material_repository.h"
 #include "crud_repository.h"
-#include "../../models/material.h"
-#include "../../core/errors/error.h"
-#include "../../core/db/expression.h"
 #include <list>
 #include <QDebug>
+#include <QSqlRecord>
+#include <QSqlQuery>
 
 using std::list;
 using Models::Material;
@@ -12,6 +11,8 @@ using Services::MaterialRepository;
 using Services::CRUDRepository;
 using Core::Error;
 using Core::Db::Expr;
+
+MaterialRepository* MaterialRepository::instance;
 
 MaterialRepository::MaterialRepository()
         : ReadOnlyRepository("material") {};
@@ -56,10 +57,10 @@ Either<Error, list<Material>> MaterialRepository::findAll() {
 }
 
 MaterialRepository* Services::MaterialRepository::getInstance() {
-    if (MaterialRepository::instance == nullptr) {
-        MaterialRepository::instance = new MaterialRepository();
+    if (instance == nullptr) {
+        instance = new MaterialRepository();
     }
-    return MaterialRepository::instance;
+    return instance;
 }
 
 Either<Error, Material> Services::MaterialRepository::findByName(const Material::Name& name) {
@@ -69,7 +70,7 @@ Either<Error, Material> Services::MaterialRepository::findByName(const Material:
 
 Either<Error, Material> MaterialRepository::saveCostPerUnit(const Material& entity) {
 
-     QVariantList params;
+    QVariantList params;
     params << entity.getCostPerUnit()
            << entity.getId();
 
@@ -81,7 +82,7 @@ Either<Error, Material> MaterialRepository::saveCostPerUnit(const Material& enti
     QSqlQuery query = exec(sql, params);
     query.next();
 
-    optional<Error> hasError = entityMapper.hasError(query);
+    optional<Error> hasError = ReadOnlyRepository::hasError(query);
 
     if (hasError.has_value()) {
         qCritical() << QString::fromStdString(

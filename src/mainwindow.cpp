@@ -28,12 +28,8 @@ MainWindow::MainWindow(QWidget* parent)
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
     if (db.open()) {
-        MaterialRepository* mr = MaterialRepository::getInstance();
-        Either<Error, Material> m = mr->findByName(Material::COTTON);
-        if (m.isRight()) {
-            m.forceRight().setCostPerUnit(6);
-            mr->saveCostPerUnit(m.forceRight());
-        }
+        HatRepository* hr = HatRepository::getInstance();
+        hr->findById(2);
     } else {
         QMessageBox::information(this, "Not connected", "Database Connected Failed");
     }

@@ -2,6 +2,8 @@
 #include "../../core/db/expression.h"
 #include <list>
 #include <QDebug>
+#include <QSqlQuery>
+#include <QSqlRecord>
 
 using Core::Db::Expr;
 using std::list;
@@ -13,8 +15,19 @@ SizeRepository* SizeRepository::instance;
 SizeRepository::SizeRepository()
         : ReadOnlyRepository("size") {};
 
+SizeRepository* Services::SizeRepository::getInstance() {
+    if (instance == nullptr) {
+        instance = new SizeRepository();
+    }
+    return instance;
+}
 
-Either<Error, Size> SizeRepository::findById(int id) {
+
+Either<Error, Size> Services::SizeRepository::findByName(const Size::Name& name) {
+    return findById(name);
+}
+
+Either<Error, Size> Services::SizeRepository::findById(int id) {
     if (sizes.hasKey(id)) {
         return sizes.get(id).value();
     }
@@ -35,14 +48,7 @@ Either<Error, Size> SizeRepository::findById(int id) {
     return errorOrSize;
 }
 
-SizeRepository* Services::SizeRepository::getInstance() {
-    if (instance == nullptr) {
-        instance = new SizeRepository();
-    }
-    return instance;
-}
-
-Either<Error, list<Size>> SizeRepository::findAll() {
+Either<Error, list<Size>> Services::SizeRepository::findAll() {
     string sql = queryBuilder.select()
             .from(table)
             .build();
@@ -60,8 +66,4 @@ Either<Error, list<Size>> SizeRepository::findAll() {
         sizes[size.getId()] = errorOrSize.forceRight();
     }
     return dbSizes;
-}
-
-Either<Error, Size> Services::SizeRepository::findByName(const Size::Name& name) {
-    return findById(name);
 }
