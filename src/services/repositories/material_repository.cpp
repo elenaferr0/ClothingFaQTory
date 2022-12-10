@@ -30,10 +30,10 @@ Either<Error, Material> MaterialRepository::findById(int id) {
 
     if (errorOrMaterial.isLeft()) {
         qCritical() << QString::fromStdString(
-                errorOrMaterial.left().value().getMessage());
+                errorOrMaterial.forceLeft().getMessage());
     }
 
-    materials[id] = errorOrMaterial.right().value();
+    materials[id] = errorOrMaterial.forceRight();
     return errorOrMaterial;
 }
 
@@ -46,16 +46,16 @@ Either<Error, list<Material>> MaterialRepository::findAll() {
     while (query.next()) {
         Either<Error, Material> materialOrError = entityMapper.material(query);
         if (materialOrError.isLeft()) {
-            qCritical() << QString::fromStdString(materialOrError.left().value().getMessage());
-            return materialOrError.left().value();
+            qCritical() << QString::fromStdString(materialOrError.forceLeft().getMessage());
+            return materialOrError.forceLeft();
         }
-        materials.push_back(materialOrError.right().value());
+        materials.push_back(materialOrError.forceRight());
     }
     return materials;
 }
 
 MaterialRepository* Services::MaterialRepository::getInstance() {
-    if(MaterialRepository::instance == nullptr){
+    if (MaterialRepository::instance == nullptr) {
         MaterialRepository::instance = new MaterialRepository();
     }
     return MaterialRepository::instance;
@@ -63,4 +63,30 @@ MaterialRepository* Services::MaterialRepository::getInstance() {
 
 Either<Error, Material> Services::MaterialRepository::findByName(const Material::Name& name) {
     return findById(name);
+}
+
+
+Either<Error, Material> MaterialRepository::saveCostPerUnit(const Material& entity) {
+
+     QVariantList params;
+    params << entity.getCostPerUnit()
+           << entity.getId();
+
+    string sql = queryBuilder.update(entity.getTableName())
+            .set("cost_per_unit")
+            .where(Expr("id").equals({"?"}))
+            .build();
+
+    QSqlQuery query = exec(sql, params);
+    query.next();
+
+    optional<Error> hasError = entityMapper.hasError(query);
+
+    if (hasError.has_value()) {
+        qCritical() << QString::fromStdString(
+                hasError.value().getMessage());
+        return Either<Error, Material>::ofLeft(hasError.value());
+    }
+
+    return entity;
 }

@@ -48,7 +48,7 @@ namespace Core::Db {
         QueryBuilder& insertInto(string entity, const list<string>& fieldNames);
 
         // qb.set("u.username", "foo");
-        QueryBuilder& set(string field, string value);
+        QueryBuilder& set(string field);
 
         // qb.set({("username", "u"), ("email", "e")})
         QueryBuilder& set(const list<string>& fieldNames);

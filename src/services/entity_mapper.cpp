@@ -57,14 +57,14 @@ Either<Error, Size> EntityMapper::size(const QSqlQuery& query) {
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
-        return Either<Error, Size>::ofLeft(recordOrError.left().value());
+        return Either<Error, Size>::ofLeft(recordOrError.forceLeft());
     }
 
     if (query.size() == 0) {
         return Either<Error, Size>::ofRight(Size());
     }
 
-    QSqlRecord record = recordOrError.right().value();
+    QSqlRecord record = recordOrError.forceRight();
 
     return Size(record.value("id").toInt(),
                 record.value("name").toString().toStdString(),
@@ -81,14 +81,14 @@ Either<Error, Material> EntityMapper::material(const QSqlQuery& query) {
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
-        return recordOrError.left().value();
+        return recordOrError.forceLeft();
     }
 
     if (query.size() == 0) {
         return Material();
     }
 
-    QSqlRecord record = recordOrError.right().value();
+    QSqlRecord record = recordOrError.forceRight();
 
     return Material(
             record.value("id").toInt(),
@@ -114,14 +114,14 @@ Either<Error, Hat> EntityMapper::hat(const QSqlQuery& query) {
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
-        return recordOrError.left().value();
+        return recordOrError.forceLeft();
     }
 
     if (query.size() == 0) {
         return Hat();
     }
 
-    QSqlRecord record = recordOrError.right().value();
+    QSqlRecord record = recordOrError.forceRight();
 
     return Hat(
             record.value("id").toInt(),

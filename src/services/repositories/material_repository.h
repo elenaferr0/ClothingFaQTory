@@ -17,9 +17,9 @@ namespace Services {
     protected:
         MaterialRepository();
 
-        static MaterialRepository* instance;
+        static MaterialRepository* instance; // no need for destructor since it's static
 
-        Map<int, Material> materials; // is not static since there's only an instance
+        Map<int, Material> materials; // not static since there's only an instance
 
     public:
         MaterialRepository(MaterialRepository&) = delete;
@@ -28,12 +28,13 @@ namespace Services {
 
         Either<Error, Material> findById(int id) override;
 
-        Either<Error, Material> findByName(const Material::Name&);
-
         Either<Error, list<Material>> findAll() override;
 
         static MaterialRepository* getInstance();
 
+        Either<Error, Material> findByName(const Material::Name&);
+
+        Either<Error, Material> saveCostPerUnit(const Material&);
     };
 }
 #endif // MATERIAL_REPOSITORY_H

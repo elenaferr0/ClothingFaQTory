@@ -35,12 +35,10 @@ Either<Error, Hat> HatRepository::findById(int id) {
 
     if (errorOrHat.isLeft()) {
         qCritical() << QString::fromStdString(
-                errorOrHat.left().value().getMessage());
+                errorOrHat.forceLeft().getMessage());
         QSqlDatabase::database().rollback();
         return errorOrHat; // return the error
     }
-
-    Hat hat = errorOrHat.right().value();
 
     // get the size
     QSqlQuery sizeQuery = exec(sizeSql, QVariant::fromValue<int>(id));
@@ -49,12 +47,12 @@ Either<Error, Hat> HatRepository::findById(int id) {
 
     if (errorOrSize.isLeft()) {
         qCritical() << QString::fromStdString(
-                errorOrSize.left().value().getMessage());
+                errorOrSize.forceLeft().getMessage());
         QSqlDatabase::database().rollback();
-        return errorOrSize.left().value(); // return the error
+        return errorOrSize.forceLeft(); // return the error
     }
 
-    hat.setSize(errorOrSize.right().value());
+    errorOrHat.forceRight().setSize(errorOrSize.forceRight());
 
     // get the material
     QSqlQuery materialQuery = exec(materialSql, QVariant::fromValue<int>(id));
@@ -63,12 +61,12 @@ Either<Error, Hat> HatRepository::findById(int id) {
 
     if (errorOrMaterial.isLeft()) {
         qCritical() << QString::fromStdString(
-                errorOrMaterial.left().value().getMessage());
-        return errorOrMaterial.left().value(); // return the error
+                errorOrMaterial.forceLeft().getMessage());
+        return errorOrMaterial.forceLeft(); // return the error
     }
 
-    hat.setMaterial(errorOrMaterial.right().value());
-    return hat;
+    errorOrHat.forceRight().setMaterial(errorOrMaterial.forceRight());
+    return errorOrHat.forceRight();
 }
 
 
@@ -135,11 +133,11 @@ Either<Error, list<Hat>> HatRepository::saveAll(list<Hat>& entities) {
     for (auto en = entities.begin(); en != entities.end(); en++) {
         Either<Error, Hat> hatOrError = save(*en);
         if (hatOrError.isLeft()) {
-            qCritical() << QString::fromStdString(hatOrError.left().value().getMessage());
-            return hatOrError.left().value();
+            qCritical() << QString::fromStdString(hatOrError.forceLeft().getMessage());
+            return hatOrError.forceLeft();
         }
 
-        *en = hatOrError.right().value();
+        *en = hatOrError.forceRight();
     }
     return entities;
 }
@@ -157,10 +155,10 @@ Either<Error, list<Hat>> HatRepository::findAll() {
     while (query.next()) {
         Either<Error, Hat> hatOrError = entityMapper.hat(query);
         if (hatOrError.isLeft()) {
-            qCritical() << QString::fromStdString(hatOrError.left().value().getMessage());
-            return hatOrError.left().value();
+            qCritical() << QString::fromStdString(hatOrError.forceLeft().getMessage());
+            return hatOrError.forceLeft();
         }
-        hats.push_back(hatOrError.right().value());
+        hats.push_back(hatOrError.forceRight());
     }
     return hats;
 }

@@ -81,9 +81,9 @@ QueryBuilder& QueryBuilder::update(string entity) {
     return *this;
 }
 
-QueryBuilder& QueryBuilder::set(string field, string value) {
-    if (field != "" && value != "") {
-        query = "SET " + field + " = " + value;
+QueryBuilder& QueryBuilder::set(string field) {
+    if (field != "") {
+        query += "SET " + field + " = ? ";
     }
     return *this;
 }

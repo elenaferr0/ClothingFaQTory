@@ -106,7 +106,7 @@ Material::UnitOfMeasure Models::Material::unitOfMeasureFromString(const string& 
     } else if (unit == "g") {
         return GRAM;
     } else {
-        qWarning() << QString::fromStdString("Invalid unit of measure provided " + unit + " for material");
+        qWarning() << QString::fromStdString("Invalid unit of measure "  + unit + " provided for material");
         return CENTIMETER;
     }
 }

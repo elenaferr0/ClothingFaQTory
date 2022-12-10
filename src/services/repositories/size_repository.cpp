@@ -29,9 +29,9 @@ Either<Error, Size> SizeRepository::findById(int id) {
 
     if (errorOrSize.isLeft()) {
         qCritical() << QString::fromStdString(
-                errorOrSize.left().value().getMessage());
+                errorOrSize.forceLeft().getMessage());
     }
-    sizes[id] = errorOrSize.right().value();
+    sizes[id] = errorOrSize.forceRight();
     return errorOrSize;
 }
 
@@ -52,12 +52,12 @@ Either<Error, list<Size>> SizeRepository::findAll() {
         Either<Error, Size> errorOrSize = entityMapper.size(query);
         if (errorOrSize.isLeft()) {
             qCritical() << QString::fromStdString(
-                    errorOrSize.left().value().getMessage());
-            return errorOrSize.left().value();
+                    errorOrSize.forceLeft().getMessage());
+            return errorOrSize.forceLeft();
         }
-        Size size = errorOrSize.right().value();
+        Size& size = errorOrSize.forceRight();
         dbSizes.push_back(size);
-        sizes[size.getId()] = errorOrSize.right().value();
+        sizes[size.getId()] = errorOrSize.forceRight();
     }
     return dbSizes;
 }
