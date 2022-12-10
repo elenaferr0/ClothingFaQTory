@@ -14,7 +14,7 @@ namespace Models {
 
         double getExtraPercentageOfMaterial() const;
 
-        string getName() const;
+        Name getName() const;
 
         Size(long id = -1,
              string name = "",

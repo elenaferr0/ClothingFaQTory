@@ -6,14 +6,14 @@ Size::Size(long id,
            string name,
            double extraPercentageOfMaterial)
         : Model(id),
-          name(name),
+          name(nameFromString(name)),
           extraPercentageOfMaterial(extraPercentageOfMaterial) {}
 
 double Size::getExtraPercentageOfMaterial() const {
     return extraPercentageOfMaterial;
 }
 
-string Size::getName() const {
+Size::Name Size::getName() const {
     return name;
 }
 
@@ -26,7 +26,7 @@ string Size::getTableName() const {
 }
 
 void Size::setName(string name) {
-    this->name = name;
+    this->name = nameFromString(name);
 }
 
 void Size::setExtraPercentageOfMaterial(double extraPercentageOfMaterial) {
