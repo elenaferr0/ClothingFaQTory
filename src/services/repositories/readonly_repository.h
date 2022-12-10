@@ -46,10 +46,10 @@ namespace Services {
 
         optional<Error> hasError(const QSqlQuery& query);
 
-    public:
         Either<Error, T> findById(int id, function<Either<Error, T>(const QSqlQuery&)> mappingFunction);
 
         Either<Error, list<T>> findAll(function<Either<Error, T>(const QSqlQuery&)> mappingFunction);
+    public:
 
         explicit ReadOnlyRepository(const string& table);
 

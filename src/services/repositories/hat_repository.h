@@ -32,10 +32,6 @@ namespace Services {
 
         Either<Error, list<Hat>> saveAll(list<Hat>& entities) override;
 
-//        optional<Error> deleteT(const Hat& entity) override;
-
-//        optional<Error> deleteById(int id) override;
-
         Either<Error, Hat> findById(int id) override;
 
         Either<Error, list<Hat>> findAll() override;

@@ -38,12 +38,12 @@ namespace Services {
 
     template<class T>
     optional<Error> CRUDRepository<T>::deleteById(int id) {
-        string sql = CRUDRepository<T>::queryBuilder.deleteT()
+        string sql = ReadOnlyRepository<T>::queryBuilder.deleteT()
                 .from(CRUDRepository<T>::table)
                 .where(Expr("id").equals({"?"}))
                 .build();
 
-        QSqlQuery query = CRUDRepository<T>::exec(sql, QVariant::fromValue<int>(id));
+        QSqlQuery query = ReadOnlyRepository<T>::exec(sql, QVariant::fromValue<int>(id));
         query.next();
 
         optional<Error> hasError = ReadOnlyRepository<T>::hasError(query);
@@ -52,7 +52,6 @@ namespace Services {
             qCritical() << QString::fromStdString(
                     hasError.value().getMessage());
         }
-
         return hasError;
     }
 

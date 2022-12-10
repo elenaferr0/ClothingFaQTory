@@ -1,11 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
 #include<iostream>
 #include <QSqlQuery>
-#include <QSqlRecord>
 #include "./core/db/querybuilder.h"
-#include "./core/db/expression.h"
 #include "./services/repositories/hat_repository.h"
 #include "./services/repositories/material_repository.h"
 #include "./services/repositories/size_repository.h"
@@ -29,7 +26,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     if (db.open()) {
         HatRepository* hr = HatRepository::getInstance();
-        hr->findById(2);
+        hr->deleteT(hr->findById(2).forceRight());
     } else {
         QMessageBox::information(this, "Not connected", "Database Connected Failed");
     }
