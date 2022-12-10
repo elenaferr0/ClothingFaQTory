@@ -7,7 +7,7 @@ using Services::HatRepository;
 HatRepository* HatRepository::instance;
 
 HatRepository::HatRepository()
-        : CRUDRepository("hat") {};
+        : CRUDRepository("hat", entityMapper.hat) {};
 
 
 Either<Error, Hat> HatRepository::save(Hat& entity) {
@@ -87,12 +87,4 @@ HatRepository* Services::HatRepository::getInstance() {
         instance = new HatRepository();
     }
     return instance;
-}
-
-Either<Error, Hat> Services::HatRepository::findById(int id) {
-    return ReadOnlyRepository<Hat>::findById(id, entityMapper.hat);
-}
-
-Either<Error, list<Hat>> Services::HatRepository::findAll() {
-    return ReadOnlyRepository<Hat>::findAll(entityMapper.hat);
 }

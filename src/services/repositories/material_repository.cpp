@@ -15,7 +15,7 @@ using Core::Db::Expr;
 MaterialRepository* MaterialRepository::instance;
 
 MaterialRepository::MaterialRepository()
-        : ReadOnlyRepository("material") {};
+        : ReadOnlyRepository("material", entityMapper.material) {};
 
 Either<Error, Material> MaterialRepository::findById(int id) {
     if (materials.hasKey(id)) {

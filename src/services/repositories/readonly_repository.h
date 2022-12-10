@@ -31,10 +31,12 @@ namespace Services {
     private:
         string errorTypeToString(const QSqlError::ErrorType& errorType);
 
+
     protected:
         string table;
         QueryBuilder queryBuilder;
         EntityMapper entityMapper;
+        function<Either<Error, T>(const QSqlQuery&)> mappingFunction;
 
         QSqlQuery exec(const string&, const QVariantList&);
 
@@ -46,99 +48,17 @@ namespace Services {
 
         optional<Error> hasError(const QSqlQuery& query);
 
-        Either<Error, T> findById(int id, function<Either<Error, T>(const QSqlQuery&)> mappingFunction);
-
-        Either<Error, list<T>> findAll(function<Either<Error, T>(const QSqlQuery&)> mappingFunction);
-    public:
-
-        explicit ReadOnlyRepository(const string& table);
-
         virtual Either<Error, T> findById(int id) = 0;
 
         virtual Either<Error, list<T>> findAll() = 0;
 
+    public:
+
+        ReadOnlyRepository(const string& table,
+                           function<Either<Error, T>(const QSqlQuery&)> mappingFunction);
+
         virtual ~ReadOnlyRepository();
     };
-
-    template<class T>
-    Either<Error, T>
-    ReadOnlyRepository<T>::findById(int id, function<Either<Error, T>(const QSqlQuery&)> mappingFunction) {
-        string mainEntitySql = queryBuilder.select()
-                .from(table)
-                .where(Expr("h.id").equals({"?"}))
-                .build();
-
-        string sizeSql = queryBuilder.select("s.*")
-                .from(table)
-                .join(QueryBuilder::Join::INNER, "size", Expr("s.id").equals({"h.size_id"}))
-                .where(Expr("h.id").equals({"?"}))
-                .build();
-
-        string materialSql = queryBuilder.select("m.*")
-                .from(table)
-                .join(QueryBuilder::Join::INNER, "material", Expr("m.id").equals({"h.material_id"}))
-                .where(Expr("h.id").equals({"?"}))
-                .build();
-
-        // get the entity
-        QSqlQuery mainEntityQuery = exec(mainEntitySql, QVariant::fromValue<int>(id));
-        mainEntityQuery.next();
-        Either<Error, T> errorOrEntity = mappingFunction(mainEntityQuery);
-
-        if (errorOrEntity.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    errorOrEntity.forceLeft().getMessage());
-            QSqlDatabase::database().rollback();
-            return errorOrEntity; // return the error
-        }
-
-        // get the size
-        QSqlQuery sizeQuery = exec(sizeSql, QVariant::fromValue<int>(id));
-        sizeQuery.next();
-        Either<Error, Size> errorOrSize = entityMapper.size(sizeQuery);
-
-        if (errorOrSize.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    errorOrSize.forceLeft().getMessage());
-            QSqlDatabase::database().rollback();
-            return errorOrSize.forceLeft(); // return the error
-        }
-
-        errorOrEntity.forceRight().setSize(errorOrSize.forceRight());
-
-        // get the material
-        QSqlQuery materialQuery = exec(materialSql, QVariant::fromValue<int>(id));
-        materialQuery.next();
-        Either<Error, Material> errorOrMaterial = entityMapper.material(materialQuery);
-
-        if (errorOrMaterial.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    errorOrMaterial.forceLeft().getMessage());
-            return errorOrMaterial.forceLeft(); // return the error
-        }
-
-        errorOrEntity.forceRight().setMaterial(errorOrMaterial.forceRight());
-        return errorOrEntity.forceRight();
-    }
-
-    template<class T>
-    Either<Error, list<T>> ReadOnlyRepository<T>::findAll(function<Either<Error, T>(const QSqlQuery&)> mappingFunction) {
-        string sql = queryBuilder.select()
-                .from(table)
-                .build();
-        QSqlQuery query = exec(sql);
-        list<T> entities;
-        while (query.next()) {
-            Either<Error, T> entityOrError = mappingFunction(query);
-            if (entityOrError.isLeft()) {
-                qCritical() << QString::fromStdString(entityOrError.forceLeft().getMessage());
-                return entityOrError.forceLeft();
-            }
-            entities.push_back(entityOrError.forceRight());
-        }
-        return entities;
-    }
-
 
     template<class T>
     Either<Error, QSqlRecord> ReadOnlyRepository<T>::hasErrorOrRecord(const QSqlQuery& query) {
@@ -185,7 +105,10 @@ namespace Services {
     }
 
     template<class T>
-    ReadOnlyRepository<T>::ReadOnlyRepository(const string& table): table(table) {};
+    ReadOnlyRepository<T>::ReadOnlyRepository(const string& table,
+                                              function<Either<Error, T>(const QSqlQuery&)> mappingFunction):
+            table(table),
+            mappingFunction(mappingFunction) {}; // empty function
 
 
     template<class T>

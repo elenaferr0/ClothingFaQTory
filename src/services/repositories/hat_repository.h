@@ -31,10 +31,6 @@ namespace Services {
         Either<Error, Hat> save(Hat& entity) override;
 
         Either<Error, list<Hat>> saveAll(list<Hat>& entities) override;
-
-        Either<Error, Hat> findById(int id) override;
-
-        Either<Error, list<Hat>> findAll() override;
     };
 }
 #endif // HATREPOSITORY_H
