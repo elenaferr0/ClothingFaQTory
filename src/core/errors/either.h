@@ -11,6 +11,8 @@ using std::holds_alternative;
 using std::optional;
 using std::nullopt;
 using std::function;
+using std::reference_wrapper;
+using std::ref;
 
 namespace Core {
     template<class L, class R>// R = right (correct result), L error
@@ -18,9 +20,17 @@ namespace Core {
     private:
         variant<L, R> value;
     public:
-        optional<L> left() const;
 
-        optional<R> right() const;
+        // left() and right() are not const since the object is returned by reference
+        optional<reference_wrapper<L>> left();
+
+        optional<reference_wrapper<R>> right();
+
+        // forceLeft() and forceRight() will result in an error if not present (but they allows less verbosity)
+        // should be used only after checking current value
+        L& forceLeft();
+
+        R& forceRight();
 
         bool isRight() const;
 
@@ -49,19 +59,31 @@ namespace Core {
     }
 
     template<class L, class R>
-    optional<L> Either<L, R>::left() const {
+    optional<reference_wrapper<L>> Either<L, R>::left() {
         if (holds_alternative<L>(value)) {
-            return optional(get<L>(value));
+            reference_wrapper<L> reference = ref(get<L>(value));
+            return optional(reference);
         }
         return nullopt;
     }
 
     template<class L, class R>
-    optional<R> Either<L, R>::right() const {
+    optional<reference_wrapper<R>> Either<L, R>::right() {
         if (holds_alternative<R>(value)) {
-            return optional(get<R>(value));
+            reference_wrapper<R> reference = ref(get<R>(value));
+            return optional(reference);
         }
         return nullopt;
+    }
+
+    template<class L, class R>
+    L& Either<L, R>::forceLeft() {
+        return ref(get<L>(value));
+    }
+
+    template<class L, class R>
+    R& Either<L, R>::forceRight() {
+        return ref(get<R>(value));
     }
 
     template<class L, class R>
