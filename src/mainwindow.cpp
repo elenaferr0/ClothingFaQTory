@@ -27,8 +27,22 @@ MainWindow::MainWindow(QWidget* parent)
     if (db.open()) {
         MaterialRepository* mr = MaterialRepository::getInstance();
         HatRepository* hr = HatRepository::getInstance();
-        Either<Error, Hat> h = hr->findById(2).forceRight();
-        Either<Error, Material> m = mr->findByName(Material::COTTON);
+        SizeRepository* sr = SizeRepository::getInstance();
+
+        Either<Error, Hat> h = hr->findById(2);
+        h.forceRight().setMaterial(mr->findByName(Material::WOOL).forceRight());
+
+        Hat h2 = Hat(-1,
+                     "CODE",
+                     "PINK",
+                     mr->findByName(Material::COTTON).forceRight(),
+                     sr->findByName(Size::ONE_SIZE).forceRight()
+        );
+        list<Hat> l;
+        l.push_back(h.forceRight());
+        l.push_back(h2);
+        hr->saveAll(l);
+
     } else {
         QMessageBox::information(this, "Not connected", "Database Connected Failed");
     }

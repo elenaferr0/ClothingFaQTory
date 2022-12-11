@@ -69,19 +69,6 @@ Either<Error, Hat> HatRepository::save(Hat& entity) {
     return entity;
 }
 
-Either<Error, list<Hat>> HatRepository::saveAll(list<Hat>& entities) {
-    for (auto en = entities.begin(); en != entities.end(); en++) {
-        Either<Error, Hat> hatOrError = save(*en);
-        if (hatOrError.isLeft()) {
-            qCritical() << QString::fromStdString(hatOrError.forceLeft().getMessage());
-            return hatOrError.forceLeft();
-        }
-
-        *en = hatOrError.forceRight();
-    }
-    return entities;
-}
-
 HatRepository* Services::HatRepository::getInstance() {
     if (instance == nullptr) {
         instance = new HatRepository();

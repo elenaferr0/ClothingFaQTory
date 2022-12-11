@@ -24,7 +24,7 @@ namespace Services {
 
         virtual Either<Error, T> save(T& entity) = 0;
 
-        virtual Either<Error, list<T>> saveAll(list<T>& entities) = 0;
+        Either<Error, list<T>> saveAll(list<T>& entities);
 
         optional<Error> deleteT(const T& entity);
 
@@ -35,6 +35,20 @@ namespace Services {
         Either<Error, list<T>> findAll() override;
 
     };
+
+    template<class T>
+    Either<Error, list<T>> CRUDRepository<T>::saveAll(list<T>& entities) {
+        for (auto en = entities.begin(); en != entities.end(); en++) {
+            Either<Error, T> entityOrError = save(*en);
+            if (entityOrError.isLeft()) {
+                qCritical() << QString::fromStdString(entityOrError.forceLeft().getMessage());
+                return entityOrError.forceLeft();
+            }
+
+            *en = entityOrError.forceRight();
+        }
+        return entities;
+    }
 
     template<class T>
     Either<Error, T> CRUDRepository<T>::findById(int id) {
