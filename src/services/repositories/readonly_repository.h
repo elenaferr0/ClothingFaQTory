@@ -48,9 +48,9 @@ namespace Services {
 
         optional<Error> hasError(const QSqlQuery& query);
 
-        virtual Either<Error, T> findById(int id) = 0;
+        virtual Either<Error, T> findById(int id);
 
-        virtual Either<Error, list<T>> findAll() = 0;
+        virtual Either<Error, list<T>> findAll();
 
     public:
 
@@ -59,6 +59,41 @@ namespace Services {
 
         virtual ~ReadOnlyRepository();
     };
+
+    template<class T>
+    Either<Error, list<T>> ReadOnlyRepository<T>::findAll() {
+        string sql = queryBuilder.select()
+                .from(table)
+                .build();
+        QSqlQuery query = exec(sql);
+        list<T> entities;
+        while (query.next()) {
+            Either<Error, T> entityOrError = mappingFunction(query);
+            if (entityOrError.isLeft()) {
+                qCritical() << QString::fromStdString(entityOrError.forceLeft().getMessage());
+                return entityOrError.forceLeft();
+            }
+            entities.push_back(entityOrError.forceRight());
+        }
+        return entities;
+    }
+
+    template<class T>
+    Either<Error, T> ReadOnlyRepository<T>::findById(int id) {
+        string sql = queryBuilder.select()
+                .from(table)
+                .where(Expr("id").equals({"?"}))
+                .build();
+        QSqlQuery query = exec(sql, QVariant::fromValue<int>(id));
+        query.next(); // is needed so the record can be read
+        Either<Error, T> errorOrEntity = mappingFunction(query);
+
+        if (errorOrEntity.isLeft()) {
+            qCritical() << QString::fromStdString(
+                    errorOrEntity.forceLeft().getMessage());
+        }
+        return errorOrEntity;
+    }
 
     template<class T>
     Either<Error, QSqlRecord> ReadOnlyRepository<T>::hasErrorOrRecord(const QSqlQuery& query) {

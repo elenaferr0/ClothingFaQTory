@@ -28,42 +28,22 @@ Either<Error, Size> Services::SizeRepository::findByName(const Size::Name& name)
 }
 
 Either<Error, Size> Services::SizeRepository::findById(int id) {
-    if (sizes.hasKey(id)) {
-        return sizes.get(id).value();
+    if (cachedSizes.hasKey(id)) {
+        return cachedSizes.get(id).value();
     }
 
-    string sql = queryBuilder.select()
-            .from(table)
-            .where(Expr("id").equals({"?"}))
-            .build();
-    QSqlQuery query = exec(sql, QVariant::fromValue<int>(id));
-    query.next(); // is needed so the record can be read
-    Either<Error, Size> errorOrSize = entityMapper.size(query);
+    Either<Error, Size> errorOrSize = ReadOnlyRepository::findById(id);
 
-    if (errorOrSize.isLeft()) {
-        qCritical() << QString::fromStdString(
-                errorOrSize.forceLeft().getMessage());
-    }
-    sizes[id] = errorOrSize.forceRight();
+    cachedSizes[id] = errorOrSize.forceRight();
     return errorOrSize;
 }
 
 Either<Error, list<Size>> Services::SizeRepository::findAll() {
-    string sql = queryBuilder.select()
-            .from(table)
-            .build();
-    QSqlQuery query = exec(sql);
-    list<Size> dbSizes;
-    while (query.next()) {
-        Either<Error, Size> errorOrSize = entityMapper.size(query);
-        if (errorOrSize.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    errorOrSize.forceLeft().getMessage());
-            return errorOrSize.forceLeft();
+    Either<Error, list<Size>> sizeOrError = ReadOnlyRepository::findAll();
+    if(sizeOrError.isRight()){
+        for (auto s : sizeOrError.forceRight()) {
+            cachedSizes[s.getId()] = s;
         }
-        Size& size = errorOrSize.forceRight();
-        dbSizes.push_back(size);
-        sizes[size.getId()] = errorOrSize.forceRight();
     }
-    return dbSizes;
+    return sizeOrError;
 }

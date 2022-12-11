@@ -8,7 +8,7 @@ using Core::Model;
 namespace Models {
     class Material : public Model {
     public:
-        enum Name { // contains database ids corresponding to this materials
+        enum Name { // contains database ids corresponding to this cachedMaterials
             DENIM = 1,
             WOOL = 2,
             POLYESTER = 3,

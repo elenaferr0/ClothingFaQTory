@@ -19,7 +19,7 @@ namespace Services {
 
         static MaterialRepository* instance; // no need for destructor since it's static
 
-        Map<int, Material> materials; // not static since there's only an instance
+        Map<int, Material> cachedMaterials; // not static since there's only an instance
 
     public:
         MaterialRepository(MaterialRepository&) = delete;

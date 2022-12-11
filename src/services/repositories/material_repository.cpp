@@ -18,42 +18,24 @@ MaterialRepository::MaterialRepository()
         : ReadOnlyRepository("material", entityMapper.material) {};
 
 Either<Error, Material> MaterialRepository::findById(int id) {
-    if (materials.hasKey(id)) {
-        return materials.get(id).value();
+    if (cachedMaterials.hasKey(id)) {
+        return cachedMaterials.get(id).value();
     }
 
-    string sql = queryBuilder.select()
-            .from(table)
-            .where(Expr("id").equals({"?"}))
-            .build();
-    QSqlQuery query = exec(sql, QVariant::fromValue<int>(id));
-    query.next(); // is needed so the record can be read
-    Either<Error, Material> errorOrMaterial = entityMapper.material(query);
+    Either<Error, Material> errorOrMaterial = ReadOnlyRepository::findById(id);
 
-    if (errorOrMaterial.isLeft()) {
-        qCritical() << QString::fromStdString(
-                errorOrMaterial.forceLeft().getMessage());
-    }
-
-    materials[id] = errorOrMaterial.forceRight();
+    cachedMaterials[id] = errorOrMaterial.forceRight();
     return errorOrMaterial;
 }
 
 Either<Error, list<Material>> MaterialRepository::findAll() {
-    string sql = queryBuilder.select()
-            .from(table)
-            .build();
-    QSqlQuery query = exec(sql);
-    list<Material> materials;
-    while (query.next()) {
-        Either<Error, Material> materialOrError = entityMapper.material(query);
-        if (materialOrError.isLeft()) {
-            qCritical() << QString::fromStdString(materialOrError.forceLeft().getMessage());
-            return materialOrError.forceLeft();
+    Either<Error, list<Material>> materialsOrError = ReadOnlyRepository::findAll();
+    if(materialsOrError.isRight()){
+        for (auto m : materialsOrError.forceRight()) {
+            cachedMaterials[m.getId()] = m;
         }
-        materials.push_back(materialOrError.forceRight());
     }
-    return materials;
+    return materialsOrError;
 }
 
 MaterialRepository* Services::MaterialRepository::getInstance() {
