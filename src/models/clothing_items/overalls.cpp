@@ -11,7 +11,7 @@ Overalls::Overalls(long id,
                    int soldQuantity,
                    string description,
                    bool sustainableMaterials,
-                   Gender gender,
+                   string gender,
                    bool shorts,
                    bool hasButtons)
         : Vest(id,
@@ -43,8 +43,4 @@ Overalls* Overalls::clone() const {
 
 double Overalls::computePrice() const {
     return Jeans::computePrice() + Vest::computePrice();
-}
-
-string Overalls::getTableName() const {
-    return "overalls";
 }

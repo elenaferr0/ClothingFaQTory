@@ -45,7 +45,7 @@ namespace Models {
 
         void setCostPerUnit(double costPerUnit);
 
-        string getTableName() const override;
+
 
         string getNameAsString() const;
 

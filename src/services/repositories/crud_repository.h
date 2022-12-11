@@ -18,6 +18,9 @@ using Models::Material;
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
+    protected:
+        Either<Error, T> save(const list<string>&, QVariantList&, T& entity);
+
     public:
         CRUDRepository(const string& table, function<Either<Error, T>(const QSqlQuery&)> mappingFunction)
                 : ReadOnlyRepository<T>(table, mappingFunction) {};
@@ -35,6 +38,42 @@ namespace Services {
         Either<Error, list<T>> findAll() override;
 
     };
+
+    template<class T>
+    Either<Error, T> CRUDRepository<T>::save(const list<string>& fields, QVariantList& params, T& entity) {
+        string sql;
+        QSqlQuery query;
+
+        if (entity.getId() == -1) { // does not exist => create a new BackPack
+            sql = CRUDRepository<T>::queryBuilder
+                    .insertInto(CRUDRepository<T>::table, fields).build();
+
+            query = CRUDRepository<T>::exec(sql, params);
+            query.next();
+            entity.setId(query.lastInsertId().toInt());
+        } else {
+            // exists => should update all the fields
+            sql = CRUDRepository<T>::queryBuilder.update(CRUDRepository<T>::table)
+                    .set(fields)
+                    .where(Expr("id").equals({"?"}))
+                    .build();
+
+            params << entity.getId();
+            query = CRUDRepository<T>::exec(sql, params);
+            query.next();
+        }
+
+        optional<Error> hasError = CRUDRepository::hasError(query);
+
+        if (hasError.has_value()) {
+            QSqlDatabase::database().rollback();
+            qCritical() << QString::fromStdString(hasError.value().getMessage());
+            return Either<Error, T>::ofLeft(hasError.value());
+        }
+
+        QSqlDatabase::database().commit();
+        return entity;
+    }
 
     template<class T>
     Either<Error, list<T>> CRUDRepository<T>::saveAll(list<T>& entities) {
@@ -84,7 +123,7 @@ namespace Services {
         // get the size
         QSqlQuery sizeQuery = ReadOnlyRepository<T>::exec(sizeSql, QVariant::fromValue<int>(id));
         sizeQuery.next();
-        Either<Error, Size> errorOrSize = ReadOnlyRepository<T>::entityMapper.size(sizeQuery);
+        Either<Error, Size> errorOrSize = EntityMapper::size(sizeQuery);
 
         if (errorOrSize.isLeft()) {
             qCritical() << QString::fromStdString(
@@ -98,7 +137,7 @@ namespace Services {
         // get the material
         QSqlQuery materialQuery = ReadOnlyRepository<T>::exec(materialSql, QVariant::fromValue<int>(id));
         materialQuery.next();
-        Either<Error, Material> errorOrMaterial = ReadOnlyRepository<T>::entityMapper.material(materialQuery);
+        Either<Error, Material> errorOrMaterial = EntityMapper::material(materialQuery);
 
         if (errorOrMaterial.isLeft()) {
             qCritical() << QString::fromStdString(

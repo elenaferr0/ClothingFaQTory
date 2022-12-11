@@ -16,6 +16,11 @@ namespace Models::ClothingItems {
         // if shorts is true, when calculating the price half the length will be used
         bool shorts;
     public:
+        bool areShorts() const;
+
+        void setShorts(bool shorts);
+
+    public:
         Jeans(long id = -1,
               string code = "",
               string color = "",
@@ -25,13 +30,11 @@ namespace Models::ClothingItems {
               int soldQuantity = 0,
               string description = "",
               bool sustainableMaterials = false,
-              Gender gender = Gender::UNISEX,
+              string gender = "",
               bool shorts = false
         );
 
         double computePrice() const override;
-
-        string getTableName() const override;
 
         Jeans* clone() const override;
     };

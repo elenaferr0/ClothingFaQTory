@@ -12,8 +12,8 @@
 #include "../models/accessories/bracelet.h"
 #include "../models/accessories/hat.h"
 #include "../models/clothing_items/jeans.h"
-#include "../models/clothing_items/overalls.h"
 #include "../models/clothing_items/vest.h"
+#include "../models/clothing_items/overalls.h"
 
 using Models::Size;
 using Models::Product;
@@ -23,8 +23,8 @@ using Models::Accessories::BackPack;
 using Models::Accessories::Bracelet;
 using Models::Accessories::Hat;
 using Models::ClothingItem;
-using Models::ClothingItems::Jeans;
 using Models::ClothingItems::Overalls;
+using Models::ClothingItems::Jeans;
 using Models::ClothingItems::Vest;
 using Core::Either;
 using Core::Error;
@@ -43,21 +43,17 @@ namespace Services {
 
         static Either<Error, Material> material(const QSqlQuery&);
 
-//        static Accessory accessory(const QSqlQuery&);
-
-//	static BackPack backPack(const QSqlQuery&);
-
-//        static Bracelet bracelet(const QSqlQuery&);
+        static Either<Error, BackPack> backPack(const QSqlQuery&);
 
         static Either<Error, Hat> hat(const QSqlQuery&);
 
-//        static ClothingItem clothingItem(const QSqlQuery&);
+        static Either<Error, Vest> vest(const QSqlQuery&);
 
-//        static Jeans jeans(const QSqlQuery&);
+        static Either<Error, Bracelet> bracelet(const QSqlQuery&);
 
-//        static Overalls overalls(const QSqlQuery&);
+        static Either<Error, Jeans> jeans(const QSqlQuery&);
 
-//        static Vest vest(const QSqlQuery&);
+        static Either<Error, Overalls> overalls(const QSqlQuery&);
 
     };
 }

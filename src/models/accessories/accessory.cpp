@@ -25,10 +25,6 @@ Accessory::Accessory(
                   description),
           category(categoryFromString(category)) {}
 
-string Accessory::getTableName() const {
-    return "accessory";
-}
-
 string Accessory::getCategoryAsString() const {
     switch (category) {
         case BAGS:

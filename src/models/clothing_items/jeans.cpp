@@ -14,7 +14,7 @@ Jeans::Jeans(long id,
              int soldQuantity,
              string description,
              bool sustainableMaterials,
-             Gender gender,
+             string gender,
              bool shorts)
         : ClothingItem(id,
                        code,
@@ -44,6 +44,11 @@ double Jeans::computePrice() const {
     return surface * material.getCostPerUnit();
 }
 
-string Jeans::getTableName() const {
-    return "jeans";
+bool Models::ClothingItems::Jeans::areShorts() const {
+    return shorts;
 }
+
+void Models::ClothingItems::Jeans::setShorts(bool shorts) {
+    Jeans::shorts = shorts;
+}
+

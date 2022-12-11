@@ -20,8 +20,6 @@ namespace Models {
              string name = "",
              double extraPercentageOfMaterial = 0);
 
-        string getTableName() const override;
-
         void setName(string name);
 
         void setExtraPercentageOfMaterial(double extraPercentageOfMaterial);

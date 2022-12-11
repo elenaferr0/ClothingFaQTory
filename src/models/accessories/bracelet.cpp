@@ -57,6 +57,18 @@ double Bracelet::computePrice() const {
     return totalWeight * material.getCostPerUnit();
 }
 
-string Bracelet::getTableName() const {
-    return "bracelet";
+unsigned int Models::Accessories::Bracelet::getPearlNumber() const {
+    return pearlNumber;
+}
+
+void Models::Accessories::Bracelet::setPearlNumber(unsigned int pearlNumber) {
+    Bracelet::pearlNumber = pearlNumber;
+}
+
+double Models::Accessories::Bracelet::getPearlDiameter() const {
+    return pearlDiameter;
+}
+
+void Models::Accessories::Bracelet::setPearlDiameter(double pearlDiameter) {
+    Bracelet::pearlDiameter = pearlDiameter;
 }

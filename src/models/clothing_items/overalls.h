@@ -4,6 +4,11 @@
 #include "vest.h"
 #include "jeans.h"
 
+using Models::ClothingItems::Vest;
+using Models::ClothingItems::Jeans;
+using Models::Material;
+using Models::Size;
+
 namespace Models::ClothingItems {
     class Overalls : public Vest, public Jeans {
     public:
@@ -16,13 +21,11 @@ namespace Models::ClothingItems {
                  int soldQuantity = 0,
                  string description = "",
                  bool sustainableMaterials = false,
-                 Gender gender = Gender::UNISEX,
+                 string gender = "",
                  bool shorts = false,
                  bool hasButtons = false);
 
         double computePrice() const override;
-
-        string getTableName() const override;
 
         Overalls* clone() const override;
     };

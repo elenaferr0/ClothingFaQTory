@@ -2,11 +2,11 @@
 
 using Core::Model;
 
-long long Model::getId() const {
+int Model::getId() const {
     return id;
 }
 
-void Model::setId(long long id) {
+void Model::setId(int id) {
     this->id = id;
 }
 

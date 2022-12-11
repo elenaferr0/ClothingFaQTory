@@ -1,5 +1,8 @@
-#ifndef HATREPOSITORY_H
-#define HATREPOSITORY_H
+
+
+#ifndef VEST_REPOSITORY_H
+#define VEST_REPOSITORY_H
+
 
 #include <QSqlQuery>
 #include <QVariant>
@@ -11,21 +14,22 @@
 
 using Core::Either;
 using Core::Error;
-using Models::Accessories::Hat;
+using Models::ClothingItems::Vest;
 using Services::CRUDRepository;
 
 namespace Services {
-    class HatRepository : public CRUDRepository<Hat> {
+    class VestRepository : public CRUDRepository<Vest> {
     private:
-        HatRepository();
+        VestRepository();
     protected:
-
         // doesn't need a destructor since it's static (it wouldn't be called)
-        static HatRepository* instance;
+        static VestRepository* instance;
     public:
-        static HatRepository* getInstance();
 
-        Either<Error, Hat> save(Hat& entity) override;
+        static VestRepository* getInstance();
+
+        Either<Error, Vest> save(Vest& entity) override;
     };
 }
-#endif // HATREPOSITORY_H
+
+#endif //VEST_REPOSITORY_H

@@ -49,10 +49,6 @@ double Hat::computePrice() const {
     return material.getCostPerUnit() * surface;
 }
 
-string Hat::getTableName() const {
-    return "hat";
-}
-
 bool Hat::isBaseballCap() const {
     return baseballCap;
 }

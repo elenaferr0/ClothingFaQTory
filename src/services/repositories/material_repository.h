@@ -14,18 +14,14 @@ using Services::ReadOnlyRepository;
 
 namespace Services {
     class MaterialRepository : public ReadOnlyRepository<Material> {
-    protected:
+    private:
         MaterialRepository();
-
-        static MaterialRepository* instance; // no need for destructor since it's static
-
-        Map<int, Material> cachedMaterials; // not static since there's only an instance
+    protected:
+        // doesn't need a destructor since it's static (it wouldn't be called)
+        static MaterialRepository* instance;
+        Map<int, Material> cachedMaterials; // not static since there's only one instance
 
     public:
-        MaterialRepository(MaterialRepository&) = delete;
-
-        void operator=(const MaterialRepository&) = delete;
-
         static MaterialRepository* getInstance();
 
         Either<Error, Material> findByName(const Material::Name&);
@@ -35,6 +31,7 @@ namespace Services {
         Either<Error, Material> findById(int id) override;
 
         Either<Error, list<Material>> findAll() override;
+
     };
 }
 #endif // MATERIAL_REPOSITORY_H

@@ -20,9 +20,18 @@ namespace Models {
                      int soldQuantity = 0,
                      string description = "",
                      bool sustainableMaterials = false,
-                     Gender gender = Gender::UNISEX);
+                     string gender = "");
 
-        string getTableName() const override;
+
+
+        string getGenderAsString() const;
+        Gender genderFromString(const string&) const;
+
+        ClothingItem& operator=(const ClothingItem&) = default; // needed because it's a virtual base
+
+        bool hasSustainableMaterials() const;
+
+        void setSustainableMaterials(bool sustainableMaterials);
 
     protected:
         double computeLegLength() const;
@@ -43,6 +52,7 @@ namespace Models {
         // constants used for bottom part clothing
         static const double SMALLEST_SIZE_LEG_WIDTH;
         static const double SMALLEST_SIZE_LEG_LENGTH;
+
 
     };
 }

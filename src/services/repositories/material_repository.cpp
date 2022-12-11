@@ -15,7 +15,7 @@ using Core::Db::Expr;
 MaterialRepository* MaterialRepository::instance;
 
 MaterialRepository::MaterialRepository()
-        : ReadOnlyRepository("material", entityMapper.material) {};
+        : ReadOnlyRepository("material", EntityMapper::material) {};
 
 Either<Error, Material> MaterialRepository::findById(int id) {
     if (cachedMaterials.hasKey(id)) {
@@ -38,13 +38,6 @@ Either<Error, list<Material>> MaterialRepository::findAll() {
     return materialsOrError;
 }
 
-MaterialRepository* Services::MaterialRepository::getInstance() {
-    if (instance == nullptr) {
-        instance = new MaterialRepository();
-    }
-    return instance;
-}
-
 Either<Error, Material> Services::MaterialRepository::findByName(const Material::Name& name) {
     return findById(name);
 }
@@ -56,7 +49,7 @@ Either<Error, Material> MaterialRepository::saveCostPerUnit(const Material& enti
     params << entity.getCostPerUnit()
            << entity.getId();
 
-    string sql = queryBuilder.update(entity.getTableName())
+    string sql = queryBuilder.update(table)
             .set("cost_per_unit")
             .where(Expr("id").equals({"?"}))
             .build();
@@ -73,4 +66,11 @@ Either<Error, Material> MaterialRepository::saveCostPerUnit(const Material& enti
     }
 
     return entity;
+}
+
+MaterialRepository* Services::MaterialRepository::getInstance() {
+    if (instance == nullptr) {
+        instance = new MaterialRepository();
+    }
+    return instance;
 }

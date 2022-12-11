@@ -7,6 +7,16 @@ namespace Models::Accessories {
     class Bracelet : public Accessory {
     protected:
         unsigned int pearlNumber;
+    public:
+        unsigned int getPearlNumber() const;
+
+        void setPearlNumber(unsigned int pearlNumber);
+
+        double getPearlDiameter() const;
+
+        void setPearlDiameter(double pearlDiameter);
+
+    protected:
         double pearlDiameter;
 
     public:
@@ -25,7 +35,7 @@ namespace Models::Accessories {
 
         Bracelet* clone() const override;
 
-        string getTableName() const override;
+
 
         double computePrice() const override;
     };

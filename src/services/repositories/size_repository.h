@@ -15,16 +15,15 @@ using Models::Size;
 
 namespace Services {
     class SizeRepository : public ReadOnlyRepository<Size> {
-    protected:
+    private:
         SizeRepository();
 
-        static SizeRepository* instance; // no need for destructor since it's static
+    protected:
+        // doesn't need a destructor since it's static (it wouldn't be called)
+        static SizeRepository* instance;
         Map<int, Size> cachedSizes; // not static since there's only an instance
 
     public:
-        SizeRepository(SizeRepository&) = delete;
-
-        void operator=(const SizeRepository&) = delete;
 
         Either<Error, Size> findById(int id) override;
 

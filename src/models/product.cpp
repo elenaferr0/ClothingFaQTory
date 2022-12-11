@@ -23,10 +23,6 @@ Product::Product(long id,
           description(description),
           code(code) {};
 
-string Product::getTableName() const {
-    return "product";
-}
-
 const string& Product::getColor() const {
     return color;
 }

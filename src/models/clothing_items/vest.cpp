@@ -19,7 +19,7 @@ Vest::Vest(long id,
            int soldQuantity,
            string description,
            bool sustainableMaterials,
-           Gender gender,
+           string gender,
            bool hasButtons)
         : ClothingItem(id,
                        code,
@@ -56,6 +56,10 @@ double Vest::computePrice() const {
     return price;
 }
 
-string Vest::getTableName() const {
-    return "vest";
+bool Models::ClothingItems::Vest::getHasButtons() const {
+    return hasButtons;
+}
+
+void Models::ClothingItems::Vest::setHasButtons(bool hasButtons) {
+    Vest::hasButtons = hasButtons;
 }

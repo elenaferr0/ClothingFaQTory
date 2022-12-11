@@ -45,10 +45,6 @@ void Material::setCostPerUnit(double costPerUnit) {
     this->costPerUnit = costPerUnit;
 }
 
-string Material::getTableName() const {
-    return "material";
-}
-
 string Material::getNameAsString() const {
     switch (name) {
         case DENIM:
@@ -95,18 +91,14 @@ Material::Name Models::Material::namefromString(const string& name) {
     } else if (name == "WOOD") {
         return WOOD;
     } else {
-        qWarning() << QString::fromStdString("Invalid name provided " + name + " for material");
         return POLYESTER;
     }
 }
 
 Material::UnitOfMeasure Models::Material::unitOfMeasureFromString(const string& unit) {
-    if (unit == "cm") {
-        return CENTIMETER;
-    } else if (unit == "g") {
+    if (unit == "g") {
         return GRAM;
     } else {
-        qWarning() << QString::fromStdString("Invalid unit of measure "  + unit + " provided for material");
         return CENTIMETER;
     }
 }

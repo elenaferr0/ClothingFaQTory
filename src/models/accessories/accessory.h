@@ -23,7 +23,7 @@ namespace Models {
                   string description = "",
                   string category = "");
 
-        string getTableName() const override;
+
 
         string getCategoryAsString() const;
 

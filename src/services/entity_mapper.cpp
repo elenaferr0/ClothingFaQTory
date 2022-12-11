@@ -2,16 +2,6 @@
 #include "qvariant.h"
 
 using Services::EntityMapper;
-using Models::Product;
-using Models::Accessory;
-using Models::Accessories::BackPack;
-using Models::Accessories::Bracelet;
-using Models::Accessories::Hat;
-using Models::ClothingItem;
-using Models::ClothingItems::Jeans;
-using Models::ClothingItems::Overalls;
-using Models::ClothingItems::Vest;
-using Core::Error;
 
 string EntityMapper::toString(const QSqlError::ErrorType& errorType) {
     switch (errorType) {
@@ -137,73 +127,211 @@ Either<Error, Hat> EntityMapper::hat(const QSqlQuery& query) {
     );
 }
 
-//Either<BackPack, Error> EntityMapper::backPack(const QSqlQuery& query) {
-//  /*
-//     * id int
-//     * code string
-//     * color string
-//     * sold_quantity int
-//     * available_quantity int
-//     * description string
-//     * size_id int
-//     * sustainable_materials bool
-//     * gender string
-//     * name string
-//     * category string
-//     * capacity string
-//     */
+Either<Error, Vest> Services::EntityMapper::vest(const QSqlQuery& query) {
+    /*
+     * id int
+     * code string
+     * color string
+     * sold_quantity int
+     * available_quantity int
+     * description string
+     * size_id int
+     * sustainable_materials bool
+     * gender string
+     * material_id int
+     * has_buttons bool
+     */
+    Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
-//  QSqlError error = query.lastError();
-//  if(!query.isValid() || error.isValid()){ // error occurred
-//    return Either<BackPack,Error>::ofRight({toString(error.type()),
-//					   "Error while getting backpack"});
-//  }
+    if (recordOrError.isLeft()) {
+        return recordOrError.forceLeft();
+    }
 
-//  QSqlRecord record = query.record();
+    if (query.size() == 0) {
+        return Vest();
+    }
 
-//  BackPack backPack = BackPack(
-//	record.value("id").toInt(),
-//	record.value("code").toString().toStdString(),
-//	record.value("sold_quantity").toInt(),
-//	record.value("available_quantity").toInt(),
-//	record.value("description").toString().toStdString(),
-//	record.value("size_id").toString().toStdString(),
-//	record.value("sustainable_materials").toBool(),
-//	record.value("gender").toString(),
-//	record.value("name").toString(),
-//	record.value("category").toString(),
-//	record.value("capacity").toString()
-//  );
-//}
+    QSqlRecord record = recordOrError.forceRight();
 
-//Accessory EntityMapper::accessory(const QSqlQuery& query) {
+    return Vest(
+            record.value("id").toInt(),
+            record.value("code").toString().toStdString(),
+            record.value("color").toString().toStdString(),
+            Material(),
+            Size(),
+            record.value("available_quantity").toInt(),
+            record.value("sold_quantity").toInt(),
+            record.value("description").toString().toStdString(),
+            record.value("sustainable_materials").toBool(),
+            record.value("gender").toString().toStdString(),
+            record.value("has_buttons").toBool()
+    );
+}
 
-//}
+Either<Error, BackPack> EntityMapper::backPack(const QSqlQuery& query) {
+    /*
+       * id int
+       * code string
+       * color string
+       * sold_quantity int
+       * available_quantity int
+       * description string
+       * size_id int
+       * category string
+       * capacity double
+       * material_id int
+       */
 
-//BackPack EntityMapper::backPack(const QSqlQuery& query) {
+    Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
-//}
+    if (recordOrError.isLeft()) {
+        return recordOrError.forceLeft();
+    }
 
-//Bracelet EntityMapper::bracelet(const QSqlQuery& query) {
+    if (query.size() == 0) {
+        return BackPack();
+    }
 
-//}
+    QSqlRecord record = recordOrError.forceRight();
 
-//Hat EntityMapper::hat(const QSqlQuery& query) {
+    return BackPack(
+            record.value("id").toInt(),
+            record.value("code").toString().toStdString(),
+            record.value("color").toString().toStdString(),
+            Material(),
+            Size(),
+            record.value("available_quantity").toInt(),
+            record.value("sold_quantity").toInt(),
+            record.value("description").toString().toStdString(),
+            record.value("category").toString().toStdString(),
+            record.value("capacity").toDouble()
+    );
+}
 
-//}
+Either<Error, Bracelet> Services::EntityMapper::bracelet(const QSqlQuery& query) {
+    /*
+       * id int
+       * code string
+       * color string
+       * sold_quantity int
+       * available_quantity int
+       * description string
+       * size_id int
+       * category string
+       * pearl_number int
+       * pearl_diameter double
+       * material_id int
+       */
 
-//ClothingItem EntityMapper::clothingItem(const QSqlQuery& query) {
+    Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
-//}
+    if (recordOrError.isLeft()) {
+        return recordOrError.forceLeft();
+    }
 
-//Jeans EntityMapper::jeans(const QSqlQuery& query) {
+    if (query.size() == 0) {
+        return Bracelet();
+    }
 
-//}
+    QSqlRecord record = recordOrError.forceRight();
 
-//Overalls EntityMapper::overalls(const QSqlQuery& query) {
+    return Bracelet(
+            record.value("id").toInt(),
+            record.value("code").toString().toStdString(),
+            record.value("color").toString().toStdString(),
+            Material(),
+            Size(),
+            record.value("available_quantity").toInt(),
+            record.value("sold_quantity").toInt(),
+            record.value("description").toString().toStdString(),
+            record.value("category").toString().toStdString(),
+            record.value("pearl_number").toInt(),
+            record.value("pearl_diameter").toDouble()
+    );
+}
 
-//}
+Either<Error, Jeans> Services::EntityMapper::jeans(const QSqlQuery& query) {
+    /*
+       * id int
+       * code string
+       * color string
+       * sold_quantity int
+       * available_quantity int
+       * description string
+       * size_id int
+       * sustainable_materials bool
+       * gender string
+       * material_id int
+       * shorts true
+       */
 
-//Vest EntityMapper::vest(const QSqlQuery& query) {
+    Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
-//}
+    if (recordOrError.isLeft()) {
+        return recordOrError.forceLeft();
+    }
+
+    if (query.size() == 0) {
+        return Jeans();
+    }
+
+    QSqlRecord record = recordOrError.forceRight();
+
+    return Jeans(
+            record.value("id").toInt(),
+            record.value("code").toString().toStdString(),
+            record.value("color").toString().toStdString(),
+            Material(),
+            Size(),
+            record.value("available_quantity").toInt(),
+            record.value("sold_quantity").toInt(),
+            record.value("description").toString().toStdString(),
+            record.value("sustainable_materials").toBool(),
+            record.value("gender").toString().toStdString(),
+            record.value("shorts").toBool()
+    );
+}
+
+Either<Error, Overalls> Services::EntityMapper::overalls(const QSqlQuery& query) {
+
+       /* id int
+       * code string
+       * color string
+       * sold_quantity int
+       * available_quantity int
+       * description string
+       * size_id int
+       * sustainable_materials bool
+       * gender string
+       * material_id int
+       * has_buttons bool
+       * shorts bool
+       */
+
+    Either<Error, QSqlRecord> recordOrError = checkQuery(query);
+
+    if (recordOrError.isLeft()) {
+        return recordOrError.forceLeft();
+    }
+
+    if (query.size() == 0) {
+        return Overalls();
+    }
+
+    QSqlRecord record = recordOrError.forceRight();
+
+    return Overalls(
+            record.value("id").toInt(),
+            record.value("code").toString().toStdString(),
+            record.value("color").toString().toStdString(),
+            Material(),
+            Size(),
+            record.value("available_quantity").toInt(),
+            record.value("sold_quantity").toInt(),
+            record.value("description").toString().toStdString(),
+            record.value("sustainable_materials").toBool(),
+            record.value("gender").toString().toStdString(),
+            record.value("shorts").toBool(),
+            record.value("has_buttons").toBool()
+    );
+}

@@ -44,6 +44,10 @@ double BackPack::computePrice() const {
     return material.getCostPerUnit() * surface;
 }
 
-string BackPack::getTableName() const {
-    return "backpack";
+double Models::Accessories::BackPack::getCapacity() const {
+    return capacity;
+}
+
+void Models::Accessories::BackPack::setCapacity(double capacity) {
+    BackPack::capacity = capacity;
 }

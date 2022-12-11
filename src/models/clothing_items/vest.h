@@ -7,24 +7,30 @@ namespace Models::ClothingItems {
     class Vest : public virtual ClothingItem {
     private:
         bool hasButtons;
+    public:
+        bool getHasButtons() const;
+
+        void setHasButtons(bool hasButtons);
+
+    private:
         static const unsigned int N_BUTTONS;
         static const double BUTTON_DIAMETER;
     public:
-        Vest(long id,
-             string code,
-             string color,
-             Material material,
-             Size size,
-             int availableQuantity,
-             int soldQuantity,
-             string description,
+        Vest(long id = -1,
+             string code = "",
+             string color = "",
+             Material material = Material(),
+             Size size = Size(),
+             int availableQuantity = 0,
+             int soldQuantity = 0,
+             string description = "",
              bool sustainableMaterials = false,
-             Gender gender = Gender::UNISEX,
+             string gender = "",
              bool hasButtons = false);
 
         double computePrice() const override;
 
-        string getTableName() const override;
+
 
         Vest* clone() const override;
     };

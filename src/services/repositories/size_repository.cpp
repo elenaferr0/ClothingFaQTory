@@ -1,9 +1,5 @@
 #include "size_repository.h"
-#include "../../core/db/expression.h"
 #include <list>
-#include <QDebug>
-#include <QSqlQuery>
-#include <QSqlRecord>
 
 using Core::Db::Expr;
 using std::list;
@@ -13,7 +9,7 @@ using Services::SizeRepository;
 SizeRepository* SizeRepository::instance;
 
 SizeRepository::SizeRepository()
-        : ReadOnlyRepository("size", entityMapper.size) {};
+        : ReadOnlyRepository("size", EntityMapper::size) {};
 
 SizeRepository* Services::SizeRepository::getInstance() {
     if (instance == nullptr) {
@@ -21,7 +17,6 @@ SizeRepository* Services::SizeRepository::getInstance() {
     }
     return instance;
 }
-
 
 Either<Error, Size> Services::SizeRepository::findByName(const Size::Name& name) {
     return findById(name);

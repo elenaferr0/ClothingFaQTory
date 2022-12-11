@@ -35,7 +35,11 @@ namespace Models::Accessories {
 
         double computePrice() const override;
 
-        string getTableName() const override;
+
+
+        double getCapacity() const;
+
+        void setCapacity(double capacity);
     };
 }
 

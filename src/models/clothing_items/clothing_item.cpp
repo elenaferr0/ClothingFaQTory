@@ -21,7 +21,7 @@ ClothingItem::ClothingItem(
         int soldQuantity,
         string description,
         bool sustainableMaterials,
-        Gender gender)
+        string gender)
         : Product(id,
                   code,
                   color,
@@ -31,7 +31,7 @@ ClothingItem::ClothingItem(
                   soldQuantity,
                   description),
           sustainableMaterials(sustainableMaterials),
-          gender(gender) {};
+          gender(genderFromString(gender)) {};
 
 /*
  * compute length and compute width calculate the length of the current
@@ -56,6 +56,32 @@ double ClothingItem::computeTrunkWidth() const {
     return SMALLEST_SIZE_TRUNK_WIDTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
 }
 
-string ClothingItem::getTableName() const {
-    return "clothing_item";
+string ClothingItem::getGenderAsString() const {
+    switch (gender) {
+        case ClothingItem::MEN:
+            return "MEN";
+        case ClothingItem::WOMEN:
+            return "WOMEN";
+        case ClothingItem::UNISEX:
+        default:
+            return "UNISEX";
+    }
+}
+
+ClothingItem::Gender Models::ClothingItem::genderFromString(const string& gender) const {
+    if (gender == "MEN") {
+        return Gender::MEN;
+    } else if (gender == "WOMEN") {
+        return Gender::WOMEN;
+    } else {
+        return Gender::UNISEX;
+    }
+}
+
+bool Models::ClothingItem::hasSustainableMaterials() const {
+    return sustainableMaterials;
+}
+
+void Models::ClothingItem::setSustainableMaterials(bool sustainableMaterials) {
+    ClothingItem::sustainableMaterials = sustainableMaterials;
 }

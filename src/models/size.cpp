@@ -21,10 +21,6 @@ Size* Size::clone() const {
     return new Size(*this);
 }
 
-string Size::getTableName() const {
-    return "size";
-}
-
 void Size::setName(string name) {
     this->name = nameFromString(name);
 }

@@ -31,11 +31,10 @@ namespace Services {
     private:
         string errorTypeToString(const QSqlError::ErrorType& errorType);
 
-
     protected:
         string table;
         QueryBuilder queryBuilder;
-        EntityMapper entityMapper;
+
         function<Either<Error, T>(const QSqlQuery&)> mappingFunction;
 
         QSqlQuery exec(const string&, const QVariantList&);
@@ -58,6 +57,11 @@ namespace Services {
                            function<Either<Error, T>(const QSqlQuery&)> mappingFunction);
 
         virtual ~ReadOnlyRepository();
+
+        ReadOnlyRepository(ReadOnlyRepository&) = delete;
+
+        void operator=(const ReadOnlyRepository&) = delete;
+
     };
 
     template<class T>
