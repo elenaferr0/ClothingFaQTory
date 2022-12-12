@@ -56,10 +56,10 @@ double Vest::computePrice() const {
     return price;
 }
 
-bool Models::ClothingItems::Vest::getHasButtons() const {
+bool Vest::getHasButtons() const {
     return hasButtons;
 }
 
-void Models::ClothingItems::Vest::setHasButtons(bool hasButtons) {
-    Vest::hasButtons = hasButtons;
+void Vest::accept(IProductVisitor& visitor) {
+    visitor.visitVest(*this);
 }

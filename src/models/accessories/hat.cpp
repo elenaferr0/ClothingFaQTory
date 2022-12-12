@@ -53,6 +53,6 @@ bool Hat::isBaseballCap() const {
     return baseballCap;
 }
 
-void Hat::setIsBaseballCap(bool isBaseballCap) {
-    isBaseballCap = isBaseballCap;
+void Hat::accept(IProductVisitor& visitor) {
+    visitor.visitHat(*this);
 }

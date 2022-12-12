@@ -44,3 +44,7 @@ Overalls* Overalls::clone() const {
 double Overalls::computePrice() const {
     return Jeans::computePrice() + Vest::computePrice();
 }
+
+void Overalls::accept(IProductVisitor& visitor) {
+    visitor.visitOveralls(*this);
+}

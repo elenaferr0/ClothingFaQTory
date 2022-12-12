@@ -4,6 +4,7 @@
 #include "./material.h"
 #include "./size.h"
 #include "../core/model.h"
+#include "../core/iproduct_visitor.h"
 
 #include<string>
 #include<list>
@@ -11,6 +12,7 @@
 using std::string;
 using std::list;
 using Core::Model;
+using Core::IProductVisitor;
 
 namespace Models {
     class Product : public Model {
@@ -51,19 +53,11 @@ namespace Models {
 
         const string& getCode() const;
 
-        void setColor(const string& color);
-
         void setMaterial(const Material& material);
 
         void setSize(const Size& size);
 
-        void setAvailableQuantity(int availableQuantity);
-
-        void setSoldQuantity(int soldQuantity);
-
-        void setDescription(const string& description);
-
-        void setCode(const string& code);
+        virtual void accept(IProductVisitor& visitor) = 0;
     };
 }
 #endif // PRODUCT_H

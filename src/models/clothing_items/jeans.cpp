@@ -44,11 +44,15 @@ double Jeans::computePrice() const {
     return surface * material.getCostPerUnit();
 }
 
-bool Models::ClothingItems::Jeans::areShorts() const {
+bool Jeans::areShorts() const {
     return shorts;
 }
 
-void Models::ClothingItems::Jeans::setShorts(bool shorts) {
+void Jeans::setShorts(bool shorts) {
     Jeans::shorts = shorts;
+}
+
+void Jeans::accept(IProductVisitor& visitor) {
+    visitor.visitJeans(*this);
 }
 

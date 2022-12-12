@@ -47,28 +47,8 @@ const string& Product::getCode() const {
     return code;
 }
 
-void Product::setColor(const string& color) {
-    Product::color = color;
-}
-
 void Product::setSize(const Models::Size& size) {
     Product::size = size;
-}
-
-void Product::setAvailableQuantity(int availableQuantity) {
-    Product::availableQuantity = availableQuantity;
-}
-
-void Product::setSoldQuantity(int soldQuantity) {
-    Product::soldQuantity = soldQuantity;
-}
-
-void Product::setDescription(const string& description) {
-    Product::description = description;
-}
-
-void Product::setCode(const string& code) {
-    Product::code = code;
 }
 
 const Material& Product::getMaterial() const {

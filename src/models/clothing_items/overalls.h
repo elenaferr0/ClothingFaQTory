@@ -28,6 +28,8 @@ namespace Models::ClothingItems {
         double computePrice() const override;
 
         Overalls* clone() const override;
+
+        void accept(IProductVisitor& visitor) override;
     };
 }
 

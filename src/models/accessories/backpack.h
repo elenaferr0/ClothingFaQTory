@@ -35,9 +35,9 @@ namespace Models::Accessories {
 
         double computePrice() const override;
 
-
-
         double getCapacity() const;
+
+        void accept(IProductVisitor& visitor) override;
 
         void setCapacity(double capacity);
     };

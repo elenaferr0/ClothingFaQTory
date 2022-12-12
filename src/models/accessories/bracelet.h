@@ -1,7 +1,11 @@
 #ifndef BRACELET_H
 #define BRACELET_H
 
+#include "../../core/iproduct_visitor.h"
+
 #include "accessory.h"
+
+using Core::IProductVisitor;
 
 namespace Models::Accessories {
     class Bracelet : public Accessory {
@@ -10,11 +14,7 @@ namespace Models::Accessories {
     public:
         unsigned int getPearlNumber() const;
 
-        void setPearlNumber(unsigned int pearlNumber);
-
         double getPearlDiameter() const;
-
-        void setPearlDiameter(double pearlDiameter);
 
     protected:
         double pearlDiameter;
@@ -35,9 +35,9 @@ namespace Models::Accessories {
 
         Bracelet* clone() const override;
 
-
-
         double computePrice() const override;
+
+        void accept(IProductVisitor& visitor) override;
     };
 }
 

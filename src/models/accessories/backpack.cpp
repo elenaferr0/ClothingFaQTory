@@ -44,10 +44,10 @@ double BackPack::computePrice() const {
     return material.getCostPerUnit() * surface;
 }
 
-double Models::Accessories::BackPack::getCapacity() const {
+double BackPack::getCapacity() const {
     return capacity;
 }
 
-void Models::Accessories::BackPack::setCapacity(double capacity) {
-    BackPack::capacity = capacity;
+void BackPack::accept(IProductVisitor& visitor) {
+    visitor.visitBackPack(*this);
 }
