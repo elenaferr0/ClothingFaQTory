@@ -19,6 +19,8 @@ namespace Core {
         virtual Model* clone() const = 0;
 
         bool found() const;
+
+        virtual ~Model() = default;
     };
 }
 

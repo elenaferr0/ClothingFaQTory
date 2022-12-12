@@ -25,8 +25,8 @@ Hat::Hat(long id,
         : Accessory(id,
                     code,
                     color,
-                  material,
-                  size,
+                    material,
+                    size,
                     availableQuantity,
                     soldQuantity,
                     description,
@@ -53,6 +53,6 @@ bool Hat::isBaseballCap() const {
     return baseballCap;
 }
 
-void Hat::setIsBaseballCap(bool isBaseballCap) {
-    isBaseballCap = isBaseballCap;
+void Hat::accept(IProductVisitor& visitor) {
+    visitor.visitHat(*this);
 }

@@ -56,7 +56,7 @@ namespace Services {
         ReadOnlyRepository(const string& table,
                            function<Either<Error, T>(const QSqlQuery&)> mappingFunction);
 
-        virtual ~ReadOnlyRepository();
+        virtual ~ReadOnlyRepository() = default;
 
         ReadOnlyRepository(ReadOnlyRepository&) = delete;
 
@@ -110,9 +110,6 @@ namespace Services {
 
         return query.record();
     }
-
-    template<class T>
-    ReadOnlyRepository<T>::~ReadOnlyRepository() {}
 
     template<class T>
     QSqlQuery ReadOnlyRepository<T>::exec(const string& sql, const QVariantList& params) {

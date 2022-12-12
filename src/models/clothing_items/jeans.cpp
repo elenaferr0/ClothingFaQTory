@@ -52,3 +52,7 @@ void Models::ClothingItems::Jeans::setShorts(bool shorts) {
     Jeans::shorts = shorts;
 }
 
+void Jeans::accept(IProductVisitor& visitor) {
+    visitor.visitJeans(*this);
+}
+
