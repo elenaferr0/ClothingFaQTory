@@ -5,13 +5,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++17
 CONFIG += console
 
-SOURCES = $$files("src/*.cpp", true) \
-    src/services/repositories/material_repository.cpp
-HEADERS = $$files("src/*.h", true) \
-    src/services/repositories/material_repository.h
-
+SOURCES = $$files("src/*.cpp", true)
+HEADERS = $$files("src/*.h", true)
 FORMS += $$files("src/*.ui", true)
-RESOURCES = resources.qrc
+RESOURCES += resources.qrc
 
 # enable or disable qt logging
 CONFIG += develop

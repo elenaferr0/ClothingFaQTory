@@ -43,6 +43,7 @@ int main(int argc, char** argv) {
     qInstallMessageHandler(logHandler);
     QApplication a(argc, argv);
     MainWindow w;
+    w.resize(1024, 512);
     w.show();
     return a.exec();
 }

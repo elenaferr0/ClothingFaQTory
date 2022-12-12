@@ -25,8 +25,6 @@ MainWindow::MainWindow(QWidget* parent)
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
     if (db.open()) {
-        Overalls o;
-        Map<int, Overalls> map;
     } else {
         QMessageBox::information(this, "Not connected", "Database Connected Failed");
     }
