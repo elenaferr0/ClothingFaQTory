@@ -5,6 +5,7 @@
 #include "./size.h"
 #include "../core/model.h"
 #include "../core/iproduct_visitor.h"
+#include "../core/iproduct_observer.h"
 
 #include<string>
 #include<list>
@@ -13,9 +14,12 @@ using std::string;
 using std::list;
 using Core::Model;
 using Core::IProductVisitor;
+using Core::IProductObserver;
 
 namespace Models {
     class Product : public Model {
+    private:
+        list<IProductObserver*> observers;
     protected:
         string color;
         Material material;
@@ -24,6 +28,7 @@ namespace Models {
         int soldQuantity;
         string description;
         string code;
+        void notifyAll();
 
     public:
         Product(long id = -1,
@@ -58,6 +63,8 @@ namespace Models {
         void setSize(const Size& size);
 
         virtual void accept(IProductVisitor& visitor) = 0;
+
+        void registerObserver(IProductObserver* observer);
     };
 }
 #endif // PRODUCT_H

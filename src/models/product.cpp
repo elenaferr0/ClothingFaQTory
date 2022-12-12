@@ -58,3 +58,13 @@ const Material& Product::getMaterial() const {
 void Models::Product::setMaterial(const Material& material) {
     this->material = material;
 }
+
+void Models::Product::registerObserver(IProductObserver* observer) {
+    observers.push_back(observer);
+}
+
+void Models::Product::notifyAll() {
+    for (auto it = observers.begin(); it != observers.end(); it++) {
+        (*it)->notify(*this);
+    }
+}
