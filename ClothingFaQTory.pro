@@ -7,7 +7,7 @@ CONFIG += console
 
 SOURCES = $$files("src/*.cpp", true)
 HEADERS = $$files("src/*.h", true)
-FORMS += $$files("src/*.ui", true)
+
 RESOURCES += resources.qrc
 
 # enable or disable qt logging

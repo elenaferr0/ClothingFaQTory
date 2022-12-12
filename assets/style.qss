@@ -1,0 +1,16 @@
+QTabBar::tab {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border: 1px solid #d9d9d9;
+    border-bottom: none;
+    min-height: 50px;
+}
+
+QTabBar::tab::selected {
+    border-top: 1px solid #909090;
+    border-right: 1px solid #909090;
+    border-left: 1px solid #909090;
+    background: #ffffff;
+}
