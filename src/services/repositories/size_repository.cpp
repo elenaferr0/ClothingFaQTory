@@ -29,7 +29,7 @@ Either<Error, Size> Services::SizeRepository::findById(int id) {
 
     Either<Error, Size> errorOrSize = ReadOnlyRepository::findById(id);
 
-    cachedSizes[id] = errorOrSize.forceRight();
+    cachedSizes.put(id, errorOrSize.forceRight());
     return errorOrSize;
 }
 
@@ -37,7 +37,7 @@ Either<Error, list<Size>> Services::SizeRepository::findAll() {
     Either<Error, list<Size>> sizeOrError = ReadOnlyRepository::findAll();
     if(sizeOrError.isRight()){
         for (auto s : sizeOrError.forceRight()) {
-            cachedSizes[s.getId()] = s;
+            cachedSizes.put(s.getId(), s);
         }
     }
     return sizeOrError;

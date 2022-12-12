@@ -24,15 +24,15 @@ Either<Error, Material> MaterialRepository::findById(int id) {
 
     Either<Error, Material> errorOrMaterial = ReadOnlyRepository::findById(id);
 
-    cachedMaterials[id] = errorOrMaterial.forceRight();
+    cachedMaterials.put(id, errorOrMaterial.forceRight());
     return errorOrMaterial;
 }
 
 Either<Error, list<Material>> MaterialRepository::findAll() {
     Either<Error, list<Material>> materialsOrError = ReadOnlyRepository::findAll();
-    if(materialsOrError.isRight()){
-        for (auto m : materialsOrError.forceRight()) {
-            cachedMaterials[m.getId()] = m;
+    if (materialsOrError.isRight()) {
+        for (auto m: materialsOrError.forceRight()) {
+            cachedMaterials.put(m.getId(), m);
         }
     }
     return materialsOrError;

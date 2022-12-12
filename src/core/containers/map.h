@@ -134,7 +134,7 @@ namespace Core::Containers {
             friend class Map<K, V>;
         };
 
-        pair<MapIterator, bool> put(const K& key, const V& value);
+        bool put(const K& key, const V& value); // returns true if the element was already present
 
         MapIterator begin() const;
 
@@ -511,7 +511,7 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    pair<typename Map<K, V>::MapIterator, bool> Map<K, V>::put(const K& key, const V& value) {
+    bool Map<K, V>::put(const K& key, const V& value) {
         // in order for put to work, it's MANDATORY that K is either primitive or redefines == operator
 
         Node* node = new Node(key, value, Node::RED, nullptr, TNULL, TNULL);
@@ -524,7 +524,7 @@ namespace Core::Containers {
             if (node->key < current->key) {
                 current = current->left;
             } else if (node->key == current->key) {
-                return pair(Map::MapIterator(node), false); // key already exists in the tree, so do nothing
+                return true; // key already exists in the tree, so do nothing
             } else {
                 current = current->right;
             }
@@ -544,17 +544,17 @@ namespace Core::Containers {
         // if new node is a root node, simply return
         if (node->parent == nullptr) {
             node->color = Node::BLACK;
-            return pair(Map::MapIterator(node), true);
+            return false;
         }
 
         // if the grandparent is null, simply return
         if (node->parent->parent == nullptr) {
-            return pair(Map::MapIterator(node), true);
+            return false;
         }
 
         // Fix the tree
         fixPut(node);
-        return pair(Map::MapIterator(node), true);
+        return false;
     }
 
 // delete the node from the tree
@@ -644,16 +644,6 @@ namespace Core::Containers {
     typename Map<K, V>::MapIterator Map<K, V>::end() const {
         return {TNULL};
     }
-
-    template<class K, class V>
-    V& Map<K, V>::operator[](const K& key) { // insert the element if it doesn't exist or return it if it does
-        optional<V> v = get(key);
-        if (v.has_value()) {
-            return v.value();
-        }
-        return put(key, V()).first.node->value;
-    }
-
 
     template<class K, class V>
     pair <K, V> Containers::Map<K, V>::MapIterator::operator*() const {
