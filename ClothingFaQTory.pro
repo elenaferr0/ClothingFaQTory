@@ -11,6 +11,7 @@ HEADERS = $$files("src/*.h", true) \
     src/services/repositories/material_repository.h
 
 FORMS += $$files("src/*.ui", true)
+RESOURCES = resources.qrc
 
 # enable or disable qt logging
 CONFIG += develop
