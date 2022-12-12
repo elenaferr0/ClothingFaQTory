@@ -1,12 +1,16 @@
-#include "mainwindow.h"
+#include "views/mainwindow.h"
 
 #include <QApplication>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QFile>
+#include <QIODevice>
 
 void logHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
     QByteArray localMsg = msg.toLocal8Bit();
     const char* file = context.file ? context.file : "";
     const char* function = context.function ? context.function : "";
-
     // ANSI escape codes to print colored logs
     const char* red = "\033[0;31m";
     const char* orange = "\033[38;2;255;165;0m";
@@ -42,8 +46,15 @@ void logHandler(QtMsgType type, const QMessageLogContext& context, const QString
 int main(int argc, char** argv) {
     qInstallMessageHandler(logHandler);
     QApplication a(argc, argv);
+
+    QFile file(":/assets/style.qss");
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    a.setStyleSheet(styleSheet);
+
     MainWindow w;
     w.resize(1024, 512);
     w.show();
+
     return a.exec();
 }
