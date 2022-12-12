@@ -431,17 +431,10 @@ namespace Core::Containers {
 
     template<class K, class V>
     typename Map<K, V>::Node* Map<K, V>::successor(Node* x) {// find the successor of a given node in the inorder visit
-        // if the right subtree is not null,
-        // the successor is the leftmost node in the
-        // right subtree
         if (x->right != TNULL) {
             return minimum(x->right);
         }
 
-        // else it is the lowest ancestor of x whose
-        // left child is also an ancestor of x.
-
-        // if parent becomes nullptr, the root is reached and there's no right child
         Node* parent = x->parent;
         while (parent && parent != TNULL && x == parent->right) {
             x = parent;
@@ -450,27 +443,6 @@ namespace Core::Containers {
 
         return parent ? parent : TNULL;
     }
-
-
-    template<class K, class V>
-    typename Map<K, V>::Node*
-    Map<K, V>::predecessor(Node* x) { // find the predecessor of a given node in the inorder visit
-        // if the left subtree is not null,
-        // the predecessor is the rightmost node in the
-        // left subtree
-        if (x->left != TNULL) {
-            return maximum(x->left);
-        }
-
-        Node* parent = x->parent;
-        while (parent && parent != TNULL && x == parent->left) {
-            x = parent;
-            parent = parent->parent;
-        }
-
-        return parent ? parent : TNULL;
-    }
-
 
     template<class K, class V>
     void Map<K, V>::leftRotate(Node* x) { // rotate left at node x
