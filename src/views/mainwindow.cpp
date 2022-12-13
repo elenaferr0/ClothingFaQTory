@@ -5,18 +5,8 @@
 #include <QLabel>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsView>
-#include "../core/db/querybuilder.h"
-#include "../services/repositories/hat_repository.h"
-#include "../services/repositories/material_repository.h"
-#include "../services/repositories/size_repository.h"
 #include "no_connection.h"
 #include "product_menu.h"
-
-using Core::Db::QueryBuilder;
-using Core::Db::Expr;
-using Services::HatRepository;
-using Services::MaterialRepository;
-using Services::SizeRepository;
 
 MainWindow::MainWindow(QWidget* parent)
         : QMainWindow(parent) {

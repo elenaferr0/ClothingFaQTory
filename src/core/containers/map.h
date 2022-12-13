@@ -558,7 +558,7 @@ namespace Core::Containers {
     template<class K, class V>
     ostream& operator<<(ostream& os, const Map<K, V>& map) {
         if (map.empty()) {
-            return os << "empty map" << endl;
+            return os << "empty getEntityOrError" << endl;
         }
 
         map.printHelper(os, map.root);

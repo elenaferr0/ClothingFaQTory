@@ -60,6 +60,6 @@ bool Vest::getHasButtons() const {
     return hasButtons;
 }
 
-void Vest::accept(IProductVisitor& visitor) {
+void Vest::accept(VisitorInterface& visitor) {
     visitor.visitVest(*this);
 }

@@ -2,8 +2,10 @@
 #define MATERIAL_H
 
 #include "../core/model.h"
+#include "../core/visitor_interface.h"
 
 using Core::Model;
+using Core::VisitorInterface;
 
 namespace Models {
     class Material : public Model {
@@ -35,27 +37,13 @@ namespace Models {
 
         Name getName() const;
 
-        void setName(string name);
-
-        UnitOfMeasure getUnitOfMeasure() const;
-
-        void setUnitOfMeasure(string unitOfMeasure);
-
         double getCostPerUnit() const;
-
-        void setCostPerUnit(double costPerUnit);
-
-
-
-        string getNameAsString() const;
 
         static Name namefromString(const string&);
 
-        string getUnitOfMeasureAsString() const;
-
         static UnitOfMeasure unitOfMeasureFromString(const string&);
 
-    private:
+  private:
         Name name;
         UnitOfMeasure unitOfMeasure;
         double costPerUnit;

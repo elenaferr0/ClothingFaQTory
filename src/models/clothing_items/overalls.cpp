@@ -45,6 +45,6 @@ double Overalls::computePrice() const {
     return Jeans::computePrice() + Vest::computePrice();
 }
 
-void Overalls::accept(IProductVisitor& visitor) {
+void Overalls::accept(VisitorInterface& visitor) {
     visitor.visitOveralls(*this);
 }

@@ -28,7 +28,7 @@ namespace Models::Accessories {
 
         bool isBaseballCap() const;
 
-        void accept(IProductVisitor& visitor) override;
+        void accept(VisitorInterface& visitor) override;
     };
 }
 

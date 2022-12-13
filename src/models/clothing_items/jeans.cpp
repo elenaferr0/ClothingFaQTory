@@ -52,7 +52,7 @@ void Jeans::setShorts(bool shorts) {
     Jeans::shorts = shorts;
 }
 
-void Jeans::accept(IProductVisitor& visitor) {
+void Jeans::accept(VisitorInterface& visitor) {
     visitor.visitJeans(*this);
 }
 

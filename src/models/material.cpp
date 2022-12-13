@@ -25,54 +25,8 @@ Material::Name Material::getName() const {
     return name;
 }
 
-Material::UnitOfMeasure Material::getUnitOfMeasure() const {
-    return unitOfMeasure;
-}
-
 double Material::getCostPerUnit() const {
     return costPerUnit;
-}
-
-void Material::setName(string name) {
-    this->name = namefromString(name);
-}
-
-void Material::setUnitOfMeasure(string unitOfMeasure) {
-    this->unitOfMeasure = unitOfMeasureFromString(unitOfMeasure);
-}
-
-void Material::setCostPerUnit(double costPerUnit) {
-    this->costPerUnit = costPerUnit;
-}
-
-string Material::getNameAsString() const {
-    switch (name) {
-        case DENIM:
-            return "DENIM";
-        case WOOL:
-            return "WOOL";
-        case POLYESTER:
-            return "POLYESTER";
-        case COTTON:
-            return "COTTON";
-        case GOLD:
-            return "GOLD";
-        case SILVER:
-            return "SILVER";
-        case WOOD:
-        default:
-            return "WOOD";
-    }
-}
-
-string Material::getUnitOfMeasureAsString() const {
-    switch (unitOfMeasure) {
-        case CENTIMETER:
-            return "cm";
-        case GRAM:
-        default:
-            return "g";
-    }
 }
 
 Material::Name Models::Material::namefromString(const string& name) {

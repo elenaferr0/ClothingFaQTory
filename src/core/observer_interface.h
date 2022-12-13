@@ -8,11 +8,11 @@ namespace Models {
 using Models::Product;
 
 namespace Core {
-    class IProductObserver {
+    class ObserverInterface {
     public:
         virtual void notify(Product& product) = 0;
 
-        virtual ~IProductObserver() = default;
+        virtual ~ObserverInterface() = default;
 
     };
 }

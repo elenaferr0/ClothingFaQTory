@@ -29,7 +29,7 @@ namespace Models::ClothingItems {
 
         Overalls* clone() const override;
 
-        void accept(IProductVisitor& visitor) override;
+        void accept(VisitorInterface& visitor) override;
     };
 }
 

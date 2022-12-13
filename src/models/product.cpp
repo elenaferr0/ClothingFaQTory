@@ -59,7 +59,7 @@ void Models::Product::setMaterial(const Material& material) {
     this->material = material;
 }
 
-void Models::Product::registerObserver(IProductObserver* observer) {
+void Models::Product::registerObserver(ObserverInterface* observer) {
     observers.push_back(observer);
 }
 

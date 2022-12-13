@@ -3,6 +3,7 @@
 #include "../../utils/calculator.h"
 #include "../material.h"
 #include "../size.h"
+#include "../../core/visitor_interface.h"
 #include <list>
 
 using std::list;
@@ -48,6 +49,6 @@ double BackPack::getCapacity() const {
     return capacity;
 }
 
-void BackPack::accept(IProductVisitor& visitor) {
+void BackPack::accept(VisitorInterface& visitor) {
     visitor.visitBackPack(*this);
 }

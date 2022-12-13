@@ -1,22 +1,30 @@
 #ifndef IPRODUCT_VISITOR_H
 #define IPRODUCT_VISITOR_H
 
-namespace Models::Accessories {
-    class Bracelet;
+namespace Models {
+    class Material;
 
-    class BackPack;
+    class Size;
 
-    class Hat;
+    namespace Accessories {
+        class Bracelet;
+
+        class BackPack;
+
+        class Hat;
+    }
+
+    namespace ClothingItems {
+        class Jeans;
+
+        class Vest;
+
+        class Overalls;
+    }
 }
 
-namespace Models::ClothingItems {
-    class Jeans;
-
-    class Vest;
-
-    class Overalls;
-}
-
+using Models::Material;
+using Models::Size;
 using Models::Accessories::Bracelet;
 using Models::Accessories::BackPack;
 using Models::Accessories::Hat;
@@ -26,9 +34,9 @@ using Models::ClothingItems::Vest;
 using Models::ClothingItems::Overalls;
 
 namespace Core {
-    class IProductVisitor {
+    class VisitorInterface {
     public:
-        virtual ~IProductVisitor() = default;
+        virtual ~VisitorInterface() = default;
 
         virtual void visitBracelet(Bracelet&) = 0;
 
