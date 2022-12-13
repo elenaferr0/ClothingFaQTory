@@ -2,11 +2,11 @@
 #include<iostream>
 #include <QSqlDatabase>
 #include <QBoxLayout>
-#include <QLabel>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsView>
 #include "no_connection.h"
-#include "product_menu.h"
+#include "tabs/clothing_items/clothing_items_tab_page.h"
+#include "tabs/materials_cost_tab_page.h"
 
 MainWindow::MainWindow(QWidget* parent)
         : QMainWindow(parent) {
@@ -26,5 +26,22 @@ MainWindow::MainWindow(QWidget* parent)
     }
 
     setWindowTitle("Clothing FaQTory");
-    setCentralWidget(new ProductMenu(this));
+
+    tabWidget = new QTabWidget;
+
+    tabWidget->addTab(new ClothingItemsTabPage(tabWidget), "Clothing Items");
+    QIcon clothingIcon(":/assets/icons/clothing_items.png");
+    tabWidget->setTabIcon(0, clothingIcon);
+
+//    tabWidget->addTab(new ClothingItemsTabPage(tabWidget), "Accessories");
+//    QIcon accessoriesIcon(":/assets/icons/accessories.png");
+//    tabWidget->setTabIcon(1, accessoriesIcon);
+
+    tabWidget->addTab(new MaterialsCostTabPage(tabWidget), "Materials Cost");
+    QIcon materialsIcon(":/assets/icons/materials_cost.png");
+    tabWidget->setTabIcon(1, materialsIcon);
+
+    tabWidget->setIconSize(QSize(35, 35));
+
+    setCentralWidget(tabWidget);
 }

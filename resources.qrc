@@ -6,5 +6,7 @@
         <file>assets/icons/accessories.png</file>
         <file>assets/icons/clothing_items.png</file>
         <file>assets/icons/materials_cost.png</file>
+        <file>assets/icons/jeans.png</file>
+        <file>assets/icons/vest.png</file>
     </qresource>
 </RCC>

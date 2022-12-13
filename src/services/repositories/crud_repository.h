@@ -96,23 +96,9 @@ namespace Services {
                 .where(Expr("h.id").equals({"?"}))
                 .build();
 
-        string sizeSql = ReadOnlyRepository<T>::queryBuilder.select("s.*")
-                .from(ReadOnlyRepository<T>::table)
-                .join(QueryBuilder::Join::INNER, "size", Expr("s.id").equals({"h.size_id"}))
-                .where(Expr("h.id").equals({"?"}))
-                .build();
-
-        string materialSql = ReadOnlyRepository<T>::queryBuilder.select("m.*")
-                .from(ReadOnlyRepository<T>::table)
-                .join(QueryBuilder::Join::INNER, "material", Expr("m.id").equals({"h.material_id"}))
-                .where(Expr("h.id").equals({"?"}))
-                .build();
-
-        // get the entity
         QSqlQuery mainEntityQuery = ReadOnlyRepository<T>::exec(mainEntitySql, QVariant::fromValue<int>(id));
         mainEntityQuery.next();
         Either<Error, T> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
-
         if (errorOrEntity.isLeft()) {
             qCritical() << QString::fromStdString(
                     errorOrEntity.forceLeft().getMessage());
@@ -120,32 +106,6 @@ namespace Services {
             return errorOrEntity; // return the error
         }
 
-        // get the size
-        QSqlQuery sizeQuery = ReadOnlyRepository<T>::exec(sizeSql, QVariant::fromValue<int>(id));
-        sizeQuery.next();
-        Either<Error, Size> errorOrSize = EntityMapper::size(sizeQuery);
-
-        if (errorOrSize.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    errorOrSize.forceLeft().getMessage());
-            QSqlDatabase::database().rollback();
-            return errorOrSize.forceLeft(); // return the error
-        }
-
-        errorOrEntity.forceRight().setSize(errorOrSize.forceRight());
-
-        // get the material
-        QSqlQuery materialQuery = ReadOnlyRepository<T>::exec(materialSql, QVariant::fromValue<int>(id));
-        materialQuery.next();
-        Either<Error, Material> errorOrMaterial = EntityMapper::material(materialQuery);
-
-        if (errorOrMaterial.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    errorOrMaterial.forceLeft().getMessage());
-            return errorOrMaterial.forceLeft(); // return the error
-        }
-
-        errorOrEntity.forceRight().setMaterial(errorOrMaterial.forceRight());
         return errorOrEntity.forceRight();
     }
 

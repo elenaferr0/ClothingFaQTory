@@ -11,6 +11,8 @@ QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
+private:
+    QTabWidget* tabWidget;
 public:
     MainWindow(QWidget* parent = nullptr);
 };

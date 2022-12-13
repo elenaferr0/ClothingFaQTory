@@ -1,5 +1,8 @@
 #include "entity_mapper.h"
-#include "qvariant.h"
+#include "repositories/material_repository.h"
+#include "repositories/size_repository.h"
+#include <QDebug>
+#include <QVariant>
 
 using Services::EntityMapper;
 
@@ -113,12 +116,28 @@ Either<Error, Hat> EntityMapper::hat(const QSqlQuery& query) {
 
     QSqlRecord record = recordOrError.forceRight();
 
+    int materialId = record.value("material_id").toInt();
+    MaterialRepository* materialRepository = MaterialRepository::getInstance();
+    Either<Error, Material> materialOrError = materialRepository->findById(materialId);
+
+    if (materialOrError.isLeft()) {
+        return materialOrError.forceLeft();
+    }
+
+    int sizeId = record.value("size_id").toInt();
+    SizeRepository* sizeRepository = SizeRepository::getInstance();
+    Either<Error, Size> sizeOrError = sizeRepository->findById(sizeId);
+
+    if (sizeOrError.isLeft()) {
+        return sizeOrError.forceLeft();
+    }
+
     return Hat(
             record.value("id").toInt(),
             record.value("code").toString().toStdString(),
             record.value("color").toString().toStdString(),
-            Material(),
-            Size(),
+            materialOrError.forceRight(),
+            sizeOrError.forceRight(),
             record.value("available_quantity").toInt(),
             record.value("sold_quantity").toInt(),
             record.value("description").toString().toStdString(),
@@ -153,12 +172,28 @@ Either<Error, Vest> Services::EntityMapper::vest(const QSqlQuery& query) {
 
     QSqlRecord record = recordOrError.forceRight();
 
+    int materialId = record.value("material_id").toInt();
+    MaterialRepository* materialRepository = MaterialRepository::getInstance();
+    Either<Error, Material> materialOrError = materialRepository->findById(materialId);
+
+    if (materialOrError.isLeft()) {
+        return materialOrError.forceLeft();
+    }
+
+    int sizeId = record.value("size_id").toInt();
+    SizeRepository* sizeRepository = SizeRepository::getInstance();
+    Either<Error, Size> sizeOrError = sizeRepository->findById(sizeId);
+
+    if (sizeOrError.isLeft()) {
+        return sizeOrError.forceLeft();
+    }
+
     return Vest(
             record.value("id").toInt(),
             record.value("code").toString().toStdString(),
             record.value("color").toString().toStdString(),
-            Material(),
-            Size(),
+            materialOrError.forceRight(),
+            sizeOrError.forceRight(),
             record.value("available_quantity").toInt(),
             record.value("sold_quantity").toInt(),
             record.value("description").toString().toStdString(),
@@ -194,12 +229,28 @@ Either<Error, BackPack> EntityMapper::backPack(const QSqlQuery& query) {
 
     QSqlRecord record = recordOrError.forceRight();
 
+    int materialId = record.value("material_id").toInt();
+    MaterialRepository* materialRepository = MaterialRepository::getInstance();
+    Either<Error, Material> materialOrError = materialRepository->findById(materialId);
+
+    if (materialOrError.isLeft()) {
+        return materialOrError.forceLeft();
+    }
+
+    int sizeId = record.value("size_id").toInt();
+    SizeRepository* sizeRepository = SizeRepository::getInstance();
+    Either<Error, Size> sizeOrError = sizeRepository->findById(sizeId);
+
+    if (sizeOrError.isLeft()) {
+        return sizeOrError.forceLeft();
+    }
+
     return BackPack(
             record.value("id").toInt(),
             record.value("code").toString().toStdString(),
             record.value("color").toString().toStdString(),
-            Material(),
-            Size(),
+            materialOrError.forceRight(),
+            sizeOrError.forceRight(),
             record.value("available_quantity").toInt(),
             record.value("sold_quantity").toInt(),
             record.value("description").toString().toStdString(),
@@ -235,12 +286,28 @@ Either<Error, Bracelet> Services::EntityMapper::bracelet(const QSqlQuery& query)
 
     QSqlRecord record = recordOrError.forceRight();
 
+    int materialId = record.value("material_id").toInt();
+    MaterialRepository* materialRepository = MaterialRepository::getInstance();
+    Either<Error, Material> materialOrError = materialRepository->findById(materialId);
+
+    if (materialOrError.isLeft()) {
+        return materialOrError.forceLeft();
+    }
+
+    int sizeId = record.value("size_id").toInt();
+    SizeRepository* sizeRepository = SizeRepository::getInstance();
+    Either<Error, Size> sizeOrError = sizeRepository->findById(sizeId);
+
+    if (sizeOrError.isLeft()) {
+        return sizeOrError.forceLeft();
+    }
+
     return Bracelet(
             record.value("id").toInt(),
             record.value("code").toString().toStdString(),
             record.value("color").toString().toStdString(),
-            Material(),
-            Size(),
+            materialOrError.forceRight(),
+            sizeOrError.forceRight(),
             record.value("available_quantity").toInt(),
             record.value("sold_quantity").toInt(),
             record.value("description").toString().toStdString(),
@@ -277,12 +344,28 @@ Either<Error, Jeans> Services::EntityMapper::jeans(const QSqlQuery& query) {
 
     QSqlRecord record = recordOrError.forceRight();
 
+    int materialId = record.value("material_id").toInt();
+    MaterialRepository* materialRepository = MaterialRepository::getInstance();
+    Either<Error, Material> materialOrError = materialRepository->findById(materialId);
+
+    if (materialOrError.isLeft()) {
+        return materialOrError.forceLeft();
+    }
+
+    int sizeId = record.value("size_id").toInt();
+    SizeRepository* sizeRepository = SizeRepository::getInstance();
+    Either<Error, Size> sizeOrError = sizeRepository->findById(sizeId);
+
+    if (sizeOrError.isLeft()) {
+        return sizeOrError.forceLeft();
+    }
+
     return Jeans(
             record.value("id").toInt(),
             record.value("code").toString().toStdString(),
             record.value("color").toString().toStdString(),
-            Material(),
-            Size(),
+            materialOrError.forceRight(),
+            sizeOrError.forceRight(),
             record.value("available_quantity").toInt(),
             record.value("sold_quantity").toInt(),
             record.value("description").toString().toStdString(),
@@ -294,19 +377,19 @@ Either<Error, Jeans> Services::EntityMapper::jeans(const QSqlQuery& query) {
 
 Either<Error, Overalls> Services::EntityMapper::overalls(const QSqlQuery& query) {
 
-       /* id int
-       * code string
-       * color string
-       * sold_quantity int
-       * available_quantity int
-       * description string
-       * size_id int
-       * sustainable_materials bool
-       * gender string
-       * material_id int
-       * has_buttons bool
-       * shorts bool
-       */
+    /* id int
+    * code string
+    * color string
+    * sold_quantity int
+    * available_quantity int
+    * description string
+    * size_id int
+    * sustainable_materials bool
+    * gender string
+    * material_id int
+    * has_buttons bool
+    * shorts bool
+    */
 
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
@@ -320,12 +403,28 @@ Either<Error, Overalls> Services::EntityMapper::overalls(const QSqlQuery& query)
 
     QSqlRecord record = recordOrError.forceRight();
 
+    int materialId = record.value("material_id").toInt();
+    MaterialRepository* materialRepository = MaterialRepository::getInstance();
+    Either<Error, Material> materialOrError = materialRepository->findById(materialId);
+
+    if (materialOrError.isLeft()) {
+        return materialOrError.forceLeft();
+    }
+
+    int sizeId = record.value("size_id").toInt();
+    SizeRepository* sizeRepository = SizeRepository::getInstance();
+    Either<Error, Size> sizeOrError = sizeRepository->findById(sizeId);
+
+    if (sizeOrError.isLeft()) {
+        return sizeOrError.forceLeft();
+    }
+
     return Overalls(
             record.value("id").toInt(),
             record.value("code").toString().toStdString(),
             record.value("color").toString().toStdString(),
-            Material(),
-            Size(),
+            materialOrError.forceRight(),
+            sizeOrError.forceRight(),
             record.value("available_quantity").toInt(),
             record.value("sold_quantity").toInt(),
             record.value("description").toString().toStdString(),

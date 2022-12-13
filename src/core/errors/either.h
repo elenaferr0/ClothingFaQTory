@@ -32,6 +32,10 @@ namespace Core {
 
         R& forceRight();
 
+        const L& forceLeft() const;
+
+        const R& forceRight() const;
+
         bool isRight() const;
 
         bool isLeft() const;
@@ -83,6 +87,16 @@ namespace Core {
 
     template<class L, class R>
     R& Either<L, R>::forceRight() {
+        return ref(get<R>(value));
+    }
+
+    template<class L, class R>
+    const L& Either<L, R>::forceLeft() const {
+        return ref(get<L>(value));
+    }
+
+    template<class L, class R>
+    const R& Either<L, R>::forceRight() const {
         return ref(get<R>(value));
     }
 

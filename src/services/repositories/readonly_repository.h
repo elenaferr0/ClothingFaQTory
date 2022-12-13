@@ -144,7 +144,7 @@ namespace Services {
     ReadOnlyRepository<T>::ReadOnlyRepository(const string& table,
                                               function<Either<Error, T>(const QSqlQuery&)> mappingFunction):
             table(table),
-            mappingFunction(mappingFunction) {}; // empty function
+            mappingFunction(mappingFunction) {};
 
 
     template<class T>
