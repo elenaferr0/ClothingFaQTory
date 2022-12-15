@@ -1,7 +1,8 @@
 #include <QVBoxLayout>
 #include <QHeaderView>
 #include "clothing_items_tab_page.h"
-#include "../product_info_visitor.h"
+
+unsigned int ClothingItemsTabPage::COLUMN_COUNT = 5;
 
 ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
         : QWidget(parent),
@@ -9,77 +10,99 @@ ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
           vestRepository(VestRepository::getInstance()),
           overallsRepository(OverallsRepository::getInstance()) {
 
-    QStringList labels;
-    labels
-            << QStringLiteral("Product Type")
-            << QStringLiteral("Code")
-            << QStringLiteral("Color")
-            << QStringLiteral("Description")
-            << QStringLiteral("Size")
-            << QStringLiteral("Price");
-
-    table = new QTableWidget(0, labels.size(), this);
-
-    table->setHorizontalHeaderLabels(labels);
-    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    table->verticalHeader()->setVisible(false);
-    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->setSelectionBehavior(QAbstractItemView::SelectItems);
-    table->setSelectionMode(QAbstractItemView::SingleSelection);
+    treeWidget = new QTreeWidget;
+    treeWidget->setHeaderHidden(true);
+    treeWidget->setAnimated(true);
+    treeWidget->setIconSize(QSize(30, 30));
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setAlignment(Qt::AlignTop);
-
-    layout->addWidget(table);
+    layout->addWidget(treeWidget);
     updateTableContent();
 
 }
 
 void ClothingItemsTabPage::updateTableContent() {
-    table->clearContents();
-    table->setRowCount(0);
+    treeWidget->clear();
+    treeWidget->setColumnCount(COLUMN_COUNT);
+    for (int i = Jeans; i != Hat; i++) {
+        auto topLevelItem = static_cast<TopLevelItem>(i);
+        updateOnly(topLevelItem);
+    }
+}
 
-    Either<Error, list<Jeans>> jeansOrError = jeansRepository->findAll();
+void ClothingItemsTabPage::updateOnly(TopLevelItem topLevelItem) {
+    switch (topLevelItem) {
+        case Jeans:
+            updateJeans();
+            return;
+        case Vest:
+        case Overalls:
+        case Bracelet:
+        case BackPack:
+        case Hat:
+            return;
+    }
+}
 
+void ClothingItemsTabPage::updateJeans() {
+    bool wasCreated = false;
+    QTreeWidgetItem* jeansItem = treeWidget->topLevelItem(Jeans);
+
+    if (jeansItem == nullptr) {
+        jeansItem = new QTreeWidgetItem(QStringList() << "Jeans");
+        wasCreated = true;
+    }
+
+    // remove all children
+    for (int i = 0; i < jeansItem->childCount(); ++i) {
+        jeansItem->removeChild(jeansItem->child(i));
+    }
+
+    Either<Error, list<Models::ClothingItems::Jeans>> jeansOrError = jeansRepository->findAll();
     if (jeansOrError.isRight()) {
-        list<Jeans> jeans = jeansOrError.forceRight();
+        list<Models::ClothingItems::Jeans> jeans = jeansOrError.forceRight();
+
+        QTreeWidgetItem* headers = getHeaders(Jeans);
+        jeansItem->addChild(headers);
+
         for (auto it = jeans.begin(); it != jeans.end(); it++) {
-            table->setRowCount(table->rowCount() + 1);
+            QStringList columns;
+            columns << QString::fromStdString((*it).getCode())
+                    << QString::fromStdString((*it).getColor())
+                    << QString::fromStdString((*it).getDescription())
+                    << QString::fromStdString((*it).getSize().getNameAsString())
+                    << QString::number((*it).computePrice(), 'f', 2) + "$";
 
-            int row = table->rowCount() - 1;
-            int col = -1;
-
-            QIcon icon(":/assets/icons/jeans.png");
-            table->setItem(row, ++col, new QTableWidgetItem(icon, "Jeans", 0));
-            table->setItem(row, ++col, new QTableWidgetItem(QString::fromStdString((*it).getCode())));
-            table->setItem(row, ++col, new QTableWidgetItem(QString::fromStdString((*it).getColor()), 0));
-            table->setItem(row, ++col, new QTableWidgetItem(QString::fromStdString((*it).getDescription()), 0));
-            table->setItem(row, ++col,
-                           new QTableWidgetItem(QString::fromStdString((*it).getSize().getNameAsString()), 0));
-            table->setItem(row, ++col, new QTableWidgetItem(QString::number((*it).computePrice(), 'f', 2) + "$", 0));
-
+            QTreeWidgetItem* child = new QTreeWidgetItem(columns);
+            jeansItem->addChild(child);
         }
+
+        QIcon icon(":/assets/icons/jeans.png");
+        jeansItem->setIcon(0, icon);
+        if (wasCreated) {
+            treeWidget->addTopLevelItem(jeansItem);
+        }
+
+    } else {
+        qCritical() << QString::fromStdString(jeansOrError.forceLeft().getMessage());
+    }
+}
+
+QTreeWidgetItem* ClothingItemsTabPage::getHeaders(TopLevelItem topLevelItem) {
+    QTreeWidgetItem* headers = new QTreeWidgetItem(QStringList() << "Code"
+                                                                 << "Color"
+                                                                 << "Description"
+                                                                 << "Size"
+                                                                 << "Price");
+    QFont font = QFont();
+    font.setBold(true);
+
+    for (int i = 0; i < COLUMN_COUNT; ++i) {
+        headers->setFont(i, font);
+        treeWidget->setColumnWidth(i, 200);
     }
 
-    Either<Error, list<Vest>> vestsOrError = vestRepository->findAll();
 
-    if (vestsOrError.isRight()) {
-        list<Vest> vests = vestsOrError.forceRight();
-        for (auto it = vests.begin(); it != vests.end(); it++) {
-            table->setRowCount(table->rowCount() + 1);
-
-            int row = table->rowCount() - 1;
-            int col = -1;
-
-            QIcon icon(":/assets/icons/vest.png");
-            table->setItem(row, ++col, new QTableWidgetItem(icon, "Vest", 0));
-            table->setItem(row, ++col, new QTableWidgetItem(QString::fromStdString((*it).getCode())));
-            table->setItem(row, ++col, new QTableWidgetItem(QString::fromStdString((*it).getColor()), 0));
-            table->setItem(row, ++col, new QTableWidgetItem(QString::fromStdString((*it).getDescription()), 0));
-            table->setItem(row, ++col,
-                           new QTableWidgetItem(QString::fromStdString((*it).getSize().getNameAsString()), 0));
-            table->setItem(row, ++col, new QTableWidgetItem(QString::number((*it).computePrice(), 'f', 2) + "$", 0));
-
-        }
-    }
+    return headers;
 }

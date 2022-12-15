@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QTableWidget>
+#include <QTreeWidget>
 #include "../../../core/containers/map.h"
 #include "../../../services/repositories/jeans_repository.h"
 #include "../../../services/repositories/vest_repository.h"
@@ -22,16 +23,20 @@ QT_END_NAMESPACE
 class ClothingItemsTabPage : public QWidget {
 Q_OBJECT
 private:
+    static unsigned int COLUMN_COUNT;
+    enum TopLevelItem {Jeans, Vest, Overalls, Bracelet, BackPack, Hat};
+
     JeansRepository* jeansRepository;
     VestRepository* vestRepository;
     OverallsRepository* overallsRepository;
 
-    QTableWidget* table;
-
-    void updateTableContent();
-
+    QTreeWidget* treeWidget;
+    QTreeWidgetItem* getHeaders(TopLevelItem topLevelItem);
+    void updateJeans();
 public:
     ClothingItemsTabPage(QWidget* parent = nullptr);
+    void updateOnly(TopLevelItem topLevelItem);
+    void updateTableContent();
 };
 
 

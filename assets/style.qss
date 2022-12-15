@@ -18,3 +18,8 @@ QTabBar::tab:selected {
     background: rgb(245, 245, 245);
     margin-bottom: -1px;
 }
+
+QTreeWidgetItem {
+    margin: 20px;
+    background-color: red;
+}
