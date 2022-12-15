@@ -10,11 +10,17 @@
 #include "../../../services/repositories/jeans_repository.h"
 #include "../../../services/repositories/vest_repository.h"
 #include "../../../services/repositories/overalls_repository.h"
+#include "../../../services/repositories/bracelet_repository.h"
+#include "../../../services/repositories/backpack_repository.h"
+#include "../../../services/repositories/hat_repository.h"
 
 using Core::Containers::Map;
 using Services::JeansRepository;
 using Services::VestRepository;
 using Services::OverallsRepository;
+using Services::BraceletRepository;
+using Services::BackPackRepository;
+using Services::HatRepository;
 
 QT_BEGIN_NAMESPACE
 namespace Views::Tabs::ClothingItems { class ClothingItemsTabPage; }
@@ -24,19 +30,25 @@ class ClothingItemsTabPage : public QWidget {
 Q_OBJECT
 private:
     static unsigned int COLUMN_COUNT;
-    enum TopLevelItem {Jeans, Vest, Overalls, Bracelet, BackPack, Hat};
-
-    JeansRepository* jeansRepository;
-    VestRepository* vestRepository;
-    OverallsRepository* overallsRepository;
+    enum TopLevelItem {
+        Jeans, Vest, Overalls, Bracelet, BackPack, Hat
+    };
 
     QTreeWidget* treeWidget;
-    QTreeWidgetItem* getHeaders(TopLevelItem topLevelItem);
-    void updateJeans();
+    QTreeWidgetItem* getHeaders();
+
+    template<class T>
+    void update(TopLevelItem topLevelItem,
+                QString title,
+                ReadOnlyRepository<T>* repository,
+                QString iconFileName);
+
 public:
     ClothingItemsTabPage(QWidget* parent = nullptr);
-    void updateOnly(TopLevelItem topLevelItem);
-    void updateTableContent();
+
+    void updateTopLevelItem(TopLevelItem topLevelItem);
+
+    void updateTreeContent();
 };
 
 

@@ -8,5 +8,12 @@
         <file>assets/icons/materials_cost.png</file>
         <file>assets/icons/jeans.png</file>
         <file>assets/icons/vest.png</file>
+        <file>assets/icons/hat.png</file>
+        <file>assets/icons/cap.png</file>
+        <file>assets/icons/bracelet.png</file>
+        <file>assets/icons/backpack.png</file>
+        <file>assets/icons/overalls.png</file>
+        <file>assets/icons/expand.png</file>
+        <file>assets/icons/collapse.png</file>
     </qresource>
 </RCC>

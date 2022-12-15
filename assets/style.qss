@@ -1,5 +1,6 @@
 QTabWidget::pane {
     border: 1px solid lightgray;
+
     top: -1px;
     background: rgb(245, 245, 245);
 }
@@ -7,7 +8,7 @@ QTabWidget::pane {
 QTabBar::tab {
     background: rgb(230, 230, 230);
     border: 1px solid lightgray;
-    margin-right: 10px;
+    margin: 5px 10px 0 5px;
     padding: 5px 10px;
     padding: 15px;
     border-top-left-radius: 10px;
@@ -19,7 +20,19 @@ QTabBar::tab:selected {
     margin-bottom: -1px;
 }
 
-QTreeWidgetItem {
-    margin: 20px;
-    background-color: red;
+QTreeWidget::item {
+    padding: 10px;
+}
+
+QTreeView::branch {
+    background-color: white;
+    padding-left: 5px;
+}
+
+QTreeView::branch:open {
+    image: url(:/assets/icons/collapse.png);
+}
+
+QTreeView::branch:closed:has-children {
+    image: url(:/assets/icons/expand.png);
 }

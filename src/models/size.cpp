@@ -45,7 +45,7 @@ string Size::getNameAsString() const {
             return "XXL";
         case ONE_SIZE:
         default:
-            return "ONE_SIZE";
+            return "ONE SIZE";
     }
 }
 

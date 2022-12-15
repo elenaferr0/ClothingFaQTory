@@ -47,10 +47,6 @@ namespace Services {
 
         optional<Error> hasError(const QSqlQuery& query);
 
-        virtual Either<Error, T> findById(int id);
-
-        virtual Either<Error, list<T>> findAll();
-
     public:
 
         ReadOnlyRepository(const string& table,
@@ -61,6 +57,10 @@ namespace Services {
         ReadOnlyRepository(ReadOnlyRepository&) = delete;
 
         void operator=(const ReadOnlyRepository&) = delete;
+
+        virtual Either<Error, T> findById(int id);
+
+        virtual Either<Error, list<T>> findAll();
 
     };
 

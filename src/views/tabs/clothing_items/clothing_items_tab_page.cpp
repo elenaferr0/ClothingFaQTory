@@ -5,68 +5,82 @@
 unsigned int ClothingItemsTabPage::COLUMN_COUNT = 5;
 
 ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
-        : QWidget(parent),
-          jeansRepository(JeansRepository::getInstance()),
-          vestRepository(VestRepository::getInstance()),
-          overallsRepository(OverallsRepository::getInstance()) {
+        : QWidget(parent) {
 
     treeWidget = new QTreeWidget;
     treeWidget->setHeaderHidden(true);
     treeWidget->setAnimated(true);
     treeWidget->setIconSize(QSize(30, 30));
 
+    updateTreeContent();
+
+    for (int i = 0; i < COLUMN_COUNT; ++i) {
+        treeWidget->setColumnWidth(i, 180);
+    }
+
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setAlignment(Qt::AlignTop);
     layout->addWidget(treeWidget);
-    updateTableContent();
-
 }
 
-void ClothingItemsTabPage::updateTableContent() {
+void ClothingItemsTabPage::updateTreeContent() {
     treeWidget->clear();
     treeWidget->setColumnCount(COLUMN_COUNT);
-    for (int i = Jeans; i != Hat; i++) {
+    for (int i = Jeans; i != Hat + 1; i++) {
         auto topLevelItem = static_cast<TopLevelItem>(i);
-        updateOnly(topLevelItem);
+        updateTopLevelItem(topLevelItem);
     }
 }
 
-void ClothingItemsTabPage::updateOnly(TopLevelItem topLevelItem) {
+void ClothingItemsTabPage::updateTopLevelItem(TopLevelItem topLevelItem) {
     switch (topLevelItem) {
         case Jeans:
-            updateJeans();
+            update(Jeans, "Jeans", JeansRepository::getInstance(), "jeans.png");
             return;
         case Vest:
+            update(Vest, "Vests", VestRepository::getInstance(), "vest.png");
+            return;
         case Overalls:
+            update(Overalls, "Overalls", OverallsRepository::getInstance(), "overalls.png");
+            return;
         case Bracelet:
+            update(Bracelet, "Bracelets", BraceletRepository::getInstance(), "bracelet.png");
+            return;
         case BackPack:
+            update(BackPack, "BackPacks", BackPackRepository::getInstance(), "backpack.png");
+            return;
         case Hat:
+            update(Hat, "Hats", HatRepository::getInstance(), "hat.png");
             return;
     }
 }
 
-void ClothingItemsTabPage::updateJeans() {
+template<class T>
+void ClothingItemsTabPage::update(TopLevelItem topLevelItem, QString title, ReadOnlyRepository<T>* repository,
+                                  QString iconFileName) {
     bool wasCreated = false;
-    QTreeWidgetItem* jeansItem = treeWidget->topLevelItem(Jeans);
+    QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(topLevelItem);
 
-    if (jeansItem == nullptr) {
-        jeansItem = new QTreeWidgetItem(QStringList() << "Jeans");
+    if (topLevelItemWidget == nullptr) {
+        topLevelItemWidget = new QTreeWidgetItem(QStringList() << title);
         wasCreated = true;
     }
 
-    // remove all children
-    for (int i = 0; i < jeansItem->childCount(); ++i) {
-        jeansItem->removeChild(jeansItem->child(i));
+    // remove all existing children
+    for (int i = 0; i < topLevelItemWidget->childCount(); ++i) {
+        topLevelItemWidget->removeChild(topLevelItemWidget->child(i));
     }
 
-    Either<Error, list<Models::ClothingItems::Jeans>> jeansOrError = jeansRepository->findAll();
-    if (jeansOrError.isRight()) {
-        list<Models::ClothingItems::Jeans> jeans = jeansOrError.forceRight();
+    Either<Error, list<T>> entitiesOrError = repository->findAll();
+    if (entitiesOrError.isRight()) {
+        list<T> entities = entitiesOrError.forceRight();
 
-        QTreeWidgetItem* headers = getHeaders(Jeans);
-        jeansItem->addChild(headers);
+        if (entities.size() > 0) {
+            QTreeWidgetItem* headers = getHeaders();
+            topLevelItemWidget->addChild(headers);
+        }
 
-        for (auto it = jeans.begin(); it != jeans.end(); it++) {
+        for (auto it = entities.begin(); it != entities.end(); it++) {
             QStringList columns;
             columns << QString::fromStdString((*it).getCode())
                     << QString::fromStdString((*it).getColor())
@@ -75,32 +89,32 @@ void ClothingItemsTabPage::updateJeans() {
                     << QString::number((*it).computePrice(), 'f', 2) + "$";
 
             QTreeWidgetItem* child = new QTreeWidgetItem(columns);
-            jeansItem->addChild(child);
+            topLevelItemWidget->addChild(child);
         }
 
-        QIcon icon(":/assets/icons/jeans.png");
-        jeansItem->setIcon(0, icon);
+        QIcon icon(":/assets/icons/" + iconFileName);
+        topLevelItemWidget->setIcon(0, icon);
+        topLevelItemWidget->setFlags(topLevelItemWidget->flags() & ~Qt::ItemIsSelectable);
+
         if (wasCreated) {
-            treeWidget->addTopLevelItem(jeansItem);
+            treeWidget->addTopLevelItem(topLevelItemWidget);
         }
-
     } else {
-        qCritical() << QString::fromStdString(jeansOrError.forceLeft().getMessage());
+        qCritical() << QString::fromStdString(entitiesOrError.forceLeft().getMessage());
     }
 }
 
-QTreeWidgetItem* ClothingItemsTabPage::getHeaders(TopLevelItem topLevelItem) {
+QTreeWidgetItem* ClothingItemsTabPage::getHeaders() {
     QTreeWidgetItem* headers = new QTreeWidgetItem(QStringList() << "Code"
                                                                  << "Color"
                                                                  << "Description"
                                                                  << "Size"
-                                                                 << "Price");
+                                                                 << "Calculated price");
     QFont font = QFont();
     font.setBold(true);
 
     for (int i = 0; i < COLUMN_COUNT; ++i) {
         headers->setFont(i, font);
-        treeWidget->setColumnWidth(i, 200);
     }
 
 
