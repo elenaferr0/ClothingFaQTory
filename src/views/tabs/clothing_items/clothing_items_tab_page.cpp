@@ -39,10 +39,6 @@ ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
 
     toolBar->setIconSize(QSize(15, 15));
 
-//    action = toolBar->addAction(QStringLiteral("Find"));
-//    action->
-//    action->setData(1);
-
     layout->addWidget(toolBar);
     layout->addWidget(treeWidget);
 

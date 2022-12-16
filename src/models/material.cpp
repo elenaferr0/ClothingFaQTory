@@ -34,8 +34,6 @@ Material::Name Models::Material::namefromString(const string& name) {
         return DENIM;
     } else if (name == "WOOL") {
         return WOOL;
-    } else if (name == "POLYESTER") {
-        return POLYESTER;
     } else if (name == "COTTON") {
         return COTTON;
     } else if (name == "GOLD") {
@@ -54,5 +52,35 @@ Material::UnitOfMeasure Models::Material::unitOfMeasureFromString(const string& 
         return GRAM;
     } else {
         return METER;
+    }
+}
+
+string Models::Material::getUnitOfMeasureAsString() const {
+    switch (unitOfMeasure) {
+        case GRAM:
+            return "g";
+        case METER:
+        default:
+            return "m";
+    }
+}
+
+string Models::Material::getNameAsString() const {
+    switch (name) {
+        case DENIM:
+            return "DENIM";
+        case WOOL:
+            return "WOOL";
+        case COTTON:
+            return "COTTON";
+        case GOLD:
+            return "GOLD";
+        case SILVER:
+            return "SILVER";
+        case WOOD:
+            return "WOOD";
+        case POLYESTER:
+        default:
+            return "POLYESTER";
     }
 }

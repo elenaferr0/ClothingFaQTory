@@ -37,16 +37,21 @@ namespace Models {
 
         Name getName() const;
 
+        string getNameAsString() const;
+
         double getCostPerUnit() const;
 
         static Name namefromString(const string&);
 
         static UnitOfMeasure unitOfMeasureFromString(const string&);
 
-  private:
+        string getUnitOfMeasureAsString() const;
+
+    private:
         Name name;
         UnitOfMeasure unitOfMeasure;
         double costPerUnit;
+
     };
 }
 

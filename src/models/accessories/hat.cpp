@@ -47,9 +47,7 @@ double Hat::computePrice() const {
         surface += Calculator::computeRectangleArea(VISOR_LENGTH, VISOR_WIDTH);
     }
 
-    double cost = material.getCostPerUnit();
-    cost *= surface;
-    return cost;
+    return material.getCostPerUnit() * surface;
 }
 
 bool Hat::isBaseballCap() const {

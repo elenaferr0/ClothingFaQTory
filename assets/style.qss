@@ -1,6 +1,7 @@
 * {
     font-family: "Inter";
 }
+
 QTabWidget::pane {
     border: 1px solid lightgray;
 
@@ -38,4 +39,17 @@ QTreeView::branch:open {
 
 QTreeView::branch:closed:has-children {
     image: url(:/assets/icons/expand.png);
+}
+
+QToolButton#materialButton {
+    background-color: #dfdfdf;
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    padding: 15px;
+    border: 1px solid #bbbbbb;
+}
+
+QToolButton#materialButton:hover {
+    background-color: #f0f0f0;
 }

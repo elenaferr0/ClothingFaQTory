@@ -6,7 +6,7 @@
 #include <QGraphicsView>
 #include "no_connection.h"
 #include "tabs/clothing_items/clothing_items_tab_page.h"
-#include "tabs/materials_cost_tab_page.h"
+#include "tabs/materials_cost/materials_cost_tab_page.h"
 
 MainWindow::MainWindow(QWidget* parent)
         : QMainWindow(parent) {
