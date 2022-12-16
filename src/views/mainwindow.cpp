@@ -33,10 +33,6 @@ MainWindow::MainWindow(QWidget* parent)
     QIcon clothingIcon(":/assets/icons/clothing_items.png");
     tabWidget->setTabIcon(0, clothingIcon);
 
-//    tabWidget->addTab(new ClothingItemsTabPage(tabWidget), "Accessories");
-//    QIcon accessoriesIcon(":/assets/icons/accessories.png");
-//    tabWidget->setTabIcon(1, accessoriesIcon);
-
     tabWidget->addTab(new MaterialsCostTabPage(tabWidget), "Materials Cost");
     QIcon materialsIcon(":/assets/icons/materials_cost.png");
     tabWidget->setTabIcon(1, materialsIcon);

@@ -17,7 +17,7 @@ namespace Services {
     private:
         MaterialRepository();
     protected:
-        // doesn't need a destructor since it's static (it wouldn't be called)
+        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
         static MaterialRepository* instance;
         Map<int, Material> cachedMaterials; // not static since there's only one instance
 

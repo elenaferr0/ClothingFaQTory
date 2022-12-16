@@ -1,5 +1,6 @@
 #include <QVBoxLayout>
 #include <QHeaderView>
+#include <QToolButton>
 #include "clothing_items_tab_page.h"
 
 unsigned int ClothingItemsTabPage::COLUMN_COUNT = 5;
@@ -13,14 +14,38 @@ ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
     treeWidget->setIconSize(QSize(30, 30));
 
     updateTreeContent();
-
     for (int i = 0; i < COLUMN_COUNT; ++i) {
         treeWidget->setColumnWidth(i, 180);
     }
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setAlignment(Qt::AlignTop);
+
+    toolBar = new QToolBar(this);
+    toolBar->setMovable(false);
+
+
+    QToolButton* addButton = new QToolButton;
+    addButton->setIcon(QIcon(":/assets/icons/add.png"));
+    addButton->setText("Create New");
+    addButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
+    toolBar->addWidget(addButton);
+
+    QToolButton* searchButton = new QToolButton;
+    searchButton->setIcon(QIcon(":/assets/icons/search.png"));
+    searchButton->setText("Search");
+    searchButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
+    toolBar->addWidget(searchButton);
+
+    toolBar->setIconSize(QSize(15, 15));
+
+//    action = toolBar->addAction(QStringLiteral("Find"));
+//    action->
+//    action->setData(1);
+
+    layout->addWidget(toolBar);
     layout->addWidget(treeWidget);
+
 }
 
 void ClothingItemsTabPage::updateTreeContent() {

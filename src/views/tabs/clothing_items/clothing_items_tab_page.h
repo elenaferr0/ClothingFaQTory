@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QTableWidget>
 #include <QTreeWidget>
+#include <QToolBar>
 #include "../../../core/containers/map.h"
 #include "../../../services/repositories/jeans_repository.h"
 #include "../../../services/repositories/vest_repository.h"
@@ -35,6 +36,8 @@ private:
     };
 
     QTreeWidget* treeWidget;
+    QToolBar* toolBar;
+
     QTreeWidgetItem* getHeaders();
 
     template<class T>

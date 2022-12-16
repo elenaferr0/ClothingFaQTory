@@ -15,7 +15,7 @@ namespace Services {
     private:
         BackPackRepository();
     protected:
-        // doesn't need a destructor since it's static (it wouldn't be called)
+        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
         static BackPackRepository* instance;
     public:
 

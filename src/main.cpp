@@ -1,9 +1,9 @@
 #include "views/mainwindow.h"
 
 #include <QApplication>
-#include <QGraphicsPixmapItem>
-#include <QGraphicsView>
-#include <QGraphicsScene>
+#include <QDebug>
+#include <QFontDatabase>
+#include <QResource>
 #include <QFile>
 #include <QIODevice>
 
@@ -47,6 +47,8 @@ int main(int argc, char** argv) {
     qInstallMessageHandler(logHandler);
     QApplication a(argc, argv);
 
+    int id = QFontDatabase::addApplicationFont(":/fonts/inter.ttf");
+
     QFile file(":/assets/style.qss");
     file.open(QFile::ReadOnly);
     QString styleSheet = QLatin1String(file.readAll());
@@ -54,6 +56,8 @@ int main(int argc, char** argv) {
 
     MainWindow w;
     w.resize(1024, 512);
+//    QFont font(family, 14);
+//    w.setFont(font);
     w.show();
 
     return a.exec();

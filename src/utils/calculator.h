@@ -14,9 +14,9 @@ namespace Utils {
 
         static double computeCilinderSurface(double radius, double height);
 
-        static double computeCubeSideFromVolume(double volume);
-
         static double computeTrapezoidalBasedPrismSurfaceFrom(double prismHeight, double baseHeight);
+
+        static void squaredCmToSquaredMeters(double& cm);
     };
 }
 

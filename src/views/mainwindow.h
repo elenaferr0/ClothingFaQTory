@@ -4,6 +4,7 @@
 #include <QSqlDatabase>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 namespace Views { class MainWindow; }

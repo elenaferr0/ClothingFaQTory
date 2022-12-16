@@ -5,11 +5,11 @@ using std::string;
 
 using Models::ClothingItem;
 
-const double ClothingItem::SMALLEST_SIZE_TRUNK_WIDTH = 10;
-const double ClothingItem::SMALLEST_SIZE_TRUNK_LENGTH = 10;
+const double ClothingItem::SMALLEST_SIZE_TRUNK_WIDTH = 40;
+const double ClothingItem::SMALLEST_SIZE_TRUNK_LENGTH = 70;
 
-const double ClothingItem::SMALLEST_SIZE_LEG_WIDTH = 10;
-const double ClothingItem::SMALLEST_SIZE_LEG_LENGTH = 10;
+const double ClothingItem::SMALLEST_SIZE_LEG_WIDTH = 20;
+const double ClothingItem::SMALLEST_SIZE_LEG_LENGTH = 100;
 
 ClothingItem::ClothingItem(
         long id,

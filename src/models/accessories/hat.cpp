@@ -8,9 +8,9 @@ using std::list;
 using Models::Accessories::Hat;
 using Utils::Calculator;
 
-const double Hat::DIAMETER = 15.5;
-const double Hat::VISOR_LENGTH = 10.25;
-const double Hat::VISOR_WIDTH = 5.25;
+const double Hat::DIAMETER = 13.2;
+const double Hat::VISOR_LENGTH = 6.2;
+const double Hat::VISOR_WIDTH = 3.10;
 
 Hat::Hat(long id,
          string code,
@@ -25,8 +25,8 @@ Hat::Hat(long id,
         : Accessory(id,
                     code,
                     color,
-                  material,
-                  size,
+                    material,
+                    size,
                     availableQuantity,
                     soldQuantity,
                     description,
@@ -41,12 +41,15 @@ double Hat::computePrice() const {
     // the cost of the hat is estimated through the surface of half a sphere
     // if it's a baseball hat, the cost of the visor part surface is added.
     double surface = Calculator::computeSphereSurface(DIAMETER / 2) / 2;
+    Calculator::squaredCmToSquaredMeters(surface);
 
     if (baseballCap) {
         surface += Calculator::computeRectangleArea(VISOR_LENGTH, VISOR_WIDTH);
     }
 
-    return material.getCostPerUnit() * surface;
+    double cost = material.getCostPerUnit();
+    cost *= surface;
+    return cost;
 }
 
 bool Hat::isBaseballCap() const {

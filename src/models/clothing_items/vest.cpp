@@ -38,12 +38,13 @@ Vest* Vest::clone() const {
 }
 
 double Vest::computePrice() const {
-    double trunkLength = ClothingItem::computeTrunkLength();
-    double trunkWidth = ClothingItem::computeTrunkWidth();
+    double trunkLength = computeTrunkLength();
+    double trunkWidth = computeTrunkWidth();
 
     // the surface of the Vest is estimated with the surface of a cilinder
-    double surface = Calculator::computeCilinderSurface(trunkWidth, trunkLength);
+    double surface = Calculator::computeCilinderSurface(trunkWidth, trunkLength); // cm^2
 
+    Calculator::squaredCmToSquaredMeters(surface);
     double price = surface * material.getCostPerUnit();
 
     if (hasButtons) {

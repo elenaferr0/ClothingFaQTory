@@ -41,6 +41,7 @@ double BackPack::computePrice() const {
     // calculate the depth dividing the volume (capacity) by height and width
     double backpackDepth = capacity / (BACKPACK_HEIGHT * BACKPACK_WIDTH);
     double surface = Calculator::computeTrapezoidalBasedPrismSurfaceFrom(BACKPACK_HEIGHT, backpackDepth);
+    Calculator::squaredCmToSquaredMeters(surface);
 
     return material.getCostPerUnit() * surface;
 }

@@ -21,7 +21,7 @@ namespace Models {
         };
 
         enum UnitOfMeasure {
-            GRAM, CENTIMETER
+            GRAM, METER
         };
 
         static const double GOLD_SPECIFIC_WEIGHT;

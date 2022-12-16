@@ -53,6 +53,6 @@ Material::UnitOfMeasure Models::Material::unitOfMeasureFromString(const string& 
     if (unit == "g") {
         return GRAM;
     } else {
-        return CENTIMETER;
+        return METER;
     }
 }

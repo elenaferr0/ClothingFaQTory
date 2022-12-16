@@ -23,10 +23,6 @@ double Calculator::computeCilinderSurface(double radius, double height) {
     return 2 * M_PI * radius * height;
 }
 
-double Calculator::computeCubeSideFromVolume(double volume) {
-    return cbrt(volume); // cube root
-}
-
 double Calculator::computeTrapezoidalBasedPrismSurfaceFrom(double prismHeight, double baseHeight) {
     /*
      * To simplify the calculations, we assume that the trapezoid placed on the prism base is
@@ -42,4 +38,8 @@ double Calculator::computeTrapezoidalBasedPrismSurfaceFrom(double prismHeight, d
     double biggerLateralSurface = (baseHeight + baseHeight / 2) * prismHeight;
 
     return 2 * baseArea + 2 * smallerLateralSurface + 2 * biggerLateralSurface;
+}
+
+void Utils::Calculator::squaredCmToSquaredMeters(double& cm) {
+    cm /= 1e4; // 10^4
 }

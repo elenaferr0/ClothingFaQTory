@@ -40,6 +40,7 @@ double Jeans::computePrice() const {
     double legLength = shorts ? computedLength / 2 : computedLength;
 
     double surface = 2 * Calculator::computeCilinderSurface(computedWidth, legLength);
+    Calculator::squaredCmToSquaredMeters(surface);
 
     return surface * material.getCostPerUnit();
 }

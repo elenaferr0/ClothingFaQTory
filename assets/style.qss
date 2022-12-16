@@ -1,3 +1,6 @@
+* {
+    font-family: "Inter";
+}
 QTabWidget::pane {
     border: 1px solid lightgray;
 
