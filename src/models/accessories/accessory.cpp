@@ -51,7 +51,7 @@ Accessory::Category Accessory::categoryFromString(const string& category) {
     }
 }
 
-Accessory::Category Accessory::getCategory() const {
+const Accessory::Category& Accessory::getCategory() const {
     return category;
 }
 

@@ -50,7 +50,7 @@ double Hat::computePrice() const {
     return material.getCostPerUnit() * surface;
 }
 
-bool Hat::isBaseballCap() const {
+const bool& Hat::isBaseballCap() const {
     return baseballCap;
 }
 

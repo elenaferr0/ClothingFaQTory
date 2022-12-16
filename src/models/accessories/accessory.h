@@ -32,7 +32,7 @@ namespace Models {
     protected:
         Category category;
     public:
-        Category getCategory() const;
+        const Category& getCategory() const;
 
         void setCategory(const string&);
     };

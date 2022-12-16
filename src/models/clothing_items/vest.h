@@ -8,7 +8,7 @@ namespace Models::ClothingItems {
     private:
         bool hasButtons;
     public:
-        bool getHasButtons() const;
+        const bool& getHasButtons() const;
 
         void setHasButtons(bool hasButtons);
 

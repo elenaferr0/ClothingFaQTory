@@ -12,19 +12,16 @@ namespace Models {
             XS = 1, S = 2, M = 3, L = 4, XL = 5, XXL = 6, ONE_SIZE = 7
         };
 
-        double getExtraPercentageOfMaterial() const;
+        const double& getExtraPercentageOfMaterial() const;
 
-        Name getName() const;
+        const Name& getName() const;
 
         Size(long id = -1,
              string name = "",
              double extraPercentageOfMaterial = 0);
 
-        void setName(string name);
-
-        void setExtraPercentageOfMaterial(double extraPercentageOfMaterial);
-
         string getNameAsString() const;
+
         static Name nameFromString(const string&);
 
     private:

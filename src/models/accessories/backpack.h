@@ -13,8 +13,8 @@ namespace Models::Accessories {
         /*
          * static constants used to estimate the backpack size
          * for price calculation
-         * assumption: all backpacks have same height and depth,
-         * only capacity and width changes
+         * assumption: all backpacks have same height and width,
+         * only capacity changes
          */
         static const double BACKPACK_HEIGHT; // in cm
         static const double BACKPACK_WIDTH;  // in cm
@@ -36,7 +36,7 @@ namespace Models::Accessories {
 
         double computePrice() const override;
 
-        double getCapacity() const;
+        const double& getCapacity() const;
 
         void accept(VisitorInterface& visitor) override;
     };

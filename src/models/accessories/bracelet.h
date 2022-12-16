@@ -12,9 +12,9 @@ namespace Models::Accessories {
     protected:
         unsigned int pearlNumber;
     public:
-        unsigned int getPearlNumber() const;
+        const unsigned int& getPearlNumber() const;
 
-        double getPearlDiameter() const;
+        const double& getPearlDiameter() const;
 
     protected:
         double pearlDiameter;

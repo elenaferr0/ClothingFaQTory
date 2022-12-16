@@ -45,7 +45,7 @@ double Jeans::computePrice() const {
     return surface * material.getCostPerUnit();
 }
 
-bool Jeans::areShorts() const {
+const bool& Jeans::areShorts() const {
     return shorts;
 }
 

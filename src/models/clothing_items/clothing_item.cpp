@@ -68,7 +68,7 @@ string ClothingItem::getGenderAsString() const {
     }
 }
 
-ClothingItem::Gender Models::ClothingItem::genderFromString(const string& gender) const {
+ClothingItem::Gender Models::ClothingItem::genderFromString(const string& gender) {
     if (gender == "MEN") {
         return Gender::MEN;
     } else if (gender == "WOMEN") {
@@ -78,7 +78,7 @@ ClothingItem::Gender Models::ClothingItem::genderFromString(const string& gender
     }
 }
 
-bool Models::ClothingItem::hasSustainableMaterials() const {
+const bool& Models::ClothingItem::hasSustainableMaterials() const {
     return sustainableMaterials;
 }
 

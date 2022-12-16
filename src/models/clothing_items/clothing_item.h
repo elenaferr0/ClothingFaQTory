@@ -25,11 +25,11 @@ namespace Models {
 
 
         string getGenderAsString() const;
-        Gender genderFromString(const string&) const;
+        static Gender genderFromString(const string&);
 
         ClothingItem& operator=(const ClothingItem&) = default; // needed because it's a virtual base
 
-        bool hasSustainableMaterials() const;
+        const bool& hasSustainableMaterials() const;
 
         void setSustainableMaterials(bool sustainableMaterials);
 

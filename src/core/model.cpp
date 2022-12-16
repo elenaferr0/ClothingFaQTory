@@ -2,7 +2,7 @@
 
 using Core::Model;
 
-int Model::getId() const {
+const int& Model::getId() const {
     return id;
 }
 

@@ -21,11 +21,11 @@ Material* Material::clone() const {
     return new Material(*this);
 }
 
-Material::Name Material::getName() const {
+const Material::Name& Material::getName() const {
     return name;
 }
 
-double Material::getCostPerUnit() const {
+const double& Material::getCostPerUnit() const {
     return costPerUnit;
 }
 
@@ -55,7 +55,7 @@ Material::UnitOfMeasure Models::Material::unitOfMeasureFromString(const string& 
     }
 }
 
-string Models::Material::getUnitOfMeasureAsString() const {
+const string& Models::Material::getUnitOfMeasureAsString() const {
     switch (unitOfMeasure) {
         case GRAM:
             return "g";
@@ -65,7 +65,7 @@ string Models::Material::getUnitOfMeasureAsString() const {
     }
 }
 
-string Models::Material::getNameAsString() const {
+const string& Models::Material::getNameAsString() const {
     switch (name) {
         case DENIM:
             return "DENIM";

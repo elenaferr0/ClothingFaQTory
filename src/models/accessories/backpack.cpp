@@ -46,7 +46,7 @@ double BackPack::computePrice() const {
     return material.getCostPerUnit() * surface;
 }
 
-double BackPack::getCapacity() const {
+const double& BackPack::getCapacity() const {
     return capacity;
 }
 

@@ -9,24 +9,16 @@ Size::Size(long id,
           name(nameFromString(name)),
           extraPercentageOfMaterial(extraPercentageOfMaterial) {}
 
-double Size::getExtraPercentageOfMaterial() const {
+const double& Size::getExtraPercentageOfMaterial() const {
     return extraPercentageOfMaterial;
 }
 
-Size::Name Size::getName() const {
+const Size::Name& Size::getName() const {
     return name;
 }
 
 Size* Size::clone() const {
     return new Size(*this);
-}
-
-void Size::setName(string name) {
-    this->name = nameFromString(name);
-}
-
-void Size::setExtraPercentageOfMaterial(double extraPercentageOfMaterial) {
-    this->extraPercentageOfMaterial = extraPercentageOfMaterial;
 }
 
 string Size::getNameAsString() const {

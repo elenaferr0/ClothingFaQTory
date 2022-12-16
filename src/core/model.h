@@ -12,7 +12,7 @@ namespace Core {
     public:
         Model(int id = -1) : id(id) {};
 
-        int getId() const;
+        const int& getId() const;
 
         void setId(int id);
 

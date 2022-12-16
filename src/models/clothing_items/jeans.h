@@ -16,7 +16,7 @@ namespace Models::ClothingItems {
         // if shorts is true, when calculating the price half the length will be used
         bool shorts;
     public:
-        bool areShorts() const;
+        const bool& areShorts() const;
 
         void setShorts(bool shorts);
 

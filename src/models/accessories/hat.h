@@ -26,7 +26,7 @@ namespace Models::Accessories {
 
         double computePrice() const override;
 
-        bool isBaseballCap() const;
+        const bool& isBaseballCap() const;
 
         void accept(VisitorInterface& visitor) override;
     };

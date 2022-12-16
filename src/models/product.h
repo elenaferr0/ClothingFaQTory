@@ -28,6 +28,7 @@ namespace Models {
         int soldQuantity;
         string description;
         string code;
+
         void notifyAll();
 
     public:
@@ -50,17 +51,13 @@ namespace Models {
 
         const Size& getSize() const;
 
-        int getAvailableQuantity() const;
+        const int& getAvailableQuantity() const;
 
-        int getSoldQuantity() const;
+        const int& getSoldQuantity() const;
 
         const string& getDescription() const;
 
         const string& getCode() const;
-
-        void setMaterial(const Material& material);
-
-        void setSize(const Size& size);
 
         virtual void accept(VisitorInterface& visitor) = 0;
 

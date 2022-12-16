@@ -35,17 +35,17 @@ namespace Models {
 
         Material* clone() const override;
 
-        Name getName() const;
+        const Name& getName() const;
 
-        string getNameAsString() const;
+        const string& getNameAsString() const;
 
-        double getCostPerUnit() const;
+        const double& getCostPerUnit() const;
 
         static Name namefromString(const string&);
 
         static UnitOfMeasure unitOfMeasureFromString(const string&);
 
-        string getUnitOfMeasureAsString() const;
+        const string& getUnitOfMeasureAsString() const;
 
     private:
         Name name;

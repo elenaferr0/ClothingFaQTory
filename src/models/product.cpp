@@ -31,11 +31,11 @@ const Models::Size& Product::getSize() const {
     return size;
 }
 
-int Product::getAvailableQuantity() const {
+const int& Product::getAvailableQuantity() const {
     return availableQuantity;
 }
 
-int Product::getSoldQuantity() const {
+const int& Product::getSoldQuantity() const {
     return soldQuantity;
 }
 
@@ -47,17 +47,10 @@ const string& Product::getCode() const {
     return code;
 }
 
-void Product::setSize(const Models::Size& size) {
-    Product::size = size;
-}
-
 const Material& Product::getMaterial() const {
     return material;
 }
 
-void Models::Product::setMaterial(const Material& material) {
-    this->material = material;
-}
 
 void Models::Product::registerObserver(ObserverInterface* observer) {
     observers.push_back(observer);
