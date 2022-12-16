@@ -1,7 +1,6 @@
-
-
 #include <QLabel>
 #include <QToolButton>
+#include <string>
 #include "materials_cost_tab_page.h"
 
 int MaterialsCostTabPage::COLUMN_COUNT = 4;
@@ -30,16 +29,17 @@ void MaterialsCostTabPage::createGrid() {
 
         for (auto material: materials) {
             QToolButton* button = new QToolButton();
-            QString materialName = QString::fromStdString(material.getNameAsString());
-            QString capitalizedName = materialName.at(0).toUpper() +
-                                      QStringRef(&materialName, 1, materialName.size() - 1).toString().toLower();
+            string materialName = material.getNameAsString();
+
+            QString capitalizedName = QString::fromStdString(materialName).at(0).toUpper() +
+                                      QString::fromStdString(materialName.substr(1, materialName.size() - 1)).toLower();
 
             QString text = capitalizedName + "\n"
                            + QString::number(material.getCostPerUnit(), 'f', 2) + "$/" +
                            QString::fromStdString(material.getUnitOfMeasureAsString());
 
             button->setText(text);
-            button->setIcon(QIcon(":/assets/icons/" + materialName.toLower() + ".png"));
+            button->setIcon(QIcon(":/assets/icons/" + QString::fromStdString(materialName).toLower() + ".png"));
             button->setIconSize(QSize(50, 50));
             button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
             button->setObjectName("materialButton"); // for stylesheet

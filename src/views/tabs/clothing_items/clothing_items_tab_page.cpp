@@ -1,7 +1,6 @@
 #include <QVBoxLayout>
 #include <QHeaderView>
 #include <QToolButton>
-#include <QStringRef>
 #include "clothing_items_tab_page.h"
 
 int ClothingItemsTabPage::COLUMN_COUNT = 5;
