@@ -30,7 +30,7 @@ QT_END_NAMESPACE
 class ClothingItemsTabPage : public QWidget {
 Q_OBJECT
 private:
-    static unsigned int COLUMN_COUNT;
+    static int COLUMN_COUNT;
     enum TopLevelItem {
         Jeans, Vest, Overalls, Bracelet, BackPack, Hat
     };

@@ -15,7 +15,7 @@ class MaterialsCostTabPage : public QWidget {
 private:
     MaterialRepository* materialRepository;
     QGridLayout* gridLayout;
-    static unsigned int COLUMN_COUNT;
+    static int COLUMN_COUNT;
     void createGrid();
 public:
     MaterialsCostTabPage(QWidget* parent = nullptr);

@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     qInstallMessageHandler(logHandler);
     QApplication a(argc, argv);
 
-    int id = QFontDatabase::addApplicationFont(":/fonts/inter.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/inter.ttf");
 
     QFile file(":/assets/style.qss");
     file.open(QFile::ReadOnly);

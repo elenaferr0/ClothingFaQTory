@@ -3,7 +3,7 @@
 #include <QToolButton>
 #include "clothing_items_tab_page.h"
 
-unsigned int ClothingItemsTabPage::COLUMN_COUNT = 5;
+int ClothingItemsTabPage::COLUMN_COUNT = 5;
 
 ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
         : QWidget(parent) {

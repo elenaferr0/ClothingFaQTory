@@ -4,7 +4,7 @@
 #include <QToolButton>
 #include "materials_cost_tab_page.h"
 
-unsigned int MaterialsCostTabPage::COLUMN_COUNT = 4;
+int MaterialsCostTabPage::COLUMN_COUNT = 4;
 
 MaterialsCostTabPage::MaterialsCostTabPage(QWidget* parent)
         : QWidget(parent), materialRepository(MaterialRepository::getInstance()) {
