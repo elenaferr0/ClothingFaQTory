@@ -14,7 +14,7 @@ ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
     treeWidget->setIconSize(QSize(30, 30));
 
     updateTreeContent();
-    for (int i = 0; i < COLUMN_COUNT; ++i) {
+    for (size_t i = 0; i < COLUMN_COUNT; ++i) {
         treeWidget->setColumnWidth(i, 180);
     }
 
@@ -134,7 +134,7 @@ QTreeWidgetItem* ClothingItemsTabPage::getHeaders() {
     QFont font = QFont();
     font.setBold(true);
 
-    for (int i = 0; i < COLUMN_COUNT; ++i) {
+    for (size_t i = 0; i < COLUMN_COUNT; ++i) {
         headers->setFont(i, font);
     }
 
