@@ -23,6 +23,7 @@ using Services::OverallsRepository;
 using Services::BraceletRepository;
 using Services::BackPackRepository;
 using Services::HatRepository;
+using Models::Product;
 
 QT_BEGIN_NAMESPACE
 namespace Views::Tabs::ClothingItems { class ClothingItemsTabPage; }
@@ -32,13 +33,6 @@ class ClothingItemsTabPage : public QWidget {
 Q_OBJECT
 private:
     static int COLUMN_COUNT;
-    enum ProductType {
-        Jeans, Vest, Overalls, Bracelet, BackPack, Hat
-    };
-
-    enum ToolBarActions {
-        CreateNew, Search
-    };
 
     QTreeWidget* treeWidget;
     QToolBar* toolBar;
@@ -46,23 +40,20 @@ private:
     QTreeWidgetItem* getHeaders();
 
     template<class T>
-    void update(ProductType topLevelItem,
-                QString title,
+    void update(Product::ProductType topLevelItem,
+                string title,
                 ReadOnlyRepository<T>* repository,
                 QString iconFileName);
-
-    static QString productTypeToString(ProductType);
 
 public:
     ClothingItemsTabPage(QWidget* parent = nullptr);
 
-    void updateTopLevelItem(ProductType topLevelItem);
+    void updateTopLevelItem(Product::ProductType topLevelItem);
 
     void populateTree();
 
 private slots:
-    void showNewProductTypeChooserWindow(bool);
-    void handleProductTypeChoice(int);
+    void showWizard(bool);
 };
 
 

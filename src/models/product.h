@@ -32,6 +32,11 @@ namespace Models {
         void notifyAll();
 
     public:
+        enum ProductType {
+            Jeans, Vest, Overalls, Bracelet, BackPack, Hat
+        };
+        static string productTypeToString(Product::ProductType);
+
         Product(long id = -1,
                 string code = "",
                 string color = "",

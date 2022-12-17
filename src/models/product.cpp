@@ -61,3 +61,21 @@ void Models::Product::notifyAll() {
         (*it)->notify(*this);
     }
 }
+
+string Product::productTypeToString(Product::ProductType productType) {
+    switch (productType) {
+        case Jeans:
+            return "Jeans";
+        case Overalls:
+            return "Overalls";
+        case Hat:
+            return "Hat";
+        case Bracelet:
+            return "Bracelet";
+        case Vest:
+            return "Vest";
+        case BackPack:
+        default:
+            return "BackPack";
+    }
+}

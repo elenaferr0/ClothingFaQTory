@@ -4,7 +4,9 @@
 #include <QPushButton>
 #include "clothing_items_tab_page.h"
 #include "../../mainwindow.h"
-#include "../../product_type_button.h"
+#include "../../wizard/create_product_wizard.h"
+
+using Models::Product;
 
 int ClothingItemsTabPage::COLUMN_COUNT = 5;
 
@@ -32,14 +34,14 @@ ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
     createButton->setIcon(QIcon(":/assets/icons/add.png"));
     createButton->setText("Create New");
     createButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    connect(createButton, SIGNAL(clicked(bool)), this, SLOT(showNewProductTypeChooserWindow(bool)));
+    connect(createButton, SIGNAL(clicked(bool)), this, SLOT(showWizard(bool)));
     toolBar->addWidget(createButton);
 
     QToolButton* searchButton = new QToolButton;
     searchButton->setIcon(QIcon(":/assets/icons/search.png"));
     searchButton->setText("Search");
     searchButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-//    connect(searchButton, SIGNAL(clicked(bool)), this, SLOT(showNewProductTypeChooserWindow(bool)));
+//    connect(searchButton, SIGNAL(clicked(bool)), this, SLOT(showNewProduct::ProductTypeChooserWindow(bool)));
     toolBar->addWidget(searchButton);
 
     toolBar->setIconSize(QSize(15, 15));
@@ -52,43 +54,45 @@ ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
 void ClothingItemsTabPage::populateTree() {
     treeWidget->clear();
     treeWidget->setColumnCount(COLUMN_COUNT);
-    for (int i = Jeans; i != Hat + 1; i++) {
-        auto topLevelItem = static_cast<ProductType>(i);
+    for (int i = Product::Jeans; i != Product::Hat + 1; i++) {
+        auto topLevelItem = static_cast<Product::ProductType>(i);
         updateTopLevelItem(topLevelItem);
     }
 }
 
-void ClothingItemsTabPage::updateTopLevelItem(ProductType topLevelItem) {
+void ClothingItemsTabPage::updateTopLevelItem(Product::ProductType topLevelItem) {
     switch (topLevelItem) {
-        case Jeans:
-            update(Jeans, productTypeToString(Jeans), JeansRepository::getInstance(), "jeans.png");
+        case Product::Jeans:
+            update(Product::Jeans, Product::productTypeToString(Product::Jeans), JeansRepository::getInstance(), "jeans.png");
             return;
-        case Vest:
-            update(Vest, productTypeToString(Vest), VestRepository::getInstance(), "vest.png");
+        case Product::Vest:
+            update(Product::Vest, Product::productTypeToString(Product::Vest), VestRepository::getInstance(), "vest.png");
             return;
-        case Overalls:
-            update(Overalls, productTypeToString(Overalls), OverallsRepository::getInstance(), "overalls.png");
+        case Product::Overalls:
+            update(Product::Overalls, Product::productTypeToString(Product::Overalls), OverallsRepository::getInstance(), "overalls.png");
             return;
-        case Bracelet:
-            update(Bracelet, productTypeToString(Bracelet), BraceletRepository::getInstance(), "bracelet.png");
+        case Product::Bracelet:
+            update(Product::Bracelet, Product::productTypeToString(Product::Bracelet), BraceletRepository::getInstance(), "bracelet.png");
             return;
-        case BackPack:
-            update(BackPack, productTypeToString(BackPack), BackPackRepository::getInstance(), "backpack.png");
+        case Product::BackPack:
+            update(Product::BackPack, Product::productTypeToString(Product::BackPack), BackPackRepository::getInstance(), "backpack.png");
             return;
-        case Hat:
-            update(Hat, productTypeToString(Hat), HatRepository::getInstance(), "hat.png");
+        case Product::Hat:
+            update(Product::Hat, Product::productTypeToString(Product::Hat), HatRepository::getInstance(), "hat.png");
             return;
     }
 }
 
 template<class T>
-void ClothingItemsTabPage::update(ProductType topLevelItem, QString title, ReadOnlyRepository<T>* repository,
+void ClothingItemsTabPage::update(Product::ProductType topLevelItem,
+                                  string title,
+                                  ReadOnlyRepository<T>* repository,
                                   QString iconFileName) {
     bool wasCreated = false;
     QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(topLevelItem);
 
     if (topLevelItemWidget == nullptr) { // if it didn't already exist
-        topLevelItemWidget = new QTreeWidgetItem(QStringList() << title);
+        topLevelItemWidget = new QTreeWidgetItem(QStringList() << QString::fromStdString(title));
         wasCreated = true;
     }
 
@@ -147,44 +151,7 @@ QTreeWidgetItem* ClothingItemsTabPage::getHeaders() {
     return headers;
 }
 
-void ClothingItemsTabPage::showNewProductTypeChooserWindow(bool) {
-    QDialog* dialog = new QDialog(this);
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
-    dialog->setModal(true);
-    dialog->setWindowTitle("Choose product type to insert");
-    dialog->setMinimumSize(QSize(400, 400));
-    QVBoxLayout* layout = new QVBoxLayout(dialog);
-
-    for (int i = Jeans; i < Hat + 1; i++) {
-        ProductType productType = static_cast<ProductType>(i);
-        ProductTypeButton* button = new ProductTypeButton(dialog, productType);
-        button->setText(productTypeToString(productType));
-        connect(button, SIGNAL(clicked(int)), this, SLOT(handleProductTypeChoice(int)));
-        connect(button, SIGNAL(clicked()), dialog, SLOT(close()));
-        layout->addWidget(button);
-    }
-
-    dialog->exec();
-}
-
-void ClothingItemsTabPage::handleProductTypeChoice(int choice) {
-    qInfo() << choice;
-}
-
-QString ClothingItemsTabPage::productTypeToString(ProductType productType) {
-    switch (productType) {
-        case Jeans:
-            return "Jeans";
-        case Overalls:
-            return "Overalls";
-        case Hat:
-            return "Hat";
-        case Bracelet:
-            return "Bracelet";
-        case Vest:
-            return "Vest";
-        case BackPack:
-        default:
-            return "BackPack";
-    }
+void ClothingItemsTabPage::showWizard(bool) {
+    CreateProductWizard* wizard = new CreateProductWizard();
+    wizard->exec();
 }
