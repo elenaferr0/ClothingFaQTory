@@ -55,7 +55,7 @@ Material::UnitOfMeasure Models::Material::unitOfMeasureFromString(const string& 
     }
 }
 
-const string& Models::Material::getUnitOfMeasureAsString() const {
+string Models::Material::getUnitOfMeasureAsString() const {
     switch (unitOfMeasure) {
         case GRAM:
             return "g";
@@ -65,7 +65,7 @@ const string& Models::Material::getUnitOfMeasureAsString() const {
     }
 }
 
-const string& Models::Material::getNameAsString() const {
+string Models::Material::getNameAsString() const {
     switch (name) {
         case DENIM:
             return "DENIM";

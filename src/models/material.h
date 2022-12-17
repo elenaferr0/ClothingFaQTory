@@ -37,7 +37,7 @@ namespace Models {
 
         const Name& getName() const;
 
-        const string& getNameAsString() const;
+        string getNameAsString() const;
 
         const double& getCostPerUnit() const;
 
@@ -45,7 +45,7 @@ namespace Models {
 
         static UnitOfMeasure unitOfMeasureFromString(const string&);
 
-        const string& getUnitOfMeasureAsString() const;
+        string getUnitOfMeasureAsString() const;
 
     private:
         Name name;
