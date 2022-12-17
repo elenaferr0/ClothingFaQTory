@@ -8,8 +8,11 @@ using Core::VisitorInterface;
 
 class ProductInfoVisitor : VisitorInterface {
 private:
-    QVBoxLayout* layout;
+    QGridLayout* layout;
+    void buildAccessoryLayoutBase();
+    void buildClothingItemLayoutBase();
 public:
+    ProductInfoVisitor();
     void visitBracelet(Bracelet& bracelet) override;
 
     void visitBackPack(BackPack& pack) override;
@@ -22,7 +25,8 @@ public:
 
     void visitOveralls(Overalls& overalls) override;
 
-    QVBoxLayout* getLayout() const;
+    QGridLayout* getLayout() const;
+
 };
 
 

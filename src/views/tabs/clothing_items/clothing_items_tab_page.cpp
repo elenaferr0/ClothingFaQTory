@@ -32,14 +32,14 @@ ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
 
     QToolButton* createButton = new QToolButton;
     createButton->setIcon(QIcon(":/assets/icons/add.png"));
-    createButton->setText("Create New");
+    createButton->setText(tr("Create &New"));
     createButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
     connect(createButton, SIGNAL(clicked(bool)), this, SLOT(showWizard(bool)));
     toolBar->addWidget(createButton);
 
     QToolButton* searchButton = new QToolButton;
     searchButton->setIcon(QIcon(":/assets/icons/search.png"));
-    searchButton->setText("Search");
+    searchButton->setText(tr("&Search"));
     searchButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
 //    connect(searchButton, SIGNAL(clicked(bool)), this, SLOT(showNewProduct::ProductTypeChooserWindow(bool)));
     toolBar->addWidget(searchButton);
