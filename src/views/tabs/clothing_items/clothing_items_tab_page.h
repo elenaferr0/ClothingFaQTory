@@ -7,6 +7,7 @@
 #include <QTableWidget>
 #include <QTreeWidget>
 #include <QToolBar>
+#include <QVBoxLayout>
 #include "../../../core/containers/map.h"
 #include "../../../services/repositories/jeans_repository.h"
 #include "../../../services/repositories/vest_repository.h"
@@ -31,8 +32,12 @@ class ClothingItemsTabPage : public QWidget {
 Q_OBJECT
 private:
     static int COLUMN_COUNT;
-    enum TopLevelItem {
+    enum ProductType {
         Jeans, Vest, Overalls, Bracelet, BackPack, Hat
+    };
+
+    enum ToolBarActions {
+        CreateNew, Search
     };
 
     QTreeWidget* treeWidget;
@@ -41,17 +46,23 @@ private:
     QTreeWidgetItem* getHeaders();
 
     template<class T>
-    void update(TopLevelItem topLevelItem,
+    void update(ProductType topLevelItem,
                 QString title,
                 ReadOnlyRepository<T>* repository,
                 QString iconFileName);
 
+    static QString productTypeToString(ProductType);
+
 public:
     ClothingItemsTabPage(QWidget* parent = nullptr);
 
-    void updateTopLevelItem(TopLevelItem topLevelItem);
+    void updateTopLevelItem(ProductType topLevelItem);
 
-    void updateTreeContent();
+    void populateTree();
+
+private slots:
+    void showNewProductTypeChooserWindow(bool);
+    void handleProductTypeChoice(int);
 };
 
 
