@@ -28,7 +28,7 @@ QueryBuilder& QueryBuilder::select(const Map<string, string>& fields) {
 
     query = "SELECT ";
 
-    for (auto f = fields.begin(); f != fields.end(); ++f) {
+    for (auto f = fields.cbegin(); f != fields.cend(); ++f) {
 
         query += (*f).first;
         // create automatically the alias if the second parameter is not present
@@ -166,7 +166,7 @@ QueryBuilder& QueryBuilder::bindParameter(string key, string value) {
 }
 
 QueryBuilder& QueryBuilder::bindParameters(const Map<string, string>& params) {
-    for (auto it = params.begin(); it != params.end(); it++) {
+    for (auto it = params.cbegin(); it != params.cend(); it++) {
         bindParameter((*it).first, (*it).second);
     }
 

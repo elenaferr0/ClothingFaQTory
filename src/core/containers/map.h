@@ -111,34 +111,34 @@ namespace Core::Containers {
 
         V& operator[](const K&);
 
-        class MapIterator {
+        class ConstIterator {
         private:
             Map::Node* node;
             bool isPastTheEnd;
             bool isBeforeTheStart;
         public:
-            MapIterator(Map::Node* n) : node(n), isPastTheEnd(false), isBeforeTheStart(false) {};
+            ConstIterator(Map::Node* n) : node(n), isPastTheEnd(false), isBeforeTheStart(false) {};
 
-            bool operator==(const MapIterator& i) const;
+            bool operator==(const ConstIterator& i) const;
 
-            bool operator!=(const MapIterator& i) const;
+            bool operator!=(const ConstIterator& i) const;
 
-            const MapIterator operator++(int);  // postfix
-            MapIterator& operator++();    // prefix
+            const ConstIterator operator++(int);  // postfix
+            ConstIterator& operator++();    // prefix
 
-            const MapIterator operator--(int);  // postfix
-            MapIterator& operator--();    // prefix
+            const ConstIterator operator--(int);  // postfix
+            ConstIterator& operator--();    // prefix
 
-            pair <K, V> operator*() const;
+            const pair <K, V> operator*() const;
 
             friend class Map<K, V>;
         };
 
         bool put(const K& key, const V& value); // returns true if the element was already present
 
-        MapIterator begin() const;
+        ConstIterator cbegin() const;
 
-        MapIterator end() const;
+        ConstIterator cend() const;
     };
 
 
@@ -566,18 +566,18 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    bool Map<K, V>::MapIterator::operator==(const MapIterator& i) const {
+    bool Map<K, V>::ConstIterator::operator==(const ConstIterator& i) const {
         return node == i.node;
     }
 
     template<class K, class V>
-    bool Map<K, V>::MapIterator::operator!=(const MapIterator& i) const {
+    bool Map<K, V>::ConstIterator::operator!=(const ConstIterator& i) const {
         return node != i.node;
     }
 
     template<class K, class V>
-    const typename Map<K, V>::MapIterator Map<K, V>::MapIterator::operator++(int) { // postfix
-        MapIterator copy = *this;
+    const typename Map<K, V>::ConstIterator Map<K, V>::ConstIterator::operator++(int) { // postfix
+        ConstIterator copy = *this;
 
         if (node && !isPastTheEnd) {
             node = Map<K, V>::successor(node);
@@ -590,7 +590,7 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    typename Map<K, V>::MapIterator& Map<K, V>::MapIterator::operator--() { // prefix
+    typename Map<K, V>::ConstIterator& Map<K, V>::ConstIterator::operator--() { // prefix
         if (node && !isBeforeTheStart) {
             node = Map<K, V>::predecessor(node);
 
@@ -608,22 +608,22 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    typename Map<K, V>::MapIterator Map<K, V>::begin() const {
+    typename Map<K, V>::ConstIterator Map<K, V>::cbegin() const {
         return {minimum(root)};
     }
 
     template<class K, class V>
-    typename Map<K, V>::MapIterator Map<K, V>::end() const {
+    typename Map<K, V>::ConstIterator Map<K, V>::cend() const {
         return {TNULL};
     }
 
     template<class K, class V>
-    pair <K, V> Containers::Map<K, V>::MapIterator::operator*() const {
+    const pair <K, V> Containers::Map<K, V>::ConstIterator::operator*() const {
         return pair(node->key, node->value);
     }
 
     template<class K, class V>
-    typename Map<K, V>::MapIterator& Map<K, V>::MapIterator::operator++() {
+    typename Map<K, V>::ConstIterator& Map<K, V>::ConstIterator::operator++() {
         if (node && !isPastTheEnd) {
             node = Map<K, V>::successor(node);
 
@@ -635,8 +635,8 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    const typename Map<K, V>::MapIterator Map<K, V>::MapIterator::operator--(int) {
-        MapIterator copy(*this);
+    const typename Map<K, V>::ConstIterator Map<K, V>::ConstIterator::operator--(int) {
+        ConstIterator copy(*this);
 
         if (node && !isBeforeTheStart) {
             node = Map<K, V>::predecessor(node);
