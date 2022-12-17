@@ -2,7 +2,7 @@
 
 #include "product_type_button.h"
 
-ProductTypeButton::ProductTypeButton(int productType, QWidget* parent) : productType(productType), QPushButton(parent) {
+ProductTypeButton::ProductTypeButton(QWidget* parent, int productType) : QPushButton(parent), productType(productType) {
     connect(this, SIGNAL(clicked(bool)), this, SLOT(handleClick(bool)));
 }
 

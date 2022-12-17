@@ -157,7 +157,7 @@ void ClothingItemsTabPage::showNewProductTypeChooserWindow(bool) {
 
     for (int i = Jeans; i < Hat + 1; i++) {
         ProductType productType = static_cast<ProductType>(i);
-        ProductTypeButton* button = new ProductTypeButton(productType);
+        ProductTypeButton* button = new ProductTypeButton(dialog, productType);
         button->setText(productTypeToString(productType));
         connect(button, SIGNAL(clicked(int)), this, SLOT(handleProductTypeChoice(int)));
         connect(button, SIGNAL(clicked()), dialog, SLOT(close()));

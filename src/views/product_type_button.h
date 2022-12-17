@@ -15,7 +15,7 @@ Q_OBJECT
 private:
     int productType;
 public:
-    ProductTypeButton(int productType = -1, QWidget* parent = nullptr);
+    ProductTypeButton(QWidget* parent, int productType);
 
 signals:
     void clicked(int);
