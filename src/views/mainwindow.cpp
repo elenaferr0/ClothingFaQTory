@@ -5,7 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsView>
 #include "no_connection.h"
-#include "tabs/clothing_items/clothing_items_tab_page.h"
+#include "tabs/products/products_tab_page.h"
 #include "tabs/materials_cost/materials_cost_tab_page.h"
 
 MainWindow::MainWindow(QWidget* parent)
@@ -29,8 +29,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     tabWidget = new QTabWidget;
 
-    tabWidget->addTab(new ClothingItemsTabPage(tabWidget), "Clothing Items");
-    QIcon clothingIcon(":/assets/icons/clothing_items.png");
+    tabWidget->addTab(new ProductsTabPage(tabWidget), "Products");
+    QIcon clothingIcon(":/assets/icons/tshirt.png");
     tabWidget->setTabIcon(0, clothingIcon);
 
     tabWidget->addTab(new MaterialsCostTabPage(tabWidget), "Materials Cost");

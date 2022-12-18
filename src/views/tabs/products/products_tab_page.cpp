@@ -2,15 +2,16 @@
 #include <QHeaderView>
 #include <QToolButton>
 #include <QPushButton>
-#include "clothing_items_tab_page.h"
+#include "products_tab_page.h"
 #include "../../mainwindow.h"
 #include "../../wizard/create_product_wizard.h"
+#include "../../../services/svg_icon_engine.h"
 
 using Models::Product;
 
-int ClothingItemsTabPage::COLUMN_COUNT = 5;
+int ProductsTabPage::COLUMN_COUNT = 5;
 
-ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
+ProductsTabPage::ProductsTabPage(QWidget* parent)
         : QWidget(parent) {
 
     treeWidget = new QTreeWidget;
@@ -51,7 +52,7 @@ ClothingItemsTabPage::ClothingItemsTabPage(QWidget* parent)
 
 }
 
-void ClothingItemsTabPage::populateTree() {
+void ProductsTabPage::populateTree() {
     treeWidget->clear();
     treeWidget->setColumnCount(COLUMN_COUNT);
     for (int i = Product::Jeans; i != Product::Hat + 1; i++) {
@@ -60,7 +61,7 @@ void ClothingItemsTabPage::populateTree() {
     }
 }
 
-void ClothingItemsTabPage::updateTopLevelItem(Product::ProductType topLevelItem) {
+void ProductsTabPage::updateTopLevelItem(Product::ProductType topLevelItem) {
     switch (topLevelItem) {
         case Product::Jeans:
             update(Product::Jeans, Product::productTypeToString(Product::Jeans), JeansRepository::getInstance(), "jeans.png");
@@ -84,10 +85,10 @@ void ClothingItemsTabPage::updateTopLevelItem(Product::ProductType topLevelItem)
 }
 
 template<class T>
-void ClothingItemsTabPage::update(Product::ProductType topLevelItem,
-                                  string title,
-                                  ReadOnlyRepository<T>* repository,
-                                  QString iconFileName) {
+void ProductsTabPage::update(Product::ProductType topLevelItem,
+                             string title,
+                             ReadOnlyRepository<T>* repository,
+                             QString iconFileName) {
     bool wasCreated = false;
     QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(topLevelItem);
 
@@ -119,6 +120,8 @@ void ClothingItemsTabPage::update(Product::ProductType topLevelItem,
                     << QString::number((*it).computePrice(), 'f', 2) + "$";
 
             QTreeWidgetItem* child = new QTreeWidgetItem(columns);
+            QIcon icon(new SVGIconEngine(":/assets/icons/black_square.png"));
+            child->setIcon(0, icon);
             topLevelItemWidget->addChild(child);
         }
 
@@ -134,7 +137,7 @@ void ClothingItemsTabPage::update(Product::ProductType topLevelItem,
     }
 }
 
-QTreeWidgetItem* ClothingItemsTabPage::getHeaders() {
+QTreeWidgetItem* ProductsTabPage::getHeaders() {
     QTreeWidgetItem* headers = new QTreeWidgetItem(QStringList() << "Code"
                                                                  << "Color"
                                                                  << "Description"
@@ -151,7 +154,7 @@ QTreeWidgetItem* ClothingItemsTabPage::getHeaders() {
     return headers;
 }
 
-void ClothingItemsTabPage::showWizard(bool) {
+void ProductsTabPage::showWizard(bool) {
     CreateProductWizard* wizard = new CreateProductWizard();
     wizard->exec();
 }

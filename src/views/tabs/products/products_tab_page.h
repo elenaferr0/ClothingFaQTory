@@ -29,7 +29,7 @@ QT_BEGIN_NAMESPACE
 namespace Views::Tabs::ClothingItems { class ClothingItemsTabPage; }
 QT_END_NAMESPACE
 
-class ClothingItemsTabPage : public QWidget {
+class ProductsTabPage : public QWidget {
 Q_OBJECT
 private:
     static int COLUMN_COUNT;
@@ -46,7 +46,7 @@ private:
                 QString iconFileName);
 
 public:
-    ClothingItemsTabPage(QWidget* parent = nullptr);
+    ProductsTabPage(QWidget* parent = nullptr);
 
     void updateTopLevelItem(Product::ProductType topLevelItem);
 
