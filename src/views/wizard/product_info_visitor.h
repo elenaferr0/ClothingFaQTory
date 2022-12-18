@@ -1,16 +1,17 @@
 #ifndef CLOTHING_ITEM_VIEW_VISITOR_H
 #define CLOTHING_ITEM_VIEW_VISITOR_H
 
-#include <QVBoxLayout>
+#include <QFormLayout>
 #include "../../core/visitor_interface.h"
 
 using Core::VisitorInterface;
 
 class ProductInfoVisitor : VisitorInterface {
 private:
-    QGridLayout* layout;
+    QFormLayout* layout;
     void buildAccessoryLayoutBase();
     void buildClothingItemLayoutBase();
+    void buildProductLayoutBase();
 public:
     ProductInfoVisitor();
     void visitBracelet(Bracelet& bracelet) override;
@@ -25,7 +26,7 @@ public:
 
     void visitOveralls(Overalls& overalls) override;
 
-    QGridLayout* getLayout() const;
+    QFormLayout* getLayout() const;
 
 };
 

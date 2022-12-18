@@ -5,7 +5,6 @@
 #include "products_tab_page.h"
 #include "../../mainwindow.h"
 #include "../../wizard/create_product_wizard.h"
-#include "../../../services/svg_icon_engine.h"
 
 using Models::Product;
 
@@ -64,19 +63,24 @@ void ProductsTabPage::populateTree() {
 void ProductsTabPage::updateTopLevelItem(Product::ProductType topLevelItem) {
     switch (topLevelItem) {
         case Product::Jeans:
-            update(Product::Jeans, Product::productTypeToString(Product::Jeans), JeansRepository::getInstance(), "jeans.png");
+            update(Product::Jeans, Product::productTypeToString(Product::Jeans), JeansRepository::getInstance(),
+                   "jeans.png");
             return;
         case Product::Vest:
-            update(Product::Vest, Product::productTypeToString(Product::Vest), VestRepository::getInstance(), "vest.png");
+            update(Product::Vest, Product::productTypeToString(Product::Vest), VestRepository::getInstance(),
+                   "vest.png");
             return;
         case Product::Overalls:
-            update(Product::Overalls, Product::productTypeToString(Product::Overalls), OverallsRepository::getInstance(), "overalls.png");
+            update(Product::Overalls, Product::productTypeToString(Product::Overalls),
+                   OverallsRepository::getInstance(), "overalls.png");
             return;
         case Product::Bracelet:
-            update(Product::Bracelet, Product::productTypeToString(Product::Bracelet), BraceletRepository::getInstance(), "bracelet.png");
+            update(Product::Bracelet, Product::productTypeToString(Product::Bracelet),
+                   BraceletRepository::getInstance(), "bracelet.png");
             return;
         case Product::BackPack:
-            update(Product::BackPack, Product::productTypeToString(Product::BackPack), BackPackRepository::getInstance(), "backpack.png");
+            update(Product::BackPack, Product::productTypeToString(Product::BackPack),
+                   BackPackRepository::getInstance(), "backpack.png");
             return;
         case Product::Hat:
             update(Product::Hat, Product::productTypeToString(Product::Hat), HatRepository::getInstance(), "hat.png");
@@ -120,9 +124,8 @@ void ProductsTabPage::update(Product::ProductType topLevelItem,
                     << QString::number((*it).computePrice(), 'f', 2) + "$";
 
             QTreeWidgetItem* child = new QTreeWidgetItem(columns);
-            QIcon icon(new SVGIconEngine(":/assets/icons/black_square.png"));
-            child->setIcon(0, icon);
             topLevelItemWidget->addChild(child);
+            productCodes.insert(QString::fromStdString((*it).getCode()));
         }
 
         QIcon productIcon(":/assets/icons/" + iconFileName);
@@ -155,6 +158,6 @@ QTreeWidgetItem* ProductsTabPage::getHeaders() {
 }
 
 void ProductsTabPage::showWizard(bool) {
-    CreateProductWizard* wizard = new CreateProductWizard();
+    CreateProductWizard* wizard = new CreateProductWizard(nullptr, productCodes);
     wizard->exec();
 }

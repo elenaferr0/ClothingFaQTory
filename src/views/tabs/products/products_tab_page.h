@@ -39,6 +39,8 @@ private:
 
     QTreeWidgetItem* getHeaders();
 
+    QSet<QString> productCodes; // list of all product codes used for the completer widget
+
     template<class T>
     void update(Product::ProductType topLevelItem,
                 string title,
