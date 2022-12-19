@@ -6,6 +6,18 @@
 #include <QIODevice>
 #include "log_handler.h"
 
+class Foo {
+public:
+    Foo() {};
+
+    virtual ~Foo() {};
+};
+
+class Bar : public Foo {
+public:
+    Bar() {};
+};
+
 int main(int argc, char** argv) {
     qInstallMessageHandler(logHandler);
     QApplication a(argc, argv);

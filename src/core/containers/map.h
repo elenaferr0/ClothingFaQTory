@@ -77,8 +77,6 @@ namespace Core::Containers {
 
         static Node* minimum(Node* node);
 
-        static Node* maximum(Node* node);
-
         static Node* successor(Node* x);
 
     public:
@@ -100,7 +98,9 @@ namespace Core::Containers {
 
         void erase(K key);
 
-        optional <V> get(K key) const;
+        void eraseAll();
+
+        optional<V> get(K key) const;
 
         bool hasKey(const K&) const;
 
@@ -108,8 +108,6 @@ namespace Core::Containers {
 
         friend ostream& operator
         <<<K, V>(ostream&, const Map<K, V>&);
-
-        V& operator[](const K&);
 
         class ConstIterator {
         private:
@@ -144,6 +142,13 @@ namespace Core::Containers {
 
     template<class K, class V>
     typename Map<K, V>::Node* const Map<K, V>::TNULL = new Node();
+
+    template<class K, class V>
+    void Map<K, V>::eraseAll() {
+        destroy(root);
+        root = TNULL;
+        size = 0;
+    }
 
     template<class K, class V>
     void Map<K, V>::destroy(Node* node) {  // Must always be called from the root
@@ -408,7 +413,7 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    optional <V> Map<K, V>::get(K key) const {
+    optional<V> Map<K, V>::get(K key) const {
         Node* n = searchTreeHelper(this->root, key);
         return (n && n != TNULL) ? optional(n->value) : nullopt;
     }
@@ -417,14 +422,6 @@ namespace Core::Containers {
     typename Map<K, V>::Node* Map<K, V>::minimum(Node* node) { // find the node with the minimum key
         while (node->left != TNULL) {
             node = node->left;
-        }
-        return node;
-    }
-
-    template<class K, class V>
-    typename Map<K, V>::Node* Map<K, V>::maximum(Node* node) {// find the node with the maximum key
-        while (node->right != TNULL) {
-            node = node->right;
         }
         return node;
     }

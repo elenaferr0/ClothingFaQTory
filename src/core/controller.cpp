@@ -2,9 +2,11 @@
 
 #include "controller.h"
 #include "view.h"
+#include <algorithm>
 
 using Core::Controller;
 using Core::View;
+using std::transform;
 
 Controller::Controller()
         : hatRepository(HatRepository::getInstance()),
@@ -16,10 +18,11 @@ Controller::Controller()
           materialRepository(MaterialRepository::getInstance()),
           sizeRepository(SizeRepository::getInstance()),
           lastError(nullptr),
-          view(new View) {}
+          view(new View) {};
 
 Controller::ProductsMap Controller::findAllProductsByType() {
     ProductsMap map = ProductsMap();
+
     findProductsOfType(Product::Hat, hatRepository, map);
     findProductsOfType(Product::Bracelet, braceletRepository, map);
     findProductsOfType(Product::BackPack, backPackRepository, map);
@@ -63,16 +66,30 @@ Error* Core::Controller::getLastError() const {
 
 template<class T>
 void Controller::findProductsOfType(Product::ProductType productType,
-                                    ReadOnlyRepository<T>* repository,
+                                    CRUDRepository<T>* repository,
                                     Controller::ProductsMap& map) {
-    if (!lastError) {
-        Either<Error, list<shared_ptr<T>>> entitiesOrError = repository->findAll();
-        if (entitiesOrError.isRight()) {
-            list<shared_ptr<Product>> entities = entitiesOrError.forceRight();
-            map.put(productType, entities);
-        } else {
-//            map.eraseAll();
-            lastError = &entitiesOrError.forceLeft();
-        }
+    if (lastError) {
+        return;
     }
+
+    Either<Error, list<shared_ptr<T>>> entitiesOrError = repository->findAll();
+
+    if (entitiesOrError.isRight()) {
+        list<shared_ptr<T>> entities = entitiesOrError.forceRight();
+        list<shared_ptr<Product>> products(entities.size());
+
+        transform(entities.begin(),
+                  entities.end(),
+                  products.begin(),
+                  [](shared_ptr<T> entity) {
+                      return shared_ptr<Product>(entity);
+                  }
+        );
+        map.put(productType, products);
+
+    } else {
+        map.eraseAll();
+        lastError = &entitiesOrError.forceLeft();
+    }
+
 }
