@@ -8,6 +8,6 @@ using Core::View;
 
 
 View::View() : controller(new Controller) {
-    Map < Product::ProductType, list<shared_ptr < Product>>> products = controller->findAllProductsByType();
-    productsView = new ProductsView(nullptr, products);
+//    Map < Product::ProductType, list<shared_ptr < Product>>> products = controller->findAllProductsByType();
+//    productsView = new ProductsView(nullptr, products);
 }

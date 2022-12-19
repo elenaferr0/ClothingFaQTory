@@ -23,12 +23,22 @@ using Services::MaterialRepository;
 using Services::SizeRepository;
 
 namespace Core {
+    class View;
+
     class Controller {
         typedef list<shared_ptr<Material>> MaterialsList;
         typedef list<shared_ptr<Size>> SizesList;
-        typedef Map<Product::ProductType, list<shared_ptr<Material>>> ProductsMap;
+        typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
     public:
         Controller();
+
+        ProductsMap findAllProductsByType();
+
+        MaterialsList findAllMaterials();
+
+        SizesList findAllSizes();
+
+        Error* getLastError() const;
 
     private:
         Error* lastError;
@@ -42,14 +52,9 @@ namespace Core {
         SizeRepository* sizeRepository;
         MaterialRepository* materialRepository;
 
-        MaterialsList findAllMaterials();
-
-        SizesList findAllSizes();
-
-        Error* getLastError() const;
 
         template<class T>
-        void findProductsOfType(Product::ProductType productType, ReadOnlyRepository<T>* repository, ProductsMap& map);
+        void findProductsOfType(Product::ProductType productType, CRUDRepository<T>* repository, ProductsMap& map);
 
     };
 }
