@@ -52,11 +52,11 @@ const Material& Product::getMaterial() const {
 }
 
 
-void Models::Product::registerObserver(ObserverInterface* observer) {
+void Product::registerObserver(ObserverInterface* observer) {
     observers.push_back(observer);
 }
 
-void Models::Product::notifyAll() {
+void Product::notifyAll() {
     for (auto it = observers.begin(); it != observers.end(); it++) {
         (*it)->notify(*this);
     }

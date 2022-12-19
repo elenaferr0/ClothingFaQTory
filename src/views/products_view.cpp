@@ -4,11 +4,15 @@
 
 using Views::ProductsView;
 
-Views::ProductsView::ProductsView(QWidget* parent) : ViewInterface(parent),
-                                                     productsByType(Map<Product::ProductType, Product*>()) {}
+ProductsView::ProductsView(ProductsMap& productsByType, QWidget* parent) :
+        productsByType(productsByType), ViewInterface(parent) {}
 
 void ProductsView::init() {
 
+}
+
+void Views::ProductsView::notify(Product& product) {
+    // update tree widget of the given product
 }
 
 

@@ -1,10 +1,10 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "../core/model.h"
+#include "model.h"
 #include "../core/visitor_interface.h"
 
-using Core::Model;
+using Models::Model;
 using Core::VisitorInterface;
 
 namespace Models {

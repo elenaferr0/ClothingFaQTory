@@ -11,7 +11,7 @@
 #include "../services/repositories/overalls_repository.h"
 #include "../services/repositories/material_repository.h"
 #include "../services/repositories/size_repository.h"
-#include "view.h"
+#include "../views/view.h"
 
 using Services::HatRepository;
 using Services::BraceletRepository;
@@ -22,8 +22,13 @@ using Services::OverallsRepository;
 using Services::MaterialRepository;
 using Services::SizeRepository;
 
-namespace Core {
+namespace Views {
     class View;
+}
+
+using Views::View;
+
+namespace Controllers {
 
     class Controller {
         typedef list<shared_ptr<Material>> MaterialsList;

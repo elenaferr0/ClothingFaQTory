@@ -4,18 +4,23 @@
 #include "view_interface.h"
 #include "../models/product.h"
 #include "../core/containers/map.h"
+#include <memory>
 
+using std::shared_ptr;
 using Models::Product;
 using Core::Containers::Map;
 
 namespace Views {
     class ProductsView : public ViewInterface {
     private:
-        Map<Product::ProductType, Product*> productsByType;
+        typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
+        ProductsMap productsByType;
     public:
-        ProductsView(QWidget* parent = nullptr);
+        ProductsView(ProductsMap& productsByType, QWidget* parent = nullptr);
 
         void init() override;
+
+        void notify(Product& product) override;
     };
 
 }

@@ -1,11 +1,9 @@
 
 
 #include "controller.h"
-#include "view.h"
 #include <algorithm>
 
-using Core::Controller;
-using Core::View;
+using Controllers::Controller;
 using std::transform;
 
 Controller::Controller()
@@ -60,7 +58,7 @@ Controller::SizesList Controller::findAllSizes() {
     );
 }
 
-Error* Core::Controller::getLastError() const {
+Error* Controllers::Controller::getLastError() const {
     return lastError;
 }
 
@@ -78,13 +76,16 @@ void Controller::findProductsOfType(Product::ProductType productType,
         list<shared_ptr<T>> entities = entitiesOrError.forceRight();
         list<shared_ptr<Product>> products(entities.size());
 
-        // lists wouldn't be implicitly converted to list<shared_ptr<Product>>
-        // therefore transform is needed
+        /* the list wouldn't be implicitly converted to list<shared_ptr<Product>>
+           therefore transform is needed. In this situation the observer is also
+           registered*/
         transform(entities.begin(),
                   entities.end(),
                   products.begin(),
-                  [](shared_ptr<T> entity) {
-                      return shared_ptr<Product>(entity);
+                  [this](shared_ptr<T> entity) {
+                      shared_ptr<Product> product = shared_ptr<Product>(entity);
+                      product->registerObserver(view->getProductsView());
+                      return product;
                   }
         );
         map.put(productType, products);

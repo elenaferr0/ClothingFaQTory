@@ -5,9 +5,12 @@
 
 
 #include <QWidget>
+#include "../core/observer_interface.h"
+
+using Core::ObserverInterface;
 
 namespace Views {
-    class ViewInterface : public QWidget {
+    class ViewInterface : public QWidget, public ObserverInterface {
     Q_OBJECT
     public:
         explicit ViewInterface(QWidget* parent = nullptr);

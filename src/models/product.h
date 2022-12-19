@@ -3,7 +3,7 @@
 
 #include "./material.h"
 #include "./size.h"
-#include "../core/model.h"
+#include "model.h"
 #include "../core/observer_interface.h"
 #include "../core/visitor_interface.h"
 
@@ -12,7 +12,7 @@
 
 using std::string;
 using std::list;
-using Core::Model;
+using Models::Model;
 using Core::VisitorInterface;
 using Core::ObserverInterface;
 

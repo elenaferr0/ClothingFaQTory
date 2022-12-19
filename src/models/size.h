@@ -1,9 +1,9 @@
 #ifndef SIZE_H
 #define SIZE_H
 
-#include "../core/model.h"
+#include "model.h"
 
-using Core::Model;
+using Models::Model;
 
 namespace Models {
     class Size : public Model {

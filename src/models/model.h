@@ -2,11 +2,12 @@
 #define MODEL_H
 
 #include <string>
-#include "visitor_interface.h"
+#include "../core/visitor_interface.h"
 
 using std::string;
+using Core::VisitorInterface;
 
-namespace Core {
+namespace Models {
     class Model {
     private:
         int id;
