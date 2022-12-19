@@ -19,8 +19,6 @@ int main(int argc, char** argv) {
 
     MainWindow w;
     w.resize(1024, 512);
-//    QFont font(family, 14);
-//    w.setFont(font);
     w.show();
 
     return a.exec();

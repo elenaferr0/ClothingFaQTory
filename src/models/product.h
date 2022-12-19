@@ -64,8 +64,6 @@ namespace Models {
 
         const string& getCode() const;
 
-        virtual void accept(VisitorInterface& visitor) = 0;
-
         void registerObserver(ObserverInterface* observer);
     };
 }

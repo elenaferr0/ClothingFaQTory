@@ -47,6 +47,8 @@ namespace Models {
 
         string getUnitOfMeasureAsString() const;
 
+        void accept(VisitorInterface& visitor) override;
+
     private:
         Name name;
         UnitOfMeasure unitOfMeasure;

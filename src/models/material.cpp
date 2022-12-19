@@ -84,3 +84,7 @@ string Models::Material::getNameAsString() const {
             return "POLYESTER";
     }
 }
+
+void Models::Material::accept(VisitorInterface& visitor) {
+    visitor.visitMaterial(*this);
+}

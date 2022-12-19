@@ -1,6 +1,8 @@
 #include "size_repository.h"
 #include <list>
 
+using std::shared_ptr;
+using std::make_shared;
 using Core::Db::Expr;
 using std::list;
 using Models::Size;
@@ -18,26 +20,26 @@ SizeRepository* Services::SizeRepository::getInstance() {
     return instance;
 }
 
-Either<Error, Size> Services::SizeRepository::findByName(const Size::Name& name) {
+Either<Error, shared_ptr<Size>> SizeRepository::findByName(const Size::Name& name) {
     return findById(name);
 }
 
-Either<Error, Size> Services::SizeRepository::findById(int id) {
+Either<Error, shared_ptr<Size>> SizeRepository::findById(int id) {
     if (cachedSizes.hasKey(id)) {
         return cachedSizes.get(id).value();
     }
 
-    Either<Error, Size> errorOrSize = ReadOnlyRepository::findById(id);
+    Either<Error, shared_ptr<Size>> errorOrSize = ReadOnlyRepository::findById(id);
 
     cachedSizes.put(id, errorOrSize.forceRight());
     return errorOrSize;
 }
 
-Either<Error, list<Size>> Services::SizeRepository::findAll() {
-    Either<Error, list<Size>> sizeOrError = ReadOnlyRepository::findAll();
-    if(sizeOrError.isRight()){
-        for (auto s : sizeOrError.forceRight()) {
-            cachedSizes.put(s.getId(), s);
+Either<Error, list<shared_ptr<Size>>> Services::SizeRepository::findAll() {
+    Either<Error, list<shared_ptr<Size>>> sizeOrError = ReadOnlyRepository::findAll();
+    if (sizeOrError.isRight()) {
+        for (auto s: sizeOrError.forceRight()) {
+            cachedSizes.put(s->getId(), s);
         }
     }
     return sizeOrError;

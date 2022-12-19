@@ -106,9 +106,9 @@ void ProductsTabPage::update(Product::ProductType topLevelItem,
         topLevelItemWidget->removeChild(topLevelItemWidget->child(i));
     }
 
-    Either<Error, list<T>> entitiesOrError = repository->findAll();
+    Either<Error, list<shared_ptr<T>>> entitiesOrError = repository->findAll();
     if (entitiesOrError.isRight()) {
-        list<T> entities = entitiesOrError.forceRight();
+        list<shared_ptr<T>> entities = entitiesOrError.forceRight();
 
         if (entities.size() > 0) {
             QTreeWidgetItem* headers = getHeaders();
@@ -117,15 +117,15 @@ void ProductsTabPage::update(Product::ProductType topLevelItem,
 
         for (auto it = entities.begin(); it != entities.end(); it++) {
             QStringList columns;
-            columns << QString::fromStdString((*it).getCode())
-                    << QString::fromStdString((*it).getColor())
-                    << QString::fromStdString((*it).getDescription())
-                    << QString::fromStdString((*it).getSize().getNameAsString())
-                    << QString::number((*it).computePrice(), 'f', 2) + "$";
+            columns << QString::fromStdString((*it)->getCode())
+                    << QString::fromStdString((*it)->getColor())
+                    << QString::fromStdString((*it)->getDescription())
+                    << QString::fromStdString((*it)->getSize().getNameAsString())
+                    << QString::number((*it)->computePrice(), 'f', 2) + "$";
 
             QTreeWidgetItem* child = new QTreeWidgetItem(columns);
             topLevelItemWidget->addChild(child);
-            productCodes.insert(QString::fromStdString((*it).getCode()));
+            productCodes.insert(QString::fromStdString((*it)->getCode()));
         }
 
         QIcon productIcon(":/assets/icons/" + iconFileName);

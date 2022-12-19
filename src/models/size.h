@@ -24,6 +24,8 @@ namespace Models {
 
         static Name nameFromString(const string&);
 
+        void accept(Core::VisitorInterface& visitor) override;
+
     private:
         Name name;
         double extraPercentageOfMaterial;

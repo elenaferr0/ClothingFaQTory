@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include <string>
+#include "visitor_interface.h"
 
 using std::string;
 
@@ -21,6 +22,8 @@ namespace Core {
         bool found() const;
 
         virtual ~Model() = default;
+
+        virtual void accept(VisitorInterface& visitor) = 0;
     };
 }
 

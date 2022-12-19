@@ -19,17 +19,17 @@ namespace Services {
         SizeRepository();
 
     protected:
-        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
+        // doesn't need a destructor since it's static (it wouldn't called)
         static SizeRepository* instance;
-        Map<int, Size> cachedSizes; // not static since there's only an instance
+        Map<int, shared_ptr<Size>> cachedSizes; // not static since there's only an instance
 
     public:
 
-        Either<Error, Size> findById(int id) override;
+        Either<Error, shared_ptr<Size>> findById(int id) override;
 
-        Either<Error, Size> findByName(const Size::Name&);
+        Either<Error, shared_ptr<Size>> findByName(const Size::Name&);
 
-        Either<Error, list<Size>> findAll() override;
+        Either<Error, list<shared_ptr<Size>>> findAll() override;
 
         static SizeRepository* getInstance();
 

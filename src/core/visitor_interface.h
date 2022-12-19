@@ -49,6 +49,10 @@ namespace Core {
         virtual void visitVest(Vest&) = 0;
 
         virtual void visitOveralls(Overalls&) = 0;
+
+        virtual void visitMaterial(Material&) = 0;
+
+        virtual void visitSize(Size&) = 0;
     };
 }
 #endif //IPRODUCT_VISITOR_H
