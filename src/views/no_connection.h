@@ -13,10 +13,6 @@ QT_END_NAMESPACE
 class NoConnection : public QWidget {
 Q_OBJECT
 
-private:
-    QLabel* icon;
-    QLabel* message;
-
 public:
     NoConnection(QWidget* parent = nullptr);
 };

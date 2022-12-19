@@ -3,6 +3,8 @@
 #include "select_color_button.h"
 #include <QColorDialog>
 
+int SelectColorButton::LIGHTNESS_THRESHOLD = 186;
+
 SelectColorButton::SelectColorButton(QWidget* parent, const QString& text)
         : QPushButton(parent) {
     connect(this, SIGNAL(clicked()), this, SLOT(changeColor()));
@@ -11,7 +13,11 @@ SelectColorButton::SelectColorButton(QWidget* parent, const QString& text)
 }
 
 void SelectColorButton::updateColor() {
-    setStyleSheet("background-color: " + color.name());
+    if (color.lightness() < LIGHTNESS_THRESHOLD) {
+        setStyleSheet("color: white; background-color: " + color.name());
+    } else {
+        setStyleSheet("color: black; background-color: " + color.name());
+    }
 }
 
 void SelectColorButton::changeColor() {

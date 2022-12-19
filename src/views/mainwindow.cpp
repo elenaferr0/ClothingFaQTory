@@ -7,6 +7,7 @@
 #include "no_connection.h"
 #include "tabs/products/products_tab_page.h"
 #include "tabs/materials_cost/materials_cost_tab_page.h"
+#include "../services/connectivity_manager.h"
 
 MainWindow::MainWindow(QWidget* parent)
         : QMainWindow(parent) {
@@ -19,7 +20,7 @@ MainWindow::MainWindow(QWidget* parent)
     db.setUserName("qtuser");
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
-    if (!db.open()) {
+    if (!ConnectivityManager::checkConnection() || !db.open()) {
         setWindowTitle("Connection Error");
         setCentralWidget(new NoConnection(this));
         return;

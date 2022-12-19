@@ -25,6 +25,7 @@ public slots:
     void changeColor();
 
 private:
+    static int LIGHTNESS_THRESHOLD;
     QColor color;
 };
 
