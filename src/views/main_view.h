@@ -21,10 +21,15 @@ namespace Controllers {
 
 using Controllers::Controller;
 
+QT_BEGIN_NAMESPACE
+namespace Views { class MainView; }
+QT_END_NAMESPACE
+
 namespace Views {
     class MainView : public QMainWindow {
-        typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
     Q_OBJECT
+        typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
+
     public:
         MainView(QWidget* parent = nullptr);
 

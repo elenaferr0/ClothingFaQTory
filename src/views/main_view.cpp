@@ -3,15 +3,11 @@
 #include "main_view.h"
 #include "../services/connectivity_manager.h"
 #include "no_connection.h"
-#include "../views/no_connection.h"
-
 using Views::ProductsView;
-using Views::MainView;
 using Views::NoConnection;
 
 MainView::MainView(QWidget* parent) : QMainWindow(parent), controller(new Controller) {
-    ProductsMap products = controller->findAllProductsByType();
-    productsView = new ProductsView(products, tabWidget);
+
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
 
@@ -30,6 +26,9 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent), controller(new Contro
     setWindowTitle("Clothing FaQTory");
 
     tabWidget = new QTabWidget;
+
+    ProductsMap products = controller->findAllProductsByType();// TODO: throws seg fault
+    productsView = new ProductsView(products, tabWidget);
 
     tabWidget->addTab(productsView, "Products");
     QIcon clothingIcon(":/assets/icons/tshirt.png");

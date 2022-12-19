@@ -17,7 +17,7 @@ Controller::Controller()
           materialRepository(MaterialRepository::getInstance()),
           sizeRepository(SizeRepository::getInstance()),
           lastError(nullptr),
-          view(new MainView()) {};
+          view(nullptr) {};
 
 Controller::ProductsMap Controller::findAllProductsByType() {
     ProductsMap map = ProductsMap();
