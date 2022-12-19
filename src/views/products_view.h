@@ -9,11 +9,11 @@ using Models::Product;
 using Core::Containers::Map;
 
 namespace Views {
-    class ProductView : public ViewInterface {
+    class ProductsView : public ViewInterface {
     private:
         Map<Product::ProductType, Product*> productsByType;
     public:
-        ProductView(QWidget* parent = nullptr);
+        ProductsView(QWidget* parent = nullptr);
 
         void init() override;
     };
