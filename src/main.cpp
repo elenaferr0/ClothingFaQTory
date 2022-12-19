@@ -1,22 +1,10 @@
-#include "views/mainwindow.h"
 
 #include <QApplication>
 #include <QFontDatabase>
 #include <QFile>
 #include <QIODevice>
 #include "log_handler.h"
-
-class Foo {
-public:
-    Foo() {};
-
-    virtual ~Foo() {};
-};
-
-class Bar : public Foo {
-public:
-    Bar() {};
-};
+#include "views/main_view.h"
 
 int main(int argc, char** argv) {
     qInstallMessageHandler(logHandler);
@@ -29,7 +17,7 @@ int main(int argc, char** argv) {
     QString styleSheet = QLatin1String(file.readAll());
     a.setStyleSheet(styleSheet);
 
-    MainWindow w;
+    MainView w;
     w.resize(1024, 512);
     w.show();
 

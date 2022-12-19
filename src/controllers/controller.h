@@ -11,7 +11,8 @@
 #include "../services/repositories/overalls_repository.h"
 #include "../services/repositories/material_repository.h"
 #include "../services/repositories/size_repository.h"
-#include "../views/view.h"
+#include "../views/products_view.h"
+#include "../views/main_view.h"
 
 using Services::HatRepository;
 using Services::BraceletRepository;
@@ -23,10 +24,10 @@ using Services::MaterialRepository;
 using Services::SizeRepository;
 
 namespace Views {
-    class View;
+    class MainView;
 }
 
-using Views::View;
+using Views::MainView;
 
 namespace Controllers {
 
@@ -47,7 +48,7 @@ namespace Controllers {
 
     private:
         Error* lastError;
-        View* view;
+        MainView* view;
         HatRepository* hatRepository;
         BraceletRepository* braceletRepository;
         BackPackRepository* backPackRepository;

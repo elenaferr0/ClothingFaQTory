@@ -5,6 +5,7 @@
 
 using Controllers::Controller;
 using std::transform;
+using Views::MainView;
 
 Controller::Controller()
         : hatRepository(HatRepository::getInstance()),
@@ -16,7 +17,7 @@ Controller::Controller()
           materialRepository(MaterialRepository::getInstance()),
           sizeRepository(SizeRepository::getInstance()),
           lastError(nullptr),
-          view(new View) {};
+          view(new MainView()) {};
 
 Controller::ProductsMap Controller::findAllProductsByType() {
     ProductsMap map = ProductsMap();

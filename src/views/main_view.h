@@ -7,6 +7,9 @@
 #include "../controllers/controller.h"
 #include "../models/product.h"
 #include <memory>
+#include <QStackedWidget>
+#include <QTabWidget>
+#include <QMainWindow>
 #include "products_view.h"
 
 using std::shared_ptr;
@@ -19,19 +22,20 @@ namespace Controllers {
 using Controllers::Controller;
 
 namespace Views {
-    class View {
+    class MainView : public QMainWindow {
         typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
-
+    Q_OBJECT
     public:
-        View();
+        MainView(QWidget* parent = nullptr);
+
+        ProductsView* getProductsView() const;
 
     protected:
         Controller* controller;
         ProductsView* productsView;
-    public:
-        ProductsView* getProductsView() const;
+    private:
+        QTabWidget* tabWidget;
     };
-
 }
 
 

@@ -3,7 +3,6 @@
 #include <QToolButton>
 #include <QPushButton>
 #include "products_tab_page.h"
-#include "../../mainwindow.h"
 #include "../../wizard/create_product_wizard.h"
 
 using Models::Product;
