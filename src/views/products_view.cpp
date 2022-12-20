@@ -4,12 +4,15 @@
 #include <QToolButton>
 #include <QDebug>
 #include "products_view.h"
+#include "../controllers/wizard_controller.h"
 
 using Views::ProductsView;
+using Views::Wizard::CreateProductWizard;
+using Controllers::WizardController;
 
 int ProductsView::COLUMN_COUNT = 5;
 
-ProductsView::ProductsView(QWidget* parent) : ObserverWidget(parent) {}
+ProductsView::ProductsView(QWidget* parent) : ObserverWidgetView(parent) {}
 
 void ProductsView::init(const ProductsMap& productsByType) {
     this->productsByType = productsByType;
@@ -108,5 +111,7 @@ void ProductsView::initTreeView() {
 }
 
 void ProductsView::showWizard(bool) {
-    createProductWizard = new CreateProductWizard(this);
+    CreateProductWizard* createProductWizard = new CreateProductWizard(this);
+    createProductWizard->setController(new WizardController(createProductWizard));
+    createProductWizard->show();
 }

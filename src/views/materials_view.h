@@ -5,7 +5,7 @@
 #include <QGridLayout>
 #include <memory>
 #include <list>
-#include "observer_widget.h"
+#include "observer_widget_view.h"
 
 #include "../models/material.h"
 
@@ -14,7 +14,7 @@ using Models::Material;
 using std::list;
 
 namespace Views {
-    class MaterialsView : public ObserverWidget {
+    class MaterialsView : public ObserverWidgetView {
         Q_OBJECT
             typedef list<shared_ptr < Material>> MaterialsList;
         public:

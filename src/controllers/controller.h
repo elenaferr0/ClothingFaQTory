@@ -6,6 +6,9 @@
 
 #include <QObject>
 #include "../views/view.h"
+#include "../core/errors/error.h"
+
+using Core::Error;
 
 namespace Views {
     class View;
@@ -22,6 +25,10 @@ namespace Controllers {
             explicit Controller(View*);
 
             virtual ~Controller() = default;
+
+        signals:
+
+            void databaseError(Error*);
     };
 
 }

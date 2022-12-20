@@ -6,16 +6,17 @@
 
 #include <QWidget>
 #include "../core/observer_interface.h"
+#include "view.h"
 
 using Core::ObserverInterface;
 
 namespace Views {
-    class ObserverWidget : public QWidget, public ObserverInterface {
+    class ObserverWidgetView : public QWidget, public ObserverInterface, public View {
         Q_OBJECT
         public:
-            explicit ObserverWidget(QWidget* parent = nullptr);
+            explicit ObserverWidgetView(QWidget* parent = nullptr);
 
-            virtual ~ObserverWidget() = default;
+            virtual ~ObserverWidgetView() = default;
     };
 
 }

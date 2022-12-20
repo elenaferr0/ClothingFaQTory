@@ -4,19 +4,16 @@
 
 #include <QWizard>
 #include <QSet>
+#include "../view.h"
 
-QT_BEGIN_NAMESPACE
-namespace Views::Wizard { class CreateProductWizard; }
-QT_END_NAMESPACE
+namespace Views::Wizard {
+    class CreateProductWizard : public QWizard, public View {
+        Q_OBJECT
+        public:
+            CreateProductWizard(QWidget* parent = nullptr, const QSet<QString>& productCodes = QSet<QString>());
 
-
-class CreateProductWizard : public QWizard {
-    Q_OBJECT
-    public:
-        CreateProductWizard(QWidget* parent = nullptr, const QSet<QString>& productCodes = QSet<QString>());
-
-        void accept() override; // called when the user clicks finish
-};
-
+            void accept() override; // called when the user clicks finish
+    };
+}
 
 #endif //CREATE_PRODUCT_WIZARD_H

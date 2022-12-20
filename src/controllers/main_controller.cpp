@@ -14,8 +14,7 @@ MainController::MainController(View* view)
           vestRepository(VestRepository::getInstance()),
           jeansRepository(JeansRepository::getInstance()),
           overallsRepository(OverallsRepository::getInstance()),
-          materialRepository(MaterialRepository::getInstance()),
-          sizeRepository(SizeRepository::getInstance()) {
+          materialRepository(MaterialRepository::getInstance()) {
 //    connect(this, SIGNAL(databaseError(Error * )), view, SLOT(handleDatabaseError(Error * )));
 };
 
@@ -46,19 +45,6 @@ MainController::MaterialsList MainController::findAllMaterials() {
     );
 }
 
-MainController::SizesList MainController::findAllSizes() {
-    Either<Error, SizesList> sizesOrError = sizeRepository->findAll();
-
-    return sizesOrError.fold<SizesList>(
-            [&]() { // if left
-                emit databaseError(&sizesOrError.forceLeft());
-                return SizesList();
-            },
-            [&sizesOrError]() { // if right
-                return sizesOrError.forceRight();
-            }
-    );
-}
 
 template<class T>
 void MainController::findProductsOfType(Product::ProductType productType,
