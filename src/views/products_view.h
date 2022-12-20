@@ -4,6 +4,7 @@
 #include "view_interface.h"
 #include "../models/product.h"
 #include "../core/containers/map.h"
+#include "../core/errors/error.h"
 #include <memory>
 #include <QToolBar>
 #include <QTreeWidgetItem>
@@ -12,6 +13,7 @@
 using std::shared_ptr;
 using Models::Product;
 using Core::Containers::Map;
+using Core::Error;
 
 namespace Views {
     class ProductsView : public ViewInterface {
@@ -35,7 +37,6 @@ namespace Views {
         void init(ProductsMap& productsByType);
 
         void notify(Product& product) override;
-
     };
 
 }

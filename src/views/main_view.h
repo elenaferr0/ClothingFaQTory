@@ -4,7 +4,7 @@
 #define VIEW_H
 
 
-#include "../controllers/controller.h"
+#include "../controllers/main_controller.h"
 #include "../models/product.h"
 #include <memory>
 #include <QStackedWidget>
@@ -16,10 +16,10 @@ using std::shared_ptr;
 using Views::ProductsView;
 
 namespace Controllers {
-    class Controller;
+    class MainController;
 }
 
-using Controllers::Controller;
+using Controllers::MainController;
 
 QT_BEGIN_NAMESPACE
 namespace Views { class MainView; }
@@ -35,11 +35,13 @@ namespace Views {
 
         ProductsView* getProductsView() const;
 
-    protected:
-        Controller* controller;
-        ProductsView* productsView;
     private:
+        MainController* controller;
+        ProductsView* productsView;
         QTabWidget* tabWidget;
+
+    public slots:
+        void handleDatabaseError(Error*);
     };
 }
 

@@ -6,8 +6,7 @@
 using Views::ProductsView;
 using Views::NoConnection;
 
-MainView::MainView(QWidget* parent) : QMainWindow(parent), controller(new Controller(this)) {
-
+MainView::MainView(QWidget* parent) : QMainWindow(parent) {
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
 
@@ -28,8 +27,11 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent), controller(new Contro
     tabWidget = new QTabWidget;
 
     productsView = new ProductsView(tabWidget);
+    this->controller = new MainController(this);
+
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);
+
 
     tabWidget->addTab(productsView, "Products");
     QIcon clothingIcon(":/assets/icons/tshirt.png");
@@ -46,4 +48,8 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent), controller(new Contro
 
 ProductsView* MainView::getProductsView() const {
     return productsView;
+}
+
+void Views::MainView::handleDatabaseError(Error* e) {
+    qCritical() << e;
 }

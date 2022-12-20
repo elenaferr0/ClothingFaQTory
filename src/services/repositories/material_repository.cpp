@@ -62,7 +62,7 @@ Either<Error, shared_ptr<Material>> MaterialRepository::saveCostPerUnit(const Ma
 
     if (hasError.has_value()) {
         qCritical() << QString::fromStdString(
-                hasError.value().getMessage());
+                hasError.value().getCause());
         return Either<Error, shared_ptr<Material>>::ofLeft(hasError.value());
     }
 

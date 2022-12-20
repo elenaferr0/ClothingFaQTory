@@ -74,12 +74,13 @@ namespace Services {
         QSqlQuery query = exec(sql);
         list<shared_ptr<T>> entities;
         while (query.next()) {
-            Either<Error, shared_ptr<T>> entityOrError = mappingFunction(query);
-            if (entityOrError.isLeft()) {
-                qCritical() << QString::fromStdString(entityOrError.forceLeft().getMessage());
-                return entityOrError.forceLeft();
+            Either<Error, shared_ptr<T>> errorOrEntity = mappingFunction(query);
+            if (errorOrEntity.isLeft()) {
+                qCritical() << QString::fromStdString(errorOrEntity.forceLeft().getCause());
+                errorOrEntity.forceLeft().setUserMessage("Error while fetching " + table);
+                return errorOrEntity.forceLeft();
             }
-            entities.push_back(entityOrError.forceRight());
+            entities.push_back(errorOrEntity.forceRight());
         }
         return entities;
     }
@@ -95,8 +96,9 @@ namespace Services {
         Either<Error, shared_ptr<T>> errorOrEntity = mappingFunction(query);
 
         if (errorOrEntity.isLeft()) {
+            errorOrEntity.forceLeft().setUserMessage("Error while fetching " + table);
             qCritical() << QString::fromStdString(
-                    errorOrEntity.forceLeft().getMessage());
+                    errorOrEntity.forceLeft().getCause());
         }
         return errorOrEntity;
     }
@@ -107,7 +109,7 @@ namespace Services {
         QSqlError error = query.lastError();
 
         if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
-            return Error({errorTypeToString(error.type()), error.text().toStdString()});
+            return Error(errorTypeToString(error.type()), error.text().toStdString(), "Error while fetching " + table);
         }
 
         return query.record();
@@ -170,7 +172,8 @@ namespace Services {
         QSqlError error = query.lastError();
         if (error.type() != QSqlError::NoError) {
             return optional<Error>({errorTypeToString(error.type()),
-                                    error.text().toStdString()});
+                                    error.text().toStdString(),
+                                    "Error while fetching " + table});
         }
         return nullopt;
     }

@@ -90,12 +90,6 @@ void ProductsView::initTreeView() {
         for (auto p = products.begin(); p != products.end(); p++) {
             QStringList columns;
 
-            qInfo() << QString::fromStdString((*p)->getCode());
-            qInfo() << QString::fromStdString((*p)->getColor());
-            qInfo() << QString::fromStdString((*p)->getDescription());
-            qInfo() << QString::fromStdString((*p)->getSize().getNameAsString());
-            qInfo() << QString::number((*p)->computePrice(), 'f', 2) + "$";
-
             columns << QString::fromStdString((*p)->getCode())
                     << QString::fromStdString((*p)->getColor())
                     << QString::fromStdString((*p)->getDescription())

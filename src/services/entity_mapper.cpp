@@ -29,7 +29,7 @@ Either<Error, QSqlRecord> EntityMapper::checkQuery(const QSqlQuery& query) {
     QSqlError error = query.lastError();
 
     if (!query.isValid() || error.type() != QSqlError::NoError) { // error occurred
-        return Error({toString(error.type()), error.text().toStdString()});
+        return Error(toString(error.type()), error.text().toStdString());
     }
 
     return query.record();

@@ -31,12 +31,13 @@ using Views::MainView;
 
 namespace Controllers {
 
-    class Controller {
+    class MainController : public QObject {
+        Q_OBJECT
         typedef list<shared_ptr<Material>> MaterialsList;
         typedef list<shared_ptr<Size>> SizesList;
         typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
     public:
-        Controller(MainView*);
+        MainController(MainView*);
 
         ProductsMap findAllProductsByType();
 
@@ -44,10 +45,7 @@ namespace Controllers {
 
         SizesList findAllSizes();
 
-        Error* getLastError() const;
-
     private:
-        Error* lastError;
         MainView* view;
         HatRepository* hatRepository;
         BraceletRepository* braceletRepository;
@@ -62,6 +60,8 @@ namespace Controllers {
         template<class T>
         void findProductsOfType(Product::ProductType productType, CRUDRepository<T>* repository, ProductsMap& map);
 
+    signals:
+        void databaseError(Error*);
     };
 }
 #endif //CONTROLLER_H

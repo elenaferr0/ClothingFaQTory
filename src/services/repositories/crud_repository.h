@@ -69,7 +69,7 @@ namespace Services {
 
         if (hasError.has_value()) {
             QSqlDatabase::database().rollback();
-            qCritical() << QString::fromStdString(hasError.value().getMessage());
+            qCritical() << QString::fromStdString(hasError.value().getCause());
             return Either<Error, T>::ofLeft(hasError.value());
         }
 
@@ -82,7 +82,8 @@ namespace Services {
         for (auto en = entities.begin(); en != entities.end(); en++) {
             Either<Error, T> entityOrError = save(*en);
             if (entityOrError.isLeft()) {
-                qCritical() << QString::fromStdString(entityOrError.forceLeft().getMessage());
+                entityOrError.forceLeft().setUserMessage("Error while fetching " + ReadOnlyRepository<T>::table);
+                qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
                 return entityOrError.forceLeft();
             }
 
@@ -103,7 +104,7 @@ namespace Services {
         Either<Error, shared_ptr<T>> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
         if (errorOrEntity.isLeft()) {
             qCritical() << QString::fromStdString(
-                    errorOrEntity.forceLeft().getMessage());
+                    errorOrEntity.forceLeft().getCause());
             QSqlDatabase::database().rollback();
             return errorOrEntity; // return the error
         }
@@ -121,7 +122,7 @@ namespace Services {
         while (query.next()) {
             Either<Error, shared_ptr<T>> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
             if (entityOrError.isLeft()) {
-                qCritical() << QString::fromStdString(entityOrError.forceLeft().getMessage());
+                qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
                 return entityOrError.forceLeft();
             }
             entities.push_back(entityOrError.forceRight());
@@ -148,7 +149,7 @@ namespace Services {
 
         if (hasError.has_value()) {
             qCritical() << QString::fromStdString(
-                    hasError.value().getMessage());
+                    hasError.value().getCause());
         }
         return hasError;
     }

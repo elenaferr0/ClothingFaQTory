@@ -10,14 +10,15 @@ namespace Core {
     private:
         string userMessage;
         string cause;
+        string type;
     public:
-        // allow implicit construction
-        Error(
-                string cause = "",
-                string userMessage = "Generic error"
-        );
+        Error(string type = "", string cause = "Generic error", string userMessage = "");
 
-        string getMessage() const;
+        const string& getCause() const;
+
+        const string& getUserMessage() const;
+
+        void setUserMessage(const string&);
     };
 }
 

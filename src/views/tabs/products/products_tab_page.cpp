@@ -135,7 +135,7 @@ void ProductsTabPage::update(Product::ProductType topLevelItem,
             treeWidget->addTopLevelItem(topLevelItemWidget);
         }
     } else {
-        qCritical() << QString::fromStdString(entitiesOrError.forceLeft().getMessage());
+        qCritical() << QString::fromStdString(entitiesOrError.forceLeft().getCause());
     }
 }
 
