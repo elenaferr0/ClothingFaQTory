@@ -3,21 +3,20 @@
 #include "main_controller.h"
 #include <algorithm>
 
-using Controllers::MainController;
 using std::transform;
-using Views::MainView;
+using Controllers::MainController;
 
-MainController::MainController(MainView* view)
-        : hatRepository(HatRepository::getInstance()),
+MainController::MainController(View* view)
+        : Controller(view),
+          hatRepository(HatRepository::getInstance()),
           braceletRepository(BraceletRepository::getInstance()),
           backPackRepository(BackPackRepository::getInstance()),
           vestRepository(VestRepository::getInstance()),
           jeansRepository(JeansRepository::getInstance()),
           overallsRepository(OverallsRepository::getInstance()),
           materialRepository(MaterialRepository::getInstance()),
-          sizeRepository(SizeRepository::getInstance()),
-          view(view) {
-    connect(this, SIGNAL(databaseError(Error * )), view, SLOT(handleDatabaseError(Error * )));
+          sizeRepository(SizeRepository::getInstance()) {
+//    connect(this, SIGNAL(databaseError(Error * )), view, SLOT(handleDatabaseError(Error * )));
 };
 
 MainController::ProductsMap MainController::findAllProductsByType() {
@@ -85,7 +84,7 @@ void MainController::findProductsOfType(Product::ProductType productType,
                           products.begin(),
                           [this](shared_ptr<T> entity) {
                               shared_ptr<Product> product = shared_ptr<Product>(entity);
-                              product->registerObserver(view->getProductsView());
+//                              product->registerObserver(view->getProductsView());
                               return product;
                           }
                 );

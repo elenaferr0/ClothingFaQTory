@@ -6,6 +6,8 @@
 #include "log_handler.h"
 #include "views/main_view.h"
 
+using Views::MainView;
+
 int main(int argc, char** argv) {
     qInstallMessageHandler(logHandler);
     QApplication a(argc, argv);

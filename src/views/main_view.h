@@ -12,23 +12,15 @@
 #include <QMainWindow>
 #include "products_view.h"
 #include "materials_view.h"
+#include "view.h"
 
 using std::shared_ptr;
 using Views::ProductsView;
 using Views::MaterialsView;
 
-namespace Controllers {
-    class MainController;
-}
-
-using Controllers::MainController;
-
-QT_BEGIN_NAMESPACE
-namespace Views { class MainView; }
-QT_END_NAMESPACE
 
 namespace Views {
-    class MainView : public QMainWindow {
+    class MainView : public QMainWindow, public View {
         Q_OBJECT
             typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
             typedef list<shared_ptr<Material>> MaterialsList;
@@ -39,7 +31,6 @@ namespace Views {
             ProductsView* getProductsView() const;
 
         private:
-            MainController* controller;
             ProductsView* productsView;
             MaterialsView* materialsView;
             QTabWidget* tabWidget;

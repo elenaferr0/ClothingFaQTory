@@ -6,6 +6,8 @@
 
 using Views::ProductsView;
 using Views::NoConnection;
+using Views::MainView;
+using Controllers::MainController;
 
 MainView::MainView(QWidget* parent) : QMainWindow(parent) {
 
@@ -18,18 +20,21 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
     if (!ConnectivityManager::checkConnection() || !db.open()) {
-        setWindowTitle("Connection Error");
+        QMainWindow::setWindowTitle("Connection Error");
         setCentralWidget(new NoConnection());
         return;
     }
 
-    setWindowTitle("Clothing FaQTory");
+    QMainWindow::setWindowTitle("Clothing FaQTory");
 
     tabWidget = new QTabWidget;
 
     productsView = new ProductsView(tabWidget);
     materialsView = new MaterialsView(tabWidget);
     this->controller = new MainController(this);
+
+    MainController* controller = new MainController(this);
+    setController(controller);
 
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);
@@ -54,6 +59,6 @@ ProductsView* MainView::getProductsView() const {
     return productsView;
 }
 
-void Views::MainView::handleDatabaseError(Error* e) {
+void MainView::handleDatabaseError(Error* e) {
     qCritical() << e;
 }

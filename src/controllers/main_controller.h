@@ -1,7 +1,7 @@
 
 
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef MAIN_CONTROLLER_H
+#define MAIN_CONTROLLER_H
 
 #include "../services/repositories/hat_repository.h"
 #include "../services/repositories/backpack_repository.h"
@@ -13,6 +13,7 @@
 #include "../services/repositories/size_repository.h"
 #include "../views/products_view.h"
 #include "../views/main_view.h"
+#include "controller.h"
 
 using Services::HatRepository;
 using Services::BraceletRepository;
@@ -24,20 +25,20 @@ using Services::MaterialRepository;
 using Services::SizeRepository;
 
 namespace Views {
-    class MainView;
+    class View;
 }
 
-using Views::MainView;
+using Views::View;
 
 namespace Controllers {
 
-    class MainController : public QObject {
+    class MainController : public Controller {
         Q_OBJECT
             typedef list<shared_ptr<Material>> MaterialsList;
             typedef list<shared_ptr<Size>> SizesList;
             typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
         public:
-            MainController(MainView*);
+            MainController(View*);
 
             ProductsMap findAllProductsByType();
 
@@ -46,7 +47,6 @@ namespace Controllers {
             SizesList findAllSizes();
 
         private:
-            MainView* view;
             HatRepository* hatRepository;
             BraceletRepository* braceletRepository;
             BackPackRepository* backPackRepository;
@@ -65,4 +65,4 @@ namespace Controllers {
             void databaseError(Error*);
     };
 }
-#endif //CONTROLLER_H
+#endif //MAIN_CONTROLLER_H

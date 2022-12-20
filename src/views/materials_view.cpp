@@ -5,7 +5,7 @@ using Views::MaterialsView;
 
 int MaterialsView::COLUMN_COUNT = 4;
 
-MaterialsView::MaterialsView(QWidget* parent) : ViewInterface(parent), materials(MaterialsList()) {}
+MaterialsView::MaterialsView(QWidget* parent) : ObserverWidget(parent), materials(MaterialsList()) {}
 
 void MaterialsView::init(const MaterialsList& materials) {
     this->materials = materials;

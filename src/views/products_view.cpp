@@ -9,7 +9,7 @@ using Views::ProductsView;
 
 int ProductsView::COLUMN_COUNT = 5;
 
-ProductsView::ProductsView(QWidget* parent) : ViewInterface(parent) {}
+ProductsView::ProductsView(QWidget* parent) : ObserverWidget(parent) {}
 
 void ProductsView::init(const ProductsMap& productsByType) {
     this->productsByType = productsByType;
@@ -105,4 +105,8 @@ void ProductsView::initTreeView() {
         topLevelItemWidget->setFlags(topLevelItemWidget->flags() & ~Qt::ItemIsSelectable);
         treeWidget->addTopLevelItem(topLevelItemWidget);
     }
+}
+
+void ProductsView::showWizard(bool) {
+    createProductWizard = new CreateProductWizard(this);
 }
