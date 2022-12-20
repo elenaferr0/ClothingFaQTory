@@ -2,23 +2,24 @@
 
 #include <QVBoxLayout>
 #include <QToolButton>
+#include <QDebug>
 #include "products_view.h"
 
 using Views::ProductsView;
 
 int ProductsView::COLUMN_COUNT = 5;
 
-ProductsView::ProductsView(ProductsMap& productsByType, QWidget* parent) :
-        productsByType(productsByType), ViewInterface(parent) {
-    init();
-}
+ProductsView::ProductsView(QWidget* parent) : ViewInterface(parent) {}
 
-void ProductsView::init() {
+void ProductsView::init(ProductsMap& productsByType) {
+    this->productsByType = productsByType;
+
     treeWidget = new QTreeWidget;
     treeWidget->setHeaderHidden(true);
     treeWidget->setAnimated(true);
     treeWidget->setIconSize(QSize(30, 30));
     treeWidget->setFocusPolicy(Qt::NoFocus);
+    treeWidget->setColumnCount(COLUMN_COUNT);
 
     initTreeView();
 
@@ -81,11 +82,6 @@ void ProductsView::initTreeView() {
 
         QTreeWidgetItem* topLevelItemWidget = new QTreeWidgetItem(QStringList() << productTypeName);
 
-        // remove all existing children
-        for (int i = 0; i < topLevelItemWidget->childCount(); ++i) {
-            topLevelItemWidget->removeChild(topLevelItemWidget->child(i));
-        }
-
         if (products.size() > 0) {
             QTreeWidgetItem* headers = getHeaders();
             topLevelItemWidget->addChild(headers);
@@ -93,6 +89,13 @@ void ProductsView::initTreeView() {
 
         for (auto p = products.begin(); p != products.end(); p++) {
             QStringList columns;
+
+            qInfo() << QString::fromStdString((*p)->getCode());
+            qInfo() << QString::fromStdString((*p)->getColor());
+            qInfo() << QString::fromStdString((*p)->getDescription());
+            qInfo() << QString::fromStdString((*p)->getSize().getNameAsString());
+            qInfo() << QString::number((*p)->computePrice(), 'f', 2) + "$";
+
             columns << QString::fromStdString((*p)->getCode())
                     << QString::fromStdString((*p)->getColor())
                     << QString::fromStdString((*p)->getDescription())
@@ -106,5 +109,6 @@ void ProductsView::initTreeView() {
         QIcon productIcon(":/assets/icons/" + productTypeName.toLower() + ".png");
         topLevelItemWidget->setIcon(0, productIcon);
         topLevelItemWidget->setFlags(topLevelItemWidget->flags() & ~Qt::ItemIsSelectable);
+        treeWidget->addTopLevelItem(topLevelItemWidget);
     }
 }

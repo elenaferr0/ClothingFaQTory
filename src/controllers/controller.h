@@ -36,7 +36,7 @@ namespace Controllers {
         typedef list<shared_ptr<Size>> SizesList;
         typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
     public:
-        Controller();
+        Controller(MainView*);
 
         ProductsMap findAllProductsByType();
 

@@ -16,9 +16,6 @@ namespace Views {
         explicit ViewInterface(QWidget* parent = nullptr);
 
         virtual ~ViewInterface() = default;
-
-    public:
-        virtual void init() = 0;
     };
 
 }

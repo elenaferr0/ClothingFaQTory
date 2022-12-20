@@ -30,9 +30,9 @@ namespace Views {
         void initTreeView();
 
     public:
-        ProductsView(ProductsMap& productsByType, QWidget* parent = nullptr);
+        ProductsView(QWidget* parent = nullptr);
 
-        void init() override;
+        void init(ProductsMap& productsByType);
 
         void notify(Product& product) override;
 

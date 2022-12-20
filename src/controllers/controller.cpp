@@ -7,7 +7,7 @@ using Controllers::Controller;
 using std::transform;
 using Views::MainView;
 
-Controller::Controller()
+Controller::Controller(MainView* view)
         : hatRepository(HatRepository::getInstance()),
           braceletRepository(BraceletRepository::getInstance()),
           backPackRepository(BackPackRepository::getInstance()),
@@ -17,7 +17,7 @@ Controller::Controller()
           materialRepository(MaterialRepository::getInstance()),
           sizeRepository(SizeRepository::getInstance()),
           lastError(nullptr),
-          view(nullptr) {};
+          view(view) {};
 
 Controller::ProductsMap Controller::findAllProductsByType() {
     ProductsMap map = ProductsMap();

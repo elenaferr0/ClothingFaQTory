@@ -6,7 +6,7 @@
 using Views::ProductsView;
 using Views::NoConnection;
 
-MainView::MainView(QWidget* parent) : QMainWindow(parent), controller(new Controller) {
+MainView::MainView(QWidget* parent) : QMainWindow(parent), controller(new Controller(this)) {
 
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
@@ -27,8 +27,9 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent), controller(new Contro
 
     tabWidget = new QTabWidget;
 
-    ProductsMap products = controller->findAllProductsByType();// TODO: throws seg fault
-    productsView = new ProductsView(products, tabWidget);
+    productsView = new ProductsView(tabWidget);
+    ProductsMap products = controller->findAllProductsByType();
+    productsView->init(products);
 
     tabWidget->addTab(productsView, "Products");
     QIcon clothingIcon(":/assets/icons/tshirt.png");
