@@ -14,22 +14,23 @@ using Services::ReadOnlyRepository;
 
 namespace Services {
     class MaterialRepository : public ReadOnlyRepository<Material> {
-    private:
-        MaterialRepository();
-    protected:
-        static MaterialRepository* instance;
-        Map<int, shared_ptr<Material>> cachedMaterials; // not static since there's only one instance
+        private:
+            MaterialRepository();
 
-    public:
-        static MaterialRepository* getInstance();
+        protected:
+            static MaterialRepository* instance;
+            Map<int, shared_ptr<Material>> cachedMaterials; // not static since there's only one instance
 
-        Either<Error, shared_ptr<Material>> findByName(const Material::Name&);
+        public:
+            static MaterialRepository* getInstance();
 
-        Either<Error, shared_ptr<Material>> saveCostPerUnit(const Material&);
+            Either<Error, shared_ptr<Material>> findByName(const Material::Name&);
 
-        Either<Error, shared_ptr<Material>> findById(int id) override;
+            Either<Error, shared_ptr<Material>> saveCostPerUnit(const Material&);
 
-        Either<Error, list<shared_ptr<Material>>> findAll() override;
+            Either<Error, shared_ptr<Material>> findById(int id) override;
+
+            Either<Error, list<shared_ptr<Material>>> findAll() override;
 
     };
 }

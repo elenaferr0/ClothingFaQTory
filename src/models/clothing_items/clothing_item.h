@@ -6,52 +6,52 @@
 
 namespace Models {
     class ClothingItem : public Product {
-    public:
-        enum Gender {
-            MEN, WOMEN, UNISEX
-        };
+        public:
+            enum Gender {
+                MEN, WOMEN, UNISEX
+            };
 
-        ClothingItem(long id = -1,
-                     string code = "",
-                     string color = "",
-                     Material material = Material(),
-                     Size size = Size(),
-                     int availableQuantity = 0,
-                     int soldQuantity = 0,
-                     string description = "",
-                     bool sustainableMaterials = false,
-                     string gender = "");
+            ClothingItem(long id = -1,
+                         string code = "",
+                         string color = "",
+                         Material material = Material(),
+                         Size size = Size(),
+                         int availableQuantity = 0,
+                         int soldQuantity = 0,
+                         string description = "",
+                         bool sustainableMaterials = false,
+                         string gender = "");
 
 
+            string getGenderAsString() const;
 
-        string getGenderAsString() const;
-        static Gender genderFromString(const string&);
+            static Gender genderFromString(const string&);
 
-        ClothingItem& operator=(const ClothingItem&) = default; // needed because it's a virtual base
+            ClothingItem& operator=(const ClothingItem&) = default; // needed because it's a virtual base
 
-        const bool& hasSustainableMaterials() const;
+            const bool& hasSustainableMaterials() const;
 
-        void setSustainableMaterials(bool sustainableMaterials);
+            void setSustainableMaterials(bool sustainableMaterials);
 
-    protected:
-        double computeLegLength() const;
+        protected:
+            double computeLegLength() const;
 
-        double computeTrunkLength() const;
+            double computeTrunkLength() const;
 
-        double computeLegWidth() const;
+            double computeLegWidth() const;
 
-        double computeTrunkWidth() const;
+            double computeTrunkWidth() const;
 
-        bool sustainableMaterials;
-        Gender gender;
+            bool sustainableMaterials;
+            Gender gender;
 
-        // constants used for top part clothing
-        static const double SMALLEST_SIZE_TRUNK_WIDTH;
-        static const double SMALLEST_SIZE_TRUNK_LENGTH;
+            // constants used for top part clothing
+            static const double SMALLEST_SIZE_TRUNK_WIDTH;
+            static const double SMALLEST_SIZE_TRUNK_LENGTH;
 
-        // constants used for bottom part clothing
-        static const double SMALLEST_SIZE_LEG_WIDTH;
-        static const double SMALLEST_SIZE_LEG_LENGTH;
+            // constants used for bottom part clothing
+            static const double SMALLEST_SIZE_LEG_WIDTH;
+            static const double SMALLEST_SIZE_LEG_LENGTH;
 
 
     };

@@ -30,39 +30,39 @@ using Services::EntityMapper;
 namespace Services {
     template<class T>
     class ReadOnlyRepository {
-    private:
-        string errorTypeToString(const QSqlError::ErrorType& errorType);
+        private:
+            string errorTypeToString(const QSqlError::ErrorType& errorType);
 
-    protected:
-        string table;
-        QueryBuilder queryBuilder;
+        protected:
+            string table;
+            QueryBuilder queryBuilder;
 
-        function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction;
+            function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction;
 
-        QSqlQuery exec(const string&, const QVariantList&);
+            QSqlQuery exec(const string&, const QVariantList&);
 
-        QSqlQuery exec(const string&, const QVariant&);
+            QSqlQuery exec(const string&, const QVariant&);
 
-        QSqlQuery exec(const string&);
+            QSqlQuery exec(const string&);
 
-        Either<Error, QSqlRecord> hasErrorOrRecord(const QSqlQuery& query);
+            Either<Error, QSqlRecord> hasErrorOrRecord(const QSqlQuery& query);
 
-        optional<Error> hasError(const QSqlQuery& query);
+            optional<Error> hasError(const QSqlQuery& query);
 
-    public:
+        public:
 
-        ReadOnlyRepository(const string& table,
-                           function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction);
+            ReadOnlyRepository(const string& table,
+                               function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction);
 
-        virtual ~ReadOnlyRepository() = default;
+            virtual ~ReadOnlyRepository() = default;
 
-        ReadOnlyRepository(ReadOnlyRepository&) = delete;
+            ReadOnlyRepository(ReadOnlyRepository&) = delete;
 
-        void operator=(const ReadOnlyRepository&) = delete;
+            void operator=(const ReadOnlyRepository&) = delete;
 
-        virtual Either<Error, shared_ptr<T>> findById(int id);
+            virtual Either<Error, shared_ptr<T>> findById(int id);
 
-        virtual Either<Error, list<shared_ptr<T>>> findAll();
+            virtual Either<Error, list<shared_ptr<T>>> findAll();
 
     };
 

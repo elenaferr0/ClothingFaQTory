@@ -10,12 +10,12 @@ QT_BEGIN_NAMESPACE
 namespace Views::Wizard { class InsertProductInfoWizardPage; }
 QT_END_NAMESPACE
 
-class ProductInfoWizardPage : public QWizardPage{
+class ProductInfoWizardPage : public QWizardPage {
     Q_OBJECT
-private:
-    SelectColorButton* button;
-public:
-    ProductInfoWizardPage(QWidget* parent = nullptr, const QSet<QString>& = QSet<QString>());
+    private:
+        SelectColorButton* button;
+    public:
+        ProductInfoWizardPage(QWidget* parent = nullptr, const QSet<QString>& = QSet<QString>());
 };
 
 

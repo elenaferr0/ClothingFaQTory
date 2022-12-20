@@ -5,8 +5,8 @@
 
 
 class ConnectivityManager {
-public:
-    static bool checkConnection();
+    public:
+        static bool checkConnection();
 };
 
 

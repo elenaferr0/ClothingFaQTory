@@ -1,7 +1,7 @@
 
 
-#ifndef VIEW_H
-#define VIEW_H
+#ifndef MAIN_VIEW_H
+#define MAIN_VIEW_H
 
 
 #include "../controllers/main_controller.h"
@@ -51,4 +51,4 @@ namespace Views {
 }
 
 
-#endif //VIEW_H
+#endif //MAIN_VIEW_H

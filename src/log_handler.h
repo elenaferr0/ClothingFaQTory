@@ -1,5 +1,6 @@
 #ifndef LOG_HANDLER_H
 #define LOG_HANDLER_H
+
 #include <QDebug>
 
 void logHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
@@ -37,4 +38,5 @@ void logHandler(QtMsgType type, const QMessageLogContext& context, const QString
             break;
     }
 }
+
 #endif

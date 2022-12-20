@@ -11,11 +11,11 @@ QT_END_NAMESPACE
 
 
 class CreateProductWizard : public QWizard {
-Q_OBJECT
-public:
-    CreateProductWizard(QWidget* parent = nullptr, const QSet<QString>& productCodes = QSet<QString>());
+    Q_OBJECT
+    public:
+        CreateProductWizard(QWidget* parent = nullptr, const QSet<QString>& productCodes = QSet<QString>());
 
-    void accept() override; // called when the user clicks finish
+        void accept() override; // called when the user clicks finish
 };
 
 

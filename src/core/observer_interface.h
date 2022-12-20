@@ -9,10 +9,10 @@ using Models::Model;
 
 namespace Core {
     class ObserverInterface {
-    public:
-        virtual void notify(Model* model) = 0;
+        public:
+            virtual void notify(Model* model) = 0;
 
-        virtual ~ObserverInterface() = default;
+            virtual ~ObserverInterface() = default;
 
     };
 }
