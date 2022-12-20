@@ -18,8 +18,6 @@ using Core::ObserverInterface;
 
 namespace Models {
     class Product : public Model {
-    private:
-        list<ObserverInterface*> observers;
     protected:
         string color;
         Material material;
@@ -64,7 +62,6 @@ namespace Models {
 
         const string& getCode() const;
 
-        void registerObserver(ObserverInterface* observer);
     };
 }
 #endif // PRODUCT_H

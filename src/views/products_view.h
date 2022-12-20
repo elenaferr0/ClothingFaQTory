@@ -17,26 +17,28 @@ using Core::Error;
 
 namespace Views {
     class ProductsView : public ViewInterface {
-    private:
-        typedef Map <Product::ProductType, list<shared_ptr < Product>>>
-        ProductsMap;
-        ProductsMap productsByType;
+        Q_OBJECT
+        private:
+            typedef Map <Product::ProductType, list<shared_ptr < Product>>>
+            ProductsMap;
 
-        static int COLUMN_COUNT;
+            ProductsMap productsByType;
 
-        QTreeWidget* treeWidget;
-        QToolBar* toolBar;
+            static int COLUMN_COUNT;
 
-        QTreeWidgetItem* getHeaders();
+            QTreeWidget* treeWidget;
+            QToolBar* toolBar;
 
-        void initTreeView();
+            QTreeWidgetItem* getHeaders();
 
-    public:
-        ProductsView(QWidget* parent = nullptr);
+            void initTreeView();
 
-        void init(ProductsMap& productsByType);
+        public:
+            ProductsView(QWidget* parent = nullptr);
 
-        void notify(Product& product) override;
+            void init(const ProductsMap& productsByType);
+
+            void notify(Model*) override;
     };
 
 }

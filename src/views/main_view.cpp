@@ -27,19 +27,22 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     tabWidget = new QTabWidget;
 
     productsView = new ProductsView(tabWidget);
+    materialsView = new MaterialsView(tabWidget);
     this->controller = new MainController(this);
 
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);
 
+    MaterialsList materials = controller->findAllMaterials();
+    materialsView->init(materials);
 
     tabWidget->addTab(productsView, "Products");
     QIcon clothingIcon(":/assets/icons/tshirt.png");
     tabWidget->setTabIcon(0, clothingIcon);
 
-//    tabWidget->addTab(new MaterialsCostTabPage(tabWidget), "Materials Cost");
-//    QIcon materialsIcon(":/assets/icons/materials_cost.png");
-//    tabWidget->setTabIcon(1, materialsIcon);
+    tabWidget->addTab(materialsView, "Materials Cost");
+    QIcon materialsIcon(":/assets/icons/materials_cost.png");
+    tabWidget->setTabIcon(1, materialsIcon);
 
     tabWidget->setIconSize(QSize(35, 35));
 

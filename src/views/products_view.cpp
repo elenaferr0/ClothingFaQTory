@@ -11,7 +11,7 @@ int ProductsView::COLUMN_COUNT = 5;
 
 ProductsView::ProductsView(QWidget* parent) : ViewInterface(parent) {}
 
-void ProductsView::init(ProductsMap& productsByType) {
+void ProductsView::init(const ProductsMap& productsByType) {
     this->productsByType = productsByType;
 
     treeWidget = new QTreeWidget;
@@ -53,8 +53,8 @@ void ProductsView::init(ProductsMap& productsByType) {
     layout->addWidget(treeWidget);
 }
 
-void Views::ProductsView::notify(Product& product) {
-    // update tree widget of the given product
+void Views::ProductsView::notify(Model* model) {
+    // TODO handle notify event
 }
 
 QTreeWidgetItem* ProductsView::getHeaders() {

@@ -2,29 +2,38 @@
 #define MODEL_H
 
 #include <string>
+#include <list>
 #include "../core/visitor_interface.h"
+#include "../core/observer_interface.h"
 
 using std::string;
+using std::list;
 using Core::VisitorInterface;
+using Core::ObserverInterface;
 
 namespace Models {
     class Model {
-    private:
-        int id;
-    public:
-        Model(int id = -1) : id(id) {};
+        private:
+            int id;
+            list<ObserverInterface*> observers;
+        public:
+            Model(int id = -1) : id(id) {};
 
-        const int& getId() const;
+            const int& getId() const;
 
-        void setId(int id);
+            void setId(int id);
 
-        virtual Model* clone() const = 0;
+            virtual Model* clone() const = 0;
 
-        bool found() const;
+            bool found() const;
 
-        virtual ~Model() = default;
+            virtual ~Model() = default;
 
-        virtual void accept(VisitorInterface& visitor) = 0;
+            virtual void accept(VisitorInterface& visitor) = 0;
+
+            void registerObserver(ObserverInterface* observer);
+
+            void notifyAll();
     };
 }
 

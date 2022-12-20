@@ -11,9 +11,11 @@
 #include <QTabWidget>
 #include <QMainWindow>
 #include "products_view.h"
+#include "materials_view.h"
 
 using std::shared_ptr;
 using Views::ProductsView;
+using Views::MaterialsView;
 
 namespace Controllers {
     class MainController;
@@ -27,21 +29,24 @@ QT_END_NAMESPACE
 
 namespace Views {
     class MainView : public QMainWindow {
-    Q_OBJECT
-        typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
+        Q_OBJECT
+            typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
+            typedef list<shared_ptr<Material>> MaterialsList;
 
-    public:
-        MainView(QWidget* parent = nullptr);
+        public:
+            MainView(QWidget* parent = nullptr);
 
-        ProductsView* getProductsView() const;
+            ProductsView* getProductsView() const;
 
-    private:
-        MainController* controller;
-        ProductsView* productsView;
-        QTabWidget* tabWidget;
+        private:
+            MainController* controller;
+            ProductsView* productsView;
+            MaterialsView* materialsView;
+            QTabWidget* tabWidget;
 
-    public slots:
-        void handleDatabaseError(Error*);
+        public slots:
+
+            void handleDatabaseError(Error*);
     };
 }
 
