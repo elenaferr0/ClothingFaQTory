@@ -23,7 +23,7 @@ namespace Services {
             VestRepository();
 
         protected:
-            // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
+
             static VestRepository* instance;
         public:
 

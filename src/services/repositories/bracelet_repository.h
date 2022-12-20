@@ -16,7 +16,7 @@ namespace Services {
             BraceletRepository();
 
         protected:
-            // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
+
             static BraceletRepository* instance;
         public:
 
