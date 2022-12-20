@@ -12,17 +12,17 @@ using Models::Accessories::Bracelet;
 
 namespace Services {
     class BraceletRepository : public CRUDRepository<Bracelet> {
-    private:
-        BraceletRepository();
+        private:
+            BraceletRepository();
 
-    protected:
-        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
-        static BraceletRepository* instance;
-    public:
+        protected:
 
-        static BraceletRepository* getInstance();
+            static BraceletRepository* instance;
+        public:
 
-        Either<Error, Bracelet> save(Bracelet& entity) override;
+            static BraceletRepository* getInstance();
+
+            Either<Error, Bracelet> save(Bracelet& entity) override;
     };
 }
 

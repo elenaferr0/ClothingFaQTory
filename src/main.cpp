@@ -1,10 +1,12 @@
-#include "views/mainwindow.h"
 
 #include <QApplication>
 #include <QFontDatabase>
 #include <QFile>
 #include <QIODevice>
 #include "log_handler.h"
+#include "views/main_view.h"
+
+using Views::MainView;
 
 int main(int argc, char** argv) {
     qInstallMessageHandler(logHandler);
@@ -17,10 +19,8 @@ int main(int argc, char** argv) {
     QString styleSheet = QLatin1String(file.readAll());
     a.setStyleSheet(styleSheet);
 
-    MainWindow w;
+    MainView w;
     w.resize(1024, 512);
-//    QFont font(family, 14);
-//    w.setFont(font);
     w.show();
 
     return a.exec();

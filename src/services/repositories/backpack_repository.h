@@ -12,19 +12,19 @@ using Models::Accessories::BackPack;
 
 namespace Services {
     class BackPackRepository : public CRUDRepository<BackPack> {
-    private:
-        BackPackRepository();
-    protected:
-        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
-        static BackPackRepository* instance;
-    public:
+        private:
+            BackPackRepository();
 
-        static BackPackRepository* getInstance();
+        protected:
 
-        Either<Error, BackPack> save(BackPack& entity) override;
+            static BackPackRepository* instance;
+        public:
+
+            static BackPackRepository* getInstance();
+
+            Either<Error, BackPack> save(BackPack& entity) override;
     };
 }
-
 
 
 #endif //BACKPACK_REPOSITORY_H

@@ -17,39 +17,39 @@ using std::ref;
 namespace Core {
     template<class L, class R>// R = right (correct result), L error
     class Either {
-    private:
-        variant<L, R> value;
-    public:
+        private:
+            variant<L, R> value;
+        public:
 
-        // left() and right() are not const since the object is returned by reference
-        optional<reference_wrapper<L>> left();
+            // left() and right() are not const since the object is returned by reference
+            optional<reference_wrapper<L>> left();
 
-        optional<reference_wrapper<R>> right();
+            optional<reference_wrapper<R>> right();
 
-        // forceLeft() and forceRight() will result in an error if not present (but they allows less verbosity)
-        // should be used only after checking current value
-        L& forceLeft();
+            // forceLeft() and forceRight() will result in an error if not present (but they allows less verbosity)
+            // should be used only after checking current value
+            L& forceLeft();
 
-        R& forceRight();
+            R& forceRight();
 
-        const L& forceLeft() const;
+            const L& forceLeft() const;
 
-        const R& forceRight() const;
+            const R& forceRight() const;
 
-        bool isRight() const;
+            bool isRight() const;
 
-        bool isLeft() const;
+            bool isLeft() const;
 
-        Either(const L& left);
+            Either(const L& left);
 
-        Either(const R& left);
+            Either(const R& left);
 
-        static Either ofLeft(const L& left);
+            static Either ofLeft(const L& left);
 
-        static Either ofRight(const R& right);
+            static Either ofRight(const R& right);
 
-        template<class B>
-        B fold(function<B(void)> ifLeft, function<B(void)> ifRight) const;
+            template<class B>
+            B fold(function<B(void)> ifLeft, function<B(void)> ifRight) const;
     };
 
     template<class L, class R>

@@ -3,6 +3,8 @@
 #include <QHBoxLayout>
 #include "no_connection.h"
 
+using Views::NoConnection;
+
 NoConnection::NoConnection(QWidget* parent)
         : QWidget(parent) {
     QVBoxLayout* layout = new QVBoxLayout(this);

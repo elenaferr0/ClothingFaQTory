@@ -14,23 +14,23 @@ using Services::ReadOnlyRepository;
 
 namespace Services {
     class MaterialRepository : public ReadOnlyRepository<Material> {
-    private:
-        MaterialRepository();
-    protected:
-        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
-        static MaterialRepository* instance;
-        Map<int, Material> cachedMaterials; // not static since there's only one instance
+        private:
+            MaterialRepository();
 
-    public:
-        static MaterialRepository* getInstance();
+        protected:
+            static MaterialRepository* instance;
+            Map<int, shared_ptr<Material>> cachedMaterials; // not static since there's only one instance
 
-        Either<Error, Material> findByName(const Material::Name&);
+        public:
+            static MaterialRepository* getInstance();
 
-        Either<Error, Material> saveCostPerUnit(const Material&);
+            Either<Error, shared_ptr<Material>> findByName(const Material::Name&);
 
-        Either<Error, Material> findById(int id) override;
+            Either<Error, shared_ptr<Material>> saveCostPerUnit(const Material&);
 
-        Either<Error, list<Material>> findAll() override;
+            Either<Error, shared_ptr<Material>> findById(int id) override;
+
+            Either<Error, list<shared_ptr<Material>>> findAll() override;
 
     };
 }

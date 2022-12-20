@@ -7,17 +7,20 @@ using std::string;
 
 namespace Core {
     class Error {
-    private:
-        string userMessage;
-        string cause;
-    public:
-        // allow implicit construction
-        Error(
-                string cause = "",
-                string userMessage = "Generic error"
-        );
+        private:
+            string userMessage;
+            string cause;
+            string type;
+        public:
+            Error(string type = "", string cause = "Generic error", string userMessage = "");
 
-        string getMessage() const;
+            const string& getCause() const;
+
+            const string& getUserMessage() const;
+
+            const string& getType() const;
+
+            void setUserMessage(const string&);
     };
 }
 

@@ -1,9 +1,6 @@
 
 #include "backpack.h"
 #include "../../utils/calculator.h"
-#include "../material.h"
-#include "../size.h"
-#include "../../core/visitor_interface.h"
 #include <list>
 
 using std::list;
@@ -25,8 +22,8 @@ BackPack::BackPack(long id,
         : Accessory(id,
                     code,
                     color,
-                  material,
-                  size,
+                    material,
+                    size,
                     availableQuantity,
                     soldQuantity,
                     description,
@@ -50,6 +47,6 @@ const double& BackPack::getCapacity() const {
     return capacity;
 }
 
-void BackPack::accept(VisitorInterface& visitor) {
+void BackPack::accept(ModelVisitorInterface& visitor) {
     visitor.visitBackPack(*this);
 }

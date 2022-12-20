@@ -52,16 +52,6 @@ const Material& Product::getMaterial() const {
 }
 
 
-void Models::Product::registerObserver(ObserverInterface* observer) {
-    observers.push_back(observer);
-}
-
-void Models::Product::notifyAll() {
-    for (auto it = observers.begin(); it != observers.end(); it++) {
-        (*it)->notify(*this);
-    }
-}
-
 string Product::productTypeToString(Product::ProductType productType) {
     switch (productType) {
         case Jeans:

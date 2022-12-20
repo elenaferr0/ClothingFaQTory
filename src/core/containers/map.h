@@ -22,128 +22,133 @@ namespace Core::Containers {
 
     template<class K, class V>
     class Map {
-    private:
-        class Node {
-
         private:
-            enum Color {
-                RED,
-                BLACK,
+            class Node {
+
+                private:
+                    enum Color {
+                        RED,
+                        BLACK,
+                    };
+
+                    K key;
+                    V value;
+                    Color color;
+                    Node* parent;
+                    Node* left;
+                    Node* right;
+
+                    friend class Map;
+
+                public:
+                    Node(K key = K(), V value = V(), Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
+                         Node* right = nullptr) :
+                            key(key),
+                            value(value),
+                            color(color),
+                            parent(parent),
+                            left(left),
+                            right(right) {};
             };
 
-            K key;
-            V value;
-            Color color;
-            Node* parent;
-            Node* left;
-            Node* right;
+            Node* root;
+            unsigned int size;
+            static Node* const TNULL;
 
-            friend class Map;
+            void inOrderHelper(Node* node) const;
+
+            Node* searchTreeHelper(Node* node, K key) const;
+
+            void fixErase(Node* x);
+
+            void transplant(Node* u, Node* v);
+
+            void eraseNodeHelper(Node* node, K key);
+
+            void fixPut(Node* k);
+
+            void printHelper(ostream& os, Node* root, string indent = "", bool visitRight = true) const;
+
+            static Node* predecessor(Node* x);
+
+            void leftRotate(Node* x);
+
+            void rightRotate(Node* x);
+
+            static Node* minimum(Node* node);
+
+            static Node* successor(Node* x);
 
         public:
-            Node(K key = K(), V value = V(), Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
-                 Node* right = nullptr) :
-                    key(key),
-                    value(value),
-                    color(color),
-                    parent(parent),
-                    left(left),
-                    right(right) {};
-        };
+            Map() : root(TNULL), size(0) {};
 
-        Node* root;
-        unsigned int size;
-        static Node* const TNULL;
+            Map(const Map<K, V>& map) : root(inOrderCopy(map.root)), size(map.size) {};
 
-        void inOrderHelper(Node* node) const;
+            ~Map();
 
-        Node* searchTreeHelper(Node* node, K key) const;
+            bool empty() const;
 
-        void fixErase(Node* x);
+            Map& operator=(const Map&);
 
-        void transplant(Node* u, Node* v);
+            static void destroy(Node*);
 
-        void eraseNodeHelper(Node* node, K key);
+            static Node* inOrderCopy(Node*);
 
-        void fixPut(Node* k);
+            void inOrderTraversal() const;
 
-        void printHelper(ostream& os, Node* root, string indent = "", bool visitRight = true) const;
+            void erase(K key);
 
-        static Node* predecessor(Node* x);
+            void eraseAll();
 
-        void leftRotate(Node* x);
+            optional<V> get(K key) const;
 
-        void rightRotate(Node* x);
+            bool hasKey(const K&) const;
 
-        static Node* minimum(Node* node);
+            unsigned int getSize() const;
 
-        static Node* maximum(Node* node);
+            friend ostream& operator
+            <<<K, V>(ostream&, const Map<K, V>&);
 
-        static Node* successor(Node* x);
+            class ConstIterator {
+                private:
+                    Map::Node* node;
+                    bool isPastTheEnd;
+                    bool isBeforeTheStart;
+                public:
+                    ConstIterator(Map::Node* n) : node(n), isPastTheEnd(false), isBeforeTheStart(false) {};
 
-    public:
-        Map() : root(TNULL), size(0) {};
+                    bool operator==(const ConstIterator& i) const;
 
-        Map(const Map<K, V>& map) : root(inOrderCopy(map.root)), size(map.size) {};
+                    bool operator!=(const ConstIterator& i) const;
 
-        ~Map();
+                    const ConstIterator operator++(int);  // postfix
+                    ConstIterator& operator++();    // prefix
 
-        bool empty() const;
+                    const ConstIterator operator--(int);  // postfix
+                    ConstIterator& operator--();    // prefix
 
-        Map& operator=(const Map&);
+                    const pair<K, V> operator*() const;
 
-        static void destroy(Node*);
+                    friend class Map<K, V>;
+            };
 
-        static Node* inOrderCopy(Node*);
+            bool put(const K& key, const V& value); // returns true if the element was already present
 
-        void inOrderTraversal() const;
+            ConstIterator cbegin() const;
 
-        void erase(K key);
-
-        optional <V> get(K key) const;
-
-        bool hasKey(const K&) const;
-
-        unsigned int getSize() const;
-
-        friend ostream& operator
-        <<<K, V>(ostream&, const Map<K, V>&);
-
-        V& operator[](const K&);
-
-        class ConstIterator {
-        private:
-            Map::Node* node;
-            bool isPastTheEnd;
-            bool isBeforeTheStart;
-        public:
-            ConstIterator(Map::Node* n) : node(n), isPastTheEnd(false), isBeforeTheStart(false) {};
-
-            bool operator==(const ConstIterator& i) const;
-
-            bool operator!=(const ConstIterator& i) const;
-
-            const ConstIterator operator++(int);  // postfix
-            ConstIterator& operator++();    // prefix
-
-            const ConstIterator operator--(int);  // postfix
-            ConstIterator& operator--();    // prefix
-
-            const pair <K, V> operator*() const;
-
-            friend class Map<K, V>;
-        };
-
-        bool put(const K& key, const V& value); // returns true if the element was already present
-
-        ConstIterator cbegin() const;
-
-        ConstIterator cend() const;
+            ConstIterator cend() const;
     };
 
 
     template<class K, class V>
     typename Map<K, V>::Node* const Map<K, V>::TNULL = new Node();
+
+    template<class K, class V>
+    void Map<K, V>::eraseAll() {
+        destroy(root);
+        root = TNULL;
+        size = 0;
+    }
 
     template<class K, class V>
     void Map<K, V>::destroy(Node* node) {  // Must always be called from the root
@@ -408,7 +413,7 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    optional <V> Map<K, V>::get(K key) const {
+    optional<V> Map<K, V>::get(K key) const {
         Node* n = searchTreeHelper(this->root, key);
         return (n && n != TNULL) ? optional(n->value) : nullopt;
     }
@@ -417,14 +422,6 @@ namespace Core::Containers {
     typename Map<K, V>::Node* Map<K, V>::minimum(Node* node) { // find the node with the minimum key
         while (node->left != TNULL) {
             node = node->left;
-        }
-        return node;
-    }
-
-    template<class K, class V>
-    typename Map<K, V>::Node* Map<K, V>::maximum(Node* node) {// find the node with the maximum key
-        while (node->right != TNULL) {
-            node = node->right;
         }
         return node;
     }
@@ -618,7 +615,7 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    const pair <K, V> Containers::Map<K, V>::ConstIterator::operator*() const {
+    const pair<K, V> Containers::Map<K, V>::ConstIterator::operator*() const {
         return pair(node->key, node->value);
     }
 

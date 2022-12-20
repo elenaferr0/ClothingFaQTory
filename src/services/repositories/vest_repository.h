@@ -19,16 +19,17 @@ using Services::CRUDRepository;
 
 namespace Services {
     class VestRepository : public CRUDRepository<Vest> {
-    private:
-        VestRepository();
-    protected:
-        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
-        static VestRepository* instance;
-    public:
+        private:
+            VestRepository();
 
-        static VestRepository* getInstance();
+        protected:
 
-        Either<Error, Vest> save(Vest& entity) override;
+            static VestRepository* instance;
+        public:
+
+            static VestRepository* getInstance();
+
+            Either<Error, Vest> save(Vest& entity) override;
     };
 }
 

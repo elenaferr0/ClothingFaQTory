@@ -58,3 +58,7 @@ Size::Name Size::nameFromString(const string& name) {
         return ONE_SIZE;
     }
 }
+
+void Models::Size::accept(Core::Visitors::ModelVisitorInterface& visitor) {
+    visitor.visitSize(*this);
+}
