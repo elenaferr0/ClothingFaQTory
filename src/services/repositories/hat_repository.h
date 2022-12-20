@@ -16,16 +16,17 @@ using Services::CRUDRepository;
 
 namespace Services {
     class HatRepository : public CRUDRepository<Hat> {
-    private:
-        HatRepository();
-    protected:
+        private:
+            HatRepository();
 
-        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
-        static HatRepository* instance;
-    public:
-        static HatRepository* getInstance();
+        protected:
 
-        Either<Error, Hat> save(Hat& entity) override;
+            // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
+            static HatRepository* instance;
+        public:
+            static HatRepository* getInstance();
+
+            Either<Error, Hat> save(Hat& entity) override;
     };
 }
 #endif // HATREPOSITORY_H

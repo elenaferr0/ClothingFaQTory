@@ -11,11 +11,11 @@ using Core::ObserverInterface;
 
 namespace Views {
     class ViewInterface : public QWidget, public ObserverInterface {
-    Q_OBJECT
-    public:
-        explicit ViewInterface(QWidget* parent = nullptr);
+        Q_OBJECT
+        public:
+            explicit ViewInterface(QWidget* parent = nullptr);
 
-        virtual ~ViewInterface() = default;
+            virtual ~ViewInterface() = default;
     };
 
 }

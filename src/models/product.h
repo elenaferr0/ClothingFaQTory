@@ -18,49 +18,50 @@ using Core::ObserverInterface;
 
 namespace Models {
     class Product : public Model {
-    protected:
-        string color;
-        Material material;
-        Size size;
-        int availableQuantity;
-        int soldQuantity;
-        string description;
-        string code;
+        protected:
+            string color;
+            Material material;
+            Size size;
+            int availableQuantity;
+            int soldQuantity;
+            string description;
+            string code;
 
-        void notifyAll();
+            void notifyAll();
 
-    public:
-        enum ProductType {
-            Jeans, Vest, Overalls, Bracelet, BackPack, Hat
-        };
-        static string productTypeToString(Product::ProductType);
+        public:
+            enum ProductType {
+                Jeans, Vest, Overalls, Bracelet, BackPack, Hat
+            };
 
-        Product(long id = -1,
-                string code = "",
-                string color = "",
-                Material material = Material(),
-                Size size = Size(),
-                int availableQuantity = 0,
-                int soldQuantity = 0,
-                string description = "");
+            static string productTypeToString(Product::ProductType);
 
-        virtual double computePrice() const = 0;
+            Product(long id = -1,
+                    string code = "",
+                    string color = "",
+                    Material material = Material(),
+                    Size size = Size(),
+                    int availableQuantity = 0,
+                    int soldQuantity = 0,
+                    string description = "");
 
-        virtual ~Product() {};
+            virtual double computePrice() const = 0;
 
-        const string& getColor() const;
+            virtual ~Product() {};
 
-        const Material& getMaterial() const;
+            const string& getColor() const;
 
-        const Size& getSize() const;
+            const Material& getMaterial() const;
 
-        const int& getAvailableQuantity() const;
+            const Size& getSize() const;
 
-        const int& getSoldQuantity() const;
+            const int& getAvailableQuantity() const;
 
-        const string& getDescription() const;
+            const int& getSoldQuantity() const;
 
-        const string& getCode() const;
+            const string& getDescription() const;
+
+            const string& getCode() const;
 
     };
 }

@@ -11,10 +11,10 @@ QT_END_NAMESPACE
 
 class ChooseProductTypeWizardPage : public QWizardPage {
     Q_OBJECT
-private:
-    QComboBox* comboBox;
-public:
-    ChooseProductTypeWizardPage(QWidget* parent = nullptr);
+    private:
+        QComboBox* comboBox;
+    public:
+        ChooseProductTypeWizardPage(QWidget* parent = nullptr);
 };
 
 

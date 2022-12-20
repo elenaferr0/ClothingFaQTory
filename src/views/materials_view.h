@@ -15,19 +15,19 @@ using std::list;
 
 namespace Views {
     class MaterialsView : public ViewInterface {
-    Q_OBJECT
-        typedef list <shared_ptr<Material>> MaterialsList;
-    public:
-        MaterialsView(QWidget* parent = nullptr);
+        Q_OBJECT
+            typedef list<shared_ptr < Material>> MaterialsList;
+        public:
+            MaterialsView(QWidget* parent = nullptr);
 
-        void init(const MaterialsList&);
+            void init(const MaterialsList&);
 
-    private:
-        QGridLayout* gridLayout;
-        static int COLUMN_COUNT;
-        MaterialsList materials;
+        private:
+            QGridLayout* gridLayout;
+            static int COLUMN_COUNT;
+            MaterialsList materials;
 
-        void initGrid();
+            void initGrid();
 
         public:
             void notify(Model* model) override;

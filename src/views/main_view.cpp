@@ -3,6 +3,7 @@
 #include "main_view.h"
 #include "../services/connectivity_manager.h"
 #include "no_connection.h"
+
 using Views::ProductsView;
 using Views::NoConnection;
 

@@ -13,18 +13,19 @@ using Core::Error;
 using Services::CRUDRepository;
 using Models::ClothingItems::Overalls;
 
-namespace Services{
+namespace Services {
     class OverallsRepository : public CRUDRepository<Overalls> {
-    private:
-        OverallsRepository();
-    protected:
-        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
-        static OverallsRepository* instance;
-    public:
+        private:
+            OverallsRepository();
 
-        static OverallsRepository* getInstance();
+        protected:
+            // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
+            static OverallsRepository* instance;
+        public:
 
-        Either<Error, Overalls> save(Overalls& entity) override;
+            static OverallsRepository* getInstance();
+
+            Either<Error, Overalls> save(Overalls& entity) override;
     };
 };
 

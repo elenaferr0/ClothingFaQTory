@@ -8,10 +8,10 @@
 
 namespace Views {
     class NoConnection : public QWidget {
-    Q_OBJECT
+        Q_OBJECT
 
-    public:
-        NoConnection(QWidget* parent = nullptr);
+        public:
+            NoConnection(QWidget* parent = nullptr);
     };
 }
 

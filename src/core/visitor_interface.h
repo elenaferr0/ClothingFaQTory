@@ -35,24 +35,24 @@ using Models::ClothingItems::Overalls;
 
 namespace Core {
     class VisitorInterface {
-    public:
-        virtual ~VisitorInterface() = default;
+        public:
+            virtual ~VisitorInterface() = default;
 
-        virtual void visitBracelet(Bracelet&) = 0;
+            virtual void visitBracelet(Bracelet&) = 0;
 
-        virtual void visitBackPack(BackPack&) = 0;
+            virtual void visitBackPack(BackPack&) = 0;
 
-        virtual void visitHat(Hat&) = 0;
+            virtual void visitHat(Hat&) = 0;
 
-        virtual void visitJeans(Jeans&) = 0;
+            virtual void visitJeans(Jeans&) = 0;
 
-        virtual void visitVest(Vest&) = 0;
+            virtual void visitVest(Vest&) = 0;
 
-        virtual void visitOveralls(Overalls&) = 0;
+            virtual void visitOveralls(Overalls&) = 0;
 
-        virtual void visitMaterial(Material&) = 0;
+            virtual void visitMaterial(Material&) = 0;
 
-        virtual void visitSize(Size&) = 0;
+            virtual void visitSize(Size&) = 0;
     };
 }
 #endif //IPRODUCT_VISITOR_H

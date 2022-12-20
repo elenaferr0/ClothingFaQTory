@@ -10,23 +10,23 @@ namespace Views::Wizard { class SelectColorButton; }
 QT_END_NAMESPACE
 
 class SelectColorButton : public QPushButton {
-Q_OBJECT
-public:
-    SelectColorButton(QWidget* parent = nullptr, const QString& = "");
+    Q_OBJECT
+    public:
+        SelectColorButton(QWidget* parent = nullptr, const QString& = "");
 
-    void setColor(const QColor& color);
+        void setColor(const QColor& color);
 
-    const QColor& getColor() const;
+        const QColor& getColor() const;
 
-public slots:
+    public slots:
 
-    void updateColor();
+        void updateColor();
 
-    void changeColor();
+        void changeColor();
 
-private:
-    static int LIGHTNESS_THRESHOLD;
-    QColor color;
+    private:
+        static int LIGHTNESS_THRESHOLD;
+        QColor color;
 };
 
 #endif //SELECT_COLOR_BUTTON_H

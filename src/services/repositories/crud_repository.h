@@ -20,24 +20,25 @@ using Models::Material;
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
-    protected:
-        Either<Error, T> save(const list<string>&, QVariantList&, T& entity);
+        protected:
+            Either<Error, T> save(const list<string>&, QVariantList&, T& entity);
 
-    public:
-        CRUDRepository(const string& table, function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction)
-                : ReadOnlyRepository<T>(table, mappingFunction) {};
+        public:
+            CRUDRepository(const string& table,
+                           function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction)
+                    : ReadOnlyRepository<T>(table, mappingFunction) {};
 
-        virtual Either<Error, T> save(T& entity) = 0;
+            virtual Either<Error, T> save(T& entity) = 0;
 
-        Either<Error, list<T>> saveAll(list<T>& entities);
+            Either<Error, list<T>> saveAll(list<T>& entities);
 
-        optional<Error> deleteT(const T& entity);
+            optional<Error> deleteT(const T& entity);
 
-        optional<Error> deleteById(int id);
+            optional<Error> deleteById(int id);
 
-        Either<Error, shared_ptr<T>> findById(int id) override;
+            Either<Error, shared_ptr<T>> findById(int id) override;
 
-        Either<Error, list<shared_ptr<T>>> findAll() override;
+            Either<Error, list<shared_ptr<T>>> findAll() override;
 
     };
 

@@ -5,30 +5,30 @@
 
 namespace Models::Accessories {
     class Hat : public Accessory {
-    private:
-        bool baseballCap;
-        static const double DIAMETER;
-        static const double VISOR_LENGTH;
-        static const double VISOR_WIDTH;
-    public:
-        Hat(long id = -1,
-            string code = "",
-            string color = "",
-            Material material = Material(),
-            Size size = Size(),
-            int availableQuantity = 0,
-            int soldQuantity = 0,
-            string description = "",
-            string category = "",
-            bool isBaseballCap = false);
+        private:
+            bool baseballCap;
+            static const double DIAMETER;
+            static const double VISOR_LENGTH;
+            static const double VISOR_WIDTH;
+        public:
+            Hat(long id = -1,
+                string code = "",
+                string color = "",
+                Material material = Material(),
+                Size size = Size(),
+                int availableQuantity = 0,
+                int soldQuantity = 0,
+                string description = "",
+                string category = "",
+                bool isBaseballCap = false);
 
-        Hat* clone() const override;
+            Hat* clone() const override;
 
-        double computePrice() const override;
+            double computePrice() const override;
 
-        const bool& isBaseballCap() const;
+            const bool& isBaseballCap() const;
 
-        void accept(VisitorInterface& visitor) override;
+            void accept(VisitorInterface& visitor) override;
     };
 }
 

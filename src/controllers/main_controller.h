@@ -33,35 +33,36 @@ namespace Controllers {
 
     class MainController : public QObject {
         Q_OBJECT
-        typedef list<shared_ptr<Material>> MaterialsList;
-        typedef list<shared_ptr<Size>> SizesList;
-        typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
-    public:
-        MainController(MainView*);
+            typedef list<shared_ptr<Material>> MaterialsList;
+            typedef list<shared_ptr<Size>> SizesList;
+            typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
+        public:
+            MainController(MainView*);
 
-        ProductsMap findAllProductsByType();
+            ProductsMap findAllProductsByType();
 
-        MaterialsList findAllMaterials();
+            MaterialsList findAllMaterials();
 
-        SizesList findAllSizes();
+            SizesList findAllSizes();
 
-    private:
-        MainView* view;
-        HatRepository* hatRepository;
-        BraceletRepository* braceletRepository;
-        BackPackRepository* backPackRepository;
-        VestRepository* vestRepository;
-        JeansRepository* jeansRepository;
-        OverallsRepository* overallsRepository;
-        SizeRepository* sizeRepository;
-        MaterialRepository* materialRepository;
+        private:
+            MainView* view;
+            HatRepository* hatRepository;
+            BraceletRepository* braceletRepository;
+            BackPackRepository* backPackRepository;
+            VestRepository* vestRepository;
+            JeansRepository* jeansRepository;
+            OverallsRepository* overallsRepository;
+            SizeRepository* sizeRepository;
+            MaterialRepository* materialRepository;
 
 
-        template<class T>
-        void findProductsOfType(Product::ProductType productType, CRUDRepository<T>* repository, ProductsMap& map);
+            template<class T>
+            void findProductsOfType(Product::ProductType productType, CRUDRepository<T>* repository, ProductsMap& map);
 
-    signals:
-        void databaseError(Error*);
+        signals:
+
+            void databaseError(Error*);
     };
 }
 #endif //CONTROLLER_H

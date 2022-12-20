@@ -7,26 +7,31 @@
 using Core::VisitorInterface;
 
 class ProductInfoVisitor : VisitorInterface {
-private:
-    QFormLayout* layout;
-    void buildAccessoryLayoutBase();
-    void buildClothingItemLayoutBase();
-    void buildProductLayoutBase();
-public:
-    ProductInfoVisitor();
-    void visitBracelet(Bracelet& bracelet) override;
+    private:
+        QFormLayout* layout;
 
-    void visitBackPack(BackPack& pack) override;
+        void buildAccessoryLayoutBase();
 
-    void visitHat(Hat& hat) override;
+        void buildClothingItemLayoutBase();
 
-    void visitJeans(Jeans& jeans) override;
+        void buildProductLayoutBase();
 
-    void visitVest(Vest& vest) override;
+    public:
+        ProductInfoVisitor();
 
-    void visitOveralls(Overalls& overalls) override;
+        void visitBracelet(Bracelet& bracelet) override;
 
-    QFormLayout* getLayout() const;
+        void visitBackPack(BackPack& pack) override;
+
+        void visitHat(Hat& hat) override;
+
+        void visitJeans(Jeans& jeans) override;
+
+        void visitVest(Vest& vest) override;
+
+        void visitOveralls(Overalls& overalls) override;
+
+        QFormLayout* getLayout() const;
 
 };
 
