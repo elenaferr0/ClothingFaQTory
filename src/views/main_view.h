@@ -34,10 +34,13 @@ namespace Views {
             ProductsView* productsView;
             MaterialsView* materialsView;
             QTabWidget* tabWidget;
-
         public slots:
 
             void handleDatabaseError(Error*);
+
+        signals:
+
+            void retryFetchingDataFromDB();
     };
 }
 

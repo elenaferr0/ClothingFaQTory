@@ -27,7 +27,6 @@ namespace Controllers {
             virtual ~Controller() = default;
 
         signals:
-
             void databaseError(Error*);
     };
 

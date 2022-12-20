@@ -32,7 +32,7 @@ namespace Models::ClothingItems {
 
             Vest* clone() const override;
 
-            void accept(VisitorInterface& visitor) override;
+            void accept(ModelVisitorInterface& visitor) override;
     };
 
 }

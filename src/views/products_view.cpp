@@ -5,10 +5,12 @@
 #include <QDebug>
 #include "products_view.h"
 #include "../controllers/wizard_controller.h"
+#include "../controllers/main_controller.h"
 
 using Views::ProductsView;
-using Views::Wizard::CreateProductWizard;
+using Views::Wizard::CreateProductWizardView;
 using Controllers::WizardController;
+using Controllers::MainController;
 
 int ProductsView::COLUMN_COUNT = 5;
 
@@ -24,7 +26,9 @@ void ProductsView::init(const ProductsMap& productsByType) {
     treeWidget->setFocusPolicy(Qt::NoFocus);
     treeWidget->setColumnCount(COLUMN_COUNT);
 
-    initTreeView();
+    if (productsByType.getSize() > 0) {
+        initTreeView();
+    }
 
     for (int i = 0; i < COLUMN_COUNT; ++i) {
         treeWidget->setColumnWidth(i, 180);
@@ -111,7 +115,13 @@ void ProductsView::initTreeView() {
 }
 
 void ProductsView::showWizard(bool) {
-    CreateProductWizard* createProductWizard = new CreateProductWizard(this);
+    CreateProductWizardView* createProductWizard = new CreateProductWizardView(this);
     createProductWizard->setController(new WizardController(createProductWizard));
+    createProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     createProductWizard->show();
+}
+
+void Views::ProductsView::rebuildTreeView() {
+    productsByType = dynamic_cast<MainController*>(controller)->findAllProductsByType();
+    initTreeView();
 }

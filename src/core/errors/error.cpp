@@ -16,3 +16,7 @@ const string& Error::getUserMessage() const {
 void Error::setUserMessage(const string& userMessage) {
     this->userMessage = userMessage;
 }
+
+const string& Core::Error::getType() const {
+    return type;
+}

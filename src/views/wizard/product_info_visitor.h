@@ -2,11 +2,11 @@
 #define CLOTHING_ITEM_VIEW_VISITOR_H
 
 #include <QFormLayout>
-#include "../../core/visitor_interface.h"
+#include "../../core/visitors/model_visitor_interface.h"
 
-using Core::VisitorInterface;
+using Core::Visitors::ModelVisitorInterface;
 
-class ProductInfoVisitor : VisitorInterface {
+class ProductInfoVisitor : public ModelVisitorInterface {
     private:
         QFormLayout* layout;
 

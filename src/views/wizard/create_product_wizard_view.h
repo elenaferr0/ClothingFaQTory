@@ -7,10 +7,10 @@
 #include "../view.h"
 
 namespace Views::Wizard {
-    class CreateProductWizard : public QWizard, public View {
+    class CreateProductWizardView : public QWizard, public View {
         Q_OBJECT
         public:
-            CreateProductWizard(QWidget* parent = nullptr, const QSet<QString>& productCodes = QSet<QString>());
+            CreateProductWizardView(QWidget* parent = nullptr, const QSet<QString>& productCodes = QSet<QString>());
 
             void accept() override; // called when the user clicks finish
     };

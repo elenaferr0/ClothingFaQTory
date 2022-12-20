@@ -38,7 +38,7 @@ namespace Models::ClothingItems {
 
             Jeans* clone() const override;
 
-            void accept(VisitorInterface& visitor) override;
+            void accept(ModelVisitorInterface& visitor) override;
     };
 }
 

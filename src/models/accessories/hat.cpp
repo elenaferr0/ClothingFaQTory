@@ -54,6 +54,6 @@ const bool& Hat::isBaseballCap() const {
     return baseballCap;
 }
 
-void Hat::accept(VisitorInterface& visitor) {
+void Hat::accept(ModelVisitorInterface& visitor) {
     visitor.visitHat(*this);
 }

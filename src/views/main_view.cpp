@@ -1,5 +1,6 @@
 
 
+#include <QMessageBox>
 #include "main_view.h"
 #include "../services/connectivity_manager.h"
 #include "no_connection.h"
@@ -38,6 +39,7 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
 
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);
+    connect(this, SIGNAL(retryFetchingDataFromDB()), productsView, SLOT(rebuildTreeView()));
 
     MaterialsList materials = controller->findAllMaterials();
     materialsView->init(materials);
@@ -60,5 +62,21 @@ ProductsView* MainView::getProductsView() const {
 }
 
 void MainView::handleDatabaseError(Error* e) {
-    qCritical() << e;
+
+    QMessageBox* errorBox = new QMessageBox;
+    errorBox->setWindowTitle(QString::fromStdString(e->getType()));
+    errorBox->setText(QString::fromStdString(e->getUserMessage()));
+    errorBox->setStandardButtons(QMessageBox::Retry | QMessageBox::Abort);
+    errorBox->setDefaultButton(QMessageBox::Retry);
+    errorBox->setAttribute(Qt::WA_DeleteOnClose);
+    errorBox->resize(300, 200);
+    int choice = errorBox->exec();
+
+    switch (choice) {
+        case QMessageBox::Retry:
+            emit retryFetchingDataFromDB();
+            break;
+        case QMessageBox::Abort:
+            qFatal("Aborting due to database error.");
+    }
 }

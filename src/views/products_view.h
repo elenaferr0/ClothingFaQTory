@@ -5,7 +5,7 @@
 #include "../models/product.h"
 #include "../core/containers/map.h"
 #include "../core/errors/error.h"
-#include "wizard/create_product_wizard.h"
+#include "wizard/create_product_wizard_view.h"
 #include "view.h"
 #include <memory>
 #include <QToolBar>
@@ -41,6 +41,10 @@ namespace Views {
             void init(const ProductsMap& productsByType);
 
             void notify(Model*) override;
+
+        public slots:
+
+            void rebuildTreeView();
 
         private slots:
 

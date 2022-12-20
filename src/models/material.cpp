@@ -85,6 +85,6 @@ string Models::Material::getNameAsString() const {
     }
 }
 
-void Models::Material::accept(VisitorInterface& visitor) {
+void Models::Material::accept(ModelVisitorInterface& visitor) {
     visitor.visitMaterial(*this);
 }

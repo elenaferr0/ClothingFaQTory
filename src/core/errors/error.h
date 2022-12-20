@@ -18,6 +18,8 @@ namespace Core {
 
             const string& getUserMessage() const;
 
+            const string& getType() const;
+
             void setUserMessage(const string&);
     };
 }

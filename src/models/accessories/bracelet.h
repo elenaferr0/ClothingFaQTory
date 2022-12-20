@@ -1,11 +1,11 @@
 #ifndef BRACELET_H
 #define BRACELET_H
 
-#include "../../core/visitor_interface.h"
+#include "../../core/visitors/model_visitor_interface.h"
 
 #include "accessory.h"
 
-using Core::VisitorInterface;
+using Core::Visitors::ModelVisitorInterface;
 
 namespace Models::Accessories {
     class Bracelet : public Accessory {
@@ -37,7 +37,7 @@ namespace Models::Accessories {
 
             double computePrice() const override;
 
-            void accept(VisitorInterface& visitor) override;
+            void accept(ModelVisitorInterface& visitor) override;
     };
 }
 

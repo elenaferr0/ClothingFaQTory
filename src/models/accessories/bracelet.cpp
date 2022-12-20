@@ -65,6 +65,6 @@ const double& Bracelet::getPearlDiameter() const {
     return pearlDiameter;
 }
 
-void Bracelet::accept(VisitorInterface& visitor) {
+void Bracelet::accept(ModelVisitorInterface& visitor) {
     visitor.visitBracelet(*this);
 }

@@ -2,10 +2,10 @@
 #define MATERIAL_H
 
 #include "model.h"
-#include "../core/visitor_interface.h"
+#include "../core/visitors/model_visitor_interface.h"
 
 using Models::Model;
-using Core::VisitorInterface;
+using Core::Visitors::ModelVisitorInterface;
 
 namespace Models {
     class Material : public Model {
@@ -47,7 +47,7 @@ namespace Models {
 
             string getUnitOfMeasureAsString() const;
 
-            void accept(VisitorInterface& visitor) override;
+            void accept(ModelVisitorInterface& visitor) override;
 
         private:
             Name name;

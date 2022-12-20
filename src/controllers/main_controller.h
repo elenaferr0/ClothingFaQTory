@@ -3,6 +3,7 @@
 #ifndef MAIN_CONTROLLER_H
 #define MAIN_CONTROLLER_H
 
+#include <QObject>
 #include "../services/repositories/hat_repository.h"
 #include "../services/repositories/backpack_repository.h"
 #include "../services/repositories/bracelet_repository.h"

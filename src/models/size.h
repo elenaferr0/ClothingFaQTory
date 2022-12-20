@@ -24,7 +24,7 @@ namespace Models {
 
             static Name nameFromString(const string&);
 
-            void accept(Core::VisitorInterface& visitor) override;
+            void accept(Core::Visitors::ModelVisitorInterface& visitor) override;
 
         private:
             Name name;
