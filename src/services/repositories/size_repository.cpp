@@ -36,11 +36,11 @@ Either<Error, shared_ptr<Size>> SizeRepository::findById(int id) {
 }
 
 Either<Error, list<shared_ptr<Size>>> Services::SizeRepository::findAll() {
-    Either<Error, list<shared_ptr<Size>>> sizeOrError = ReadOnlyRepository::findAll();
-    if (sizeOrError.isRight()) {
-        for (auto s: sizeOrError.forceRight()) {
+    Either<Error, list<shared_ptr<Size>>> sizesOrError = ReadOnlyRepository::findAll();
+    if (sizesOrError.isRight()) {
+        for (auto s: sizesOrError.forceRight()) {
             cachedSizes.put(s->getId(), s);
         }
     }
-    return sizeOrError;
+    return sizesOrError;
 }

@@ -70,6 +70,7 @@ namespace Services {
     Either<Error, list<shared_ptr<T>>> ReadOnlyRepository<T>::findAll() {
         string sql = queryBuilder.select()
                 .from(table)
+                .orderBy("id", QueryBuilder::Order::ASC)
                 .build();
         QSqlQuery query = exec(sql);
         list<shared_ptr<T>> entities;

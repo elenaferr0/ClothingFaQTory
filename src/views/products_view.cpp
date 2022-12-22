@@ -129,23 +129,21 @@ void ProductsView::showWizard(bool) {
 
     transform(dbMaterials.begin(),
               dbMaterials.end(),
-              inserter(materials, materials.begin()),
+              inserter(materials, materials.end()),
               [](const shared_ptr<Material> material) {
                   return QString::fromStdString(material->getNameAsString());
               });
 
     transform(dbSizes.begin(),
               dbSizes.end(),
-              inserter(sizes, sizes.begin()),
+              inserter(sizes, sizes.end()),
               [](const shared_ptr<Size> size) {
                   return QString::fromStdString(size->getNameAsString());
               });
 
     CreateProductWizardView* createProductWizard = new CreateProductWizardView(this,
-                                                                               QSet<QString>(materials.begin(),
-                                                                                             materials.end()),
-                                                                               QSet<QString>(sizes.begin(),
-                                                                                             sizes.end()));
+                                                                               materials,
+                                                                               sizes);
     createProductWizard->setController(new WizardController(createProductWizard));
     createProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     createProductWizard->show();

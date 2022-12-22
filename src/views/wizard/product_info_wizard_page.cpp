@@ -9,8 +9,8 @@
 #include "product_info_wizard_page.h"
 
 ProductInfoWizardPage::ProductInfoWizardPage(QWidget* parent,
-                                             const QSet<QString>& materials,
-                                             const QSet<QString>& sizes) : QWizardPage(parent) {
+                                             const QList<QString>& materials,
+                                             const QList<QString>& sizes) : QWizardPage(parent) {
     setTitle("Insert product info");
     QFormLayout* layout = new QFormLayout;
 
@@ -42,11 +42,14 @@ ProductInfoWizardPage::ProductInfoWizardPage(QWidget* parent,
     layout->addRow("Description", descriptionTextEdit);
 
     QComboBox* sizeBox = new QComboBox;
-    sizeBox->addItems(sizes.values());
+    // iterate over the items to preserve the order (.addItems would not)
+    for (int i = 0; i < sizes.size(); ++i) {
+        sizeBox->addItem(sizes.value(i));
+    }
     layout->addRow("Size", sizeBox);
 
     QComboBox* materialBox = new QComboBox;
-    materialBox->addItems(materials.values());
+    materialBox->addItems(materials);
     layout->addRow("Material", materialBox);
 
     setLayout(layout);

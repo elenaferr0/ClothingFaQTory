@@ -7,8 +7,8 @@
 using Views::Wizard::CreateProductWizardView;
 
 CreateProductWizardView::CreateProductWizardView(QWidget* parent,
-                                                 const QSet<QString>& materials,
-                                                 const QSet<QString>& sizes) : QWizard(parent) {
+                                                 const QList<QString>& materials,
+                                                 const QList<QString>& sizes) : QWizard(parent) {
 //    addPage(new ChooseProductTypeWizardPage);
     addPage(new ProductInfoWizardPage(nullptr, materials, sizes));
     setWindowTitle("Insert a new product");
