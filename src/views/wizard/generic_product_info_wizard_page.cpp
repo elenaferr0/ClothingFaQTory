@@ -6,7 +6,7 @@
 #include <QSpinBox>
 #include <QTextEdit>
 #include <QComboBox>
-#include "product_info_wizard_page.h"
+#include "generic_product_info_wizard_page.h"
 #include "create_product_wizard_view.h"
 
 using Models::Product;
@@ -19,9 +19,9 @@ using Models::Accessories::Hat;
 using Views::Wizard::CreateProductWizardView;
 using Controllers::WizardController;
 
-ProductInfoWizardPage::ProductInfoWizardPage(const QList<QString>& materials,
-                                             const QList<QString>& sizes,
-                                             QWidget* parent)
+GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>& materials,
+                                                           const QList<QString>& sizes,
+                                                           QWidget* parent)
         : QWizardPage(parent) {
     setTitle("Insert product information");
     QFormLayout* layout = new QFormLayout;
@@ -72,7 +72,7 @@ ProductInfoWizardPage::ProductInfoWizardPage(const QList<QString>& materials,
 
 }
 
-bool ProductInfoWizardPage::validatePage() {
+bool GenericProductInfoWizardPage::validatePage() {
     bool valid = true;
 
     if (codeLineEdit->text().isEmpty()) {

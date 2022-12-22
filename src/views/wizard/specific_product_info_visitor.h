@@ -1,17 +1,22 @@
-#ifndef CLOTHING_ITEM_VIEW_VISITOR_H
-#define CLOTHING_ITEM_VIEW_VISITOR_H
+#ifndef SPECIFIC_PRODUCT_INFO_VISITOR_H
+#define SPECIFIC_PRODUCT_INFO_VISITOR_H
 
 #include <QFormLayout>
 #include "../../core/visitor_interface.h"
 
 using Core::VisitorInterface;
 
-class ProductInfoVisitor : public VisitorInterface {
+class SpecificProductInfoVisitor : public VisitorInterface {
     private:
         QFormLayout* layout;
 
+        void buildAccessory();
+
+        void buildClothingItem();
+
+        QMap<QString, QWidget*> fieldsToRegister;
     public:
-        ProductInfoVisitor();
+        SpecificProductInfoVisitor();
 
         void visitBracelet(Bracelet& bracelet) override;
 
@@ -30,4 +35,4 @@ class ProductInfoVisitor : public VisitorInterface {
 };
 
 
-#endif //CLOTHING_ITEM_VIEW_VISITOR_H
+#endif //SPECIFIC_PRODUCT_INFO_VISITOR_H

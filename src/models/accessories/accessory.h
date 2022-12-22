@@ -24,7 +24,7 @@ namespace Models {
                       string category = "");
 
 
-            string getCategoryAsString() const;
+            static string getCategoryAsString(Category);
 
             static Category categoryFromString(const string&);
 

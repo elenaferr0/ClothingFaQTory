@@ -56,7 +56,7 @@ double ClothingItem::computeTrunkWidth() const {
     return SMALLEST_SIZE_TRUNK_WIDTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
 }
 
-string ClothingItem::getGenderAsString() const {
+string ClothingItem::getGenderAsString(ClothingItem::Gender gender) {
     switch (gender) {
         case ClothingItem::MEN:
             return "MEN";

@@ -1,5 +1,5 @@
-#ifndef PRODUCT_INFO_WIZARD_PAGE_H
-#define PRODUCT_INFO_WIZARD_PAGE_H
+#ifndef GENERIC_PRODUCT_INFO_WIZARD_PAGE_H
+#define GENERIC_PRODUCT_INFO_WIZARD_PAGE_H
 
 #include "../../models/product.h"
 #include "../../controllers/wizard_controller.h"
@@ -14,7 +14,7 @@ QT_END_NAMESPACE
 using Models::Product;
 using Controllers::WizardController;
 
-class ProductInfoWizardPage : public QWizardPage {
+class GenericProductInfoWizardPage : public QWizardPage {
     Q_OBJECT
     private:
         static const int MAX_SPIN_BOX_VALUE = 99999999;
@@ -22,13 +22,13 @@ class ProductInfoWizardPage : public QWizardPage {
         QLineEdit* codeLineEdit;
         SelectColorButton* colorButton;
     public:
-        ProductInfoWizardPage(const QList<QString>& = QList<QString>(),
-                              const QList<QString>& = QList<QString>(),
-                              QWidget* parent = nullptr);
+        GenericProductInfoWizardPage(const QList<QString>& = QList<QString>(),
+                                     const QList<QString>& = QList<QString>(),
+                                     QWidget* parent = nullptr);
 
         bool validatePage() override;
 
 };
 
 
-#endif //PRODUCT_INFO_WIZARD_PAGE_H
+#endif //GENERIC_PRODUCT_INFO_WIZARD_PAGE_H

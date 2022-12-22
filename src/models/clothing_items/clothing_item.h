@@ -23,7 +23,7 @@ namespace Models {
                          string gender = "");
 
 
-            string getGenderAsString() const;
+            static string getGenderAsString(Gender);
 
             static Gender genderFromString(const string&);
 
