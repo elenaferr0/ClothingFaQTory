@@ -19,7 +19,8 @@ class ProductInfoWizardPage : public QWizardPage {
     private:
         static const int MAX_SPIN_BOX_VALUE = 99999999;
         static const int SPIN_BOX_STEP = 100;
-
+        QLineEdit* codeLineEdit;
+        SelectColorButton* colorButton;
     public:
         ProductInfoWizardPage(const QList<QString>& = QList<QString>(),
                               const QList<QString>& = QList<QString>(),

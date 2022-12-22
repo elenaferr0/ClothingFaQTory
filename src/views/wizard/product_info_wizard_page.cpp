@@ -28,14 +28,14 @@ ProductInfoWizardPage::ProductInfoWizardPage(const QList<QString>& materials,
 
     QRegExpValidator* alphaNumericUnderscoresValidator = new QRegExpValidator(QRegExp("^[a-zA-Z0-9_-]*$"));
 
-    QLineEdit* codeLineEdit = new QLineEdit();
+    codeLineEdit = new QLineEdit();
     codeLineEdit->setPlaceholderText("Product Code");
     codeLineEdit->setMaxLength(10);
     codeLineEdit->setValidator(alphaNumericUnderscoresValidator);
     registerField("code", codeLineEdit);
     layout->addRow("Code", codeLineEdit);
 
-    SelectColorButton* colorButton = new SelectColorButton(nullptr, "Choose color");
+    colorButton = new SelectColorButton(nullptr, "Choose color");
     registerField("color", colorButton);
     layout->addRow("Color", colorButton);
 
@@ -73,5 +73,19 @@ ProductInfoWizardPage::ProductInfoWizardPage(const QList<QString>& materials,
 }
 
 bool ProductInfoWizardPage::validatePage() {
-    return QWizardPage::validatePage();
+    bool valid = true;
+
+    if (codeLineEdit->text().isEmpty()) {
+        codeLineEdit->setStyleSheet("color: red");
+        valid = false;
+    } else {
+        codeLineEdit->setStyleSheet("color: gray");
+    }
+
+    if (!colorButton->getColor().isValid()) {
+        colorButton->setStyleSheet("color: red");
+        valid = false;
+    }
+
+    return valid && QWizardPage::validatePage();
 }
