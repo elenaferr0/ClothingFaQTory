@@ -5,7 +5,7 @@
 #include "./size.h"
 #include "model.h"
 #include "../core/observer_interface.h"
-#include "../core/visitors/model_visitor_interface.h"
+#include "../core/visitor_interface.h"
 
 #include<string>
 #include<list>
@@ -13,7 +13,7 @@
 using std::string;
 using std::list;
 using Models::Model;
-using Core::Visitors::ModelVisitorInterface;
+using Core::VisitorInterface;
 using Core::ObserverInterface;
 
 namespace Models {
@@ -62,6 +62,22 @@ namespace Models {
             const string& getDescription() const;
 
             const string& getCode() const;
+
+            virtual void accept(VisitorInterface& visitor) = 0;
+
+            void setColor(const string& color);
+
+            void setMaterial(const Material& material);
+
+            void setSize(const Size& size);
+
+            void setAvailableQuantity(int availableQuantity);
+
+            void setSoldQuantity(int soldQuantity);
+
+            void setDescription(const string& description);
+
+            void setCode(const string& code);
 
     };
 }

@@ -53,7 +53,7 @@ void Jeans::setShorts(bool shorts) {
     Jeans::shorts = shorts;
 }
 
-void Jeans::accept(ModelVisitorInterface& visitor) {
+void Jeans::accept(VisitorInterface& visitor) {
     visitor.visitJeans(*this);
 }
 

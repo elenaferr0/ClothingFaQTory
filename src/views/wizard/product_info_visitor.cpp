@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QComboBox>
+#include <QCheckBox>
 #include "product_info_visitor.h"
 #include "../../services/repositories/jeans_repository.h"
 #include "select_color_button.h"
@@ -28,7 +29,9 @@ void ProductInfoVisitor::visitJeans(Jeans& jeans) {
 }
 
 void ProductInfoVisitor::visitVest(Vest& vest) {
-
+    QCheckBox* checkBox = new QCheckBox();
+    checkBox->setCheckState(Qt::CheckState::Unchecked);
+    layout->addRow("Has Buttons", checkBox);
 }
 
 void ProductInfoVisitor::visitOveralls(Overalls& overalls) {
@@ -38,15 +41,3 @@ void ProductInfoVisitor::visitOveralls(Overalls& overalls) {
 QFormLayout* ProductInfoVisitor::getLayout() const {
     return layout;
 }
-
-void ProductInfoVisitor::buildAccessoryLayoutBase() {
-}
-
-void ProductInfoVisitor::buildClothingItemLayoutBase() {
-
-}
-
-void ProductInfoVisitor::buildProductLayoutBase() {
-
-}
-

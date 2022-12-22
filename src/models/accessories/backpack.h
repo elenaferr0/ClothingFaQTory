@@ -3,7 +3,7 @@
 
 #include <string>
 #include "accessory.h"
-#include "../../core/visitors/model_visitor_interface.h"
+#include "../../core/visitor_interface.h"
 
 using std::string;
 
@@ -38,7 +38,7 @@ namespace Models::Accessories {
 
             const double& getCapacity() const;
 
-            void accept(ModelVisitorInterface& visitor) override;
+            void accept(VisitorInterface& visitor) override;
     };
 }
 

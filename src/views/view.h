@@ -20,6 +20,8 @@ namespace Views {
 
             void setController(Controller* controller);
 
+            Controller* getController() const;
+
             virtual ~View() = default;
     };
 }

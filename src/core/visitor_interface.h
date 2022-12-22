@@ -33,10 +33,10 @@ using Models::ClothingItems::Jeans;
 using Models::ClothingItems::Vest;
 using Models::ClothingItems::Overalls;
 
-namespace Core::Visitors {
-    class ModelVisitorInterface {
+namespace Core {
+    class VisitorInterface {
         public:
-            virtual ~ModelVisitorInterface() = default;
+            virtual ~VisitorInterface() = default;
 
             virtual void visitBracelet(Bracelet&) = 0;
 
@@ -49,10 +49,6 @@ namespace Core::Visitors {
             virtual void visitVest(Vest&) = 0;
 
             virtual void visitOveralls(Overalls&) = 0;
-
-            virtual void visitMaterial(Material&) = 0;
-
-            virtual void visitSize(Size&) = 0;
     };
 }
 #endif //MODEL_VISITOR_INTERFACE_H

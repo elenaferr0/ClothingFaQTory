@@ -3,12 +3,12 @@
 
 #include <string>
 #include <list>
-#include "../core/visitors/model_visitor_interface.h"
+#include "../core/visitor_interface.h"
 #include "../core/observer_interface.h"
 
 using std::string;
 using std::list;
-using Core::Visitors::ModelVisitorInterface;
+using Core::VisitorInterface;
 using Core::ObserverInterface;
 
 namespace Models {
@@ -28,8 +28,6 @@ namespace Models {
             bool found() const;
 
             virtual ~Model() = default;
-
-            virtual void accept(ModelVisitorInterface& visitor) = 0;
 
             void registerObserver(ObserverInterface* observer);
 

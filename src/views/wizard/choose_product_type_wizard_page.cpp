@@ -14,8 +14,9 @@ ChooseProductTypeWizardPage::ChooseProductTypeWizardPage(QWidget* parent)
     for (int i = Product::Jeans; i != Product::Hat + 1; i++) {
         auto productType = static_cast<Product::ProductType>(i);
         QString name = QString::fromStdString(Product::productTypeToString(productType));
-        comboBox->addItem(QIcon(":/assets/icons/" + name.toLower() + ".png"), name);
+        comboBox->addItem(QIcon(":/assets/icons/" + name.toLower() + ".png"), name, i);
     }
     comboBox->setIconSize(QSize(25, 25));
+    registerField("productType", comboBox);
     layout->addWidget(comboBox);
 }

@@ -47,6 +47,6 @@ const double& BackPack::getCapacity() const {
     return capacity;
 }
 
-void BackPack::accept(ModelVisitorInterface& visitor) {
+void BackPack::accept(VisitorInterface& visitor) {
     visitor.visitBackPack(*this);
 }

@@ -69,3 +69,31 @@ string Product::productTypeToString(Product::ProductType productType) {
             return "BackPack";
     }
 }
+
+void Models::Product::setColor(const string& color) {
+    Product::color = color;
+}
+
+void Models::Product::setMaterial(const Material& material) {
+    Product::material = material;
+}
+
+void Models::Product::setSize(const Size& size) {
+    Product::size = size;
+}
+
+void Models::Product::setAvailableQuantity(int availableQuantity) {
+    Product::availableQuantity = availableQuantity;
+}
+
+void Models::Product::setSoldQuantity(int soldQuantity) {
+    Product::soldQuantity = soldQuantity;
+}
+
+void Models::Product::setDescription(const string& description) {
+    Product::description = description;
+}
+
+void Models::Product::setCode(const string& code) {
+    Product::code = code;
+}
