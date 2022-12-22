@@ -6,6 +6,7 @@
 #include <memory>
 #include <list>
 #include "observer_widget_view.h"
+#include "../controllers/main_controller.h"
 
 #include "../models/material.h"
 
@@ -18,7 +19,7 @@ namespace Views {
         Q_OBJECT
             typedef list<shared_ptr < Material>> MaterialsList;
         public:
-            MaterialsView(QWidget* parent = nullptr, Controller* controller = nullptr);
+            MaterialsView(QWidget* parent = nullptr);
 
             void init(const MaterialsList&);
 

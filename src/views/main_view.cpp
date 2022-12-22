@@ -32,8 +32,8 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
 
     MainController* controller = new MainController(this);
     setController(controller);
-    productsView = new ProductsView(tabWidget, controller);
-    materialsView = new MaterialsView(tabWidget, controller);
+    productsView = new ProductsView(tabWidget);
+    materialsView = new MaterialsView(tabWidget);
 
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);

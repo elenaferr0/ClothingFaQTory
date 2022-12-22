@@ -2,12 +2,13 @@
 #include "materials_view.h"
 
 using Views::MaterialsView;
+using Controllers::MainController;
 
 int MaterialsView::COLUMN_COUNT = 4;
 
-MaterialsView::MaterialsView(QWidget* parent, Controller* controller) : ObserverWidgetView(parent),
-                                                                        materials(MaterialsList()) {
-    setController(controller);
+MaterialsView::MaterialsView(QWidget* parent) : ObserverWidgetView(parent),
+                                                materials(MaterialsList()) {
+    setController(new MainController(this));
 }
 
 void MaterialsView::init(const MaterialsList& materials) {

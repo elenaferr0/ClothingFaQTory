@@ -36,7 +36,7 @@ namespace Views {
             void initTreeView();
 
         public:
-            ProductsView(QWidget* parent = nullptr, Controller* controller = nullptr);
+            ProductsView(QWidget* parent = nullptr);
 
             void init(const ProductsMap& productsByType);
 

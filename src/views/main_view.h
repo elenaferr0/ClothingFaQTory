@@ -14,6 +14,11 @@
 #include "materials_view.h"
 #include "view.h"
 
+namespace Views {
+    class ProductsView;
+
+    class MaterialsView;
+}
 using std::shared_ptr;
 using Views::ProductsView;
 using Views::MaterialsView;
@@ -35,6 +40,7 @@ namespace Views {
             MaterialsView* materialsView;
             QTabWidget* tabWidget;
         public slots:
+
             void handleDatabaseError(Error*);
 
     };
