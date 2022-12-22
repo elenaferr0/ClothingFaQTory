@@ -21,7 +21,7 @@ namespace Views {
         public:
             MaterialsView(QWidget* parent = nullptr);
 
-            void init(const MaterialsList&);
+            void init();
 
         private:
             QGridLayout* gridLayout;

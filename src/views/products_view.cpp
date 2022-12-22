@@ -18,7 +18,7 @@ using Controllers::MainController;
 
 int ProductsView::COLUMN_COUNT = 5;
 
-ProductsView::ProductsView(QWidget* parent) : ObserverWidgetView(parent) {
+ProductsView::ProductsView(QWidget* parent) : ObserverWidgetView() {
     setController(new MainController(this));
 }
 

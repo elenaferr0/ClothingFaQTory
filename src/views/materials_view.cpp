@@ -11,8 +11,8 @@ MaterialsView::MaterialsView(QWidget* parent) : ObserverWidgetView(parent),
     setController(new MainController(this));
 }
 
-void MaterialsView::init(const MaterialsList& materials) {
-    this->materials = materials;
+void MaterialsView::init() {
+    this->materials = dynamic_cast<MainController*>(controller)->findAllMaterials();
     gridLayout = new QGridLayout(this);
     gridLayout->setAlignment(Qt::AlignCenter);
     gridLayout->setSpacing(60);

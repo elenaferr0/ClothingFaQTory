@@ -38,8 +38,7 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);
 
-    MaterialsList materials = controller->findAllMaterials();
-    materialsView->init(materials);
+    materialsView->init();
 
     tabWidget->addTab(productsView, "Products");
     QIcon clothingIcon(":/assets/icons/tshirt.png");

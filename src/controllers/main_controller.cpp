@@ -85,7 +85,7 @@ void MainController::findProductsOfType(Product::ProductType productType,
                           products.begin(),
                           [this](shared_ptr<T> entity) {
                               shared_ptr<Product> product = shared_ptr<Product>(entity);
-                              product->registerObserver(dynamic_cast<MainView*>(view)->getProductsView());
+//                              product->registerObserver(dynamic_cast<MainView*>(view)->getProductsView());
                               return product;
                           }
                 );
