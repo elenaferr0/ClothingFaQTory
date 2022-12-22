@@ -6,7 +6,11 @@
 #include "products_view.h"
 #include "../controllers/wizard_controller.h"
 #include "../controllers/main_controller.h"
+#include <algorithm>
 
+using std::transform;
+using std::inserter;
+using std::pair;
 using Views::ProductsView;
 using Views::Wizard::CreateProductWizardView;
 using Controllers::WizardController;
@@ -14,7 +18,9 @@ using Controllers::MainController;
 
 int ProductsView::COLUMN_COUNT = 5;
 
-ProductsView::ProductsView(QWidget* parent) : ObserverWidgetView(parent) {}
+ProductsView::ProductsView(QWidget* parent, Controller* controller) {
+    setController(controller);
+}
 
 void ProductsView::init(const ProductsMap& productsByType) {
     this->productsByType = productsByType;
@@ -64,7 +70,7 @@ void Views::ProductsView::notify(Model* model) {
     // TODO handle notify event
 }
 
-QTreeWidgetItem* ProductsView::getHeaders() {
+QTreeWidgetItem* ProductsView::getHeaders() const {
     QTreeWidgetItem* headers = new QTreeWidgetItem(QStringList() << "Code"
                                                                  << "Color"
                                                                  << "Description"
@@ -115,7 +121,31 @@ void ProductsView::initTreeView() {
 }
 
 void ProductsView::showWizard(bool) {
-    CreateProductWizardView* createProductWizard = new CreateProductWizardView(this);
+    list<shared_ptr<Material>> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
+    list<shared_ptr<Size>> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
+
+    QList<QString> materials = QList<QString>();
+    QList<QString> sizes = QList<QString>();
+
+    transform(dbMaterials.begin(),
+              dbMaterials.end(),
+              inserter(materials, materials.begin()),
+              [](const shared_ptr<Material> material) {
+                  return QString::fromStdString(material->getNameAsString());
+              });
+
+    transform(dbSizes.begin(),
+              dbSizes.end(),
+              inserter(sizes, sizes.begin()),
+              [](const shared_ptr<Size> size) {
+                  return QString::fromStdString(size->getNameAsString());
+              });
+
+    CreateProductWizardView* createProductWizard = new CreateProductWizardView(this,
+                                                                               QSet<QString>(materials.begin(),
+                                                                                             materials.end()),
+                                                                               QSet<QString>(sizes.begin(),
+                                                                                             sizes.end()));
     createProductWizard->setController(new WizardController(createProductWizard));
     createProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     createProductWizard->show();

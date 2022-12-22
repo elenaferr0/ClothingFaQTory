@@ -14,6 +14,7 @@
 #include "../views/products_view.h"
 #include "../views/main_view.h"
 #include "controller.h"
+#include "../services/repositories/size_repository.h"
 
 using Services::HatRepository;
 using Services::BraceletRepository;
@@ -22,6 +23,7 @@ using Services::VestRepository;
 using Services::JeansRepository;
 using Services::OverallsRepository;
 using Services::MaterialRepository;
+using Services::SizeRepository;
 
 namespace Views {
     class View;
@@ -35,6 +37,7 @@ namespace Controllers {
         Q_OBJECT
             typedef list<shared_ptr<Material>> MaterialsList;
             typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
+            typedef list<shared_ptr<Size>> SizesList;
         public:
             MainController(View*);
 
@@ -42,8 +45,11 @@ namespace Controllers {
 
             MaterialsList findAllMaterials();
 
+            SizesList findAllSizes();
+
         private:
             HatRepository* hatRepository;
+            SizeRepository* sizeRepository;
             BraceletRepository* braceletRepository;
             BackPackRepository* backPackRepository;
             VestRepository* vestRepository;

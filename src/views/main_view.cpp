@@ -21,25 +21,22 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
     if (!ConnectivityManager::checkConnection() || !db.open()) {
-        QMainWindow::setWindowTitle("Connection Error");
+        setWindowTitle("Connection Error");
         setCentralWidget(new NoConnection());
         return;
     }
 
-    QMainWindow::setWindowTitle("Clothing FaQTory");
+    setWindowTitle("Clothing FaQTory");
 
     tabWidget = new QTabWidget;
 
-    productsView = new ProductsView(tabWidget);
-    materialsView = new MaterialsView(tabWidget);
-    this->controller = new MainController(this);
-
     MainController* controller = new MainController(this);
     setController(controller);
+    productsView = new ProductsView(tabWidget, controller);
+    materialsView = new MaterialsView(tabWidget, controller);
 
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);
-    connect(this, SIGNAL(retryFetchingDataFromDB()), productsView, SLOT(rebuildTreeView()));
 
     MaterialsList materials = controller->findAllMaterials();
     materialsView->init(materials);
@@ -70,13 +67,7 @@ void MainView::handleDatabaseError(Error* e) {
     errorBox->setDefaultButton(QMessageBox::Retry);
     errorBox->setAttribute(Qt::WA_DeleteOnClose);
     errorBox->resize(300, 200);
-    int choice = errorBox->exec();
+    errorBox->exec();
+    qFatal("Aborting due to database error.");
 
-    switch (choice) {
-        case QMessageBox::Retry:
-            emit retryFetchingDataFromDB();
-            break;
-        case QMessageBox::Abort:
-            qFatal("Aborting due to database error.");
-    }
 }

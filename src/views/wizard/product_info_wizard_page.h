@@ -15,7 +15,8 @@ class ProductInfoWizardPage : public QWizardPage {
     private:
         SelectColorButton* button;
     public:
-        ProductInfoWizardPage(QWidget* parent = nullptr, const QSet<QString>& = QSet<QString>());
+        ProductInfoWizardPage(QWidget* parent = nullptr, const QSet<QString>& = QSet<QString>(),
+                              const QSet<QString>& = QSet<QString>());
 };
 
 

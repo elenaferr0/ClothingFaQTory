@@ -18,7 +18,7 @@ namespace Views {
         Q_OBJECT
             typedef list<shared_ptr < Material>> MaterialsList;
         public:
-            MaterialsView(QWidget* parent = nullptr);
+            MaterialsView(QWidget* parent = nullptr, Controller* controller = nullptr);
 
             void init(const MaterialsList&);
 

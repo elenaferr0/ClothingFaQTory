@@ -31,12 +31,12 @@ namespace Views {
             QTreeWidget* treeWidget;
             QToolBar* toolBar;
 
-            QTreeWidgetItem* getHeaders();
+            QTreeWidgetItem* getHeaders() const;
 
             void initTreeView();
 
         public:
-            ProductsView(QWidget* parent = nullptr);
+            ProductsView(QWidget* parent = nullptr, Controller* controller = nullptr);
 
             void init(const ProductsMap& productsByType);
 

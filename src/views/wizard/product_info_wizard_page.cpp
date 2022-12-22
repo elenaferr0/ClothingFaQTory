@@ -8,17 +8,16 @@
 #include <QComboBox>
 #include "product_info_wizard_page.h"
 
-ProductInfoWizardPage::ProductInfoWizardPage(QWidget* parent, const QSet<QString>& productCodes) : QWizardPage(parent) {
+ProductInfoWizardPage::ProductInfoWizardPage(QWidget* parent,
+                                             const QSet<QString>& materials,
+                                             const QSet<QString>& sizes) : QWizardPage(parent) {
     setTitle("Insert product info");
     QFormLayout* layout = new QFormLayout;
 
     QRegExpValidator* alphaNumericUnderscoresValidator = new QRegExpValidator(QRegExp("^[a-zA-Z0-9_-]*$"));
 
-    QCompleter* completer = new QCompleter(productCodes.values(), this);
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
     QLineEdit* codeLineEdit = new QLineEdit();
     codeLineEdit->setPlaceholderText("Product Code");
-    codeLineEdit->setCompleter(completer);
     codeLineEdit->setMaxLength(10);
     codeLineEdit->setValidator(alphaNumericUnderscoresValidator);
     layout->addRow("Code", codeLineEdit);
@@ -43,9 +42,11 @@ ProductInfoWizardPage::ProductInfoWizardPage(QWidget* parent, const QSet<QString
     layout->addRow("Description", descriptionTextEdit);
 
     QComboBox* sizeBox = new QComboBox;
+    sizeBox->addItems(sizes.values());
     layout->addRow("Size", sizeBox);
 
     QComboBox* materialBox = new QComboBox;
+    materialBox->addItems(materials.values());
     layout->addRow("Material", materialBox);
 
     setLayout(layout);

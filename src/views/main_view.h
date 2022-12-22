@@ -35,12 +35,8 @@ namespace Views {
             MaterialsView* materialsView;
             QTabWidget* tabWidget;
         public slots:
-
             void handleDatabaseError(Error*);
 
-        signals:
-
-            void retryFetchingDataFromDB();
     };
 }
 

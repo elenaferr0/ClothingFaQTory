@@ -5,7 +5,10 @@ using Views::MaterialsView;
 
 int MaterialsView::COLUMN_COUNT = 4;
 
-MaterialsView::MaterialsView(QWidget* parent) : ObserverWidgetView(parent), materials(MaterialsList()) {}
+MaterialsView::MaterialsView(QWidget* parent, Controller* controller) : ObserverWidgetView(parent),
+                                                                        materials(MaterialsList()) {
+    setController(controller);
+}
 
 void MaterialsView::init(const MaterialsList& materials) {
     this->materials = materials;
@@ -21,7 +24,7 @@ void Views::MaterialsView::initGrid() {
     int row = 0, col = 0;
 
     for (auto material: materials) {
-        QToolButton * button = new QToolButton();
+        QToolButton* button = new QToolButton();
         string materialName = material->getNameAsString();
 
         QString capitalizedName = QString::fromStdString(materialName).at(0).toUpper() +

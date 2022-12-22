@@ -41,8 +41,8 @@ namespace Core::Containers {
                     friend class Map;
 
                 public:
-                    Node(K key = K(), V value = V(), Color color = BLACK, Node* parent = nullptr, Node* left = nullptr,
-                         Node* right = nullptr) :
+                    Node(K key = K(), V value = V(), Color color = BLACK, Node* parent = nullptr, Node* left = TNULL,
+                         Node* right = TNULL) :
                             key(key),
                             value(value),
                             color(color),
@@ -115,7 +115,7 @@ namespace Core::Containers {
                     bool isPastTheEnd;
                     bool isBeforeTheStart;
                 public:
-                    ConstIterator(Map::Node* n) : node(n), isPastTheEnd(false), isBeforeTheStart(false) {};
+                    ConstIterator(Map::Node* n = TNULL) : node(n), isPastTheEnd(false), isBeforeTheStart(true) {};
 
                     bool operator==(const ConstIterator& i) const;
 
@@ -127,7 +127,7 @@ namespace Core::Containers {
                     const ConstIterator operator--(int);  // postfix
                     ConstIterator& operator--();    // prefix
 
-                    const pair<K, V> operator*() const;
+                    const pair <K, V> operator*() const;
 
                     friend class Map<K, V>;
             };
@@ -548,6 +548,7 @@ namespace Core::Containers {
             destroy(root);
             root = inOrderCopy(map.root);
         }
+        size = map.size;
         return *this;
     }
 
@@ -615,7 +616,7 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    const pair<K, V> Containers::Map<K, V>::ConstIterator::operator*() const {
+    const pair <K, V> Containers::Map<K, V>::ConstIterator::operator*() const {
         return pair(node->key, node->value);
     }
 

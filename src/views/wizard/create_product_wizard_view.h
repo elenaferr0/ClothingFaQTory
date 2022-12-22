@@ -10,7 +10,9 @@ namespace Views::Wizard {
     class CreateProductWizardView : public QWizard, public View {
         Q_OBJECT
         public:
-            CreateProductWizardView(QWidget* parent = nullptr, const QSet<QString>& productCodes = QSet<QString>());
+            CreateProductWizardView(QWidget* parent = nullptr,
+                                    const QSet<QString>& materials = QSet<QString>(),
+                                    const QSet<QString>& sizes = QSet<QString>());
 
             void accept() override; // called when the user clicks finish
     };
