@@ -63,8 +63,9 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
 
     QComboBox* sizeBox = new QComboBox;
     // iterate over the items to preserve the order (.addItems would not)
+    // and to set the value
     for (int i = 0; i < sizes.size(); ++i) {
-        sizeBox->addItem(sizes.value(i));
+        sizeBox->addItem(sizes.value(i), i + 1);
     }
     registerField("size", sizeBox);
     layout->addRow("Size", sizeBox);
@@ -84,7 +85,7 @@ bool GenericProductInfoWizardPage::validatePage() {
         codeLineEdit->setStyleSheet("color: red");
         valid = false;
     } else {
-        codeLineEdit->setStyleSheet("color: gray");
+        codeLineEdit->setStyleSheet("color: black");
     }
 
     if (!colorButton->getColor().isValid()) {

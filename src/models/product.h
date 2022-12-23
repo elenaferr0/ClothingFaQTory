@@ -27,8 +27,6 @@ namespace Models {
             string description;
             string code;
 
-            void notifyAll();
-
         public:
             enum ProductType {
                 Jeans, Vest, Overalls, Bracelet, BackPack, Hat
@@ -78,7 +76,6 @@ namespace Models {
             void setDescription(const string& description);
 
             void setCode(const string& code);
-
     };
 }
 #endif // PRODUCT_H

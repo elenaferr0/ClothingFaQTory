@@ -493,6 +493,7 @@ namespace Core::Containers {
             if (node->key < current->key) {
                 current = current->left;
             } else if (node->key == current->key) {
+                node->value = value;
                 return true; // key already exists in the tree, so do nothing
             } else {
                 current = current->right;

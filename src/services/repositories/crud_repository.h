@@ -47,7 +47,7 @@ namespace Services {
         string sql;
         QSqlQuery query;
 
-        if (entity.getId() == -1) { // does not exist => create a new BackPack
+        if (entity.getId() == -1) { // does not exist
             sql = CRUDRepository<T>::queryBuilder
                     .insertInto(CRUDRepository<T>::table, fields).build();
 
@@ -69,12 +69,10 @@ namespace Services {
         optional<Error> hasError = CRUDRepository::hasError(query);
 
         if (hasError.has_value()) {
-            QSqlDatabase::database().rollback();
             qCritical() << QString::fromStdString(hasError.value().getCause());
             return Either<Error, T>::ofLeft(hasError.value());
         }
 
-        QSqlDatabase::database().commit();
         return entity;
     }
 
@@ -106,7 +104,6 @@ namespace Services {
         if (errorOrEntity.isLeft()) {
             qCritical() << QString::fromStdString(
                     errorOrEntity.forceLeft().getCause());
-            QSqlDatabase::database().rollback();
             return errorOrEntity; // return the error
         }
 

@@ -2,14 +2,14 @@
 
 #include <QVBoxLayout>
 #include <QToolButton>
-#include <QDebug>
 #include "products_view.h"
-#include "../controllers/main_controller.h"
 #include <algorithm>
 #include <QPainter>
+#include <memory>
 
 using std::transform;
 using std::inserter;
+using std::make_shared;
 using std::pair;
 using Views::ProductsView;
 using Views::Wizard::CreateProductWizardView;
@@ -93,8 +93,17 @@ void ProductsView::initTreeView() {
         Product::ProductType productType = (*type).first;
         list<shared_ptr<Product>> products = (*type).second;
         QString productTypeName = QString::fromStdString(Product::productTypeToString(productType));
+        QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(productType);
 
-        QTreeWidgetItem* topLevelItemWidget = new QTreeWidgetItem(QStringList() << productTypeName);
+        bool wasCreated = false;
+        if (topLevelItemWidget == nullptr) {
+            topLevelItemWidget = new QTreeWidgetItem(QStringList() << productTypeName);
+            wasCreated = true;
+        } else {
+            for (int i = 0; i < topLevelItemWidget->childCount(); i++) {
+                topLevelItemWidget->removeChild(topLevelItemWidget->child(i));
+            }
+        }
 
         if (products.size() > 0) {
             QTreeWidgetItem* headers = getHeaders();
@@ -102,24 +111,29 @@ void ProductsView::initTreeView() {
         }
 
         for (auto p = products.begin(); p != products.end(); p++) {
-            QStringList values;
-
-            values << QString::fromStdString((*p)->getCode())
-                   << QString::fromStdString((*p)->getColor())
-                   << QString::fromStdString((*p)->getDescription())
-                   << QString::fromStdString((*p)->getSize().getNameAsString())
-                   << QString::number((*p)->computePrice(), 'f', 2) + "$";
-
-            QTreeWidgetItem* columns = new QTreeWidgetItem(values);
-            topLevelItemWidget->addChild(columns);
-            columns->setIcon(1, drawColorIcon((*p)->getColor()));
+            buildAndInsertChild(topLevelItemWidget, *p);
         }
 
         QIcon productIcon(":/assets/icons/" + productTypeName.toLower() + ".png");
         topLevelItemWidget->setIcon(0, productIcon);
         topLevelItemWidget->setFlags(topLevelItemWidget->flags() & ~Qt::ItemIsSelectable);
-        treeWidget->addTopLevelItem(topLevelItemWidget);
+        if (wasCreated) {
+            treeWidget->addTopLevelItem(topLevelItemWidget);
+        }
     }
+}
+
+void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
+                                       shared_ptr<Product> product) {
+    QStringList values;
+    values << QString::fromStdString(product->getCode())
+           << QString::fromStdString(product->getColor())
+           << QString::fromStdString(product->getDescription())
+           << QString::fromStdString(product->getSize().getNameAsString())
+           << QString::number(product->computePrice(), 'f', 2) + "$";
+    QTreeWidgetItem* columns = new QTreeWidgetItem(values);
+    topLevelItemWidget->addChild(columns);
+    columns->setIcon(1, drawColorIcon(product->getColor()));
 }
 
 void ProductsView::showWizard(bool) {
@@ -146,13 +160,15 @@ void ProductsView::showWizard(bool) {
     CreateProductWizardView* createProductWizard = new CreateProductWizardView(this,
                                                                                materials,
                                                                                sizes);
+    connect(createProductWizard, SIGNAL(productCreationCompleted(Product * , Product::ProductType)),
+            this, SLOT(handleProductCreation(Product * , Product::ProductType)));
     createProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     createProductWizard->show();
 }
 
 void Views::ProductsView::rebuildTreeView() {
-    productsByType = dynamic_cast<MainController*>(controller)->findAllProductsByType();
-    initTreeView();
+//    productsByType = dynamic_cast<MainController*>(controller)->findAllProductsByType();
+//    initTreeView();
 }
 
 QIcon Views::ProductsView::drawColorIcon(const string& hex) {
@@ -167,5 +183,13 @@ QIcon Views::ProductsView::drawColorIcon(const string& hex) {
     painter.drawRect(0, 0, COLOR_ICON_SIZE, COLOR_ICON_SIZE);
     QIcon icon(pixmap);
     return icon;
+}
+
+void Views::ProductsView::handleProductCreation(Product* product, Product::ProductType type) {
+    list<shared_ptr<Product>> currentProducts = productsByType.get(type).value();
+    auto sharedPtr = shared_ptr<Product>(product);
+    currentProducts.push_back(sharedPtr);
+    productsByType.put(type, currentProducts);
+    buildAndInsertChild(treeWidget->topLevelItem(type), sharedPtr);
 }
 

@@ -42,6 +42,9 @@ namespace Views {
 
             static const int COLOR_ICON_SIZE = 20;
 
+            void buildAndInsertChild(QTreeWidgetItem*,
+                                     shared_ptr<Product>);
+
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
@@ -55,7 +58,10 @@ namespace Views {
 
         private slots:
 
+            void handleProductCreation(Product*, Product::ProductType);
+
             void showWizard(bool);
+
     };
 
 }

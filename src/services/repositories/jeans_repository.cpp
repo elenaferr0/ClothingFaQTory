@@ -30,6 +30,7 @@ Either<Error, Jeans> JeansRepository::save(Jeans& entity) {
            << QString::fromStdString(entity.getColor())
            << entity.getSoldQuantity()
            << entity.getAvailableQuantity()
+           << QString::fromStdString(entity.getDescription())
            << entity.getSize().getId()
            << entity.hasSustainableMaterials()
            << QString::fromStdString(Jeans::getGenderAsString(entity.getGender()))

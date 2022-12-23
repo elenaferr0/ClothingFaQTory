@@ -75,9 +75,11 @@ void SpecificProductInfoWizardPage::setFields(Product* product) {
     product->setDescription(field("description").toString().toStdString());
 
     QString sizeName = field("size").toString();
+    qInfo() << sizeName; // FIXME returns size id - 1
     product->setSize(*parentWizard->getController()->findSizeByName(sizeName));
 
     QString materialName = field("material").toString();
+    qInfo() << materialName;// FIXME returns wrong material
     product->setMaterial(*parentWizard->getController()->findMaterialByName(materialName));
 }
 
