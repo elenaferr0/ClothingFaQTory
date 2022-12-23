@@ -51,6 +51,7 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     tabWidget->setIconSize(QSize(35, 35));
 
     setCentralWidget(tabWidget);
+    setWindowIcon(clothingIcon);
 }
 
 ProductsView* MainView::getProductsView() const {
