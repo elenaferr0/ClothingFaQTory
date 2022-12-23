@@ -56,7 +56,7 @@ double ClothingItem::computeTrunkWidth() const {
     return SMALLEST_SIZE_TRUNK_WIDTH * (100 + size.getExtraPercentageOfMaterial()) / 100;
 }
 
-string ClothingItem::getGenderAsString() const {
+string ClothingItem::getGenderAsString(ClothingItem::Gender gender) {
     switch (gender) {
         case ClothingItem::MEN:
             return "MEN";
@@ -68,7 +68,7 @@ string ClothingItem::getGenderAsString() const {
     }
 }
 
-ClothingItem::Gender Models::ClothingItem::genderFromString(const string& gender) const {
+ClothingItem::Gender Models::ClothingItem::genderFromString(const string& gender) {
     if (gender == "MEN") {
         return Gender::MEN;
     } else if (gender == "WOMEN") {
@@ -78,10 +78,18 @@ ClothingItem::Gender Models::ClothingItem::genderFromString(const string& gender
     }
 }
 
-bool Models::ClothingItem::hasSustainableMaterials() const {
+const bool& Models::ClothingItem::hasSustainableMaterials() const {
     return sustainableMaterials;
 }
 
 void Models::ClothingItem::setSustainableMaterials(bool sustainableMaterials) {
     ClothingItem::sustainableMaterials = sustainableMaterials;
+}
+
+bool Models::ClothingItem::isSustainableMaterials() const {
+    return sustainableMaterials;
+}
+
+ClothingItem::Gender Models::ClothingItem::getGender() const {
+    return gender;
 }

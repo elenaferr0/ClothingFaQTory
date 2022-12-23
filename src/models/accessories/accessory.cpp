@@ -25,7 +25,7 @@ Accessory::Accessory(
                   description),
           category(categoryFromString(category)) {}
 
-string Accessory::getCategoryAsString() const {
+string Accessory::getCategoryAsString(Category category) {
     switch (category) {
         case BAGS:
             return "BAGS";
@@ -51,7 +51,7 @@ Accessory::Category Accessory::categoryFromString(const string& category) {
     }
 }
 
-Accessory::Category Accessory::getCategory() const {
+const Accessory::Category& Accessory::getCategory() const {
     return category;
 }
 

@@ -12,33 +12,33 @@ using std::string;
 
 namespace Models::ClothingItems {
     class Jeans : public virtual ClothingItem {
-    private:
-        // if shorts is true, when calculating the price half the length will be used
-        bool shorts;
-    public:
-        bool areShorts() const;
+        private:
+            // if shorts is true, when calculating the price half the length will be used
+            bool shorts;
+        public:
+            const bool& areShorts() const;
 
-        void setShorts(bool shorts);
+            void setShorts(bool shorts);
 
-    public:
-        Jeans(long id = -1,
-              string code = "",
-              string color = "",
-              Material material = Material(),
-              Size size = Size(),
-              int availableQuantity = 0,
-              int soldQuantity = 0,
-              string description = "",
-              bool sustainableMaterials = false,
-              string gender = "",
-              bool shorts = false
-        );
+        public:
+            Jeans(long id = -1,
+                  string code = "",
+                  string color = "",
+                  Material material = Material(),
+                  Size size = Size(),
+                  int availableQuantity = 0,
+                  int soldQuantity = 0,
+                  string description = "",
+                  bool sustainableMaterials = false,
+                  string gender = "",
+                  bool shorts = false
+            );
 
-        double computePrice() const override;
+            double computePrice() const override;
 
-        Jeans* clone() const override;
+            Jeans* clone() const override;
 
-        void accept(VisitorInterface& visitor) override;
+            void accept(VisitorInterface& visitor) override;
     };
 }
 

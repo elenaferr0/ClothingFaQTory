@@ -32,7 +32,7 @@ Either<Error, Jeans> JeansRepository::save(Jeans& entity) {
            << entity.getAvailableQuantity()
            << entity.getSize().getId()
            << entity.hasSustainableMaterials()
-           << QString::fromStdString(entity.getGenderAsString())
+           << QString::fromStdString(Jeans::getGenderAsString(entity.getGender()))
            << entity.getMaterial().getId()
            << entity.areShorts();
 

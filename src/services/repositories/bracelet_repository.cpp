@@ -29,7 +29,7 @@ Either<Error, Bracelet> BraceletRepository::save(Bracelet& entity) {
            << entity.getAvailableQuantity()
            << QString::fromStdString(entity.getDescription())
            << entity.getSize().getId()
-           << QString::fromStdString(entity.getCategoryAsString())
+           << QString::fromStdString(Bracelet::getCategoryAsString(entity.getCategory()))
            << entity.getPearlNumber()
            << entity.getPearlDiameter()
            << entity.getMaterial().getId();

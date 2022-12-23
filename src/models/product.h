@@ -3,7 +3,7 @@
 
 #include "./material.h"
 #include "./size.h"
-#include "../core/model.h"
+#include "model.h"
 #include "../core/observer_interface.h"
 #include "../core/visitor_interface.h"
 
@@ -12,59 +12,73 @@
 
 using std::string;
 using std::list;
-using Core::Model;
+using Models::Model;
 using Core::VisitorInterface;
 using Core::ObserverInterface;
 
 namespace Models {
     class Product : public Model {
-    private:
-        list<ObserverInterface*> observers;
-    protected:
-        string color;
-        Material material;
-        Size size;
-        int availableQuantity;
-        int soldQuantity;
-        string description;
-        string code;
-        void notifyAll();
+        protected:
+            string color;
+            Material material;
+            Size size;
+            int availableQuantity;
+            int soldQuantity;
+            string description;
+            string code;
 
-    public:
-        Product(long id = -1,
-                string code = "",
-                string color = "",
-                Material material = Material(),
-                Size size = Size(),
-                int availableQuantity = 0,
-                int soldQuantity = 0,
-                string description = "");
+            void notifyAll();
 
-        virtual double computePrice() const = 0;
+        public:
+            enum ProductType {
+                Jeans, Vest, Overalls, Bracelet, BackPack, Hat
+            };
 
-        virtual ~Product() {};
+            static string productTypeToString(Product::ProductType);
 
-        const string& getColor() const;
+            Product(long id = -1,
+                    string code = "",
+                    string color = "",
+                    Material material = Material(),
+                    Size size = Size(),
+                    int availableQuantity = 0,
+                    int soldQuantity = 0,
+                    string description = "");
 
-        const Material& getMaterial() const;
+            virtual double computePrice() const = 0;
 
-        const Size& getSize() const;
+            virtual ~Product() {};
 
-        int getAvailableQuantity() const;
+            const string& getColor() const;
 
-        int getSoldQuantity() const;
+            const Material& getMaterial() const;
 
-        const string& getDescription() const;
+            const Size& getSize() const;
 
-        const string& getCode() const;
+            const int& getAvailableQuantity() const;
 
-        void setMaterial(const Material& material);
+            const int& getSoldQuantity() const;
 
-        void setSize(const Size& size);
+            const string& getDescription() const;
 
-        virtual void accept(VisitorInterface& visitor) = 0;
+            const string& getCode() const;
 
-        void registerObserver(ObserverInterface* observer);
+            virtual void accept(VisitorInterface& visitor) = 0;
+
+            void setColor(const string& color);
+
+            void setMaterial(const Material& material);
+
+            void setSize(const Size& size);
+
+            void setAvailableQuantity(int availableQuantity);
+
+            void setSoldQuantity(int soldQuantity);
+
+            void setDescription(const string& description);
+
+            void setCode(const string& code);
+
     };
 }
 #endif // PRODUCT_H

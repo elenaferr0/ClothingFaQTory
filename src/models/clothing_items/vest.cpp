@@ -57,7 +57,7 @@ double Vest::computePrice() const {
     return price;
 }
 
-bool Vest::getHasButtons() const {
+const bool& Vest::getHasButtons() const {
     return hasButtons;
 }
 

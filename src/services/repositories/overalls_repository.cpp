@@ -33,7 +33,7 @@ Either<Error, Overalls> OverallsRepository::save(Overalls& entity) {
            << QString::fromStdString(entity.getDescription())
            << entity.getSize().getId()
            << entity.hasSustainableMaterials()
-           << QString::fromStdString(entity.getGenderAsString())
+           << QString::fromStdString(Overalls::getGenderAsString(entity.getGender()))
            << entity.getMaterial().getId()
            << entity.getHasButtons()
            << entity.areShorts();

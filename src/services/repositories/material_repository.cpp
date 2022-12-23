@@ -6,6 +6,7 @@
 #include <QSqlQuery>
 
 using std::list;
+using std::make_shared;
 using Models::Material;
 using Services::MaterialRepository;
 using Services::CRUDRepository;
@@ -17,33 +18,33 @@ MaterialRepository* MaterialRepository::instance;
 MaterialRepository::MaterialRepository()
         : ReadOnlyRepository("material", EntityMapper::material) {};
 
-Either<Error, Material> MaterialRepository::findById(int id) {
+Either<Error, shared_ptr<Material>> MaterialRepository::findById(int id) {
     if (cachedMaterials.hasKey(id)) {
         return cachedMaterials.get(id).value();
     }
 
-    Either<Error, Material> errorOrMaterial = ReadOnlyRepository::findById(id);
+    Either<Error, shared_ptr<Material>> errorOrMaterial = ReadOnlyRepository::findById(id);
 
     cachedMaterials.put(id, errorOrMaterial.forceRight());
     return errorOrMaterial;
 }
 
-Either<Error, list<Material>> MaterialRepository::findAll() {
-    Either<Error, list<Material>> materialsOrError = ReadOnlyRepository::findAll();
+Either<Error, list<shared_ptr<Material>>> MaterialRepository::findAll() {
+    Either<Error, list<shared_ptr<Material>>> materialsOrError = ReadOnlyRepository::findAll();
     if (materialsOrError.isRight()) {
         for (auto m: materialsOrError.forceRight()) {
-            cachedMaterials.put(m.getId(), m);
+            cachedMaterials.put(m->getId(), m);
         }
     }
     return materialsOrError;
 }
 
-Either<Error, Material> Services::MaterialRepository::findByName(const Material::Name& name) {
+Either<Error, shared_ptr<Material>> Services::MaterialRepository::findByName(const Material::Name& name) {
     return findById(name);
 }
 
 
-Either<Error, Material> MaterialRepository::saveCostPerUnit(const Material& entity) {
+Either<Error, shared_ptr<Material>> MaterialRepository::saveCostPerUnit(const Material& entity) {
 
     QVariantList params;
     params << entity.getCostPerUnit()
@@ -61,11 +62,11 @@ Either<Error, Material> MaterialRepository::saveCostPerUnit(const Material& enti
 
     if (hasError.has_value()) {
         qCritical() << QString::fromStdString(
-                hasError.value().getMessage());
-        return Either<Error, Material>::ofLeft(hasError.value());
+                hasError.value().getCause());
+        return Either<Error, shared_ptr<Material>>::ofLeft(hasError.value());
     }
 
-    return entity;
+    return make_shared<Material>(entity);
 }
 
 MaterialRepository* Services::MaterialRepository::getInstance() {

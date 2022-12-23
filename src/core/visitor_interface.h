@@ -1,5 +1,5 @@
-#ifndef IPRODUCT_VISITOR_H
-#define IPRODUCT_VISITOR_H
+#ifndef MODEL_VISITOR_INTERFACE_H
+#define MODEL_VISITOR_INTERFACE_H
 
 namespace Models {
     class Material;
@@ -35,20 +35,20 @@ using Models::ClothingItems::Overalls;
 
 namespace Core {
     class VisitorInterface {
-    public:
-        virtual ~VisitorInterface() = default;
+        public:
+            virtual ~VisitorInterface() = default;
 
-        virtual void visitBracelet(Bracelet&) = 0;
+            virtual void visitBracelet(Bracelet&) = 0;
 
-        virtual void visitBackPack(BackPack&) = 0;
+            virtual void visitBackPack(BackPack&) = 0;
 
-        virtual void visitHat(Hat&) = 0;
+            virtual void visitHat(Hat&) = 0;
 
-        virtual void visitJeans(Jeans&) = 0;
+            virtual void visitJeans(Jeans&) = 0;
 
-        virtual void visitVest(Vest&) = 0;
+            virtual void visitVest(Vest&) = 0;
 
-        virtual void visitOveralls(Overalls&) = 0;
+            virtual void visitOveralls(Overalls&) = 0;
     };
 }
-#endif //IPRODUCT_VISITOR_H
+#endif //MODEL_VISITOR_INTERFACE_H

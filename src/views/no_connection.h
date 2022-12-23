@@ -6,20 +6,13 @@
 #include <QWidget>
 #include <QLabel>
 
-QT_BEGIN_NAMESPACE
-namespace Views { class NoConnection; };
-QT_END_NAMESPACE
+namespace Views {
+    class NoConnection : public QWidget {
+        Q_OBJECT
 
-class NoConnection : public QWidget {
-Q_OBJECT
-
-private:
-    QLabel* icon;
-    QLabel* message;
-
-public:
-    NoConnection(QWidget* parent = nullptr);
-};
-
+        public:
+            NoConnection(QWidget* parent = nullptr);
+    };
+}
 
 #endif //NO_CONNECTION_H

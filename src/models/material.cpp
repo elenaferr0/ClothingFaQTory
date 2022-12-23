@@ -21,11 +21,11 @@ Material* Material::clone() const {
     return new Material(*this);
 }
 
-Material::Name Material::getName() const {
+const Material::Name& Material::getName() const {
     return name;
 }
 
-double Material::getCostPerUnit() const {
+const double& Material::getCostPerUnit() const {
     return costPerUnit;
 }
 

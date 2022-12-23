@@ -31,11 +31,11 @@ const Models::Size& Product::getSize() const {
     return size;
 }
 
-int Product::getAvailableQuantity() const {
+const int& Product::getAvailableQuantity() const {
     return availableQuantity;
 }
 
-int Product::getSoldQuantity() const {
+const int& Product::getSoldQuantity() const {
     return soldQuantity;
 }
 
@@ -47,24 +47,53 @@ const string& Product::getCode() const {
     return code;
 }
 
-void Product::setSize(const Models::Size& size) {
-    Product::size = size;
-}
-
 const Material& Product::getMaterial() const {
     return material;
 }
 
-void Models::Product::setMaterial(const Material& material) {
-    this->material = material;
-}
 
-void Models::Product::registerObserver(ObserverInterface* observer) {
-    observers.push_back(observer);
-}
-
-void Models::Product::notifyAll() {
-    for (auto it = observers.begin(); it != observers.end(); it++) {
-        (*it)->notify(*this);
+string Product::productTypeToString(Product::ProductType productType) {
+    switch (productType) {
+        case Jeans:
+            return "Jeans";
+        case Overalls:
+            return "Overalls";
+        case Hat:
+            return "Hat";
+        case Bracelet:
+            return "Bracelet";
+        case Vest:
+            return "Vest";
+        case BackPack:
+        default:
+            return "BackPack";
     }
+}
+
+void Models::Product::setColor(const string& color) {
+    Product::color = color;
+}
+
+void Models::Product::setMaterial(const Material& material) {
+    Product::material = material;
+}
+
+void Models::Product::setSize(const Size& size) {
+    Product::size = size;
+}
+
+void Models::Product::setAvailableQuantity(int availableQuantity) {
+    Product::availableQuantity = availableQuantity;
+}
+
+void Models::Product::setSoldQuantity(int soldQuantity) {
+    Product::soldQuantity = soldQuantity;
+}
+
+void Models::Product::setDescription(const string& description) {
+    Product::description = description;
+}
+
+void Models::Product::setCode(const string& code) {
+    Product::code = code;
 }

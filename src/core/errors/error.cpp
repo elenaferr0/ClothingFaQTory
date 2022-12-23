@@ -2,9 +2,21 @@
 
 using Core::Error;
 
-Error::Error(string userMessage, string cause)
-        : userMessage(userMessage), cause(cause) {}
+Error::Error(string type, string cause, string userMessage)
+        : type(type), cause(cause), userMessage(userMessage) {}
 
-string Error::getMessage() const {
+const string& Error::getCause() const {
+    return cause;
+}
+
+const string& Error::getUserMessage() const {
     return userMessage;
+}
+
+void Error::setUserMessage(const string& userMessage) {
+    this->userMessage = userMessage;
+}
+
+const string& Core::Error::getType() const {
+    return type;
 }

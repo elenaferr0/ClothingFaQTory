@@ -1,56 +1,56 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "../core/model.h"
+#include "model.h"
 #include "../core/visitor_interface.h"
 
-using Core::Model;
+using Models::Model;
 using Core::VisitorInterface;
 
 namespace Models {
     class Material : public Model {
-    public:
-        enum Name { // contains database ids corresponding to this cachedMaterials
-            DENIM = 1,
-            WOOL = 2,
-            POLYESTER = 3,
-            COTTON = 4,
-            GOLD = 5,
-            SILVER = 6,
-            WOOD = 7
-        };
+        public:
+            enum Name { // contains database ids corresponding to this cachedMaterials
+                DENIM = 1,
+                WOOL = 2,
+                POLYESTER = 3,
+                COTTON = 4,
+                GOLD = 5,
+                SILVER = 6,
+                WOOD = 7
+            };
 
-        enum UnitOfMeasure {
-            GRAM, METER
-        };
+            enum UnitOfMeasure {
+                GRAM, METER
+            };
 
-        static const double GOLD_SPECIFIC_WEIGHT;
-        static const double SILVER_SPECIFIC_WEIGHT;
-        static const double WOOD_SPECIFIC_WEIGHT;
+            static const double GOLD_SPECIFIC_WEIGHT;
+            static const double SILVER_SPECIFIC_WEIGHT;
+            static const double WOOD_SPECIFIC_WEIGHT;
 
-        Material(long id = -1,
-                 string name = "",
-                 string unitOfMeasure = "",
-                 double costPerUnit = 0);
+            Material(long id = -1,
+                     string name = "",
+                     string unitOfMeasure = "",
+                     double costPerUnit = 0);
 
-        Material* clone() const override;
+            Material* clone() const override;
 
-        Name getName() const;
+            const Name& getName() const;
 
-        string getNameAsString() const;
+            string getNameAsString() const;
 
-        double getCostPerUnit() const;
+            const double& getCostPerUnit() const;
 
-        static Name namefromString(const string&);
+            static Name namefromString(const string&);
 
-        static UnitOfMeasure unitOfMeasureFromString(const string&);
+            static UnitOfMeasure unitOfMeasureFromString(const string&);
 
-        string getUnitOfMeasureAsString() const;
+            string getUnitOfMeasureAsString() const;
 
-    private:
-        Name name;
-        UnitOfMeasure unitOfMeasure;
-        double costPerUnit;
+        private:
+            Name name;
+            UnitOfMeasure unitOfMeasure;
+            double costPerUnit;
 
     };
 }

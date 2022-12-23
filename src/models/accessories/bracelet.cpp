@@ -57,11 +57,11 @@ double Bracelet::computePrice() const {
     return totalWeight * material.getCostPerUnit();
 }
 
-unsigned int Bracelet::getPearlNumber() const {
+const unsigned int& Bracelet::getPearlNumber() const {
     return pearlNumber;
 }
 
-double Bracelet::getPearlDiameter() const {
+const double& Bracelet::getPearlDiameter() const {
     return pearlDiameter;
 }
 

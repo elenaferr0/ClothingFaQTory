@@ -11,16 +11,17 @@ using Core::Error;
 
 namespace Services {
     class JeansRepository : public CRUDRepository<Jeans> {
-    private:
-        JeansRepository();
-    protected:
-        // doesn'toolBar need a destructor since it's static (it wouldn'toolBar be called)
-        static JeansRepository* instance;
-    public:
+        private:
+            JeansRepository();
 
-        static JeansRepository* getInstance();
+        protected:
 
-        Either<Error, Jeans> save(Jeans& entity) override;
+            static JeansRepository* instance;
+        public:
+
+            static JeansRepository* getInstance();
+
+            Either<Error, Jeans> save(Jeans& entity) override;
     };
 }
 

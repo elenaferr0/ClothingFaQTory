@@ -30,7 +30,7 @@ Either<Error, Hat> HatRepository::save(Hat& entity) {
            << entity.getAvailableQuantity()
            << entity.getSoldQuantity()
            << QString::fromStdString(entity.getDescription())
-           << QString::fromStdString(entity.getCategoryAsString())
+           << QString::fromStdString(Hat::getCategoryAsString(entity.getCategory()))
            << entity.isBaseballCap()
            << entity.getMaterial().getId();
 
@@ -39,7 +39,7 @@ Either<Error, Hat> HatRepository::save(Hat& entity) {
 }
 
 HatRepository* Services::HatRepository::getInstance() {
-    if(instance == nullptr){
+    if (instance == nullptr) {
         instance = new HatRepository();
     }
     return instance;

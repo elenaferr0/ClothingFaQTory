@@ -1,9 +1,6 @@
 
 #include "backpack.h"
 #include "../../utils/calculator.h"
-#include "../material.h"
-#include "../size.h"
-#include "../../core/visitor_interface.h"
 #include <list>
 
 using std::list;
@@ -25,8 +22,8 @@ BackPack::BackPack(long id,
         : Accessory(id,
                     code,
                     color,
-                  material,
-                  size,
+                    material,
+                    size,
                     availableQuantity,
                     soldQuantity,
                     description,
@@ -46,7 +43,7 @@ double BackPack::computePrice() const {
     return material.getCostPerUnit() * surface;
 }
 
-double BackPack::getCapacity() const {
+const double& BackPack::getCapacity() const {
     return capacity;
 }
 

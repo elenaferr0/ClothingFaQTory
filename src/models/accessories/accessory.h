@@ -8,33 +8,32 @@
 namespace Models {
     class Accessory : public Product {
 
-    public:
-        enum Category {
-            BAGS, JEWELRY, HATS, GENERAL
-        };
+        public:
+            enum Category {
+                BAGS, JEWELRY, HATS, GENERAL
+            };
 
-        Accessory(long id = -1,
-                  string code = "",
-                  string color = "",
-                  Material material = Material(),
-                  Size size = Size(),
-                  int availableQuantity = 0,
-                  int soldQuantity = 0,
-                  string description = "",
-                  string category = "");
+            Accessory(long id = -1,
+                      string code = "",
+                      string color = "",
+                      Material material = Material(),
+                      Size size = Size(),
+                      int availableQuantity = 0,
+                      int soldQuantity = 0,
+                      string description = "",
+                      string category = "");
 
 
+            static string getCategoryAsString(Category);
 
-        string getCategoryAsString() const;
+            static Category categoryFromString(const string&);
 
-        static Category categoryFromString(const string&);
+        protected:
+            Category category;
+        public:
+            const Category& getCategory() const;
 
-    protected:
-        Category category;
-    public:
-        Category getCategory() const;
-
-        void setCategory(const string&);
+            void setCategory(const string&);
     };
 }
 #endif // ACCESSORY_H
