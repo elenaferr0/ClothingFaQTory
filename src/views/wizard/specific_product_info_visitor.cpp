@@ -15,7 +15,7 @@ using Models::ClothingItem;
 SpecificProductInfoVisitor::SpecificProductInfoVisitor()
         : layout(new QFormLayout), fieldsToRegister(QMap<QString, QWidget*>()) {}
 
-void SpecificProductInfoVisitor::visitBracelet(Bracelet& bracelet) {
+void SpecificProductInfoVisitor::visitBracelet(Bracelet&) {
     buildAccessory();
     QSpinBox* pearlNumberSpinBox = new QSpinBox;
     pearlNumberSpinBox->setRange(0, 100);
@@ -35,7 +35,7 @@ void SpecificProductInfoVisitor::visitBracelet(Bracelet& bracelet) {
     layout->addRow("Pearl diameter (in cm)", pearlDiameterLineEdit);
 }
 
-void SpecificProductInfoVisitor::visitBackPack(BackPack& pack) {
+void SpecificProductInfoVisitor::visitBackPack(BackPack&) {
     buildAccessory();
     QLineEdit* capacityLineEdit = new QLineEdit;
     fieldsToRegister.insert("capacity", capacityLineEdit);
@@ -48,7 +48,7 @@ void SpecificProductInfoVisitor::visitBackPack(BackPack& pack) {
     layout->addRow("Capacity (in liters)", capacityLineEdit);
 }
 
-void SpecificProductInfoVisitor::visitHat(Hat& hat) {
+void SpecificProductInfoVisitor::visitHat(Hat&) {
     buildAccessory();
     QCheckBox* isBaseballHatCheckBox = new QCheckBox();
     isBaseballHatCheckBox->setCheckState(Qt::CheckState::Unchecked);
@@ -56,17 +56,17 @@ void SpecificProductInfoVisitor::visitHat(Hat& hat) {
     layout->addRow("Is baseball hat", isBaseballHatCheckBox);
 }
 
-void SpecificProductInfoVisitor::visitJeans(Jeans& jeans) {
+void SpecificProductInfoVisitor::visitJeans(Jeans&) {
     buildClothingItem();
     buildJeans();
 }
 
-void SpecificProductInfoVisitor::visitVest(Vest& vest) {
+void SpecificProductInfoVisitor::visitVest(Vest&) {
     buildClothingItem();
     buildVest();
 }
 
-void SpecificProductInfoVisitor::visitOveralls(Overalls& overalls) {
+void SpecificProductInfoVisitor::visitOveralls(Overalls&) {
     buildClothingItem();
     buildJeans();
     buildVest();

@@ -4,6 +4,7 @@
 #include "../../models/product.h"
 #include "../../controllers/wizard_controller.h"
 #include <QWizardPage>
+#include <QLineEdit>
 #include <QSet>
 #include <limits>
 #include "select_color_button.h"

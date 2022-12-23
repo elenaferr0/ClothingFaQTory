@@ -8,9 +8,10 @@ using std::string;
 namespace Core {
     class Error {
         private:
-            string userMessage;
-            string cause;
             string type;
+            string cause;
+            string userMessage;
+
         public:
             Error(string type = "", string cause = "Generic error", string userMessage = "");
 

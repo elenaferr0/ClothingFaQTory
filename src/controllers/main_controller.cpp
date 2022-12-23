@@ -10,13 +10,13 @@ using Views::MainView;
 MainController::MainController(View* view)
         : Controller(view),
           hatRepository(HatRepository::getInstance()),
+          sizeRepository(SizeRepository::getInstance()),
           braceletRepository(BraceletRepository::getInstance()),
           backPackRepository(BackPackRepository::getInstance()),
           vestRepository(VestRepository::getInstance()),
           jeansRepository(JeansRepository::getInstance()),
           overallsRepository(OverallsRepository::getInstance()),
-          materialRepository(MaterialRepository::getInstance()),
-          sizeRepository(SizeRepository::getInstance()) {
+          materialRepository(MaterialRepository::getInstance()) {
     connect(this, SIGNAL(databaseError(Error * )), dynamic_cast<MainView*>(view), SLOT(handleDatabaseError(Error * )));
 };
 

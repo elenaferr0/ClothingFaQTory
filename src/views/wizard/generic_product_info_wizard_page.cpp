@@ -2,7 +2,8 @@
 #include <QLineEdit>
 #include <QFormLayout>
 #include <QCompleter>
-#include <QRegExpValidator>
+#include <QRegularExpressionValidator>
+#include <QRegularExpression>
 #include <QSpinBox>
 #include <QTextEdit>
 #include <QComboBox>
@@ -26,7 +27,8 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
     setTitle("Insert generic product information");
     QFormLayout* layout = new QFormLayout;
 
-    QRegExpValidator* alphaNumericUnderscoresValidator = new QRegExpValidator(QRegExp("^[a-zA-Z0-9_-]*$"));
+    QRegularExpression regex("^[a-zA-Z0-9_-]*$");
+    QValidator* alphaNumericUnderscoresValidator = new QRegularExpressionValidator(regex, this);
 
     codeLineEdit = new QLineEdit();
     codeLineEdit->setPlaceholderText("Product Code");

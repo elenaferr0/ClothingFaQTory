@@ -52,6 +52,6 @@ void Views::MaterialsView::initGrid() {
 
 }
 
-void Views::MaterialsView::notify(Model* model) {
+void Views::MaterialsView::notify(Model*) {
     // TODO: handle notify event
 }

@@ -4,7 +4,6 @@
 #include <QToolButton>
 #include <QDebug>
 #include "products_view.h"
-#include "../controllers/wizard_controller.h"
 #include "../controllers/main_controller.h"
 #include <algorithm>
 
@@ -18,7 +17,7 @@ using Controllers::MainController;
 
 int ProductsView::COLUMN_COUNT = 5;
 
-ProductsView::ProductsView(QWidget* parent) : ObserverWidgetView() {
+ProductsView::ProductsView(QWidget* parent) : ObserverWidgetView(parent) {
     setController(new MainController(this));
 }
 
@@ -66,7 +65,7 @@ void ProductsView::init(const ProductsMap& productsByType) {
     layout->addWidget(treeWidget);
 }
 
-void Views::ProductsView::notify(Model* model) {
+void Views::ProductsView::notify(Model*) {
     // TODO handle notify event
 }
 

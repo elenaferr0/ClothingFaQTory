@@ -2,6 +2,7 @@
 #define SPECIFIC_PRODUCT_INFO_VISITOR_H
 
 #include <QFormLayout>
+#include <QMap>
 #include "../../core/visitor_interface.h"
 
 using Core::VisitorInterface;
