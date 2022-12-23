@@ -85,3 +85,11 @@ const bool& Models::ClothingItem::hasSustainableMaterials() const {
 void Models::ClothingItem::setSustainableMaterials(bool sustainableMaterials) {
     ClothingItem::sustainableMaterials = sustainableMaterials;
 }
+
+bool Models::ClothingItem::isSustainableMaterials() const {
+    return sustainableMaterials;
+}
+
+ClothingItem::Gender Models::ClothingItem::getGender() const {
+    return gender;
+}

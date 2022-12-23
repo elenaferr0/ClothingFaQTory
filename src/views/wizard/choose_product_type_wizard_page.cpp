@@ -3,6 +3,7 @@
 #include "../../models/product.h"
 
 using Models::Product;
+using Views::Wizard::ChooseProductTypeWizardPage;
 
 ChooseProductTypeWizardPage::ChooseProductTypeWizardPage(QWidget* parent)
         : QWizardPage(parent), comboBox(new QComboBox) {

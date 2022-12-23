@@ -144,7 +144,6 @@ void ProductsView::showWizard(bool) {
     CreateProductWizardView* createProductWizard = new CreateProductWizardView(this,
                                                                                materials,
                                                                                sizes);
-    createProductWizard->setController(new WizardController(createProductWizard));
     createProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     createProductWizard->show();
 }

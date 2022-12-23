@@ -5,6 +5,7 @@
 #include "../../controllers/wizard_controller.h"
 #include <QWizardPage>
 #include <QSet>
+#include <limits>
 #include "select_color_button.h"
 
 QT_BEGIN_NAMESPACE
@@ -17,7 +18,7 @@ using Controllers::WizardController;
 class GenericProductInfoWizardPage : public QWizardPage {
     Q_OBJECT
     private:
-        static const int MAX_SPIN_BOX_VALUE = 99999999;
+        static const int MAX_SPIN_BOX_VALUE = INT_MAX;
         static const int SPIN_BOX_STEP = 100;
         QLineEdit* codeLineEdit;
         SelectColorButton* colorButton;

@@ -57,24 +57,28 @@ void SpecificProductInfoVisitor::buildAccessory() {
     categoryComboBox->addItem(QString::fromStdString(Accessory::getCategoryAsString(Accessory::BAGS)));
     categoryComboBox->addItem(QString::fromStdString(Accessory::getCategoryAsString(Accessory::HATS)));
     categoryComboBox->addItem(QString::fromStdString(Accessory::getCategoryAsString(Accessory::JEWELRY)));
-    fieldsToRegister.insert("categoryComboBox", categoryComboBox);
+    fieldsToRegister.insert("category", categoryComboBox);
     layout->addRow("Category", categoryComboBox);
 }
 
 void SpecificProductInfoVisitor::buildClothingItem() {
     QCheckBox* sustainableMaterialsCheckBox = new QCheckBox;
     sustainableMaterialsCheckBox->setCheckState(Qt::Unchecked);
-    fieldsToRegister.insert("sustainableMaterialsCheckBox", sustainableMaterialsCheckBox);
+    fieldsToRegister.insert("sustainableMaterials", sustainableMaterialsCheckBox);
     layout->addRow("Made of sustainable materials", sustainableMaterialsCheckBox);
 
     QComboBox* genderComboBox = new QComboBox;
     genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::MEN)));
     genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::WOMEN)));
     genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::UNISEX)));
-    fieldsToRegister.insert("genderComboBox", genderComboBox);
+    fieldsToRegister.insert("gender", genderComboBox);
     layout->addRow("Gender", genderComboBox);
 }
 
 QFormLayout* SpecificProductInfoVisitor::getLayout() const {
     return layout;
+}
+
+const QMap<QString, QWidget*>& SpecificProductInfoVisitor::getFieldsToRegister() const {
+    return fieldsToRegister;
 }

@@ -31,7 +31,7 @@ Either<Error, Vest> VestRepository::save(Vest& entity) {
            << QString::fromStdString(entity.getDescription())
            << entity.getSize().getId()
            << entity.hasSustainableMaterials()
-           << QString::fromStdString(entity.getGenderAsString())
+           << QString::fromStdString(Vest::getGenderAsString(entity.getGender()))
            << entity.getMaterial().getId()
            << entity.getHasButtons();
 

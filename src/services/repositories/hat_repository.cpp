@@ -30,7 +30,7 @@ Either<Error, Hat> HatRepository::save(Hat& entity) {
            << entity.getAvailableQuantity()
            << entity.getSoldQuantity()
            << QString::fromStdString(entity.getDescription())
-           << QString::fromStdString(entity.getCategoryAsString())
+           << QString::fromStdString(Hat::getCategoryAsString(entity.getCategory()))
            << entity.isBaseballCap()
            << entity.getMaterial().getId();
 

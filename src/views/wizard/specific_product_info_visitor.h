@@ -32,6 +32,8 @@ class SpecificProductInfoVisitor : public VisitorInterface {
 
         QFormLayout* getLayout() const;
 
+        const QMap<QString, QWidget*>& getFieldsToRegister() const;
+
 };
 
 

@@ -6,8 +6,11 @@
 #include <QSet>
 #include "../view.h"
 #include "../../models/product.h"
+#include "../../controllers/wizard_controller.h"
 
 using Models::Product;
+using Controllers::WizardController;
+
 namespace Views::Wizard {
     class CreateProductWizardView : public QWizard, public View {
         Q_OBJECT
@@ -18,8 +21,12 @@ namespace Views::Wizard {
                                     const QList<QString>& materials = QList<QString>(),
                                     const QList<QString>& sizes = QList<QString>());
 
-            void accept() override; // called when the user clicks finish
-            void setFields(Product* product);
+//            void accept() override; // called when the user clicks finish
+            void setProduct(Product* product);
+
+            Product* getProduct() const;
+
+            WizardController* getController() const;
     };
 }
 

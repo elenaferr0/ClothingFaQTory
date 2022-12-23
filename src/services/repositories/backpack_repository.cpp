@@ -28,7 +28,7 @@ Either<Error, BackPack> BackPackRepository::save(BackPack& entity) {
            << entity.getAvailableQuantity()
            << QString::fromStdString(entity.getDescription())
            << entity.getSize().getId()
-           << QString::fromStdString(entity.getCategoryAsString())
+           << QString::fromStdString(BackPack::getCategoryAsString(entity.getCategory()))
            << entity.getCapacity()
            << entity.getMaterial().getId();
 

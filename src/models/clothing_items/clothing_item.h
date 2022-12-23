@@ -33,6 +33,10 @@ namespace Models {
 
             void setSustainableMaterials(bool sustainableMaterials);
 
+            bool isSustainableMaterials() const;
+
+            Gender getGender() const;
+
         protected:
             double computeLegLength() const;
 
