@@ -18,11 +18,17 @@ class SelectColorButton : public QPushButton {
 
         const QColor& getColor() const;
 
-    public slots:
+        QString getHex() const;
+
+    private slots:
+
+        void updateBackground();
 
         void updateColor();
 
-        void changeColor();
+    signals:
+
+        void colorChanged(const QString&);
 
     private:
         static int LIGHTNESS_THRESHOLD;

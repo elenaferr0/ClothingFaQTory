@@ -29,6 +29,9 @@ class GenericProductInfoWizardPage : public QWizardPage {
 
         bool validatePage() override;
 
+    private slots:
+
+        void handleColorChange(const QString&);
 };
 
 

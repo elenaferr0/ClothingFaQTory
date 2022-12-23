@@ -23,7 +23,7 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
                                                            const QList<QString>& sizes,
                                                            QWidget* parent)
         : QWizardPage(parent) {
-    setTitle("Insert product information");
+    setTitle("Insert generic product information");
     QFormLayout* layout = new QFormLayout;
 
     QRegExpValidator* alphaNumericUnderscoresValidator = new QRegExpValidator(QRegExp("^[a-zA-Z0-9_-]*$"));
@@ -32,11 +32,14 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
     codeLineEdit->setPlaceholderText("Product Code");
     codeLineEdit->setMaxLength(10);
     codeLineEdit->setValidator(alphaNumericUnderscoresValidator);
-    registerField("code", codeLineEdit);
+    registerField("code*", codeLineEdit);
     layout->addRow("Code", codeLineEdit);
 
     colorButton = new SelectColorButton(nullptr, "Choose color");
-    registerField("color", colorButton);
+    registerField("color", this, "color", SIGNAL(&SelectColorButton::colorChanged));
+    colorButton->setAutoDefault(false);
+    colorButton->setDefault(true);
+    connect(colorButton, SIGNAL(colorChanged(const QString &)), this, SLOT(handleColorChange(const QString &)));
     layout->addRow("Color", colorButton);
 
     QSpinBox* soldQuantitySpinBox = new QSpinBox;
@@ -88,4 +91,8 @@ bool GenericProductInfoWizardPage::validatePage() {
     }
 
     return valid && QWizardPage::validatePage();
+}
+
+void GenericProductInfoWizardPage::handleColorChange(const QString& hex) {
+    wizard()->setField("color", hex);
 }

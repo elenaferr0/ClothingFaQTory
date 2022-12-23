@@ -14,6 +14,10 @@ class SpecificProductInfoVisitor : public VisitorInterface {
 
         void buildClothingItem();
 
+        void buildJeans();
+
+        void buildVest();
+
         QMap<QString, QWidget*> fieldsToRegister;
     public:
         SpecificProductInfoVisitor();

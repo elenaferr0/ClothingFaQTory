@@ -9,12 +9,11 @@ SpecificProductInfoWizardPage::SpecificProductInfoWizardPage(QWidget* parent)
         : QWizardPage(parent),
           visitor(SpecificProductInfoVisitor()),
           parentWizard(dynamic_cast<CreateProductWizardView*>(parent)) {
-
+    setWindowTitle("Set specific product info");
 }
 
 void SpecificProductInfoWizardPage::initializePage() {
     Product::ProductType productType = static_cast<Product::ProductType>(field("productType").toInt());
-
     // create a Product* which has a type value of one of the concrete classes.
     // this allows using the visitor pattern to create a different page
     // based on the product type
@@ -70,7 +69,7 @@ void SpecificProductInfoWizardPage::initializePage() {
 
 void SpecificProductInfoWizardPage::setFields(Product* product) {
     product->setCode(field("code").toString().toStdString());
-    product->setColor(field("color").toString().toStdString()); // TODO fix color
+    product->setColor(field("color").toString().toStdString());
     product->setSoldQuantity(field("soldQuantity").toInt());
     product->setAvailableQuantity(field("availableQuantity").toInt());
     product->setDescription(field("description").toString().toStdString());
@@ -80,4 +79,8 @@ void SpecificProductInfoWizardPage::setFields(Product* product) {
 
     QString materialName = field("material").toString();
     product->setMaterial(*parentWizard->getController()->findMaterialByName(materialName));
+}
+
+bool Views::Wizard::SpecificProductInfoWizardPage::validatePage() {
+    return QWizardPage::validatePage();
 }

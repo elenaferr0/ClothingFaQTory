@@ -3,6 +3,8 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QLineEdit>
+#include <QSpinBox>
 #include "specific_product_info_visitor.h"
 #include "../../services/repositories/jeans_repository.h"
 
@@ -14,16 +16,40 @@ SpecificProductInfoVisitor::SpecificProductInfoVisitor()
         : layout(new QFormLayout), fieldsToRegister(QMap<QString, QWidget*>()) {}
 
 void SpecificProductInfoVisitor::visitBracelet(Bracelet& bracelet) {
-    // pearl nr
-    // pearl diameter
+    buildAccessory();
+    QSpinBox* pearlNumberSpinBox = new QSpinBox;
+    pearlNumberSpinBox->setRange(0, 100);
+    pearlNumberSpinBox->setSingleStep(1);
+    fieldsToRegister.insert("pearlNumber", pearlNumberSpinBox);
+    layout->addRow("Pearl number", pearlNumberSpinBox);
+
+    QLineEdit* pearlDiameterLineEdit = new QLineEdit;
+    fieldsToRegister.insert("pearlDiameter", pearlDiameterLineEdit);
+    pearlDiameterLineEdit->setPlaceholderText("00.0000");
+
+    QDoubleValidator* validator = new QDoubleValidator(pearlDiameterLineEdit);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+    validator->setDecimals(4);
+    validator->setBottom(2);
+    pearlDiameterLineEdit->setValidator(validator);
+    layout->addRow("Pearl diameter (in cm)", pearlDiameterLineEdit);
 }
 
 void SpecificProductInfoVisitor::visitBackPack(BackPack& pack) {
-    // capacity
+    buildAccessory();
+    QLineEdit* capacityLineEdit = new QLineEdit;
+    fieldsToRegister.insert("capacity", capacityLineEdit);
+
+    QDoubleValidator* validator = new QDoubleValidator(capacityLineEdit);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+    validator->setRange(0, 999, 3);
+    capacityLineEdit->setPlaceholderText("000.000");
+    capacityLineEdit->setValidator(validator);
+    layout->addRow("Capacity (in liters)", capacityLineEdit);
 }
 
 void SpecificProductInfoVisitor::visitHat(Hat& hat) {
-    // is baseball hat
+    buildAccessory();
     QCheckBox* isBaseballHatCheckBox = new QCheckBox();
     isBaseballHatCheckBox->setCheckState(Qt::CheckState::Unchecked);
     fieldsToRegister.insert("baseballHat", isBaseballHatCheckBox);
@@ -31,24 +57,33 @@ void SpecificProductInfoVisitor::visitHat(Hat& hat) {
 }
 
 void SpecificProductInfoVisitor::visitJeans(Jeans& jeans) {
-    // shorts
+    buildClothingItem();
+    buildJeans();
+}
+
+void SpecificProductInfoVisitor::visitVest(Vest& vest) {
+    buildClothingItem();
+    buildVest();
+}
+
+void SpecificProductInfoVisitor::visitOveralls(Overalls& overalls) {
+    buildClothingItem();
+    buildJeans();
+    buildVest();
+}
+
+void SpecificProductInfoVisitor::buildJeans() {
     QCheckBox* shortsCheckBox = new QCheckBox();
     shortsCheckBox->setCheckState(Qt::CheckState::Unchecked);
     fieldsToRegister.insert("shorts", shortsCheckBox);
     layout->addRow("Are shorts", shortsCheckBox);
 }
 
-void SpecificProductInfoVisitor::visitVest(Vest& vest) {
-    // has buttons
+void SpecificProductInfoVisitor::buildVest() {
     QCheckBox* hasButtonsCheckBox = new QCheckBox();
     hasButtonsCheckBox->setCheckState(Qt::CheckState::Unchecked);
     fieldsToRegister.insert("hasButtons", hasButtonsCheckBox);
     layout->addRow("Has Buttons", hasButtonsCheckBox);
-}
-
-void SpecificProductInfoVisitor::visitOveralls(Overalls& overalls) {
-    visitVest(overalls);
-    visitJeans(overalls);
 }
 
 void SpecificProductInfoVisitor::buildAccessory() {
@@ -62,17 +97,17 @@ void SpecificProductInfoVisitor::buildAccessory() {
 }
 
 void SpecificProductInfoVisitor::buildClothingItem() {
+    QComboBox* genderComboBox = new QComboBox;
+    genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::UNISEX)));
+    genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::MEN)));
+    genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::WOMEN)));
+    fieldsToRegister.insert("gender", genderComboBox);
+    layout->addRow("Gender", genderComboBox);
+
     QCheckBox* sustainableMaterialsCheckBox = new QCheckBox;
     sustainableMaterialsCheckBox->setCheckState(Qt::Unchecked);
     fieldsToRegister.insert("sustainableMaterials", sustainableMaterialsCheckBox);
     layout->addRow("Made of sustainable materials", sustainableMaterialsCheckBox);
-
-    QComboBox* genderComboBox = new QComboBox;
-    genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::MEN)));
-    genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::WOMEN)));
-    genderComboBox->addItem(QString::fromStdString(ClothingItem::getGenderAsString(ClothingItem::UNISEX)));
-    fieldsToRegister.insert("gender", genderComboBox);
-    layout->addRow("Gender", genderComboBox);
 }
 
 QFormLayout* SpecificProductInfoVisitor::getLayout() const {

@@ -27,6 +27,7 @@ namespace Views::Wizard {
             Product* getProduct() const;
 
             WizardController* getController() const;
+
     };
 }
 
