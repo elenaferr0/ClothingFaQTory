@@ -17,7 +17,6 @@ MainController::MainController(View* view)
           jeansRepository(JeansRepository::getInstance()),
           overallsRepository(OverallsRepository::getInstance()),
           materialRepository(MaterialRepository::getInstance()) {
-    connect(this, SIGNAL(databaseError(Error * )), dynamic_cast<MainView*>(view), SLOT(handleDatabaseError(Error * )));
 };
 
 MainController::ProductsMap MainController::findAllProductsByType() {

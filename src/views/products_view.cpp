@@ -18,8 +18,9 @@ using Controllers::MainController;
 
 int ProductsView::COLUMN_COUNT = 5;
 
-ProductsView::ProductsView(QWidget* parent) : ObserverWidgetView(parent) {
+ProductsView::ProductsView(MainView* mainView, QWidget* parent) : ObserverWidgetView(parent) {
     setController(new MainController(this));
+    connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
 }
 
 void ProductsView::init(const ProductsMap& productsByType) {

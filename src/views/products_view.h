@@ -7,6 +7,7 @@
 #include "../core/errors/error.h"
 #include "wizard/create_product_wizard_view.h"
 #include "view.h"
+#include "main_view.h"
 #include <memory>
 #include <QToolBar>
 #include <QTreeWidgetItem>
@@ -18,11 +19,13 @@ using Core::Containers::Map;
 using Core::Error;
 
 namespace Views {
+    class MainView;
+
     class ProductsView : public ObserverWidgetView {
         Q_OBJECT
         private:
-            typedef Map <Product::ProductType, list<shared_ptr < Product>>>
-            ProductsMap;
+            typedef Map<Product::ProductType, list<shared_ptr<Product>>>
+                    ProductsMap;
 
             ProductsMap productsByType;
 
@@ -40,7 +43,7 @@ namespace Views {
             static const int COLOR_ICON_SIZE = 20;
 
         public:
-            ProductsView(QWidget* parent = nullptr);
+            ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
             void init(const ProductsMap& productsByType);
 

@@ -4,6 +4,7 @@
 #include "main_view.h"
 #include "../services/connectivity_manager.h"
 #include "no_connection.h"
+#include "products_view.h"
 
 using Views::ProductsView;
 using Views::NoConnection;
@@ -32,8 +33,8 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
 
     MainController* controller = new MainController(this);
     setController(controller);
-    productsView = new ProductsView(tabWidget);
-    materialsView = new MaterialsView(tabWidget);
+    productsView = new ProductsView(this, tabWidget);
+    materialsView = new MaterialsView(this, tabWidget);
 
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);

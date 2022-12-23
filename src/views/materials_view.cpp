@@ -6,9 +6,10 @@ using Controllers::MainController;
 
 int MaterialsView::COLUMN_COUNT = 4;
 
-MaterialsView::MaterialsView(QWidget* parent) : ObserverWidgetView(parent),
-                                                materials(MaterialsList()) {
+MaterialsView::MaterialsView(MainView* mainView, QWidget* parent) : ObserverWidgetView(parent),
+                                                                    materials(MaterialsList()) {
     setController(new MainController(this));
+    connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
 }
 
 void MaterialsView::init() {
