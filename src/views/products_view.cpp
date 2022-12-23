@@ -6,6 +6,7 @@
 #include "products_view.h"
 #include "../controllers/main_controller.h"
 #include <algorithm>
+#include <QPainter>
 
 using std::transform;
 using std::inserter;
@@ -100,16 +101,17 @@ void ProductsView::initTreeView() {
         }
 
         for (auto p = products.begin(); p != products.end(); p++) {
-            QStringList columns;
+            QStringList values;
 
-            columns << QString::fromStdString((*p)->getCode())
-                    << QString::fromStdString((*p)->getColor())
-                    << QString::fromStdString((*p)->getDescription())
-                    << QString::fromStdString((*p)->getSize().getNameAsString())
-                    << QString::number((*p)->computePrice(), 'f', 2) + "$";
+            values << QString::fromStdString((*p)->getCode())
+                   << QString::fromStdString((*p)->getColor())
+                   << QString::fromStdString((*p)->getDescription())
+                   << QString::fromStdString((*p)->getSize().getNameAsString())
+                   << QString::number((*p)->computePrice(), 'f', 2) + "$";
 
-            QTreeWidgetItem* child = new QTreeWidgetItem(columns);
-            topLevelItemWidget->addChild(child);
+            QTreeWidgetItem* columns = new QTreeWidgetItem(values);
+            topLevelItemWidget->addChild(columns);
+            columns->setIcon(1, drawColorIcon((*p)->getColor()));
         }
 
         QIcon productIcon(":/assets/icons/" + productTypeName.toLower() + ".png");
@@ -151,3 +153,18 @@ void Views::ProductsView::rebuildTreeView() {
     productsByType = dynamic_cast<MainController*>(controller)->findAllProductsByType();
     initTreeView();
 }
+
+QIcon Views::ProductsView::drawColorIcon(const string& hex) {
+    const QColor color(QString::fromStdString(hex));
+    QPixmap pixmap(COLOR_ICON_SIZE, COLOR_ICON_SIZE);
+    pixmap.fill(color);
+    QPainter painter(&pixmap);
+    QPen pen;
+    pen.setWidth(3);
+    pen.setColor(Qt::black);
+    painter.setPen(pen);
+    painter.drawRect(0, 0, COLOR_ICON_SIZE, COLOR_ICON_SIZE);
+    QIcon icon(pixmap);
+    return icon;
+}
+

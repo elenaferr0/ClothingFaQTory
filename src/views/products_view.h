@@ -35,6 +35,10 @@ namespace Views {
 
             void initTreeView();
 
+            QIcon drawColorIcon(const string& hex);
+
+            static const int COLOR_ICON_SIZE = 20;
+
         public:
             ProductsView(QWidget* parent = nullptr);
 
