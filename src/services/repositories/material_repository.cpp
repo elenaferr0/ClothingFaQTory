@@ -16,7 +16,7 @@ using Core::Db::Expr;
 MaterialRepository* MaterialRepository::instance;
 
 MaterialRepository::MaterialRepository()
-        : ReadOnlyRepository("material", EntityMapper::material) {};
+        : Repository("material"), ReadOnlyRepository("material", EntityMapper::material) {};
 
 Either<Error, shared_ptr<Material>> MaterialRepository::findById(int id) {
     if (cachedMaterials.hasKey(id)) {

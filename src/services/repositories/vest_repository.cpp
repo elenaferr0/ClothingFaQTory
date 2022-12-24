@@ -7,7 +7,7 @@ using Services::VestRepository;
 VestRepository* VestRepository::instance;
 
 VestRepository::VestRepository()
-        : CRUDRepository("vest", EntityMapper::vest) {};
+        : Repository("vest"), CRUDRepository("vest", EntityMapper::vest) {};
 
 Either<Error, Vest> VestRepository::save(Vest& entity) {
     list<string> fields = {

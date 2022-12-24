@@ -24,6 +24,7 @@ using Services::JeansRepository;
 using Services::OverallsRepository;
 using Services::MaterialRepository;
 using Services::SizeRepository;
+using Services::DeleteOnlyRepository;
 
 namespace Views {
     class View;
@@ -47,6 +48,8 @@ namespace Controllers {
 
             SizesList findAllSizes();
 
+            void deleteProductById(int id);
+
         private:
             HatRepository* hatRepository;
             SizeRepository* sizeRepository;
@@ -56,7 +59,7 @@ namespace Controllers {
             JeansRepository* jeansRepository;
             OverallsRepository* overallsRepository;
             MaterialRepository* materialRepository;
-
+            DeleteOnlyRepository* productRepository;
 
             template<class T>
             void findProductsOfType(Product::ProductType productType, CRUDRepository<T>* repository, ProductsMap& map);

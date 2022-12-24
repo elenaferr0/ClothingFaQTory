@@ -34,8 +34,6 @@ namespace Services {
 
             optional<Error> deleteT(const T& entity);
 
-            optional<Error> deleteById(int id);
-
             Either<Error, shared_ptr<T>> findById(int id) override;
 
             Either<Error, list<shared_ptr<T>>> findAll() override;
@@ -81,7 +79,7 @@ namespace Services {
         for (auto en = entities.begin(); en != entities.end(); en++) {
             Either<Error, T> entityOrError = save(*en);
             if (entityOrError.isLeft()) {
-                entityOrError.forceLeft().setUserMessage("Error while fetching " + ReadOnlyRepository<T>::table);
+                entityOrError.forceLeft().setUserMessage("Error while fetching " + Repository::table);
                 qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
                 return entityOrError.forceLeft();
             }
@@ -93,12 +91,12 @@ namespace Services {
 
     template<class T>
     Either<Error, shared_ptr<T>> CRUDRepository<T>::findById(int id) {
-        string mainEntitySql = ReadOnlyRepository<T>::queryBuilder.select()
-                .from(ReadOnlyRepository<T>::table)
+        string mainEntitySql = Repository::queryBuilder.select()
+                .from(Repository::table)
                 .where(Expr("h.id").equals({"?"}))
                 .build();
 
-        QSqlQuery mainEntityQuery = ReadOnlyRepository<T>::exec(mainEntitySql, QVariant::fromValue<int>(id));
+        QSqlQuery mainEntityQuery = Repository::exec(mainEntitySql, QVariant::fromValue<int>(id));
         mainEntityQuery.next();
         Either<Error, shared_ptr<T>> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
         if (errorOrEntity.isLeft()) {
@@ -112,10 +110,10 @@ namespace Services {
 
     template<class T>
     Either<Error, list<shared_ptr<T>>> CRUDRepository<T>::findAll() {
-        string sql = ReadOnlyRepository<T>::queryBuilder.select()
-                .from(ReadOnlyRepository<T>::table)
+        string sql = Repository::queryBuilder.select()
+                .from(Repository::table)
                 .build();
-        QSqlQuery query = ReadOnlyRepository<T>::exec(sql);
+        QSqlQuery query = Repository::exec(sql);
         list<shared_ptr<T>> entities;
         while (query.next()) {
             Either<Error, shared_ptr<T>> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
@@ -131,25 +129,6 @@ namespace Services {
     template<class T>
     optional<Error> CRUDRepository<T>::deleteT(const T& entity) {
         return deleteById(entity.getId());
-    }
-
-    template<class T>
-    optional<Error> CRUDRepository<T>::deleteById(int id) {
-        string sql = ReadOnlyRepository<T>::queryBuilder.deleteT()
-                .from(CRUDRepository<T>::table)
-                .where(Expr("id").equals({"?"}))
-                .build();
-
-        QSqlQuery query = ReadOnlyRepository<T>::exec(sql, QVariant::fromValue<int>(id));
-        query.next();
-
-        optional<Error> hasError = ReadOnlyRepository<T>::hasError(query);
-
-        if (hasError.has_value()) {
-            qCritical() << QString::fromStdString(
-                    hasError.value().getCause());
-        }
-        return hasError;
     }
 
 

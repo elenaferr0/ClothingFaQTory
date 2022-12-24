@@ -44,7 +44,6 @@ namespace Views {
 
             void buildAndInsertChild(QTreeWidgetItem*,
                                      shared_ptr<Product>);
-
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
@@ -59,6 +58,8 @@ namespace Views {
         private slots:
 
             void handleProductCreation(Product*, Product::ProductType);
+
+            void handleProductDelete(QTreeWidgetItem*);
 
             void showWizard(bool);
 

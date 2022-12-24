@@ -5,7 +5,7 @@ using Services::BraceletRepository;
 BraceletRepository* BraceletRepository::instance;
 
 BraceletRepository::BraceletRepository()
-        : CRUDRepository("bracelet", EntityMapper::bracelet) {};
+        : Repository("bracelet"), CRUDRepository("bracelet", EntityMapper::bracelet) {};
 
 Either<Error, Bracelet> BraceletRepository::save(Bracelet& entity) {
 

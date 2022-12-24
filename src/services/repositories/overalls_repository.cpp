@@ -7,7 +7,7 @@ using Services::OverallsRepository;
 OverallsRepository* OverallsRepository::instance;
 
 OverallsRepository::OverallsRepository()
-        : CRUDRepository("overalls", EntityMapper::overalls) {};
+        : Repository("overalls"), CRUDRepository("overalls", EntityMapper::overalls) {};
 
 Either<Error, Overalls> OverallsRepository::save(Overalls& entity) {
 

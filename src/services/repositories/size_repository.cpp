@@ -11,7 +11,7 @@ using Services::SizeRepository;
 SizeRepository* SizeRepository::instance;
 
 SizeRepository::SizeRepository()
-        : ReadOnlyRepository("size", EntityMapper::size) {};
+        : Repository("size"), ReadOnlyRepository("size", EntityMapper::size) {};
 
 SizeRepository* Services::SizeRepository::getInstance() {
     if (instance == nullptr) {

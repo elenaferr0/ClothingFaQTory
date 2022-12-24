@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QPushButton>
 #include <memory>
+#include <QMessageBox>
 
 using std::transform;
 using std::inserter;
@@ -138,18 +139,20 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
            << QString::fromStdString(product->getDescription())
            << QString::fromStdString(product->getSize().getNameAsString())
            << QString::number(product->computePrice(), 'f', 2) + "$";
-    QTreeWidgetItem* columns = new QTreeWidgetItem(values);
-    topLevelItemWidget->addChild(columns);
+    QTreeWidgetItem* row = new QTreeWidgetItem(values);
+    topLevelItemWidget->addChild(row);
 
-    IconButton* editButton = new IconButton(":/assets/icons/edit.png", "editButton", product->getId(), this);
-    treeWidget->setItemWidget(columns, COLUMN_COUNT - 2, editButton);
+    IconButton* editButton = new IconButton(":/assets/icons/edit.png", "editButton", product->getId(), row, this);
+    treeWidget->setItemWidget(row, COLUMN_COUNT - 2, editButton);
     connect(editButton, SIGNAL(clicked(int)), this, SLOT(clickedEditButton(int)));
 
-    IconButton* deleteButton = new IconButton(":/assets/icons/delete.png", "deleteButton", product->getId(), this);
-    treeWidget->setItemWidget(columns, COLUMN_COUNT - 1, deleteButton);
+    IconButton* deleteButton = new IconButton(":/assets/icons/delete.png", "deleteButton", product->getId(), row, this);
+    treeWidget->setItemWidget(row, COLUMN_COUNT - 1, deleteButton);
     connect(deleteButton, SIGNAL(clicked(int)), this, SLOT(clickedDeleteButton(int)));
 
-    columns->setIcon(1, drawColorIcon(product->getColor()));
+    connect(deleteButton, SIGNAL(clicked(QTreeWidgetItem * )), this, SLOT(handleProductDelete(QTreeWidgetItem * )));
+
+    row->setIcon(1, drawColorIcon(product->getColor()));
 }
 
 void ProductsView::showWizard(bool) {
@@ -214,6 +217,30 @@ void Views::ProductsView::clickedEditButton(int id) {
 }
 
 void Views::ProductsView::clickedDeleteButton(int id) {
-    qInfo() << "delete Id: " << id;
+    QMessageBox* errorBox = new QMessageBox;
+    errorBox->setWindowTitle("Delete product");
+    errorBox->setText("### Do you really want to delete this product?");
+    errorBox->setInformativeText("This change cannot be reverted");
+    errorBox->setTextFormat(Qt::MarkdownText);
+    errorBox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    errorBox->setDefaultButton(QMessageBox::Cancel);
+    errorBox->setAttribute(Qt::WA_DeleteOnClose);
+    errorBox->resize(300, 200);
+    int result = errorBox->exec();
+
+    if (result == QMessageBox::Yes) {
+//        dynamic_cast<MainController*>(controller)->deleteProductById(id);
+
+        for (auto pt = productsByType.cbegin(); pt != productsByType.cend(); ++pt) {
+            auto products = (*pt).second;
+            products.remove_if([&id](shared_ptr<Product> product) { return product->getId() == id; });
+        }
+    }
 }
 
+void Views::ProductsView::handleProductDelete(QTreeWidgetItem* row) {
+    for (int i = 0; i < treeWidget->topLevelItemCount(); i++) {
+        QTreeWidgetItem* topLevelItem = treeWidget->topLevelItem(i);
+        topLevelItem->takeChildren().removeOne(row);
+    }
+}

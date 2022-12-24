@@ -7,7 +7,7 @@ using Services::HatRepository;
 HatRepository* HatRepository::instance;
 
 HatRepository::HatRepository()
-        : CRUDRepository("hat", EntityMapper::hat) {};
+        : Repository("hat"), CRUDRepository("hat", EntityMapper::hat) {};
 
 
 Either<Error, Hat> HatRepository::save(Hat& entity) {

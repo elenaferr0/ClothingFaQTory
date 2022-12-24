@@ -7,7 +7,7 @@ using Services::JeansRepository;
 JeansRepository* JeansRepository::instance;
 
 JeansRepository::JeansRepository()
-        : CRUDRepository("jeans", EntityMapper::jeans) {};
+        : Repository("jeans"), CRUDRepository("jeans", EntityMapper::jeans) {};
 
 
 Either<Error, Jeans> JeansRepository::save(Jeans& entity) {

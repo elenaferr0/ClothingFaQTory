@@ -5,7 +5,7 @@ using Services::BackPackRepository;
 BackPackRepository* BackPackRepository::instance;
 
 BackPackRepository::BackPackRepository()
-        : CRUDRepository("backpack", EntityMapper::backPack) {};
+        : Repository("backpack"), CRUDRepository("backpack", EntityMapper::backPack) {};
 
 Either<Error, BackPack> BackPackRepository::save(BackPack& entity) {
 

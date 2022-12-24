@@ -16,7 +16,8 @@ MainController::MainController(View* view)
           vestRepository(VestRepository::getInstance()),
           jeansRepository(JeansRepository::getInstance()),
           overallsRepository(OverallsRepository::getInstance()),
-          materialRepository(MaterialRepository::getInstance()) {
+          materialRepository(MaterialRepository::getInstance()),
+          productRepository(DeleteOnlyRepository::getInstance("product")) {
 };
 
 MainController::ProductsMap MainController::findAllProductsByType() {
@@ -58,6 +59,13 @@ MainController::SizesList MainController::findAllSizes() {
                 return sizesOrError.forceRight();
             }
     );
+}
+
+void Controllers::MainController::deleteProductById(int id) {
+    optional<Error> error = productRepository->deleteById(id);
+    if (error.has_value()) {
+        emit databaseError(&error.value());
+    }
 }
 
 template<class T>
