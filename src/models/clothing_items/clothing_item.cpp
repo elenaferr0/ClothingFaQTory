@@ -93,3 +93,7 @@ bool Models::ClothingItem::isSustainableMaterials() const {
 ClothingItem::Gender Models::ClothingItem::getGender() const {
     return gender;
 }
+
+void Models::ClothingItem::setGender(ClothingItem::Gender gender) {
+    this->gender = gender;
+}

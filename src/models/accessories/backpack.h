@@ -38,6 +38,8 @@ namespace Models::Accessories {
 
             const double& getCapacity() const;
 
+            void setCapacity(double capacity);
+
             void accept(VisitorInterface& visitor) override;
     };
 }

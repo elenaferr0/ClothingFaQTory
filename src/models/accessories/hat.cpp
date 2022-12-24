@@ -57,3 +57,7 @@ const bool& Hat::isBaseballCap() const {
 void Hat::accept(VisitorInterface& visitor) {
     visitor.visitHat(*this);
 }
+
+void Hat::setBaseballCap(bool baseballCap) {
+    this->baseballCap = baseballCap;
+}

@@ -68,3 +68,11 @@ const double& Bracelet::getPearlDiameter() const {
 void Bracelet::accept(VisitorInterface& visitor) {
     visitor.visitBracelet(*this);
 }
+
+void Models::Accessories::Bracelet::setPearlNumber(unsigned int pearlNumber) {
+    this->pearlNumber = pearlNumber;
+}
+
+void Models::Accessories::Bracelet::setPearlDiameter(double pearlDiameter) {
+    this->pearlDiameter = pearlDiameter;
+}

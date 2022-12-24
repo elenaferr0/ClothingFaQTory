@@ -64,3 +64,7 @@ const bool& Vest::getHasButtons() const {
 void Vest::accept(VisitorInterface& visitor) {
     visitor.visitVest(*this);
 }
+
+void Models::ClothingItems::Vest::setHasButtons(bool hasButtons) {
+    this->hasButtons = hasButtons;
+}

@@ -18,40 +18,40 @@ void SpecificProductInfoWizardPage::initializePage() {
     // this allows using the visitor pattern to create a different page
     // based on the product type
 
-    switch (productType) { // set
+    switch (productType) {
         case Product::Jeans: {
             Jeans* jeans = new Jeans;
-            setFields(jeans);
+            setProductFields(jeans);
             parentWizard->setProduct(jeans);
             break;
         }
         case Product::Overalls: {
             Overalls* overalls = new Overalls;
-            setFields(overalls);
+            setProductFields(overalls);
             parentWizard->setProduct(overalls);
             break;
         }
         case Product::Hat: {
             Hat* hat = new Hat;
-            setFields(hat);
+            setProductFields(hat);
             parentWizard->setProduct(hat);
             break;
         }
         case Product::Bracelet: {
             Bracelet* bracelet = new Bracelet;
-            setFields(bracelet);
+            setProductFields(bracelet);
             parentWizard->setProduct(bracelet);
             break;
         }
         case Product::Vest: {
             Vest* vest = new Vest;
-            setFields(vest);
+            setProductFields(vest);
             parentWizard->setProduct(vest);
             break;
         }
         case Product::BackPack: {
             BackPack* backpack = new BackPack;
-            setFields(backpack);
+            setProductFields(backpack);
             parentWizard->setProduct(backpack);
             break;
         }
@@ -67,7 +67,7 @@ void SpecificProductInfoWizardPage::initializePage() {
     QWizardPage::initializePage();
 }
 
-void SpecificProductInfoWizardPage::setFields(Product* product) {
+void SpecificProductInfoWizardPage::setProductFields(Product* product) {
     product->setCode(field("code").toString().toStdString());
     product->setColor(field("color").toString().toStdString());
     product->setSoldQuantity(field("soldQuantity").toInt());
@@ -81,6 +81,3 @@ void SpecificProductInfoWizardPage::setFields(Product* product) {
     product->setMaterial(*parentWizard->getController()->findMaterialById(materialId));
 }
 
-bool Views::Wizard::SpecificProductInfoWizardPage::validatePage() {
-    return QWizardPage::validatePage();
-}

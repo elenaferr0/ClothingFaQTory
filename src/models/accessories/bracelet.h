@@ -37,6 +37,10 @@ namespace Models::Accessories {
 
             double computePrice() const override;
 
+            void setPearlNumber(unsigned int pearlNumber);
+
+            void setPearlDiameter(double pearlDiameter);
+
             void accept(VisitorInterface& visitor) override;
     };
 }

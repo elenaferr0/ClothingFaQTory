@@ -50,3 +50,7 @@ const double& BackPack::getCapacity() const {
 void BackPack::accept(VisitorInterface& visitor) {
     visitor.visitBackPack(*this);
 }
+
+void Models::Accessories::BackPack::setCapacity(double capacity) {
+    this->capacity = capacity;
+}

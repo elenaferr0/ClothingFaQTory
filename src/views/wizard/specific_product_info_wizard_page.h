@@ -30,14 +30,12 @@ namespace Views::Wizard {
             SpecificProductInfoVisitor visitor;
             CreateProductWizardView* parentWizard;
 
-            void setFields(Product*);
+            void setProductFields(Product* product);
 
         public:
             SpecificProductInfoWizardPage(QWidget* parent = nullptr);
 
             void initializePage() override;
-
-            bool validatePage() override;
     };
 
 }

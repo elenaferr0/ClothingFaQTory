@@ -8,7 +8,7 @@ namespace Models {
     class ClothingItem : public Product {
         public:
             enum Gender {
-                MEN, WOMEN, UNISEX
+                UNISEX, MEN, WOMEN
             };
 
             ClothingItem(long id = -1,
@@ -36,6 +36,8 @@ namespace Models {
             bool isSustainableMaterials() const;
 
             Gender getGender() const;
+
+            void setGender(Gender gender);
 
         protected:
             double computeLegLength() const;

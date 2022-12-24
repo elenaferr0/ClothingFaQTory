@@ -23,6 +23,12 @@ namespace Views::Wizard {
 
         private:
             Product* product; // product which is being constructed
+            string getCategory();
+
+            bool getSustainableMaterials();
+
+            ClothingItem::Gender getGender();
+
         public:
             CreateProductWizardView(QWidget* parent = nullptr,
                                     const QList<QString>& materials = QList<QString>(),
