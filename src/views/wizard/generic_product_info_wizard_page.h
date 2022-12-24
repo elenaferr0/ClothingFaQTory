@@ -5,6 +5,9 @@
 #include "../../controllers/wizard_controller.h"
 #include <QWizardPage>
 #include <QLineEdit>
+#include <QSpinBox>
+#include <QTextEdit>
+#include <QComboBox>
 #include <QSet>
 #include <limits>
 #include "select_color_button.h"
@@ -23,12 +26,19 @@ class GenericProductInfoWizardPage : public QWizardPage {
         static const int SPIN_BOX_STEP = 100;
         QLineEdit* codeLineEdit;
         SelectColorButton* colorButton;
+        QSpinBox* soldQuantitySpinBox;
+        QSpinBox* availableQuantitySpinBox;
+        QTextEdit* descriptionTextEdit;
+        QComboBox* sizeBox;
+        QComboBox* materialBox;
     public:
         GenericProductInfoWizardPage(const QList<QString>& = QList<QString>(),
                                      const QList<QString>& = QList<QString>(),
                                      QWidget* parent = nullptr);
 
         bool validatePage() override;
+
+        void cleanupPage() override;
 
     private slots:
 

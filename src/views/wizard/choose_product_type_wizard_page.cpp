@@ -21,3 +21,8 @@ ChooseProductTypeWizardPage::ChooseProductTypeWizardPage(QWidget* parent)
     registerField("productType", comboBox);
     layout->addWidget(comboBox);
 }
+
+void Views::Wizard::ChooseProductTypeWizardPage::cleanupPage() {
+    comboBox->setCurrentIndex(0);
+    QWizardPage::cleanupPage();
+}

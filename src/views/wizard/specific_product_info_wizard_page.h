@@ -35,6 +35,8 @@ namespace Views::Wizard {
         public:
             SpecificProductInfoWizardPage(QWidget* parent = nullptr);
 
+            void cleanupPage() override;
+
             void initializePage() override;
     };
 

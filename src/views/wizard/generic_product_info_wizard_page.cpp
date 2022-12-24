@@ -4,9 +4,6 @@
 #include <QCompleter>
 #include <QRegularExpressionValidator>
 #include <QRegularExpression>
-#include <QSpinBox>
-#include <QTextEdit>
-#include <QComboBox>
 #include "generic_product_info_wizard_page.h"
 #include "create_product_wizard_view.h"
 
@@ -44,31 +41,31 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
     connect(colorButton, SIGNAL(colorChanged(const QString &)), this, SLOT(handleColorChange(const QString &)));
     layout->addRow("Color", colorButton);
 
-    QSpinBox* soldQuantitySpinBox = new QSpinBox;
+    soldQuantitySpinBox = new QSpinBox;
     soldQuantitySpinBox->setRange(0, MAX_SPIN_BOX_VALUE);
     soldQuantitySpinBox->setSingleStep(SPIN_BOX_STEP);
     registerField("soldQuantity", soldQuantitySpinBox);
     layout->addRow("Sold quantity", soldQuantitySpinBox);
 
-    QSpinBox* availableQuantitySpinBox = new QSpinBox;
+    availableQuantitySpinBox = new QSpinBox;
     availableQuantitySpinBox->setRange(0, MAX_SPIN_BOX_VALUE);
     availableQuantitySpinBox->setSingleStep(SPIN_BOX_STEP);
     registerField("availableQuantity", availableQuantitySpinBox);
     layout->addRow("Available quantity", availableQuantitySpinBox);
 
-    QTextEdit* descriptionTextEdit = new QTextEdit;
+    descriptionTextEdit = new QTextEdit;
     descriptionTextEdit->setMaximumHeight(75);
     registerField("description", descriptionTextEdit, "plainText");
     layout->addRow("Description", descriptionTextEdit);
 
-    QComboBox* sizeBox = new QComboBox;
+    sizeBox = new QComboBox;
     for (int i = 0; i < sizes.size(); ++i) {
         sizeBox->addItem(sizes.value(i));
     }
     registerField("size", sizeBox);
     layout->addRow("Size", sizeBox);
 
-    QComboBox* materialBox = new QComboBox;
+    materialBox = new QComboBox;
     materialBox->addItems(materials);
     registerField("material", materialBox);
     layout->addRow("Material", materialBox);
@@ -96,4 +93,15 @@ bool GenericProductInfoWizardPage::validatePage() {
 
 void GenericProductInfoWizardPage::handleColorChange(const QString& hex) {
     wizard()->setField("color", hex);
+}
+
+void GenericProductInfoWizardPage::cleanupPage() {
+    codeLineEdit->clear();
+    colorButton->setColor(QColor("#ffffff"));
+    soldQuantitySpinBox->setValue(0);
+    availableQuantitySpinBox->setValue(0);
+    descriptionTextEdit->clear();
+    sizeBox->setCurrentIndex(0);
+    materialBox->setCurrentIndex(0);
+    QWizardPage::cleanupPage();
 }

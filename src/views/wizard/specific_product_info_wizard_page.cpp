@@ -81,3 +81,8 @@ void SpecificProductInfoWizardPage::setProductFields(Product* product) {
     product->setMaterial(*parentWizard->getController()->findMaterialById(materialId));
 }
 
+void Views::Wizard::SpecificProductInfoWizardPage::cleanupPage() {
+    visitor.clean();
+    QWizardPage::cleanupPage();
+}
+

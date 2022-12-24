@@ -12,6 +12,8 @@ namespace Views::Wizard {
             QComboBox* comboBox;
         public:
             ChooseProductTypeWizardPage(QWidget* parent = nullptr);
+
+            void cleanupPage() override;
     };
 }
 

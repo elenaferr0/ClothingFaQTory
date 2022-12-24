@@ -21,6 +21,8 @@ namespace Views::Wizard {
         protected:
             void done(int result) override;
 
+            void cleanupPage(int id) override;
+
         private:
             Product* product; // product which is being constructed
             string getCategory();
@@ -39,7 +41,6 @@ namespace Views::Wizard {
             Product* getProduct() const;
 
             WizardController* getController() const;
-
 
         signals:
 

@@ -96,3 +96,11 @@ ClothingItem::Gender CreateProductWizardView::getGender() {
     int genderIndex = field("gender").toInt();
     return static_cast<ClothingItem::Gender>(genderIndex);
 }
+
+void CreateProductWizardView::cleanupPage(int id) {
+    for (int i = 0; i < id; ++i) {
+        QWizardPage* page = this->page(i);
+        page->cleanupPage();
+    }
+    QWizard::cleanupPage(id);
+}

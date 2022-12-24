@@ -9,6 +9,7 @@ using Core::VisitorInterface;
 
 class SpecificProductInfoVisitor : public VisitorInterface {
     private:
+        static const int FORM_ICON_SIZE = 25;
         QFormLayout* layout;
 
         void buildAccessory();
@@ -38,6 +39,8 @@ class SpecificProductInfoVisitor : public VisitorInterface {
         QFormLayout* getLayout() const;
 
         const QMap<QString, QWidget*>& getFieldsToRegister() const;
+
+        void clean();
 
 };
 
