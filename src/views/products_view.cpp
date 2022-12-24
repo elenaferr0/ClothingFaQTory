@@ -3,8 +3,10 @@
 #include <QVBoxLayout>
 #include <QToolButton>
 #include "products_view.h"
+#include "components/icon_button.h"
 #include <algorithm>
 #include <QPainter>
+#include <QPushButton>
 #include <memory>
 
 using std::transform;
@@ -16,7 +18,7 @@ using Views::Wizard::CreateProductWizardView;
 using Controllers::WizardController;
 using Controllers::MainController;
 
-int ProductsView::COLUMN_COUNT = 5;
+int ProductsView::COLUMN_COUNT = 7;
 
 ProductsView::ProductsView(MainView* mainView, QWidget* parent) : ObserverWidgetView(parent) {
     setController(new MainController(this));
@@ -32,14 +34,17 @@ void ProductsView::init(const ProductsMap& productsByType) {
     treeWidget->setIconSize(QSize(30, 30));
     treeWidget->setFocusPolicy(Qt::NoFocus);
     treeWidget->setColumnCount(COLUMN_COUNT);
+    treeWidget->setSelectionMode(QAbstractItemView::NoSelection);
 
     if (productsByType.getSize() > 0) {
         initTreeView();
     }
 
-    for (int i = 0; i < COLUMN_COUNT; ++i) {
-        treeWidget->setColumnWidth(i, 180);
+    for (int i = 0; i < COLUMN_COUNT - 2; ++i) {
+        treeWidget->setColumnWidth(i, 170);
     }
+    treeWidget->setColumnWidth(COLUMN_COUNT - 2, 50);
+    treeWidget->setColumnWidth(COLUMN_COUNT - 1, 50);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setAlignment(Qt::AlignTop);
@@ -76,7 +81,9 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
                                                                  << "Color"
                                                                  << "Description"
                                                                  << "Size"
-                                                                 << "Calculated price");
+                                                                 << "Calculated price"
+                                                                 << "Edit"
+                                                                 << "Delete");
     QFont font = QFont();
     font.setBold(true);
 
@@ -133,6 +140,15 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
            << QString::number(product->computePrice(), 'f', 2) + "$";
     QTreeWidgetItem* columns = new QTreeWidgetItem(values);
     topLevelItemWidget->addChild(columns);
+
+    IconButton* editButton = new IconButton(":/assets/icons/edit.png", "editButton", product->getId(), this);
+    treeWidget->setItemWidget(columns, COLUMN_COUNT - 2, editButton);
+    connect(editButton, SIGNAL(clicked(int)), this, SLOT(clickedEditButton(int)));
+
+    IconButton* deleteButton = new IconButton(":/assets/icons/delete.png", "deleteButton", product->getId(), this);
+    treeWidget->setItemWidget(columns, COLUMN_COUNT - 1, deleteButton);
+    connect(deleteButton, SIGNAL(clicked(int)), this, SLOT(clickedDeleteButton(int)));
+
     columns->setIcon(1, drawColorIcon(product->getColor()));
 }
 
@@ -167,8 +183,8 @@ void ProductsView::showWizard(bool) {
 }
 
 void Views::ProductsView::rebuildTreeView() {
-//    productsByType = dynamic_cast<MainController*>(controller)->findAllProductsByType();
-//    initTreeView();
+    productsByType = dynamic_cast<MainController*>(controller)->findAllProductsByType();
+    initTreeView();
 }
 
 QIcon Views::ProductsView::drawColorIcon(const string& hex) {
@@ -191,5 +207,13 @@ void Views::ProductsView::handleProductCreation(Product* product, Product::Produ
     currentProducts.push_back(sharedPtr);
     productsByType.put(type, currentProducts);
     buildAndInsertChild(treeWidget->topLevelItem(type), sharedPtr);
+}
+
+void Views::ProductsView::clickedEditButton(int id) {
+    qInfo() << "edit Id: " << id;
+}
+
+void Views::ProductsView::clickedDeleteButton(int id) {
+    qInfo() << "delete Id: " << id;
 }
 

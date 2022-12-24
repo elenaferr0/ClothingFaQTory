@@ -10,7 +10,7 @@
 #include <QComboBox>
 #include <QSet>
 #include <limits>
-#include "select_color_button.h"
+#include "../components/select_color_button.h"
 
 QT_BEGIN_NAMESPACE
 namespace Views::Wizard { class InsertProductInfoWizardPage; }

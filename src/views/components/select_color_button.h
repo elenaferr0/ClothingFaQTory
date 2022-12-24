@@ -6,7 +6,7 @@
 #include <QColor>
 
 QT_BEGIN_NAMESPACE
-namespace Views::Wizard { class SelectColorButton; }
+namespace Views::Components { class SelectColorButton; }
 QT_END_NAMESPACE
 
 class SelectColorButton : public QPushButton {

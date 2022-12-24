@@ -62,6 +62,10 @@ namespace Views {
 
             void showWizard(bool);
 
+            void clickedEditButton(int);
+
+            void clickedDeleteButton(int);
+
     };
 
 }
