@@ -14,7 +14,7 @@ CreateProductWizardView::CreateProductWizardView(QWidget* parent,
     addPage(new GenericProductInfoWizardPage(materials, sizes, this));
     addPage(new SpecificProductInfoWizardPage(this));
     setWindowTitle("Insert a new product");
-
+    setDefaultProperty("QTextEdit", "plainText", "textChanged");
     connect(this, SIGNAL(productCreationCompleted(Product * , Product::ProductType)),
             controller, SLOT(handleProductCreation(Product * , Product::ProductType)));
 }

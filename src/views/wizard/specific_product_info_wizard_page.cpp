@@ -74,13 +74,11 @@ void SpecificProductInfoWizardPage::setFields(Product* product) {
     product->setAvailableQuantity(field("availableQuantity").toInt());
     product->setDescription(field("description").toString().toStdString());
 
-    QString sizeName = field("size").toString();
-    qInfo() << sizeName; // FIXME returns size id - 1
-    product->setSize(*parentWizard->getController()->findSizeByName(sizeName));
+    int sizeId = field("size").toInt() + 1; // in the combobox the ids start from 0
+    product->setSize(*parentWizard->getController()->findSizeById(sizeId));
 
-    QString materialName = field("material").toString();
-    qInfo() << materialName;// FIXME returns wrong material
-    product->setMaterial(*parentWizard->getController()->findMaterialByName(materialName));
+    int materialId = field("material").toInt() + 1;
+    product->setMaterial(*parentWizard->getController()->findMaterialById(materialId));
 }
 
 bool Views::Wizard::SpecificProductInfoWizardPage::validatePage() {

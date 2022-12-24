@@ -16,9 +16,8 @@ WizardController::WizardController(View* view)
           overallsRepository(OverallsRepository::getInstance()),
           materialRepository(MaterialRepository::getInstance()) {}
 
-shared_ptr<Material> Controllers::WizardController::findMaterialByName(const QString& name) {
-    Either<Error, shared_ptr<Material>> errorOrMaterial = materialRepository->findByName(
-            Material::namefromString(name.toStdString()));
+shared_ptr<Material> WizardController::findMaterialById(int id) {
+    Either<Error, shared_ptr<Material>> errorOrMaterial = materialRepository->findById(id);
 
     return errorOrMaterial.fold<shared_ptr<Material>>(
             [&]() {
@@ -31,9 +30,8 @@ shared_ptr<Material> Controllers::WizardController::findMaterialByName(const QSt
     );
 }
 
-shared_ptr<Size> Controllers::WizardController::findSizeByName(const QString& name) {
-    Either<Error, shared_ptr<Size>> errorOrSize = sizeRepository->findByName(
-            Size::nameFromString(name.toStdString()));
+shared_ptr<Size> WizardController::findSizeById(int id) {
+    Either<Error, shared_ptr<Size>> errorOrSize = sizeRepository->findById(id);
 
     return errorOrSize.fold<shared_ptr<Size>>(
             [&]() {

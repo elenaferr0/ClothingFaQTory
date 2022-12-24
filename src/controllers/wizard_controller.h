@@ -57,9 +57,9 @@ namespace Controllers {
         public:
             WizardController(View*);
 
-            shared_ptr<Material> findMaterialByName(const QString&);
+            shared_ptr<Material> findMaterialById(int id);
 
-            shared_ptr<Size> findSizeByName(const QString&);
+            shared_ptr<Size> findSizeById(int id);
 
         public slots:
 

@@ -58,14 +58,12 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
 
     QTextEdit* descriptionTextEdit = new QTextEdit;
     descriptionTextEdit->setMaximumHeight(75);
-    registerField("description", descriptionTextEdit);
+    registerField("description", descriptionTextEdit, "plainText");
     layout->addRow("Description", descriptionTextEdit);
 
     QComboBox* sizeBox = new QComboBox;
-    // iterate over the items to preserve the order (.addItems would not)
-    // and to set the value
     for (int i = 0; i < sizes.size(); ++i) {
-        sizeBox->addItem(sizes.value(i), i + 1);
+        sizeBox->addItem(sizes.value(i));
     }
     registerField("size", sizeBox);
     layout->addRow("Size", sizeBox);
