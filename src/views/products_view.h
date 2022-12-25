@@ -40,6 +40,8 @@ namespace Views {
 
             void buildAndInsertChild(QTreeWidgetItem*, Product*, Product::ProductType);
 
+            QList<QString> materials;
+            QList<QString> sizes;
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
@@ -55,11 +57,13 @@ namespace Views {
 
             void handleProductCreation(Product*, Product::ProductType);
 
-            void showWizard(bool);
+            void handleProductEditing(Product*, Product::ProductType);
 
-            void clickedEditButton(int, QTreeWidgetItem*, Product::ProductType);
+            void showCreateProductWizard(bool);
 
-            void clickedDeleteButton(int, QTreeWidgetItem*, Product::ProductType);
+            void clickedEditButton(Product*, QTreeWidgetItem*, Product::ProductType);
+
+            void clickedDeleteButton(Product*, QTreeWidgetItem*, Product::ProductType);
 
     };
 

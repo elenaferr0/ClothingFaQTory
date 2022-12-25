@@ -9,7 +9,7 @@ using Views::Wizard::ChooseProductTypeWizardPage;
 ProductWizardView::ProductWizardView(Mode mode, QWidget* parent,
                                      const QList<QString>& materials,
                                      const QList<QString>& sizes,
-                                     Product* product) : QWizard(parent), product(product) {
+                                     Product* product) : QWizard(parent), product(product), mode(mode) {
     controller = new WizardController(this);
     if (mode == Mode::Create) {
         addPage(new ChooseProductTypeWizardPage(this));

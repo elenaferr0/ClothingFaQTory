@@ -2,10 +2,10 @@
 #include <QTreeWidgetItem>
 #include "icon_button.h"
 
-IconButton::IconButton(const QString& path, const QString& objName, int id, QTreeWidgetItem* row,
+IconButton::IconButton(const QString& path, const QString& objName, Product* id, QTreeWidgetItem* row,
                        Product::ProductType productType,
                        QWidget* parent)
-        : QPushButton(parent), id(id), row(row), productType(productType) {
+        : QPushButton(parent), product(product), row(row), productType(productType) {
     connect(this, SIGNAL(clicked(bool)), this, SLOT(handleClick(bool)));
     setIcon(QIcon(path));
     setObjectName(objName);
@@ -13,6 +13,6 @@ IconButton::IconButton(const QString& path, const QString& objName, int id, QTre
 }
 
 void IconButton::handleClick(bool) {
-    emit clicked(id, row, productType);
+    emit clicked(product, row, productType);
 }
 

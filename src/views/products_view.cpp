@@ -54,7 +54,7 @@ void ProductsView::init(const ProductsMap& productsByType) {
     createButton->setIcon(QIcon(":/assets/icons/add.png"));
     createButton->setText(tr("Create &New"));
     createButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    connect(createButton, SIGNAL(clicked(bool)), this, SLOT(showWizard(bool)));
+    connect(createButton, SIGNAL(clicked(bool)), this, SLOT(showCreateProductWizard(bool)));
     toolBar->addWidget(createButton);
 
     QToolButton* searchButton = new QToolButton;
@@ -68,6 +68,27 @@ void ProductsView::init(const ProductsMap& productsByType) {
 
     layout->addWidget(toolBar);
     layout->addWidget(treeWidget);
+
+    // fetch all materials and sizes and store them to reuse them
+    LinkedList<Material*> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
+    LinkedList<Size*> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
+
+    materials = QList<QString>();
+    sizes = QList<QString>();
+
+    transform(dbMaterials.begin(),
+              dbMaterials.end(),
+              inserter(materials, materials.end()),
+              [](const Material* material) {
+                  return QString::fromStdString(material->getNameAsString());
+              });
+
+    transform(dbSizes.begin(),
+              dbSizes.end(),
+              inserter(sizes, sizes.end()),
+              [](const Size* size) {
+                  return QString::fromStdString(size->getNameAsString());
+              });
 }
 
 void Views::ProductsView::notify(Model*) {
@@ -139,43 +160,23 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
     QTreeWidgetItem* row = new QTreeWidgetItem(values);
     topLevelItemWidget->addChild(row);
 
-    IconButton* editButton = new IconButton(":/assets/icons/edit.png", "editButton", product->getId(),
+    IconButton* editButton = new IconButton(":/assets/icons/edit.png", "editButton", product,
                                             row, productType, this);
     treeWidget->setItemWidget(row, COLUMN_COUNT - 2, editButton);
-    connect(editButton, SIGNAL(clicked(int, QTreeWidgetItem * , Product::ProductType)), this,
-            SLOT(clickedEditButton(int, QTreeWidgetItem * , Product::ProductType)));
+    connect(editButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedEditButton(Product * , QTreeWidgetItem * , Product::ProductType)));
 
-    IconButton* deleteButton = new IconButton(":/assets/icons/delete.png", "deleteButton", product->getId(),
+    IconButton* deleteButton = new IconButton(":/assets/icons/delete.png", "deleteButton", product,
                                               row, productType, this);
 
     treeWidget->setItemWidget(row, COLUMN_COUNT - 1, deleteButton);
-    connect(deleteButton, SIGNAL(clicked(int, QTreeWidgetItem * , Product::ProductType)), this,
-            SLOT(clickedDeleteButton(int, QTreeWidgetItem * , Product::ProductType)));
+    connect(deleteButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedDeleteButton(Product * , QTreeWidgetItem * , Product::ProductType)));
 
     row->setIcon(1, drawColorIcon(product->getColor()));
 }
 
-void ProductsView::showWizard(bool) {
-    LinkedList<Material*> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
-    LinkedList<Size*> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
-
-    QList<QString> materials = QList<QString>();
-    QList<QString> sizes = QList<QString>();
-
-    transform(dbMaterials.begin(),
-              dbMaterials.end(),
-              inserter(materials, materials.end()),
-              [](const Material* material) {
-                  return QString::fromStdString(material->getNameAsString());
-              });
-
-    transform(dbSizes.begin(),
-              dbSizes.end(),
-              inserter(sizes, sizes.end()),
-              [](const Size* size) {
-                  return QString::fromStdString(size->getNameAsString());
-              });
-
+void ProductsView::showCreateProductWizard(bool) {
     ProductWizardView* createProductWizard = new ProductWizardView(ProductWizardView::Create,
                                                                    this,
                                                                    materials,
@@ -208,11 +209,20 @@ void Views::ProductsView::handleProductCreation(Product* product, Product::Produ
     buildAndInsertChild(treeWidget->topLevelItem(type), product, type);
 }
 
-void Views::ProductsView::clickedEditButton(int id, QTreeWidgetItem* row, Product::ProductType productType) {
-    qInfo() << "edit Id: " << id;
+void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, Product::ProductType) {
+    ProductWizardView* editProductWizard = new ProductWizardView(ProductWizardView::Edit,
+                                                                 this,
+                                                                 materials,
+                                                                 sizes,
+                                                                 product
+    );
+    connect(editProductWizard, SIGNAL(completed(Product * , Product::ProductType)),
+            this, SLOT(handleProductEditing(Product * , Product::ProductType)));
+    editProductWizard->setAttribute(Qt::WA_DeleteOnClose);
+    editProductWizard->show();
 }
 
-void Views::ProductsView::clickedDeleteButton(int id, QTreeWidgetItem* row, Product::ProductType productType) {
+void Views::ProductsView::clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType productType) {
     QMessageBox* errorBox = new QMessageBox;
     errorBox->setWindowTitle("Delete product");
     errorBox->setText("### Do you really want to delete this product?");
@@ -228,4 +238,8 @@ void Views::ProductsView::clickedDeleteButton(int id, QTreeWidgetItem* row, Prod
         dynamic_cast<MainController*>(controller)->deleteProductById(id);
         treeWidget->topLevelItem(productType)->removeChild(row);
     }
+}
+
+void Views::ProductsView::handleProductEditing(Product*, Product::ProductType) {
+
 }

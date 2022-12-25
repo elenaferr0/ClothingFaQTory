@@ -74,6 +74,8 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
 
     if (parentWizard->getMode() == ProductWizardView::Edit) {
         Product* product = parentWizard->getProduct();
+        //FIXME: seg fault
+        qInfo() << QString::fromStdString(product->getCode());
         codeLineEdit->setText(QString::fromStdString(product->getCode()));
         codeLineEdit->setDisabled(true);
         colorButton->setColor(QString::fromStdString(product->getColor()));

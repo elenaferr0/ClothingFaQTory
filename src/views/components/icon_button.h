@@ -16,12 +16,12 @@ QT_END_NAMESPACE
 class IconButton : public QPushButton {
     Q_OBJECT
     private:
-        int id;
+        Product* product;
         QTreeWidgetItem* row;
         Product::ProductType productType;
 
     public:
-        IconButton(const QString& path, const QString& objName, int id, QTreeWidgetItem* row, Product::ProductType,
+        IconButton(const QString& path, const QString& objName, Product* id, QTreeWidgetItem* row, Product::ProductType,
                    QWidget* parent);
 
     private slots:
@@ -30,7 +30,7 @@ class IconButton : public QPushButton {
 
     signals:
 
-        void clicked(int, QTreeWidgetItem*, Product::ProductType);
+        void clicked(Product*, QTreeWidgetItem*, Product::ProductType);
 };
 
 
