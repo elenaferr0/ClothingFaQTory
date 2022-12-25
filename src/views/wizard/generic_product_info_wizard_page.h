@@ -18,6 +18,7 @@ QT_END_NAMESPACE
 
 using Models::Product;
 using Controllers::WizardController;
+using Views::Wizard::ProductWizardView;
 
 class GenericProductInfoWizardPage : public QWizardPage {
     Q_OBJECT
@@ -31,6 +32,7 @@ class GenericProductInfoWizardPage : public QWizardPage {
         QTextEdit* descriptionTextEdit;
         QComboBox* sizeBox;
         QComboBox* materialBox;
+        ProductWizardView* parentWizard;
     public:
         GenericProductInfoWizardPage(const QList<QString>& = QList<QString>(),
                                      const QList<QString>& = QList<QString>(),

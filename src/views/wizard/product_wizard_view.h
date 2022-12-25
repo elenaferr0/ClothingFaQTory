@@ -16,13 +16,20 @@ using Models::Product;
 using Controllers::WizardController;
 
 namespace Views::Wizard {
-    class CreateProductWizardView : public QWizard, public View {
+    class ProductWizardView : public QWizard, public View {
         Q_OBJECT
+        public:
+
+            enum Mode {
+                Edit, Create
+            };
+
         protected:
             void done(int result) override;
 
             void cleanupPage(int id) override;
 
+            Mode mode;
         private:
             Product* product; // product which is being constructed
             string getCategory();
@@ -32,19 +39,22 @@ namespace Views::Wizard {
             ClothingItem::Gender getGender();
 
         public:
-            CreateProductWizardView(QWidget* parent = nullptr,
-                                    const QList<QString>& materials = QList<QString>(),
-                                    const QList<QString>& sizes = QList<QString>());
-
             void setProduct(Product* product);
 
             Product* getProduct() const;
 
             WizardController* getController() const;
 
+            ProductWizardView(Mode mode, QWidget* parent = nullptr,
+                              const QList<QString>& materials = QList<QString>(),
+                              const QList<QString>& sizes = QList<QString>(),
+                              Product* = nullptr);
+
+            Mode getMode() const;
+
         signals:
 
-            void productCreationCompleted(Product* product, Product::ProductType);
+            void completed(Product* product, Product::ProductType);
 
     };
 }

@@ -1,37 +1,47 @@
-#include "create_product_wizard_view.h"
+#include "product_wizard_view.h"
 #include "choose_product_type_wizard_page.h"
 #include "generic_product_info_wizard_page.h"
 #include "specific_product_info_wizard_page.h"
 
-using Views::Wizard::CreateProductWizardView;
+using Views::Wizard::ProductWizardView;
 using Views::Wizard::ChooseProductTypeWizardPage;
 
-CreateProductWizardView::CreateProductWizardView(QWidget* parent,
-                                                 const QList<QString>& materials,
-                                                 const QList<QString>& sizes) : QWizard(parent) {
+ProductWizardView::ProductWizardView(Mode mode, QWidget* parent,
+                                     const QList<QString>& materials,
+                                     const QList<QString>& sizes,
+                                     Product* product) : QWizard(parent), product(product) {
     controller = new WizardController(this);
-    addPage(new ChooseProductTypeWizardPage(this));
+    if (mode == Mode::Create) {
+        addPage(new ChooseProductTypeWizardPage(this));
+    }
     addPage(new GenericProductInfoWizardPage(materials, sizes, this));
     addPage(new SpecificProductInfoWizardPage(this));
-    setWindowTitle("Insert a new product");
+    setWindowTitle(mode == Create ? "Insert a new product" : "Edit product");
+
     setDefaultProperty("QTextEdit", "plainText", "textChanged");
-    connect(this, SIGNAL(productCreationCompleted(Product * , Product::ProductType)),
-            controller, SLOT(handleProductCreation(Product * , Product::ProductType)));
+
+    if (mode == Create) {
+        connect(this, SIGNAL(completed(Product * , Product::ProductType)),
+                controller, SLOT(handleProductCreation(Product * , Product::ProductType)));
+    } else {
+        connect(this, SIGNAL(completed(Product * , Product::ProductType)),
+                controller, SLOT(handleProductEditing(Product * , Product::ProductType)));
+    }
 }
 
-void CreateProductWizardView::setProduct(Product* product) {
+void ProductWizardView::setProduct(Product* product) {
     this->product = product;
 }
 
-WizardController* CreateProductWizardView::getController() const {
+WizardController* ProductWizardView::getController() const {
     return dynamic_cast<WizardController*>(controller);
 }
 
-Product* CreateProductWizardView::getProduct() const {
+Product* ProductWizardView::getProduct() const {
     return product;
 }
 
-void CreateProductWizardView::done(int result) {
+void ProductWizardView::done(int result) {
     if (result == QDialog::Accepted) {
         Product::ProductType productType = static_cast<Product::ProductType>(field("productType").toInt());
         switch (productType) {
@@ -77,30 +87,34 @@ void CreateProductWizardView::done(int result) {
                 break;
             }
         }
-        emit productCreationCompleted(product,
-                                      static_cast<Product::ProductType>(field("productType").toInt()));
+        emit completed(product,
+                       static_cast<Product::ProductType>(field("productType").toInt()));
     }
     QWizard::done(result);
 }
 
-string CreateProductWizardView::getCategory() {
+string ProductWizardView::getCategory() {
     int categoryIndex = field("category").toInt();
     return Accessory::getCategoryAsString(static_cast<Accessory::Category>(categoryIndex));
 }
 
-bool CreateProductWizardView::getSustainableMaterials() {
+bool ProductWizardView::getSustainableMaterials() {
     return field("sustainableMaterials").toBool();
 }
 
-ClothingItem::Gender CreateProductWizardView::getGender() {
+ClothingItem::Gender ProductWizardView::getGender() {
     int genderIndex = field("gender").toInt();
     return static_cast<ClothingItem::Gender>(genderIndex);
 }
 
-void CreateProductWizardView::cleanupPage(int id) {
+void ProductWizardView::cleanupPage(int id) {
     for (int i = 0; i < id; ++i) {
         QWizardPage* page = this->page(i);
         page->cleanupPage();
     }
     QWizard::cleanupPage(id);
+}
+
+ProductWizardView::Mode Views::Wizard::ProductWizardView::getMode() const {
+    return mode;
 }

@@ -5,7 +5,7 @@
 #include <QRegularExpressionValidator>
 #include <QRegularExpression>
 #include "generic_product_info_wizard_page.h"
-#include "create_product_wizard_view.h"
+#include "product_wizard_view.h"
 
 using Models::Product;
 using Models::ClothingItems::Jeans;
@@ -14,14 +14,16 @@ using Models::ClothingItems::Overalls;
 using Models::Accessories::BackPack;
 using Models::Accessories::Bracelet;
 using Models::Accessories::Hat;
-using Views::Wizard::CreateProductWizardView;
+using Views::Wizard::ProductWizardView;
 using Controllers::WizardController;
 
 GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>& materials,
                                                            const QList<QString>& sizes,
                                                            QWidget* parent)
-        : QWizardPage(parent) {
-    setTitle("Insert generic product information");
+        : QWizardPage(parent), parentWizard(dynamic_cast<ProductWizardView*>(parent)) {
+
+    setTitle(parentWizard->getMode() == ProductWizardView::Create ?
+             "Insert generic product information" : "Edit generic product information");
     QFormLayout* layout = new QFormLayout;
 
     QRegularExpression regex("^[a-zA-Z0-9_-]*$");
@@ -69,6 +71,18 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
     materialBox->addItems(materials);
     registerField("material", materialBox);
     layout->addRow("Material", materialBox);
+
+    if (parentWizard->getMode() == ProductWizardView::Edit) {
+        Product* product = parentWizard->getProduct();
+        codeLineEdit->setText(QString::fromStdString(product->getCode()));
+        codeLineEdit->setDisabled(true);
+        colorButton->setColor(QString::fromStdString(product->getColor()));
+        soldQuantitySpinBox->setValue(product->getSoldQuantity());
+        availableQuantitySpinBox->setValue(product->getAvailableQuantity());
+        descriptionTextEdit->setText(QString::fromStdString(product->getDescription()));
+        sizeBox->setCurrentIndex(product->getSize().getId() - 1);
+        materialBox->setCurrentIndex(product->getMaterial().getId() - 1);
+    }
     setLayout(layout);
 
 }

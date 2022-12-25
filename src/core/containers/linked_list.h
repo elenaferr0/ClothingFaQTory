@@ -163,7 +163,7 @@ namespace Core::Containers {
     }
 
     template<class T>
-    LinkedList<T>::LinkedList(std::initializer_list<T> init) : head(nullptr) {
+    LinkedList<T>::LinkedList(std::initializer_list<T> init) : head(nullptr), size(init.size()) {
         for (auto it = init.begin(); it != init.end(); it++) {
             pushBack(*it);
         }
@@ -286,7 +286,7 @@ namespace Core::Containers {
     void LinkedList<T>::pushBack(T item) {
         Node* temp = new Node(item);
 
-        if (size == 0) {
+        if (head == nullptr) {
             head = temp;
             size++;
             return;

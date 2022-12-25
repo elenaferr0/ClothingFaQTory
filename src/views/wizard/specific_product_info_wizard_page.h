@@ -13,7 +13,7 @@
 #include "../../models/accessories/hat.h"
 #include "../../models/accessories/bracelet.h"
 #include "../../models/accessories/backpack.h"
-#include "create_product_wizard_view.h"
+#include "product_wizard_view.h"
 
 using Models::Product;
 using Models::Accessories::Hat;
@@ -28,7 +28,7 @@ namespace Views::Wizard {
         Q_OBJECT
         private:
             SpecificProductInfoVisitor visitor;
-            CreateProductWizardView* parentWizard;
+            ProductWizardView* parentWizard;
 
             void setProductFields(Product* product);
 

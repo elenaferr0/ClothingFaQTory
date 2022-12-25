@@ -1,14 +1,14 @@
 #include <QVariant>
 #include "specific_product_info_wizard_page.h"
-#include "create_product_wizard_view.h"
+#include "product_wizard_view.h"
 
 using Views::Wizard::SpecificProductInfoWizardPage;
-using Views::Wizard::CreateProductWizardView;
+using Views::Wizard::ProductWizardView;
 
 SpecificProductInfoWizardPage::SpecificProductInfoWizardPage(QWidget* parent)
         : QWizardPage(parent),
           visitor(SpecificProductInfoVisitor()),
-          parentWizard(dynamic_cast<CreateProductWizardView*>(parent)) {
+          parentWizard(dynamic_cast<ProductWizardView*>(parent)) {
     setWindowTitle("Set specific product info");
 }
 
@@ -18,42 +18,46 @@ void SpecificProductInfoWizardPage::initializePage() {
     // this allows using the visitor pattern to create a different page
     // based on the product type
 
-    switch (productType) {
-        case Product::Jeans: {
-            Jeans* jeans = new Jeans;
-            setProductFields(jeans);
-            parentWizard->setProduct(jeans);
-            break;
-        }
-        case Product::Overalls: {
-            Overalls* overalls = new Overalls;
-            setProductFields(overalls);
-            parentWizard->setProduct(overalls);
-            break;
-        }
-        case Product::Hat: {
-            Hat* hat = new Hat;
-            setProductFields(hat);
-            parentWizard->setProduct(hat);
-            break;
-        }
-        case Product::Bracelet: {
-            Bracelet* bracelet = new Bracelet;
-            setProductFields(bracelet);
-            parentWizard->setProduct(bracelet);
-            break;
-        }
-        case Product::Vest: {
-            Vest* vest = new Vest;
-            setProductFields(vest);
-            parentWizard->setProduct(vest);
-            break;
-        }
-        case Product::BackPack: {
-            BackPack* backpack = new BackPack;
-            setProductFields(backpack);
-            parentWizard->setProduct(backpack);
-            break;
+    if (parentWizard->getMode() == ProductWizardView::Edit) {
+        setProductFields(parentWizard->getProduct());
+    } else {
+        switch (productType) {
+            case Product::Jeans: {
+                Jeans* jeans = new Jeans;
+                setProductFields(jeans);
+                parentWizard->setProduct(jeans);
+                break;
+            }
+            case Product::Overalls: {
+                Overalls* overalls = new Overalls;
+                setProductFields(overalls);
+                parentWizard->setProduct(overalls);
+                break;
+            }
+            case Product::Hat: {
+                Hat* hat = new Hat;
+                setProductFields(hat);
+                parentWizard->setProduct(hat);
+                break;
+            }
+            case Product::Bracelet: {
+                Bracelet* bracelet = new Bracelet;
+                setProductFields(bracelet);
+                parentWizard->setProduct(bracelet);
+                break;
+            }
+            case Product::Vest: {
+                Vest* vest = new Vest;
+                setProductFields(vest);
+                parentWizard->setProduct(vest);
+                break;
+            }
+            case Product::BackPack: {
+                BackPack* backpack = new BackPack;
+                setProductFields(backpack);
+                parentWizard->setProduct(backpack);
+                break;
+            }
         }
     }
 

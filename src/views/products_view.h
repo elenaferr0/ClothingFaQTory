@@ -5,7 +5,7 @@
 #include "../models/product.h"
 #include "../core/containers/map.h"
 #include "../core/errors/error.h"
-#include "wizard/create_product_wizard_view.h"
+#include "wizard/product_wizard_view.h"
 #include "view.h"
 #include "main_view.h"
 #include <QToolBar>

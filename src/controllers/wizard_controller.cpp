@@ -108,3 +108,7 @@ void WizardController::handleProductCreation(Product* product, Product::ProductT
             break;
     }
 }
+
+void Controllers::WizardController::handleProductEditing(Product* product, Product::ProductType productType) {
+
+}

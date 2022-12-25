@@ -64,6 +64,8 @@ namespace Controllers {
         public slots:
 
             void handleProductCreation(Product* product, Product::ProductType productType);
+
+            void handleProductEditing(Product* product, Product::ProductType productType);
     };
 }
 

@@ -13,7 +13,7 @@ using std::transform;
 using std::inserter;
 using std::pair;
 using Views::ProductsView;
-using Views::Wizard::CreateProductWizardView;
+using Views::Wizard::ProductWizardView;
 using Controllers::WizardController;
 using Controllers::MainController;
 
@@ -176,10 +176,11 @@ void ProductsView::showWizard(bool) {
                   return QString::fromStdString(size->getNameAsString());
               });
 
-    CreateProductWizardView* createProductWizard = new CreateProductWizardView(this,
-                                                                               materials,
-                                                                               sizes);
-    connect(createProductWizard, SIGNAL(productCreationCompleted(Product * , Product::ProductType)),
+    ProductWizardView* createProductWizard = new ProductWizardView(ProductWizardView::Create,
+                                                                   this,
+                                                                   materials,
+                                                                   sizes);
+    connect(createProductWizard, SIGNAL(completed(Product * , Product::ProductType)),
             this, SLOT(handleProductCreation(Product * , Product::ProductType)));
     createProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     createProductWizard->show();
