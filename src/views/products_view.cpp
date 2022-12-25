@@ -25,7 +25,6 @@ ProductsView::ProductsView(MainView* mainView, QWidget* parent) : ObserverWidget
 }
 
 void ProductsView::init(const ProductsMap& productsByType) {
-    this->productsByType = productsByType;
 
     treeWidget = new QTreeWidget;
     treeWidget->setHeaderHidden(true);
@@ -36,7 +35,7 @@ void ProductsView::init(const ProductsMap& productsByType) {
     treeWidget->setSelectionMode(QAbstractItemView::NoSelection);
 
     if (productsByType.getSize() > 0) {
-        initTreeView();
+        initTreeView(productsByType);
     }
 
     for (int i = 0; i < COLUMN_COUNT - 2; ++i) {
@@ -94,10 +93,10 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
     return headers;
 }
 
-void ProductsView::initTreeView() {
+void ProductsView::initTreeView(const ProductsMap& productsByType) {
     for (auto type = productsByType.cbegin(); type != productsByType.cend(); type++) {
         Product::ProductType productType = (*type).first;
-        LinkedList<Product*> products = (*type).second;
+        LinkedList<Product*> products = productsByType.get(productType).value();
         QString productTypeName = QString::fromStdString(Product::productTypeToString(productType));
         QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(productType);
 
@@ -187,8 +186,7 @@ void ProductsView::showWizard(bool) {
 }
 
 void Views::ProductsView::rebuildTreeView() {
-    productsByType = dynamic_cast<MainController*>(controller)->findAllProductsByType();
-    initTreeView();
+    initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType());
 }
 
 QIcon Views::ProductsView::drawColorIcon(const string& hex) {
@@ -206,9 +204,6 @@ QIcon Views::ProductsView::drawColorIcon(const string& hex) {
 }
 
 void Views::ProductsView::handleProductCreation(Product* product, Product::ProductType type) {
-    LinkedList<Product*> currentProducts = productsByType.get(type).value();
-    currentProducts.pushBack(product);
-    productsByType.put(type, currentProducts);
     buildAndInsertChild(treeWidget->topLevelItem(type), product, type);
 }
 
@@ -230,16 +225,6 @@ void Views::ProductsView::clickedDeleteButton(int id, QTreeWidgetItem* row, Prod
 
     if (result == QMessageBox::Yes) {
         dynamic_cast<MainController*>(controller)->deleteProductById(id);
-
-        auto products = productsByType.get(productType).value();
-        for (auto pr = products.begin(); pr != products.end(); pr++) {
-            if ((*pr)->getId() == id) {
-                products.popElement(pr);
-                // delete the row from the ui
-                treeWidget->topLevelItem(productType)->removeChild(row);
-                return;
-            }
-        }
-
+        treeWidget->topLevelItem(productType)->removeChild(row);
     }
 }

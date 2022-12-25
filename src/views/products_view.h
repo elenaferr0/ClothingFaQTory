@@ -25,8 +25,6 @@ namespace Views {
             typedef Map<Product::ProductType, LinkedList<Product*>>
                     ProductsMap;
 
-            ProductsMap productsByType;
-
             static int COLUMN_COUNT;
 
             QTreeWidget* treeWidget;
@@ -34,7 +32,7 @@ namespace Views {
 
             QTreeWidgetItem* getHeaders() const;
 
-            void initTreeView();
+            void initTreeView(const ProductsMap& productsByType);
 
             QIcon drawColorIcon(const string& hex);
 
