@@ -11,7 +11,7 @@ OverallsRepository::OverallsRepository()
 
 Either<Error, Overalls*> OverallsRepository::save(Overalls* entity) {
 
-    list<string> fields = {
+    LinkedList<string> fields = {
             "code",
             "color",
             "sold_quantity",

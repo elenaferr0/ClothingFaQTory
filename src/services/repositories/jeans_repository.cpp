@@ -12,7 +12,7 @@ JeansRepository::JeansRepository()
 
 Either<Error, Jeans*> JeansRepository::save(Jeans* entity) {
 
-    list<string> fields = {
+    LinkedList<string> fields = {
             "code",
             "color",
             "sold_quantity",

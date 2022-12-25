@@ -3,21 +3,21 @@
 #define MATERIALS_VIEW_H
 
 #include <QGridLayout>
-#include <list>
+
 #include "observer_widget_view.h"
 #include "../controllers/main_controller.h"
 #include "main_view.h"
 #include "../models/material.h"
 
 using Models::Material;
-using std::list;
+
 
 namespace Views {
     class MainView;
 
     class MaterialsView : public ObserverWidgetView {
         Q_OBJECT
-            typedef list<Material*> MaterialsList;
+            typedef LinkedList<Material*> MaterialsList;
         public:
             MaterialsView(MainView* mainView, QWidget* parent = nullptr);
 

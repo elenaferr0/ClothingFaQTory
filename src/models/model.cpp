@@ -15,7 +15,7 @@ bool Models::Model::found() const {
 }
 
 void Model::registerObserver(ObserverInterface* observer) {
-    observers.push_back(observer);
+    observers.pushBack(observer);
 }
 
 void Model::notifyAll() {

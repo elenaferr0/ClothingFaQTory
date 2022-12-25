@@ -8,10 +8,10 @@
 #include "../core/visitor_interface.h"
 
 #include<string>
-#include<list>
+
 
 using std::string;
-using std::list;
+
 using Models::Model;
 using Core::VisitorInterface;
 using Core::ObserverInterface;

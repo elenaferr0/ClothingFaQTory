@@ -9,7 +9,7 @@ BackPackRepository::BackPackRepository()
 
 Either<Error, BackPack*> BackPackRepository::save(BackPack* entity) {
 
-    list<string> fields = {
+    LinkedList<string> fields = {
             "code",
             "color",
             "sold_quantity",

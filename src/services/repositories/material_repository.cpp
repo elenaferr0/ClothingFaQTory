@@ -1,11 +1,9 @@
 #include "material_repository.h"
 #include "crud_repository.h"
-#include <list>
 #include <QDebug>
 #include <QSqlRecord>
 #include <QSqlQuery>
 
-using std::list;
 using Models::Material;
 using Services::MaterialRepository;
 using Services::CRUDRepository;
@@ -28,8 +26,8 @@ Either<Error, Material*> MaterialRepository::findById(int id) {
     return errorOrMaterial;
 }
 
-Either<Error, list<Material*>> MaterialRepository::findAll() {
-    Either<Error, list<Material*>> materialsOrError = ReadOnlyRepository::findAll();
+Either<Error, LinkedList<Material*>> MaterialRepository::findAll() {
+    Either<Error, LinkedList<Material*>> materialsOrError = ReadOnlyRepository::findAll();
     if (materialsOrError.isRight()) {
         for (auto m: materialsOrError.forceRight()) {
             cachedMaterials.put(m->getId(), m);

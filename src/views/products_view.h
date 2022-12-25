@@ -22,7 +22,7 @@ namespace Views {
     class ProductsView : public ObserverWidgetView {
         Q_OBJECT
         private:
-            typedef Map<Product::ProductType, list<Product*>>
+            typedef Map<Product::ProductType, LinkedList<Product*>>
                     ProductsMap;
 
             ProductsMap productsByType;

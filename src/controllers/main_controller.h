@@ -36,9 +36,9 @@ namespace Controllers {
 
     class MainController : public Controller {
         Q_OBJECT
-            typedef list<Material*> MaterialsList;
-            typedef Map<Product::ProductType, list<Product*>> ProductsMap;
-            typedef list<Size*> SizesList;
+            typedef LinkedList<Material*> MaterialsList;
+            typedef Map<Product::ProductType, LinkedList<Product*>> ProductsMap;
+            typedef LinkedList<Size*> SizesList;
         public:
             MainController(View*);
 

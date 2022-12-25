@@ -2,10 +2,10 @@
 #define Expr_H
 
 #include <string>
-#include <list>
+#include "../../core/containers/linked_list.h"
 
 using std::string;
-using std::list;
+using Core::Containers::LinkedList;
 
 namespace Core::Db {
     class Expr {
@@ -14,7 +14,7 @@ namespace Core::Db {
         public:
             friend string operator+(string, const Expr&);
 
-            friend string operator+(string, list<int>&);
+            friend string operator+(string, LinkedList<int>&);
 
             // allows implicit constructor
             Expr(string initial = "") : expression(initial) {};
@@ -29,7 +29,7 @@ namespace Core::Db {
 
             Expr& notEquals(const Expr&);
 
-            Expr& in(const list<int>&);
+            Expr& in(const LinkedList<int>&);
 
             Expr& gt(const Expr&);    // greater than
             Expr& geq(const Expr&); // greater or eq than

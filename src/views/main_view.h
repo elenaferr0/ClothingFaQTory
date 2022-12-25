@@ -25,7 +25,7 @@ using Views::MaterialsView;
 namespace Views {
     class MainView : public QMainWindow, public View {
         Q_OBJECT
-            typedef Map<Product::ProductType, list<Product*>> ProductsMap;
+            typedef Map<Product::ProductType, LinkedList<Product*>> ProductsMap;
 
         public:
             MainView(QWidget* parent = nullptr);

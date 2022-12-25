@@ -73,7 +73,7 @@ void MainController::findProductsOfType(Product::ProductType productType,
                                         CRUDRepository<T>* repository,
                                         MainController::ProductsMap& map) {
 
-    Either<Error, list<T*>> entitiesOrError = repository->findAll();
+    Either<Error, LinkedList<T*>> entitiesOrError = repository->findAll();
 
     entitiesOrError.template fold<void>(
             [&]() {
@@ -81,20 +81,19 @@ void MainController::findProductsOfType(Product::ProductType productType,
                 emit databaseError(&entitiesOrError.forceLeft());
             },
             [&, this]() {
-                list<T*> entities = entitiesOrError.forceRight();
-                list<Product*> products(entities.size());
+                LinkedList<T*> entities = entitiesOrError.forceRight();
+                LinkedList<Product*> products;
 
                 /*the list wouldn't be implicitly converted to list<Product*>
                   therefore transform is needed. In this situation the observer is also
                   registered*/
 
-                transform(entities.begin(),
-                          entities.end(),
-                          products.begin(),
-                          [this](T* product) {
-                              product->registerObserver(dynamic_cast<MainView*>(view)->getProductsView());
-                              return product;
-                          }
+                std::for_each(entities.begin(),
+                              entities.end(),
+                              [this, &products](T* product) {
+                                  product->registerObserver(dynamic_cast<MainView*>(view)->getProductsView());
+                                  products.pushBack(product);
+                              }
                 );
                 map.put(productType, products);
             }

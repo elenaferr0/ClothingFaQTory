@@ -1,8 +1,8 @@
 #include "size_repository.h"
-#include <list>
+
 
 using Core::Db::Expr;
-using std::list;
+
 using Models::Size;
 using Services::SizeRepository;
 
@@ -33,8 +33,8 @@ Either<Error, Size*> SizeRepository::findById(int id) {
     return errorOrSize;
 }
 
-Either<Error, list<Size*>> Services::SizeRepository::findAll() {
-    Either<Error, list<Size*>> sizesOrError = ReadOnlyRepository::findAll();
+Either<Error, LinkedList<Size*>> Services::SizeRepository::findAll() {
+    Either<Error, LinkedList<Size*>> sizesOrError = ReadOnlyRepository::findAll();
     if (sizesOrError.isRight()) {
         for (auto s: sizesOrError.forceRight()) {
             cachedSizes.put(s->getId(), s);

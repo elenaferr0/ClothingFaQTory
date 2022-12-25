@@ -30,7 +30,7 @@ namespace Services {
 
             Either<Error, Material*> findById(int id) override;
 
-            Either<Error, list<Material*>> findAll() override;
+            Either<Error, LinkedList<Material*>> findAll() override;
 
             ~MaterialRepository();
 

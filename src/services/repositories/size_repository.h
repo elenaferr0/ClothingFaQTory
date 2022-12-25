@@ -28,7 +28,7 @@ namespace Services {
 
             Either<Error, Size*> findByName(const Size::Name&);
 
-            Either<Error, list<Size*>> findAll() override;
+            Either<Error, LinkedList<Size*>> findAll() override;
 
             static SizeRepository* getInstance();
 

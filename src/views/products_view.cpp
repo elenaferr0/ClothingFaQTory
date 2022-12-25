@@ -97,7 +97,7 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
 void ProductsView::initTreeView() {
     for (auto type = productsByType.cbegin(); type != productsByType.cend(); type++) {
         Product::ProductType productType = (*type).first;
-        list<Product*> products = (*type).second;
+        LinkedList<Product*> products = (*type).second;
         QString productTypeName = QString::fromStdString(Product::productTypeToString(productType));
         QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(productType);
 
@@ -111,7 +111,7 @@ void ProductsView::initTreeView() {
             }
         }
 
-        if (products.size() > 0) {
+        if (products.getSize() > 0) {
             QTreeWidgetItem* headers = getHeaders();
             topLevelItemWidget->addChild(headers);
         }
@@ -154,8 +154,8 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
 }
 
 void ProductsView::showWizard(bool) {
-    list<Material*> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
-    list<Size*> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
+    LinkedList<Material*> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
+    LinkedList<Size*> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
 
     QList<QString> materials = QList<QString>();
     QList<QString> sizes = QList<QString>();
@@ -203,8 +203,8 @@ QIcon Views::ProductsView::drawColorIcon(const string& hex) {
 }
 
 void Views::ProductsView::handleProductCreation(Product* product, Product::ProductType type) {
-    list<Product*> currentProducts = productsByType.get(type).value();
-    currentProducts.push_back(product);
+    LinkedList<Product*> currentProducts = productsByType.get(type).value();
+    currentProducts.pushBack(product);
     productsByType.put(type, currentProducts);
     buildAndInsertChild(treeWidget->topLevelItem(type), product);
 }
@@ -228,9 +228,14 @@ void Views::ProductsView::clickedDeleteButton(int id) {
     if (result == QMessageBox::Yes) {
 //        dynamic_cast<MainController*>(controller)->deleteProductById(id);
 
-        for (auto pt = productsByType.cbegin(); pt != productsByType.cend(); ++pt) {
-            auto products = (*pt).second;
-            products.remove_if([&id](Product* product) { return product->getId() == id; });
+        for (auto productByType = productsByType.cbegin(); productByType != productsByType.cend(); ++productByType) {
+            auto products = (*productByType).second;
+            for (auto pr = products.begin(); pr != products.end(); pr++) {
+                if ((*pr)->getId() == id) {
+                    products.popElement(pr);
+                    return;
+                }
+            }
         }
     }
 }
@@ -243,9 +248,10 @@ void Views::ProductsView::handleProductDelete(QTreeWidgetItem* row) {
 }
 
 Views::ProductsView::~ProductsView() {
-    for (auto pt = productsByType.cbegin(); pt != productsByType.cend(); pt++) {
-        for (auto product: (*pt).second) {
-            delete product;
-        }
-    }
+//    for (auto pt = productsByType.cbegin(); pt != productsByType.cend(); pt++) {
+//        for (auto p = (*pt).second.begin(); p != (*pt).second.end(); p++) {
+//            ()
+//            delete (*p);
+//        }
+//    }
 }

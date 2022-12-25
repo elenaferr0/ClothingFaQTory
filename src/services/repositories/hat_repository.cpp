@@ -11,7 +11,7 @@ HatRepository::HatRepository()
 
 
 Either<Error, Hat*> HatRepository::save(Hat* entity) {
-    list<string> fields = {
+    LinkedList<string> fields = {
             "code",
             "color",
             "size_id",

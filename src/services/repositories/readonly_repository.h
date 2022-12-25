@@ -2,7 +2,7 @@
 #define READONLY_REPOSITORY_H
 
 #include <QDebug>
-#include <list>
+
 #include <optional>
 #include <string>
 #include <QSqlError>
@@ -13,11 +13,12 @@
 #include "../../core/db/querybuilder.h"
 #include "../../core/errors/either.h"
 #include "../../core/errors/error.h"
+#include "../../core/containers/linked_list.h"
 #include "../entity_mapper.h"
 #include "delete_only_repository.h"
 #include "repository.h"
 
-using std::list;
+using Core::Containers::LinkedList;
 using std::optional;
 using std::string;
 using std::to_string;
@@ -47,18 +48,18 @@ namespace Services {
 
             virtual Either<Error, T*> findById(int id);
 
-            virtual Either<Error, list<T*>> findAll();
+            virtual Either<Error, LinkedList<T*>> findAll();
 
     };
 
     template<class T>
-    Either<Error, list<T*>> ReadOnlyRepository<T>::findAll() {
+    Either<Error, LinkedList<T*>> ReadOnlyRepository<T>::findAll() {
         string sql = Repository::queryBuilder.select()
                 .from(Repository::table)
                 .orderBy("id", QueryBuilder::Order::ASC)
                 .build();
         QSqlQuery query = Repository::exec(sql);
-        list<T*> entities;
+        LinkedList<T*> entities;
         while (query.next()) {
             Either<Error, T*> errorOrEntity = mappingFunction(query);
             if (errorOrEntity.isLeft()) {
@@ -66,7 +67,7 @@ namespace Services {
                 errorOrEntity.forceLeft().setUserMessage("Error while fetching " + Repository::table);
                 return errorOrEntity.forceLeft();
             }
-            entities.push_back(errorOrEntity.forceRight());
+            entities.pushBack(errorOrEntity.forceRight());
         }
         return entities;
     }

@@ -9,7 +9,7 @@ BraceletRepository::BraceletRepository()
 
 Either<Error, Bracelet*> BraceletRepository::save(Bracelet* entity) {
 
-    list<string> fields = {
+    LinkedList<string> fields = {
             "code",
             "color",
             "sold_quantity",

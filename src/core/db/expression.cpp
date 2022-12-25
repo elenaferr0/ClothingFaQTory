@@ -10,7 +10,7 @@ namespace Core::Db {
         return s + x.expression;
     }
 
-    string operator+(string s, const list<int>& expr) {
+    string operator+(string s, const LinkedList<int>& expr) {
 
         for (auto it = expr.begin(); it != expr.end(); it++) {
             s += to_string(*it) + ", ";
@@ -45,7 +45,7 @@ Expr& Expr::notEquals(const Expr& x) {
     return *this;
 }
 
-Expr& Expr::in(const list<int>& s) {
+Expr& Expr::in(const LinkedList<int>& s) {
     expression += " IN (" + s + ")";
     return *this;
 }

@@ -3,6 +3,7 @@
 
 #include "readonly_repository.h"
 #include "../../core/errors/error.h"
+#include "../../core/containers/linked_list.h"
 #include "../../core/errors/either.h"
 #include "../../models/size.h"
 #include "../../models/material.h"
@@ -14,12 +15,13 @@ using Core::Error;
 using Core::Either;
 using Models::Size;
 using Models::Material;
+using Core::Containers::LinkedList;
 
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
         protected:
-            Either<Error, T*> save(const list<string>&, QVariantList&, T* entity);
+            Either<Error, T*> save(const LinkedList<string>&, QVariantList&, T* entity);
 
         public:
             CRUDRepository(const string& table,
@@ -28,18 +30,18 @@ namespace Services {
 
             virtual Either<Error, T*> save(T* entity) = 0;
 
-            Either<Error, list<T*>> saveAll(list<T*>& entities);
+            Either<Error, LinkedList<T*>> saveAll(LinkedList<T*>& entities);
 
             optional<Error> deleteT(const T& entity);
 
             Either<Error, T*> findById(int id) override;
 
-            Either<Error, list<T*>> findAll() override;
+            Either<Error, LinkedList<T*>> findAll() override;
 
     };
 
     template<class T>
-    Either<Error, T*> CRUDRepository<T>::save(const list<string>& fields, QVariantList& params, T* entity) {
+    Either<Error, T*> CRUDRepository<T>::save(const LinkedList<string>& fields, QVariantList& params, T* entity) {
         string sql;
         QSqlQuery query;
 
@@ -73,7 +75,7 @@ namespace Services {
     }
 
     template<class T>
-    Either<Error, list<T*>> CRUDRepository<T>::saveAll(list<T*>& entities) {
+    Either<Error, LinkedList<T*>> CRUDRepository<T>::saveAll(LinkedList<T*>& entities) {
         for (auto en = entities.begin(); en != entities.end(); en++) {
             Either<Error, T*> entityOrError = save(*en);
             if (entityOrError.isLeft()) {
@@ -107,19 +109,19 @@ namespace Services {
     }
 
     template<class T>
-    Either<Error, list<T*>> CRUDRepository<T>::findAll() {
+    Either<Error, LinkedList<T*>> CRUDRepository<T>::findAll() {
         string sql = Repository::queryBuilder.select()
                 .from(Repository::table)
                 .build();
         QSqlQuery query = Repository::exec(sql);
-        list<T*> entities;
+        LinkedList<T*> entities;
         while (query.next()) {
             Either<Error, T*> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
             if (entityOrError.isLeft()) {
                 qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
                 return entityOrError.forceLeft();
             }
-            entities.push_back(entityOrError.forceRight());
+            entities.pushBack(entityOrError.forceRight());
         }
         return entities;
     }

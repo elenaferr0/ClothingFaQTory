@@ -10,7 +10,7 @@ VestRepository::VestRepository()
         : Repository("vest"), CRUDRepository("vest", EntityMapper::vest) {};
 
 Either<Error, Vest*> VestRepository::save(Vest* entity) {
-    list<string> fields = {
+    LinkedList<string> fields = {
             "code",
             "color",
             "sold_quantity",

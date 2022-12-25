@@ -1,10 +1,8 @@
 #include "hat.h"
 #include "../../utils/calculator.h"
 #include <string>
-#include <list>
 
 using std::string;
-using std::list;
 using Models::Accessories::Hat;
 using Utils::Calculator;
 

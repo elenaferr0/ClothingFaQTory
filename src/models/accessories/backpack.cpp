@@ -1,9 +1,6 @@
 
 #include "backpack.h"
 #include "../../utils/calculator.h"
-#include <list>
-
-using std::list;
 using Models::Accessories::BackPack;
 using Utils::Calculator;
 const double BackPack::BACKPACK_HEIGHT = 30;

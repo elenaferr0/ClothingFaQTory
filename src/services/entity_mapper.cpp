@@ -1,9 +1,7 @@
 #include "entity_mapper.h"
 #include "repositories/material_repository.h"
 #include "repositories/size_repository.h"
-#include <QDebug>
 #include <QVariant>
-#include SharedPtr
 
 using Services::EntityMapper;
 

@@ -4,10 +4,8 @@
 #include "clothing_item.h"
 #include "../material.h"
 #include "../size.h"
-#include<list>
 #include<string>
 
-using std::list;
 using std::string;
 
 namespace Models::ClothingItems {
