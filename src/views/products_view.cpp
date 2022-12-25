@@ -229,7 +229,7 @@ void Views::ProductsView::clickedDeleteButton(int id, QTreeWidgetItem* row, Prod
     int result = errorBox->exec();
 
     if (result == QMessageBox::Yes) {
-//        dynamic_cast<MainController*>(controller)->deleteProductById(id);
+        dynamic_cast<MainController*>(controller)->deleteProductById(id);
 
         auto products = productsByType.get(productType).value();
         for (auto pr = products.begin(); pr != products.end(); pr++) {
