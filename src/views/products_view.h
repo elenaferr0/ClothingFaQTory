@@ -40,7 +40,7 @@ namespace Views {
 
             static const int COLOR_ICON_SIZE = 20;
 
-            void buildAndInsertChild(QTreeWidgetItem*, Product*);
+            void buildAndInsertChild(QTreeWidgetItem*, Product*, Product::ProductType);
 
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
@@ -59,13 +59,11 @@ namespace Views {
 
             void handleProductCreation(Product*, Product::ProductType);
 
-            void handleProductDelete(QTreeWidgetItem*);
-
             void showWizard(bool);
 
-            void clickedEditButton(int);
+            void clickedEditButton(int, QTreeWidgetItem*, Product::ProductType);
 
-            void clickedDeleteButton(int);
+            void clickedDeleteButton(int, QTreeWidgetItem*, Product::ProductType);
 
     };
 

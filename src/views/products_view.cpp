@@ -117,7 +117,7 @@ void ProductsView::initTreeView() {
         }
 
         for (auto p = products.begin(); p != products.end(); p++) {
-            buildAndInsertChild(topLevelItemWidget, *p);
+            buildAndInsertChild(topLevelItemWidget, *p, productType);
         }
 
         QIcon productIcon(":/assets/icons/" + productTypeName.toLower() + ".png");
@@ -130,7 +130,7 @@ void ProductsView::initTreeView() {
 }
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
-                                       Product* product) {
+                                       Product* product, Product::ProductType productType) {
     QStringList values;
     values << QString::fromStdString(product->getCode())
            << QString::fromStdString(product->getColor())
@@ -140,15 +140,18 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
     QTreeWidgetItem* row = new QTreeWidgetItem(values);
     topLevelItemWidget->addChild(row);
 
-    IconButton* editButton = new IconButton(":/assets/icons/edit.png", "editButton", product->getId(), row, this);
+    IconButton* editButton = new IconButton(":/assets/icons/edit.png", "editButton", product->getId(),
+                                            row, productType, this);
     treeWidget->setItemWidget(row, COLUMN_COUNT - 2, editButton);
-    connect(editButton, SIGNAL(clicked(int)), this, SLOT(clickedEditButton(int)));
+    connect(editButton, SIGNAL(clicked(int, QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedEditButton(int, QTreeWidgetItem * , Product::ProductType)));
 
-    IconButton* deleteButton = new IconButton(":/assets/icons/delete.png", "deleteButton", product->getId(), row, this);
+    IconButton* deleteButton = new IconButton(":/assets/icons/delete.png", "deleteButton", product->getId(),
+                                              row, productType, this);
+
     treeWidget->setItemWidget(row, COLUMN_COUNT - 1, deleteButton);
-    connect(deleteButton, SIGNAL(clicked(int)), this, SLOT(clickedDeleteButton(int)));
-
-    connect(deleteButton, SIGNAL(clicked(QTreeWidgetItem * )), this, SLOT(handleProductDelete(QTreeWidgetItem * )));
+    connect(deleteButton, SIGNAL(clicked(int, QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedDeleteButton(int, QTreeWidgetItem * , Product::ProductType)));
 
     row->setIcon(1, drawColorIcon(product->getColor()));
 }
@@ -206,14 +209,14 @@ void Views::ProductsView::handleProductCreation(Product* product, Product::Produ
     LinkedList<Product*> currentProducts = productsByType.get(type).value();
     currentProducts.pushBack(product);
     productsByType.put(type, currentProducts);
-    buildAndInsertChild(treeWidget->topLevelItem(type), product);
+    buildAndInsertChild(treeWidget->topLevelItem(type), product, type);
 }
 
-void Views::ProductsView::clickedEditButton(int id) {
+void Views::ProductsView::clickedEditButton(int id, QTreeWidgetItem* row, Product::ProductType productType) {
     qInfo() << "edit Id: " << id;
 }
 
-void Views::ProductsView::clickedDeleteButton(int id) {
+void Views::ProductsView::clickedDeleteButton(int id, QTreeWidgetItem* row, Product::ProductType productType) {
     QMessageBox* errorBox = new QMessageBox;
     errorBox->setWindowTitle("Delete product");
     errorBox->setText("### Do you really want to delete this product?");
@@ -228,22 +231,16 @@ void Views::ProductsView::clickedDeleteButton(int id) {
     if (result == QMessageBox::Yes) {
 //        dynamic_cast<MainController*>(controller)->deleteProductById(id);
 
-        for (auto productByType = productsByType.cbegin(); productByType != productsByType.cend(); ++productByType) {
-            auto products = (*productByType).second;
-            for (auto pr = products.begin(); pr != products.end(); pr++) {
-                if ((*pr)->getId() == id) {
-                    products.popElement(pr);
-                    return;
-                }
+        auto products = productsByType.get(productType).value();
+        for (auto pr = products.begin(); pr != products.end(); pr++) {
+            if ((*pr)->getId() == id) {
+                products.popElement(pr);
+                // delete the row from the ui
+                treeWidget->topLevelItem(productType)->removeChild(row);
+                return;
             }
         }
-    }
-}
 
-void Views::ProductsView::handleProductDelete(QTreeWidgetItem* row) {
-    for (int i = 0; i < treeWidget->topLevelItemCount(); i++) {
-        QTreeWidgetItem* topLevelItem = treeWidget->topLevelItem(i);
-        topLevelItem->takeChildren().removeOne(row);
     }
 }
 

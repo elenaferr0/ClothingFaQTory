@@ -108,6 +108,7 @@ namespace Core::Containers {
 
     template<class T>
     void LinkedList<T>::popElement(LinkedList::ConstIterator& it) {
+        size--;
         // Check if the iterator is at the head of the list
         if (it.node == head) {
             Node* temp = head;
@@ -136,6 +137,7 @@ namespace Core::Containers {
             Node* temp = head;
             head = head->next;
             delete temp;
+            size--;
             return;
         }
 
@@ -147,6 +149,7 @@ namespace Core::Containers {
                 // Remove the element from the list
                 prev->next = curr->next;
                 delete curr;
+                size--;
                 return;
             }
             prev = curr;
@@ -251,11 +254,13 @@ namespace Core::Containers {
     }
 
     template<class T>
-    typename LinkedList<T>::Node* LinkedList<T>::copy(LinkedList::Node* src) {
-        if (src == nullptr) {
+    typename LinkedList<T>::Node* LinkedList<T>::copy(LinkedList::Node* p) {
+        if (p == nullptr) {
             return nullptr;
         }
-        return new Node(src->value, copy(src->next));
+        Node * result = new Node(p->value);
+        result->next = copy(p->next);
+        return result;
     }
 
     template<class T>
