@@ -420,6 +420,10 @@ namespace Core::Containers {
 
     template<class K, class V>
     typename Map<K, V>::Node* Map<K, V>::minimum(Node* node) { // find the node with the minimum key
+        if (node == TNULL) {
+            return TNULL;
+        }
+
         while (node->left != TNULL) {
             node = node->left;
         }

@@ -29,7 +29,7 @@ namespace Services {
 
             static VestRepository* getInstance();
 
-            Either<Error, Vest> save(Vest& entity) override;
+            Either<Error, Vest*> save(Vest* entity) override;
     };
 }
 

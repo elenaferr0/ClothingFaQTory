@@ -10,7 +10,7 @@ JeansRepository::JeansRepository()
         : Repository("jeans"), CRUDRepository("jeans", EntityMapper::jeans) {};
 
 
-Either<Error, Jeans> JeansRepository::save(Jeans& entity) {
+Either<Error, Jeans*> JeansRepository::save(Jeans* entity) {
 
     list<string> fields = {
             "code",
@@ -26,16 +26,16 @@ Either<Error, Jeans> JeansRepository::save(Jeans& entity) {
     };
 
     QVariantList params; // id will later be added only if the entity should be updated
-    params << QString::fromStdString(entity.getCode())
-           << QString::fromStdString(entity.getColor())
-           << entity.getSoldQuantity()
-           << entity.getAvailableQuantity()
-           << QString::fromStdString(entity.getDescription())
-           << entity.getSize().getId()
-           << entity.hasSustainableMaterials()
-           << QString::fromStdString(Jeans::getGenderAsString(entity.getGender()))
-           << entity.getMaterial().getId()
-           << entity.areShorts();
+    params << QString::fromStdString(entity->getCode())
+           << QString::fromStdString(entity->getColor())
+           << entity->getSoldQuantity()
+           << entity->getAvailableQuantity()
+           << QString::fromStdString(entity->getDescription())
+           << entity->getSize().getId()
+           << entity->hasSustainableMaterials()
+           << QString::fromStdString(Jeans::getGenderAsString(entity->getGender()))
+           << entity->getMaterial().getId()
+           << entity->areShorts();
 
 
     return CRUDRepository<Jeans>::save(fields, params, entity);

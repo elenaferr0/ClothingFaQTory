@@ -10,7 +10,7 @@ HatRepository::HatRepository()
         : Repository("hat"), CRUDRepository("hat", EntityMapper::hat) {};
 
 
-Either<Error, Hat> HatRepository::save(Hat& entity) {
+Either<Error, Hat*> HatRepository::save(Hat* entity) {
     list<string> fields = {
             "code",
             "color",
@@ -24,15 +24,15 @@ Either<Error, Hat> HatRepository::save(Hat& entity) {
     };
 
     QVariantList params; // id will later be added only if the entity should be updated
-    params << QString::fromStdString(entity.getCode())
-           << QString::fromStdString(entity.getColor())
-           << entity.getSize().getId()
-           << entity.getAvailableQuantity()
-           << entity.getSoldQuantity()
-           << QString::fromStdString(entity.getDescription())
-           << QString::fromStdString(Hat::getCategoryAsString(entity.getCategory()))
-           << entity.isBaseballCap()
-           << entity.getMaterial().getId();
+    params << QString::fromStdString(entity->getCode())
+           << QString::fromStdString(entity->getColor())
+           << entity->getSize().getId()
+           << entity->getAvailableQuantity()
+           << entity->getSoldQuantity()
+           << QString::fromStdString(entity->getDescription())
+           << QString::fromStdString(Hat::getCategoryAsString(entity->getCategory()))
+           << entity->isBaseballCap()
+           << entity->getMaterial().getId();
 
 
     return CRUDRepository<Hat>::save(fields, params, entity);

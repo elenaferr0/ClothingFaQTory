@@ -9,7 +9,7 @@ OverallsRepository* OverallsRepository::instance;
 OverallsRepository::OverallsRepository()
         : Repository("overalls"), CRUDRepository("overalls", EntityMapper::overalls) {};
 
-Either<Error, Overalls> OverallsRepository::save(Overalls& entity) {
+Either<Error, Overalls*> OverallsRepository::save(Overalls* entity) {
 
     list<string> fields = {
             "code",
@@ -26,17 +26,17 @@ Either<Error, Overalls> OverallsRepository::save(Overalls& entity) {
     };
 
     QVariantList params; // id will later be added only if the entity should be updated
-    params << QString::fromStdString(entity.getCode())
-           << QString::fromStdString(entity.getColor())
-           << entity.getSoldQuantity()
-           << entity.getAvailableQuantity()
-           << QString::fromStdString(entity.getDescription())
-           << entity.getSize().getId()
-           << entity.hasSustainableMaterials()
-           << QString::fromStdString(Overalls::getGenderAsString(entity.getGender()))
-           << entity.getMaterial().getId()
-           << entity.getHasButtons()
-           << entity.areShorts();
+    params << QString::fromStdString(entity->getCode())
+           << QString::fromStdString(entity->getColor())
+           << entity->getSoldQuantity()
+           << entity->getAvailableQuantity()
+           << QString::fromStdString(entity->getDescription())
+           << entity->getSize().getId()
+           << entity->hasSustainableMaterials()
+           << QString::fromStdString(Overalls::getGenderAsString(entity->getGender()))
+           << entity->getMaterial().getId()
+           << entity->getHasButtons()
+           << entity->areShorts();
 
     return CRUDRepository<Overalls>::save(fields, params, entity);
 }

@@ -36,9 +36,9 @@ namespace Controllers {
 
     class MainController : public Controller {
         Q_OBJECT
-            typedef list<shared_ptr<Material>> MaterialsList;
-            typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
-            typedef list<shared_ptr<Size>> SizesList;
+            typedef list<Material*> MaterialsList;
+            typedef Map<Product::ProductType, list<Product*>> ProductsMap;
+            typedef list<Size*> SizesList;
         public:
             MainController(View*);
 

@@ -22,7 +22,7 @@ namespace Services {
 
             static BackPackRepository* getInstance();
 
-            Either<Error, BackPack> save(BackPack& entity) override;
+            Either<Error, BackPack*> save(BackPack* entity) override;
     };
 }
 

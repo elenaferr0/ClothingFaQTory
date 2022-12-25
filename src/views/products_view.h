@@ -8,12 +8,10 @@
 #include "wizard/create_product_wizard_view.h"
 #include "view.h"
 #include "main_view.h"
-#include <memory>
 #include <QToolBar>
 #include <QTreeWidgetItem>
 #include <QTreeWidget>
 
-using std::shared_ptr;
 using Models::Product;
 using Core::Containers::Map;
 using Core::Error;
@@ -24,7 +22,7 @@ namespace Views {
     class ProductsView : public ObserverWidgetView {
         Q_OBJECT
         private:
-            typedef Map<Product::ProductType, list<shared_ptr<Product>>>
+            typedef Map<Product::ProductType, list<Product*>>
                     ProductsMap;
 
             ProductsMap productsByType;
@@ -42,14 +40,16 @@ namespace Views {
 
             static const int COLOR_ICON_SIZE = 20;
 
-            void buildAndInsertChild(QTreeWidgetItem*,
-                                     shared_ptr<Product>);
+            void buildAndInsertChild(QTreeWidgetItem*, Product*);
+
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
             void init(const ProductsMap& productsByType);
 
             void notify(Model*) override;
+
+            ~ProductsView();
 
         public slots:
 

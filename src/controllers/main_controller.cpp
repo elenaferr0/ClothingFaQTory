@@ -73,7 +73,7 @@ void MainController::findProductsOfType(Product::ProductType productType,
                                         CRUDRepository<T>* repository,
                                         MainController::ProductsMap& map) {
 
-    Either<Error, list<shared_ptr<T>>> entitiesOrError = repository->findAll();
+    Either<Error, list<T*>> entitiesOrError = repository->findAll();
 
     entitiesOrError.template fold<void>(
             [&]() {
@@ -81,17 +81,17 @@ void MainController::findProductsOfType(Product::ProductType productType,
                 emit databaseError(&entitiesOrError.forceLeft());
             },
             [&, this]() {
-                list<shared_ptr<T>> entities = entitiesOrError.forceRight();
-                list<shared_ptr<Product>> products(entities.size());
+                list<T*> entities = entitiesOrError.forceRight();
+                list<Product*> products(entities.size());
 
-                /*the list wouldn't be implicitly converted to list<shared_ptr<Product>>
+                /*the list wouldn't be implicitly converted to list<Product*>
                   therefore transform is needed. In this situation the observer is also
                   registered*/
+
                 transform(entities.begin(),
                           entities.end(),
                           products.begin(),
-                          [this](shared_ptr<T> entity) {
-                              shared_ptr<Product> product = shared_ptr<Product>(entity);
+                          [this](T* product) {
                               product->registerObserver(dynamic_cast<MainView*>(view)->getProductsView());
                               return product;
                           }

@@ -7,7 +7,7 @@ BackPackRepository* BackPackRepository::instance;
 BackPackRepository::BackPackRepository()
         : Repository("backpack"), CRUDRepository("backpack", EntityMapper::backPack) {};
 
-Either<Error, BackPack> BackPackRepository::save(BackPack& entity) {
+Either<Error, BackPack*> BackPackRepository::save(BackPack* entity) {
 
     list<string> fields = {
             "code",
@@ -22,15 +22,15 @@ Either<Error, BackPack> BackPackRepository::save(BackPack& entity) {
     };
 
     QVariantList params; // id will later be added only if the entity should be updated
-    params << QString::fromStdString(entity.getCode())
-           << QString::fromStdString(entity.getColor())
-           << entity.getSoldQuantity()
-           << entity.getAvailableQuantity()
-           << QString::fromStdString(entity.getDescription())
-           << entity.getSize().getId()
-           << QString::fromStdString(BackPack::getCategoryAsString(entity.getCategory()))
-           << entity.getCapacity()
-           << entity.getMaterial().getId();
+    params << QString::fromStdString(entity->getCode())
+           << QString::fromStdString(entity->getColor())
+           << entity->getSoldQuantity()
+           << entity->getAvailableQuantity()
+           << QString::fromStdString(entity->getDescription())
+           << entity->getSize().getId()
+           << QString::fromStdString(BackPack::getCategoryAsString(entity->getCategory()))
+           << entity->getCapacity()
+           << entity->getMaterial().getId();
 
     return CRUDRepository<BackPack>::save(fields, params, entity);
 }

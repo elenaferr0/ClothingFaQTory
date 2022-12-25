@@ -57,9 +57,9 @@ namespace Controllers {
         public:
             WizardController(View*);
 
-            shared_ptr<Material> findMaterialById(int id);
+            Material* findMaterialById(int id);
 
-            shared_ptr<Size> findSizeById(int id);
+            Size* findSizeById(int id);
 
         public slots:
 

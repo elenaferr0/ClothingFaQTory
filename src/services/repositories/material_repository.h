@@ -19,18 +19,20 @@ namespace Services {
 
         protected:
             static MaterialRepository* instance;
-            Map<int, shared_ptr<Material>> cachedMaterials; // not static since there's only one instance
+            Map<int, Material*> cachedMaterials; // not static since there's only one instance
 
         public:
             static MaterialRepository* getInstance();
 
-            Either<Error, shared_ptr<Material>> findByName(const Material::Name&);
+            Either<Error, Material*> findByName(const Material::Name&);
 
-            Either<Error, shared_ptr<Material>> saveCostPerUnit(const Material&);
+            Either<Error, Material*> saveCostPerUnit(Material*);
 
-            Either<Error, shared_ptr<Material>> findById(int id) override;
+            Either<Error, Material*> findById(int id) override;
 
-            Either<Error, list<shared_ptr<Material>>> findAll() override;
+            Either<Error, list<Material*>> findAll() override;
+
+            ~MaterialRepository();
 
     };
 }

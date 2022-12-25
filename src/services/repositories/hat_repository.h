@@ -23,7 +23,7 @@ namespace Services {
         public:
             static HatRepository* getInstance();
 
-            Either<Error, Hat> save(Hat& entity) override;
+            Either<Error, Hat*> save(Hat* entity) override;
     };
 }
 #endif // HATREPOSITORY_H

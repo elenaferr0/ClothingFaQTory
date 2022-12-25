@@ -16,9 +16,7 @@
 #include "../entity_mapper.h"
 #include "delete_only_repository.h"
 #include "repository.h"
-#include <memory>
 
-using std::shared_ptr;
 using std::list;
 using std::optional;
 using std::string;
@@ -34,12 +32,12 @@ namespace Services {
     template<class T>
     class ReadOnlyRepository : virtual public Repository {
         protected:
-            function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction;
+            function<Either<Error, T*>(const QSqlQuery&)> mappingFunction;
 
         public:
 
             ReadOnlyRepository(const string& table,
-                               function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction);
+                               function<Either<Error, T*>(const QSqlQuery&)> mappingFunction);
 
             virtual ~ReadOnlyRepository() = default;
 
@@ -47,22 +45,22 @@ namespace Services {
 
             void operator=(const ReadOnlyRepository&) = delete;
 
-            virtual Either<Error, shared_ptr<T>> findById(int id);
+            virtual Either<Error, T*> findById(int id);
 
-            virtual Either<Error, list<shared_ptr<T>>> findAll();
+            virtual Either<Error, list<T*>> findAll();
 
     };
 
     template<class T>
-    Either<Error, list<shared_ptr<T>>> ReadOnlyRepository<T>::findAll() {
+    Either<Error, list<T*>> ReadOnlyRepository<T>::findAll() {
         string sql = Repository::queryBuilder.select()
                 .from(Repository::table)
                 .orderBy("id", QueryBuilder::Order::ASC)
                 .build();
         QSqlQuery query = Repository::exec(sql);
-        list<shared_ptr<T>> entities;
+        list<T*> entities;
         while (query.next()) {
-            Either<Error, shared_ptr<T>> errorOrEntity = mappingFunction(query);
+            Either<Error, T*> errorOrEntity = mappingFunction(query);
             if (errorOrEntity.isLeft()) {
                 qCritical() << QString::fromStdString(errorOrEntity.forceLeft().getCause());
                 errorOrEntity.forceLeft().setUserMessage("Error while fetching " + Repository::table);
@@ -74,14 +72,14 @@ namespace Services {
     }
 
     template<class T>
-    Either<Error, shared_ptr<T>> ReadOnlyRepository<T>::findById(int id) {
+    Either<Error, T*> ReadOnlyRepository<T>::findById(int id) {
         string sql = Repository::queryBuilder.select()
                 .from(Repository::table)
                 .where(Expr("id").equals({"?"}))
                 .build();
         QSqlQuery query = Repository::exec(sql, QVariant::fromValue<int>(id));
         query.next(); // is needed so the record can be read
-        Either<Error, shared_ptr<T>> errorOrEntity = mappingFunction(query);
+        Either<Error, T*> errorOrEntity = mappingFunction(query);
 
         if (errorOrEntity.isLeft()) {
             errorOrEntity.forceLeft().setUserMessage("Error while fetching " + Repository::table);
@@ -94,7 +92,7 @@ namespace Services {
 
     template<class T>
     ReadOnlyRepository<T>::ReadOnlyRepository(const string& table,
-                                              function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction):
+                                              function<Either<Error, T*>(const QSqlQuery&)> mappingFunction):
             Repository(table),
             mappingFunction(mappingFunction) {};
 

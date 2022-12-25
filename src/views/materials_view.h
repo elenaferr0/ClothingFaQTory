@@ -3,14 +3,12 @@
 #define MATERIALS_VIEW_H
 
 #include <QGridLayout>
-#include <memory>
 #include <list>
 #include "observer_widget_view.h"
 #include "../controllers/main_controller.h"
 #include "main_view.h"
 #include "../models/material.h"
 
-using std::shared_ptr;
 using Models::Material;
 using std::list;
 
@@ -19,7 +17,7 @@ namespace Views {
 
     class MaterialsView : public ObserverWidgetView {
         Q_OBJECT
-            typedef list<shared_ptr<Material>> MaterialsList;
+            typedef list<Material*> MaterialsList;
         public:
             MaterialsView(MainView* mainView, QWidget* parent = nullptr);
 

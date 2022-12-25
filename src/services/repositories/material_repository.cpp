@@ -6,7 +6,6 @@
 #include <QSqlQuery>
 
 using std::list;
-using std::make_shared;
 using Models::Material;
 using Services::MaterialRepository;
 using Services::CRUDRepository;
@@ -18,19 +17,19 @@ MaterialRepository* MaterialRepository::instance;
 MaterialRepository::MaterialRepository()
         : Repository("material"), ReadOnlyRepository("material", EntityMapper::material) {};
 
-Either<Error, shared_ptr<Material>> MaterialRepository::findById(int id) {
+Either<Error, Material*> MaterialRepository::findById(int id) {
     if (cachedMaterials.hasKey(id)) {
         return cachedMaterials.get(id).value();
     }
 
-    Either<Error, shared_ptr<Material>> errorOrMaterial = ReadOnlyRepository::findById(id);
+    Either<Error, Material*> errorOrMaterial = ReadOnlyRepository::findById(id);
 
     cachedMaterials.put(id, errorOrMaterial.forceRight());
     return errorOrMaterial;
 }
 
-Either<Error, list<shared_ptr<Material>>> MaterialRepository::findAll() {
-    Either<Error, list<shared_ptr<Material>>> materialsOrError = ReadOnlyRepository::findAll();
+Either<Error, list<Material*>> MaterialRepository::findAll() {
+    Either<Error, list<Material*>> materialsOrError = ReadOnlyRepository::findAll();
     if (materialsOrError.isRight()) {
         for (auto m: materialsOrError.forceRight()) {
             cachedMaterials.put(m->getId(), m);
@@ -39,16 +38,16 @@ Either<Error, list<shared_ptr<Material>>> MaterialRepository::findAll() {
     return materialsOrError;
 }
 
-Either<Error, shared_ptr<Material>> Services::MaterialRepository::findByName(const Material::Name& name) {
+Either<Error, Material*> Services::MaterialRepository::findByName(const Material::Name& name) {
     return findById(name);
 }
 
 
-Either<Error, shared_ptr<Material>> MaterialRepository::saveCostPerUnit(const Material& entity) {
+Either<Error, Material*> MaterialRepository::saveCostPerUnit(Material* entity) {
 
     QVariantList params;
-    params << entity.getCostPerUnit()
-           << entity.getId();
+    params << entity->getCostPerUnit()
+           << entity->getId();
 
     string sql = queryBuilder.update(table)
             .set("cost_per_unit")
@@ -63,10 +62,10 @@ Either<Error, shared_ptr<Material>> MaterialRepository::saveCostPerUnit(const Ma
     if (hasError.has_value()) {
         qCritical() << QString::fromStdString(
                 hasError.value().getCause());
-        return Either<Error, shared_ptr<Material>>::ofLeft(hasError.value());
+        return Either<Error, Material*>::ofLeft(hasError.value());
     }
 
-    return make_shared<Material>(entity);
+    return entity;
 }
 
 MaterialRepository* Services::MaterialRepository::getInstance() {
@@ -74,4 +73,10 @@ MaterialRepository* Services::MaterialRepository::getInstance() {
         instance = new MaterialRepository();
     }
     return instance;
+}
+
+Services::MaterialRepository::~MaterialRepository() {
+    for (auto it = cachedMaterials.cbegin(); it != cachedMaterials.cend(); it++) {
+        delete (*it).second;
+    }
 }

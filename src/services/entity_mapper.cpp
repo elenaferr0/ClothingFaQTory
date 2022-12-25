@@ -3,10 +3,8 @@
 #include "repositories/size_repository.h"
 #include <QDebug>
 #include <QVariant>
-#include <memory>
+#include SharedPtr
 
-using std::shared_ptr;
-using std::make_shared;
 using Services::EntityMapper;
 
 string EntityMapper::toString(const QSqlError::ErrorType& errorType) {
@@ -35,7 +33,7 @@ Either<Error, QSqlRecord> EntityMapper::checkQuery(const QSqlQuery& query) {
     return query.record();
 }
 
-Either<Error, shared_ptr<Size>> EntityMapper::size(const QSqlQuery& query) {
+Either<Error, Size*> EntityMapper::size(const QSqlQuery& query) {
     /*
 	 * id int
 	 * name string
@@ -48,17 +46,17 @@ Either<Error, shared_ptr<Size>> EntityMapper::size(const QSqlQuery& query) {
     }
 
     if (query.size() == 0) {
-        return make_shared<Size>();
+        return new Size;
     }
 
     QSqlRecord record = recordOrError.forceRight();
 
-    return make_shared<Size>(record.value("id").toInt(),
-                             record.value("name").toString().toStdString(),
-                             record.value("extra_percentage_of_material").toFloat());
+    return new Size(record.value("id").toInt(),
+                    record.value("name").toString().toStdString(),
+                    record.value("extra_percentage_of_material").toFloat());
 }
 
-Either<Error, shared_ptr<Material>> EntityMapper::material(const QSqlQuery& query) {
+Either<Error, Material*> EntityMapper::material(const QSqlQuery& query) {
     /*
      * id int
      * name string
@@ -72,20 +70,18 @@ Either<Error, shared_ptr<Material>> EntityMapper::material(const QSqlQuery& quer
     }
 
     if (query.size() == 0) {
-        return make_shared<Material>();
+        return new Material;
     }
 
     QSqlRecord record = recordOrError.forceRight();
 
-    return make_shared<Material>(
-            record.value("id").toInt(),
-            record.value("name").toString().toStdString(),
-            record.value("unit_of_measure").toString().toStdString(),
-            record.value("cost_per_unit").toFloat()
-    );
+    return new Material(record.value("id").toInt(),
+                        record.value("name").toString().toStdString(),
+                        record.value("unit_of_measure").toString().toStdString(),
+                        record.value("cost_per_unit").toFloat());
 }
 
-Either<Error, shared_ptr<Hat>> EntityMapper::hat(const QSqlQuery& query) {
+Either<Error, Hat*> EntityMapper::hat(const QSqlQuery& query) {
     /*
      * id int
      * code string
@@ -105,14 +101,14 @@ Either<Error, shared_ptr<Hat>> EntityMapper::hat(const QSqlQuery& query) {
     }
 
     if (query.size() == 0) {
-        return make_shared<Hat>();
+        return new Hat;
     }
 
     QSqlRecord record = recordOrError.forceRight();
 
     int materialId = record.value("material_id").toInt();
     MaterialRepository* materialRepository = MaterialRepository::getInstance();
-    Either<Error, shared_ptr<Material>> materialOrError = materialRepository->findById(materialId);
+    Either<Error, Material*> materialOrError = materialRepository->findById(materialId);
 
     if (materialOrError.isLeft()) {
         return materialOrError.forceLeft();
@@ -120,27 +116,26 @@ Either<Error, shared_ptr<Hat>> EntityMapper::hat(const QSqlQuery& query) {
 
     int sizeId = record.value("size_id").toInt();
     SizeRepository* sizeRepository = SizeRepository::getInstance();
-    Either<Error, shared_ptr<Size>> sizeOrError = sizeRepository->findById(sizeId);
+    Either<Error, Size*> sizeOrError = sizeRepository->findById(sizeId);
 
     if (sizeOrError.isLeft()) {
         return sizeOrError.forceLeft();
     }
 
-    return make_shared<Hat>(
-            record.value("id").toInt(),
-            record.value("code").toString().toStdString(),
-            record.value("color").toString().toStdString(),
-            *(materialOrError.forceRight()),
-            *(sizeOrError.forceRight()),
-            record.value("available_quantity").toInt(),
-            record.value("sold_quantity").toInt(),
-            record.value("description").toString().toStdString(),
-            record.value("category").toString().toStdString(),
-            record.value("is_baseball_hat").toBool()
+    return new Hat(record.value("id").toInt(),
+                   record.value("code").toString().toStdString(),
+                   record.value("color").toString().toStdString(),
+                   *(materialOrError.forceRight()),
+                   *(sizeOrError.forceRight()),
+                   record.value("available_quantity").toInt(),
+                   record.value("sold_quantity").toInt(),
+                   record.value("description").toString().toStdString(),
+                   record.value("category").toString().toStdString(),
+                   record.value("is_baseball_hat").toBool()
     );
 }
 
-Either<Error, shared_ptr<Vest>> Services::EntityMapper::vest(const QSqlQuery& query) {
+Either<Error, Vest*> Services::EntityMapper::vest(const QSqlQuery& query) {
     /*
      * id int
      * code string
@@ -161,14 +156,14 @@ Either<Error, shared_ptr<Vest>> Services::EntityMapper::vest(const QSqlQuery& qu
     }
 
     if (query.size() == 0) {
-        return make_shared<Vest>();
+        return new Vest;
     }
 
     QSqlRecord record = recordOrError.forceRight();
 
     int materialId = record.value("material_id").toInt();
     MaterialRepository* materialRepository = MaterialRepository::getInstance();
-    Either<Error, shared_ptr<Material>> materialOrError = materialRepository->findById(materialId);
+    Either<Error, Material*> materialOrError = materialRepository->findById(materialId);
 
     if (materialOrError.isLeft()) {
         return materialOrError.forceLeft();
@@ -176,28 +171,27 @@ Either<Error, shared_ptr<Vest>> Services::EntityMapper::vest(const QSqlQuery& qu
 
     int sizeId = record.value("size_id").toInt();
     SizeRepository* sizeRepository = SizeRepository::getInstance();
-    Either<Error, shared_ptr<Size>> sizeOrError = sizeRepository->findById(sizeId);
+    Either<Error, Size*> sizeOrError = sizeRepository->findById(sizeId);
 
     if (sizeOrError.isLeft()) {
         return sizeOrError.forceLeft();
     }
 
-    return make_shared<Vest>(
-            record.value("id").toInt(),
-            record.value("code").toString().toStdString(),
-            record.value("color").toString().toStdString(),
-            *(materialOrError.forceRight()),
-            *(sizeOrError.forceRight()),
-            record.value("available_quantity").toInt(),
-            record.value("sold_quantity").toInt(),
-            record.value("description").toString().toStdString(),
-            record.value("sustainable_materials").toBool(),
-            record.value("gender").toString().toStdString(),
-            record.value("has_buttons").toBool()
+    return new Vest(record.value("id").toInt(),
+                    record.value("code").toString().toStdString(),
+                    record.value("color").toString().toStdString(),
+                    *(materialOrError.forceRight()),
+                    *(sizeOrError.forceRight()),
+                    record.value("available_quantity").toInt(),
+                    record.value("sold_quantity").toInt(),
+                    record.value("description").toString().toStdString(),
+                    record.value("sustainable_materials").toBool(),
+                    record.value("gender").toString().toStdString(),
+                    record.value("has_buttons").toBool()
     );
 }
 
-Either<Error, shared_ptr<BackPack>> EntityMapper::backPack(const QSqlQuery& query) {
+Either<Error, BackPack*> EntityMapper::backPack(const QSqlQuery& query) {
     /*
        * id int
        * code string
@@ -218,14 +212,14 @@ Either<Error, shared_ptr<BackPack>> EntityMapper::backPack(const QSqlQuery& quer
     }
 
     if (query.size() == 0) {
-        return make_shared<BackPack>();
+        return new BackPack;
     }
 
     QSqlRecord record = recordOrError.forceRight();
 
     int materialId = record.value("material_id").toInt();
     MaterialRepository* materialRepository = MaterialRepository::getInstance();
-    Either<Error, shared_ptr<Material>> materialOrError = materialRepository->findById(materialId);
+    Either<Error, Material*> materialOrError = materialRepository->findById(materialId);
 
     if (materialOrError.isLeft()) {
         return materialOrError.forceLeft();
@@ -233,27 +227,26 @@ Either<Error, shared_ptr<BackPack>> EntityMapper::backPack(const QSqlQuery& quer
 
     int sizeId = record.value("size_id").toInt();
     SizeRepository* sizeRepository = SizeRepository::getInstance();
-    Either<Error, shared_ptr<Size>> sizeOrError = sizeRepository->findById(sizeId);
+    Either<Error, Size*> sizeOrError = sizeRepository->findById(sizeId);
 
     if (sizeOrError.isLeft()) {
         return sizeOrError.forceLeft();
     }
 
-    return make_shared<BackPack>(
-            record.value("id").toInt(),
-            record.value("code").toString().toStdString(),
-            record.value("color").toString().toStdString(),
-            *(materialOrError.forceRight()),
-            *(sizeOrError.forceRight()),
-            record.value("available_quantity").toInt(),
-            record.value("sold_quantity").toInt(),
-            record.value("description").toString().toStdString(),
-            record.value("category").toString().toStdString(),
-            record.value("capacity").toDouble()
+    return new BackPack(record.value("id").toInt(),
+                        record.value("code").toString().toStdString(),
+                        record.value("color").toString().toStdString(),
+                        *(materialOrError.forceRight()),
+                        *(sizeOrError.forceRight()),
+                        record.value("available_quantity").toInt(),
+                        record.value("sold_quantity").toInt(),
+                        record.value("description").toString().toStdString(),
+                        record.value("category").toString().toStdString(),
+                        record.value("capacity").toDouble()
     );
 }
 
-Either<Error, shared_ptr<Bracelet>> Services::EntityMapper::bracelet(const QSqlQuery& query) {
+Either<Error, Bracelet*> Services::EntityMapper::bracelet(const QSqlQuery& query) {
     /*
        * id int
        * code string
@@ -275,14 +268,14 @@ Either<Error, shared_ptr<Bracelet>> Services::EntityMapper::bracelet(const QSqlQ
     }
 
     if (query.size() == 0) {
-        return make_shared<Bracelet>();
+        return new Bracelet;
     }
 
     QSqlRecord record = recordOrError.forceRight();
 
     int materialId = record.value("material_id").toInt();
     MaterialRepository* materialRepository = MaterialRepository::getInstance();
-    Either<Error, shared_ptr<Material>> materialOrError = materialRepository->findById(materialId);
+    Either<Error, Material*> materialOrError = materialRepository->findById(materialId);
 
     if (materialOrError.isLeft()) {
         return materialOrError.forceLeft();
@@ -290,28 +283,27 @@ Either<Error, shared_ptr<Bracelet>> Services::EntityMapper::bracelet(const QSqlQ
 
     int sizeId = record.value("size_id").toInt();
     SizeRepository* sizeRepository = SizeRepository::getInstance();
-    Either<Error, shared_ptr<Size>> sizeOrError = sizeRepository->findById(sizeId);
+    Either<Error, Size*> sizeOrError = sizeRepository->findById(sizeId);
 
     if (sizeOrError.isLeft()) {
         return sizeOrError.forceLeft();
     }
 
-    return make_shared<Bracelet>(
-            record.value("id").toInt(),
-            record.value("code").toString().toStdString(),
-            record.value("color").toString().toStdString(),
-            *(materialOrError.forceRight()),
-            *(sizeOrError.forceRight()),
-            record.value("available_quantity").toInt(),
-            record.value("sold_quantity").toInt(),
-            record.value("description").toString().toStdString(),
-            record.value("category").toString().toStdString(),
-            record.value("pearl_number").toInt(),
-            record.value("pearl_diameter").toDouble()
+    return new Bracelet(record.value("id").toInt(),
+                        record.value("code").toString().toStdString(),
+                        record.value("color").toString().toStdString(),
+                        *(materialOrError.forceRight()),
+                        *(sizeOrError.forceRight()),
+                        record.value("available_quantity").toInt(),
+                        record.value("sold_quantity").toInt(),
+                        record.value("description").toString().toStdString(),
+                        record.value("category").toString().toStdString(),
+                        record.value("pearl_number").toInt(),
+                        record.value("pearl_diameter").toDouble()
     );
 }
 
-Either<Error, shared_ptr<Jeans>> Services::EntityMapper::jeans(const QSqlQuery& query) {
+Either<Error, Jeans*> Services::EntityMapper::jeans(const QSqlQuery& query) {
     /*
        * id int
        * code string
@@ -333,14 +325,14 @@ Either<Error, shared_ptr<Jeans>> Services::EntityMapper::jeans(const QSqlQuery& 
     }
 
     if (query.size() == 0) {
-        return make_shared<Jeans>();
+        return new Jeans;
     }
 
     QSqlRecord record = recordOrError.forceRight();
 
     int materialId = record.value("material_id").toInt();
     MaterialRepository* materialRepository = MaterialRepository::getInstance();
-    Either<Error, shared_ptr<Material>> materialOrError = materialRepository->findById(materialId);
+    Either<Error, Material*> materialOrError = materialRepository->findById(materialId);
 
     if (materialOrError.isLeft()) {
         return materialOrError.forceLeft();
@@ -348,13 +340,13 @@ Either<Error, shared_ptr<Jeans>> Services::EntityMapper::jeans(const QSqlQuery& 
 
     int sizeId = record.value("size_id").toInt();
     SizeRepository* sizeRepository = SizeRepository::getInstance();
-    Either<Error, shared_ptr<Size>> sizeOrError = sizeRepository->findById(sizeId);
+    Either<Error, Size*> sizeOrError = sizeRepository->findById(sizeId);
 
     if (sizeOrError.isLeft()) {
         return sizeOrError.forceLeft();
     }
 
-    return make_shared<Jeans>(
+    return new Jeans(
             record.value("id").toInt(),
             record.value("code").toString().toStdString(),
             record.value("color").toString().toStdString(),
@@ -369,7 +361,7 @@ Either<Error, shared_ptr<Jeans>> Services::EntityMapper::jeans(const QSqlQuery& 
     );
 }
 
-Either<Error, shared_ptr<Overalls>> Services::EntityMapper::overalls(const QSqlQuery& query) {
+Either<Error, Overalls*> Services::EntityMapper::overalls(const QSqlQuery& query) {
 
     /* id int
     * code string
@@ -392,14 +384,14 @@ Either<Error, shared_ptr<Overalls>> Services::EntityMapper::overalls(const QSqlQ
     }
 
     if (query.size() == 0) {
-        return make_shared<Overalls>();
+        return new Overalls;
     }
 
     QSqlRecord record = recordOrError.forceRight();
 
     int materialId = record.value("material_id").toInt();
     MaterialRepository* materialRepository = MaterialRepository::getInstance();
-    Either<Error, shared_ptr<Material>> materialOrError = materialRepository->findById(materialId);
+    Either<Error, Material*> materialOrError = materialRepository->findById(materialId);
 
     if (materialOrError.isLeft()) {
         return materialOrError.forceLeft();
@@ -407,24 +399,23 @@ Either<Error, shared_ptr<Overalls>> Services::EntityMapper::overalls(const QSqlQ
 
     int sizeId = record.value("size_id").toInt();
     SizeRepository* sizeRepository = SizeRepository::getInstance();
-    Either<Error, shared_ptr<Size>> sizeOrError = sizeRepository->findById(sizeId);
+    Either<Error, Size*> sizeOrError = sizeRepository->findById(sizeId);
 
     if (sizeOrError.isLeft()) {
         return sizeOrError.forceLeft();
     }
 
-    return make_shared<Overalls>(
-            record.value("id").toInt(),
-            record.value("code").toString().toStdString(),
-            record.value("color").toString().toStdString(),
-            *(materialOrError.forceRight()),
-            *(sizeOrError.forceRight()),
-            record.value("available_quantity").toInt(),
-            record.value("sold_quantity").toInt(),
-            record.value("description").toString().toStdString(),
-            record.value("sustainable_materials").toBool(),
-            record.value("gender").toString().toStdString(),
-            record.value("shorts").toBool(),
-            record.value("has_buttons").toBool()
+    return new Overalls(record.value("id").toInt(),
+                        record.value("code").toString().toStdString(),
+                        record.value("color").toString().toStdString(),
+                        *(materialOrError.forceRight()),
+                        *(sizeOrError.forceRight()),
+                        record.value("available_quantity").toInt(),
+                        record.value("sold_quantity").toInt(),
+                        record.value("description").toString().toStdString(),
+                        record.value("sustainable_materials").toBool(),
+                        record.value("gender").toString().toStdString(),
+                        record.value("shorts").toBool(),
+                        record.value("has_buttons").toBool()
     );
 }

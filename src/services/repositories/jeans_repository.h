@@ -21,7 +21,7 @@ namespace Services {
 
             static JeansRepository* getInstance();
 
-            Either<Error, Jeans> save(Jeans& entity) override;
+            Either<Error, Jeans*> save(Jeans* entity) override;
     };
 }
 

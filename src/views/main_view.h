@@ -6,7 +6,6 @@
 
 #include "../controllers/main_controller.h"
 #include "../models/product.h"
-#include <memory>
 #include <QStackedWidget>
 #include <QTabWidget>
 #include <QMainWindow>
@@ -19,7 +18,6 @@ namespace Views {
 
     class MaterialsView;
 }
-using std::shared_ptr;
 using Views::ProductsView;
 using Views::MaterialsView;
 
@@ -27,8 +25,7 @@ using Views::MaterialsView;
 namespace Views {
     class MainView : public QMainWindow, public View {
         Q_OBJECT
-            typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
-            typedef list<shared_ptr<Material>> MaterialsList;
+            typedef Map<Product::ProductType, list<Product*>> ProductsMap;
 
         public:
             MainView(QWidget* parent = nullptr);

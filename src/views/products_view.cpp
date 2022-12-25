@@ -7,12 +7,10 @@
 #include <algorithm>
 #include <QPainter>
 #include <QPushButton>
-#include <memory>
 #include <QMessageBox>
 
 using std::transform;
 using std::inserter;
-using std::make_shared;
 using std::pair;
 using Views::ProductsView;
 using Views::Wizard::CreateProductWizardView;
@@ -99,7 +97,7 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
 void ProductsView::initTreeView() {
     for (auto type = productsByType.cbegin(); type != productsByType.cend(); type++) {
         Product::ProductType productType = (*type).first;
-        list<shared_ptr<Product>> products = (*type).second;
+        list<Product*> products = (*type).second;
         QString productTypeName = QString::fromStdString(Product::productTypeToString(productType));
         QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(productType);
 
@@ -132,7 +130,7 @@ void ProductsView::initTreeView() {
 }
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
-                                       shared_ptr<Product> product) {
+                                       Product* product) {
     QStringList values;
     values << QString::fromStdString(product->getCode())
            << QString::fromStdString(product->getColor())
@@ -156,8 +154,8 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
 }
 
 void ProductsView::showWizard(bool) {
-    list<shared_ptr<Material>> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
-    list<shared_ptr<Size>> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
+    list<Material*> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
+    list<Size*> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
 
     QList<QString> materials = QList<QString>();
     QList<QString> sizes = QList<QString>();
@@ -165,14 +163,14 @@ void ProductsView::showWizard(bool) {
     transform(dbMaterials.begin(),
               dbMaterials.end(),
               inserter(materials, materials.end()),
-              [](const shared_ptr<Material> material) {
+              [](const Material* material) {
                   return QString::fromStdString(material->getNameAsString());
               });
 
     transform(dbSizes.begin(),
               dbSizes.end(),
               inserter(sizes, sizes.end()),
-              [](const shared_ptr<Size> size) {
+              [](const Size* size) {
                   return QString::fromStdString(size->getNameAsString());
               });
 
@@ -205,11 +203,10 @@ QIcon Views::ProductsView::drawColorIcon(const string& hex) {
 }
 
 void Views::ProductsView::handleProductCreation(Product* product, Product::ProductType type) {
-    list<shared_ptr<Product>> currentProducts = productsByType.get(type).value();
-    auto sharedPtr = shared_ptr<Product>(product);
-    currentProducts.push_back(sharedPtr);
+    list<Product*> currentProducts = productsByType.get(type).value();
+    currentProducts.push_back(product);
     productsByType.put(type, currentProducts);
-    buildAndInsertChild(treeWidget->topLevelItem(type), sharedPtr);
+    buildAndInsertChild(treeWidget->topLevelItem(type), product);
 }
 
 void Views::ProductsView::clickedEditButton(int id) {
@@ -233,7 +230,7 @@ void Views::ProductsView::clickedDeleteButton(int id) {
 
         for (auto pt = productsByType.cbegin(); pt != productsByType.cend(); ++pt) {
             auto products = (*pt).second;
-            products.remove_if([&id](shared_ptr<Product> product) { return product->getId() == id; });
+            products.remove_if([&id](Product* product) { return product->getId() == id; });
         }
     }
 }
@@ -242,5 +239,13 @@ void Views::ProductsView::handleProductDelete(QTreeWidgetItem* row) {
     for (int i = 0; i < treeWidget->topLevelItemCount(); i++) {
         QTreeWidgetItem* topLevelItem = treeWidget->topLevelItem(i);
         topLevelItem->takeChildren().removeOne(row);
+    }
+}
+
+Views::ProductsView::~ProductsView() {
+    for (auto pt = productsByType.cbegin(); pt != productsByType.cend(); pt++) {
+        for (auto product: (*pt).second) {
+            delete product;
+        }
     }
 }
