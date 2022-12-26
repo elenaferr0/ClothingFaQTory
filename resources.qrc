@@ -28,6 +28,7 @@
         <file>assets/icons/buttons.png</file>
         <file>assets/icons/delete.png</file>
         <file>assets/icons/edit.png</file>
+        <file>assets/icons/dices.png</file>
         <file>fonts/inter.ttf</file>
     </qresource>
 </RCC>

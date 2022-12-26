@@ -14,7 +14,7 @@ QT_BEGIN_NAMESPACE
 namespace Views::Components { class IconButton; }
 QT_END_NAMESPACE
 
-class IconButton : public QPushButton {
+class ProductIconButton : public QPushButton {
     Q_OBJECT
     private:
         Product* product;
@@ -22,12 +22,12 @@ class IconButton : public QPushButton {
         Product::ProductType productType;
 
     public:
-        IconButton(const QString& path,
-                   const QString& objName,
-                   Product* product,
-                   QTreeWidgetItem* row,
-                   Product::ProductType,
-                   QWidget* parent);
+        ProductIconButton(const QString& path,
+                          const QString& objName,
+                          Product* product,
+                          QTreeWidgetItem* row,
+                          Product::ProductType,
+                          QWidget* parent);
 
     private slots:
 

@@ -2,8 +2,10 @@
 #include <QLineEdit>
 #include <QFormLayout>
 #include <QCompleter>
+#include <QTime>
 #include <QRegularExpressionValidator>
 #include <QRegularExpression>
+#include <QRandomGenerator>
 #include "generic_product_info_wizard_page.h"
 #include "product_wizard_view.h"
 
@@ -35,7 +37,21 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
     codeLineEdit->setMaxLength(10);
     codeLineEdit->setValidator(alphaNumericUnderscoresValidator);
     registerField("code", codeLineEdit);
-    layout->addRow("Code", codeLineEdit);
+
+    if (parentWizard->getMode() == ProductWizardView::Create) {
+        QHBoxLayout* hbox = new QHBoxLayout;
+        QPushButton* randomCodeButton = new QPushButton;
+        randomCodeButton->setIcon(QIcon(":/assets/icons/dices.png"));
+        randomCodeButton->setIconSize(QSize(25, 25));
+        randomCodeButton->setObjectName("randomCodeButton");
+        randomCodeButton->setToolTip("Generate a random code");
+        connect(randomCodeButton, SIGNAL(clicked(bool)), this, SLOT(handleRandomCodeButtonPressed(bool)));
+        hbox->addWidget(codeLineEdit);
+        hbox->addWidget(randomCodeButton);
+        layout->addRow("Code", hbox);
+    } else {
+        layout->addRow("Code", codeLineEdit);
+    }
 
     colorButton = new SelectColorButton(nullptr, "Choose color");
     registerField("color", this, "color", SIGNAL(&SelectColorButton::colorChanged));
@@ -128,4 +144,14 @@ void GenericProductInfoWizardPage::registerProductTypeField(Product::ProductType
     QSpinBox* mockSpinBox = new QSpinBox;
     mockSpinBox->setValue(productType);
     registerField("productType", mockSpinBox);
+}
+
+void GenericProductInfoWizardPage::handleRandomCodeButtonPressed(bool) {
+    QRandomGenerator gen(QTime::currentTime().msec());
+    QString randomString;
+    for (int i = 0; i < 12; ++i) {
+        int randomInt = gen.bounded('A', 'Z' + 1);
+        randomString.append(QChar(randomInt));
+    }
+    codeLineEdit->setText(randomString);
 }

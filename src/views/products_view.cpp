@@ -3,7 +3,7 @@
 #include <QVBoxLayout>
 #include <QToolButton>
 #include "products_view.h"
-#include "components/icon_button.h"
+#include "components/product_icon_button.h"
 #include <algorithm>
 #include <QPainter>
 #include <QPushButton>
@@ -151,14 +151,14 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
     QTreeWidgetItem* row = new QTreeWidgetItem(values);
     topLevelItemWidget->addChild(row);
 
-    IconButton* editButton = new IconButton(":/assets/icons/edit.png", "editButton", product,
-                                            row, productType, this);
+    ProductIconButton* editButton = new ProductIconButton(":/assets/icons/edit.png", "editButton", product,
+                                                          row, productType, this);
     treeWidget->setItemWidget(row, COLUMN_COUNT - 2, editButton);
     connect(editButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
             SLOT(clickedEditButton(Product * , QTreeWidgetItem * , Product::ProductType)));
 
-    IconButton* deleteButton = new IconButton(":/assets/icons/delete.png", "deleteButton", product,
-                                              row, productType, this);
+    ProductIconButton* deleteButton = new ProductIconButton(":/assets/icons/delete.png", "deleteButton", product,
+                                                            row, productType, this);
 
     treeWidget->setItemWidget(row, COLUMN_COUNT - 1, deleteButton);
     connect(deleteButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,

@@ -49,6 +49,8 @@ class GenericProductInfoWizardPage : public QWizardPage {
     private slots:
 
         void handleColorChange(const QString&);
+
+        void handleRandomCodeButtonPressed(bool);
 };
 
 
