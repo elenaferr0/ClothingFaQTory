@@ -11,6 +11,7 @@ QSqlQuery Repository::exec(const string& sql, const QVariantList& params) {
         query.bindValue(i, params.at(i));
     }
     query.exec();
+    qInfo() << query.lastQuery();
     return query;
 }
 

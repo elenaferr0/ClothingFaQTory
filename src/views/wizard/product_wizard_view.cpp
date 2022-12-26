@@ -23,13 +23,8 @@ ProductWizardView::ProductWizardView(Mode mode,
 
     setDefaultProperty("QTextEdit", "plainText", "textChanged");
 
-    if (mode == Create) {
-        connect(this, SIGNAL(completed(Product * , Product::ProductType)),
-                controller, SLOT(handleProductCreation(Product * , Product::ProductType)));
-    } else {
-        connect(this, SIGNAL(completed(Product * , Product::ProductType)),
-                controller, SLOT(handleProductEditing(Product * , Product::ProductType)));
-    }
+    connect(this, SIGNAL(completed(Product * , Product::ProductType)),
+            controller, SLOT(handleProductEditAndCreate(Product * , Product::ProductType)));
 
 }
 

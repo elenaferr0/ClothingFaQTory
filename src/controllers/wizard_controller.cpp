@@ -86,7 +86,7 @@ void Controllers::WizardController::save(Overalls* overalls) {
     }
 }
 
-void WizardController::handleProductCreation(Product* product, Product::ProductType productType) {
+void WizardController::handleProductEditAndCreate(Product* product, Product::ProductType productType) {
     switch (productType) {
         case Models::Product::Jeans:
             save(dynamic_cast<Jeans*>(product));
@@ -107,8 +107,4 @@ void WizardController::handleProductCreation(Product* product, Product::ProductT
             save(dynamic_cast<Hat*>(product));
             break;
     }
-}
-
-void Controllers::WizardController::handleProductEditing(Product* product, Product::ProductType productType) {
-
 }

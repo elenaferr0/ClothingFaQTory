@@ -6,7 +6,7 @@ using Controllers::MainController;
 
 int MaterialsView::COLUMN_COUNT = 4;
 
-MaterialsView::MaterialsView(MainView* mainView, QWidget* parent) : ObserverWidgetView(parent),
+MaterialsView::MaterialsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
                                                                     materials(MaterialsList()) {
     setController(new MainController(this));
     connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
@@ -51,8 +51,4 @@ void Views::MaterialsView::initGrid() {
         }
     }
 
-}
-
-void Views::MaterialsView::notify(Model*) {
-    // TODO: handle notify event
 }

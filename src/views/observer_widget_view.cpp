@@ -2,6 +2,6 @@
 
 #include "observer_widget_view.h"
 
-using Views::ObserverWidgetView;
+using Views::WidgetViewParent;
 
-ObserverWidgetView::ObserverWidgetView(QWidget* parent) : QWidget(parent) {}
+WidgetViewParent::WidgetViewParent(QWidget* parent) : QWidget(parent) {}

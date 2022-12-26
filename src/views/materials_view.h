@@ -15,7 +15,7 @@ using Models::Material;
 namespace Views {
     class MainView;
 
-    class MaterialsView : public ObserverWidgetView {
+    class MaterialsView : public WidgetViewParent {
         Q_OBJECT
             typedef LinkedList<Material*> MaterialsList;
         public:
@@ -29,9 +29,6 @@ namespace Views {
             MaterialsList materials;
 
             void initGrid();
-
-        public:
-            void notify(Model* model) override;
     };
 }
 

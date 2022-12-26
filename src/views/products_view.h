@@ -19,7 +19,7 @@ using Core::Error;
 namespace Views {
     class MainView;
 
-    class ProductsView : public ObserverWidgetView {
+    class ProductsView : public WidgetViewParent {
         Q_OBJECT
         private:
             typedef Map<Product::ProductType, LinkedList<Product*>>
@@ -40,14 +40,15 @@ namespace Views {
 
             void buildAndInsertChild(QTreeWidgetItem*, Product*, Product::ProductType);
 
+            QStringList getColumnsFromProduct(const Product* product) const;
+
             QList<QString> materials;
             QList<QString> sizes;
+            QTreeWidgetItem* rowBeingEdited;
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
             void init(const ProductsMap& productsByType);
-
-            void notify(Model*) override;
 
         public slots:
 

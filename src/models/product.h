@@ -4,7 +4,6 @@
 #include "./material.h"
 #include "./size.h"
 #include "model.h"
-#include "../core/observer_interface.h"
 #include "../core/visitor_interface.h"
 
 #include<string>
@@ -14,7 +13,6 @@ using std::string;
 
 using Models::Model;
 using Core::VisitorInterface;
-using Core::ObserverInterface;
 
 namespace Models {
     class Product : public Model {

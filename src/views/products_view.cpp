@@ -19,7 +19,7 @@ using Controllers::MainController;
 
 int ProductsView::COLUMN_COUNT = 7;
 
-ProductsView::ProductsView(MainView* mainView, QWidget* parent) : ObserverWidgetView(parent) {
+ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent) {
     setController(new MainController(this));
     connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
 }
@@ -91,10 +91,6 @@ void ProductsView::init(const ProductsMap& productsByType) {
               });
 }
 
-void Views::ProductsView::notify(Model*) {
-    // TODO handle notify event
-}
-
 QTreeWidgetItem* ProductsView::getHeaders() const {
     QTreeWidgetItem* headers = new QTreeWidgetItem(QStringList() << "Code"
                                                                  << "Color"
@@ -117,7 +113,7 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
 void ProductsView::initTreeView(const ProductsMap& productsByType) {
     for (auto type = productsByType.cbegin(); type != productsByType.cend(); type++) {
         Product::ProductType productType = (*type).first;
-        LinkedList<Product*> products = productsByType.get(productType).value();
+        LinkedList<Product*> products = (*type).second;
         QString productTypeName = QString::fromStdString(Product::productTypeToString(productType));
         QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(productType);
 
@@ -151,12 +147,7 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
                                        Product* product, Product::ProductType productType) {
-    QStringList values;
-    values << QString::fromStdString(product->getCode())
-           << QString::fromStdString(product->getColor())
-           << QString::fromStdString(product->getDescription())
-           << QString::fromStdString(product->getSize().getNameAsString())
-           << QString::number(product->computePrice(), 'f', 2) + "$";
+    QStringList values = getColumnsFromProduct(product);
     QTreeWidgetItem* row = new QTreeWidgetItem(values);
     topLevelItemWidget->addChild(row);
 
@@ -176,6 +167,16 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
     row->setIcon(1, drawColorIcon(product->getColor()));
 }
 
+QStringList ProductsView::getColumnsFromProduct(const Product* product) const {
+    QStringList values;
+    values << QString::fromStdString(product->getCode())
+           << QString::fromStdString(product->getColor())
+           << QString::fromStdString(product->getDescription())
+           << QString::fromStdString(product->getSize().getNameAsString())
+           << QString::number(product->computePrice(), 'f', 2) + "$";
+    return values;
+}
+
 void ProductsView::showCreateProductWizard(bool) {
     ProductWizardView* createProductWizard = new ProductWizardView(ProductWizardView::Create,
                                                                    this,
@@ -188,6 +189,7 @@ void ProductsView::showCreateProductWizard(bool) {
 }
 
 void Views::ProductsView::rebuildTreeView() {
+    treeWidget->clear();
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType());
 }
 
@@ -209,7 +211,7 @@ void Views::ProductsView::handleProductCreation(Product* product, Product::Produ
     buildAndInsertChild(treeWidget->topLevelItem(type), product, type);
 }
 
-void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, Product::ProductType productType) {
+void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem* row, Product::ProductType productType) {
     ProductWizardView* editProductWizard = new ProductWizardView(ProductWizardView::Edit,
                                                                  this,
                                                                  materials,
@@ -221,6 +223,7 @@ void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, 
             this, SLOT(handleProductEditing(Product * , Product::ProductType)));
     editProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     editProductWizard->show();
+    rowBeingEdited = row;
 }
 
 void Views::ProductsView::clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType productType) {
@@ -242,5 +245,5 @@ void Views::ProductsView::clickedDeleteButton(Product*, QTreeWidgetItem* row, Pr
 }
 
 void Views::ProductsView::handleProductEditing(Product*, Product::ProductType) {
-
+    rebuildTreeView();
 }

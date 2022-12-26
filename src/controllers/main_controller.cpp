@@ -85,13 +85,11 @@ void MainController::findProductsOfType(Product::ProductType productType,
                 LinkedList<Product*> products;
 
                 /*the list wouldn't be implicitly converted to list<Product*>
-                  therefore transform is needed. In this situation the observer is also
-                  registered*/
+                  therefore for_each is needed*/
 
                 std::for_each(entities.begin(),
                               entities.end(),
-                              [this, &products](T* product) {
-                                  product->registerObserver(dynamic_cast<MainView*>(view)->getProductsView());
+                              [&products](T* product) {
                                   products.pushBack(product);
                               }
                 );
