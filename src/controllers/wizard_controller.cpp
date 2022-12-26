@@ -7,14 +7,14 @@ using Core::Error;
 
 WizardController::WizardController(View* view)
         : Controller(view),
-          hatRepository(HatRepository::getInstance()),
+          materialRepository(MaterialRepository::getInstance()),
           sizeRepository(SizeRepository::getInstance()),
+          hatRepository(HatRepository::getInstance()),
           braceletRepository(BraceletRepository::getInstance()),
           backPackRepository(BackPackRepository::getInstance()),
           vestRepository(VestRepository::getInstance()),
           jeansRepository(JeansRepository::getInstance()),
-          overallsRepository(OverallsRepository::getInstance()),
-          materialRepository(MaterialRepository::getInstance()) {}
+          overallsRepository(OverallsRepository::getInstance()) {}
 
 Material* WizardController::findMaterialById(int id) {
     Either<Error, Material*> errorOrMaterial = materialRepository->findById(id);

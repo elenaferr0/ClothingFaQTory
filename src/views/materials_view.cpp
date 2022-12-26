@@ -26,7 +26,7 @@ void Views::MaterialsView::initGrid(MaterialsView::MaterialsList materials) {
     int row = 0, col = 0;
 
     for (auto material: materials) {
-        MaterialIconButton* button = new MaterialIconButton(material, row, col, this);
+        MaterialIconButton* button = new MaterialIconButton(material, this);
 
         QString text = getButtonText(material);
 
@@ -36,8 +36,8 @@ void Views::MaterialsView::initGrid(MaterialsView::MaterialsList materials) {
         button->setIconSize(QSize(50, 50));
         button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
         button->setObjectName("materialButton"); // for stylesheet
-        connect(button, SIGNAL(clicked(Material * , int, int)), this,
-                SLOT(handleMaterialButtonClicked(Material * , int, int)));
+        connect(button, SIGNAL(clicked(Material * )), this,
+                SLOT(handleMaterialButtonClicked(Material * )));
 
         gridLayout->addWidget(button, row, col);
 
@@ -62,7 +62,7 @@ QString Views::MaterialsView::getButtonText(const Material* material) const {
     return text;
 }
 
-void Views::MaterialsView::handleMaterialButtonClicked(Material* material, int row, int col) {
+void Views::MaterialsView::handleMaterialButtonClicked(Material* material) {
     EditMaterialCostMessageBox* materialCostMessageBox = new EditMaterialCostMessageBox(material, this);
     materialCostMessageBox->setAttribute(Qt::WA_DeleteOnClose);
     int result = materialCostMessageBox->exec();

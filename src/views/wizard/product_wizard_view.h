@@ -38,8 +38,6 @@ namespace Views::Wizard {
 
             ClothingItem::Gender getGender();
 
-            void registerProductType(Product::ProductType productType);
-
         public:
             void setProduct(Product* product);
 

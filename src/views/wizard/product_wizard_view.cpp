@@ -12,7 +12,7 @@ ProductWizardView::ProductWizardView(Mode mode,
                                      const QList<QString>& sizes,
                                      Product* product,
                                      Product::ProductType productType)
-        : QWizard(parent), product(product), mode(mode) {
+        : QWizard(parent), mode(mode), product(product) {
     controller = new WizardController(this);
     if (mode == Mode::Create) {
         addPage(new ChooseProductTypeWizardPage(this));

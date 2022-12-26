@@ -61,9 +61,9 @@ namespace Views {
 
             void showCreateProductWizard(bool);
 
-            void clickedEditButton(Product*, QTreeWidgetItem*, Product::ProductType);
+            void clickedEditButton(Product*, QTreeWidgetItem* row, Product::ProductType);
 
-            void clickedDeleteButton(Product*, QTreeWidgetItem*, Product::ProductType);
+            void clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType);
 
     };
 

@@ -33,7 +33,7 @@ namespace Views {
 
         private slots:
 
-            void handleMaterialButtonClicked(Material*, int row, int col);
+            void handleMaterialButtonClicked(Material*);
 
     };
 }

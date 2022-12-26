@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QPushButton>
+#include <QTreeWidgetItem>
 #include "../../models/product.h"
 
 using Models::Product;
