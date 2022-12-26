@@ -29,6 +29,10 @@ namespace Views {
             MaterialsList materials;
 
             void initGrid();
+
+        private slots:
+
+            void handleMaterialButtonClicked(Material*);
     };
 }
 

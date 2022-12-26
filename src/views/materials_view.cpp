@@ -1,5 +1,7 @@
 #include <QToolButton>
 #include "materials_view.h"
+#include "components/material_icon_button.h"
+#include "components/edit_material_cost_dialog.h"
 
 using Views::MaterialsView;
 using Controllers::MainController;
@@ -26,7 +28,7 @@ void Views::MaterialsView::initGrid() {
     int row = 0, col = 0;
 
     for (auto material: materials) {
-        QToolButton* button = new QToolButton();
+        MaterialIconButton* button = new MaterialIconButton(material, this);
         string materialName = material->getNameAsString();
 
         QString capitalizedName = QString::fromStdString(materialName).at(0).toUpper() +
@@ -41,6 +43,7 @@ void Views::MaterialsView::initGrid() {
         button->setIconSize(QSize(50, 50));
         button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
         button->setObjectName("materialButton"); // for stylesheet
+        connect(button, SIGNAL(clicked(Material * )), this, SLOT(handleMaterialButtonClicked(Material * )));
 
         gridLayout->addWidget(button, row, col);
 
@@ -51,4 +54,10 @@ void Views::MaterialsView::initGrid() {
         }
     }
 
+}
+
+void Views::MaterialsView::handleMaterialButtonClicked(Material* material) {
+    EditMaterialCostDialog* materialCostDialog = new EditMaterialCostDialog(material, this);
+    materialCostDialog->setAttribute(Qt::WA_DeleteOnClose);
+    int result = materialCostDialog->exec();
 }
