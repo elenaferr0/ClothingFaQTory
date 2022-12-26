@@ -79,6 +79,7 @@ void Views::MaterialsView::handleMaterialButtonClicked(Material* material) {
             delete item;
         }
         initGrid(dynamic_cast<MainController*>(controller)->findAllMaterials());
+        emit materialCostChanged();
     }
 
 }

@@ -63,6 +63,9 @@ Either<Error, Material*> MaterialRepository::saveCostPerUnit(Material* entity) {
         return Either<Error, Material*>::ofLeft(hasError.value());
     }
 
+    if (cachedMaterials.hasKey(entity->getId())) {
+        cachedMaterials.get(entity->getId()).value()->setCostPerUnit(entity->getCostPerUnit());
+    }
     return entity;
 }
 

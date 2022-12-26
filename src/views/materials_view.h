@@ -35,6 +35,10 @@ namespace Views {
 
             void handleMaterialButtonClicked(Material*);
 
+        signals:
+
+            void materialCostChanged();
+
     };
 }
 

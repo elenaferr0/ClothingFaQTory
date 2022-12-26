@@ -41,6 +41,8 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
 
     materialsView->init();
 
+    connect(materialsView, SIGNAL(materialCostChanged()), productsView, SLOT(rebuildTreeView()));
+
     tabWidget->addTab(productsView, "Products");
     QIcon clothingIcon(":/assets/icons/tshirt.png");
     tabWidget->setTabIcon(0, clothingIcon);
