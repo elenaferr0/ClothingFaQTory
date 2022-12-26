@@ -1,4 +1,5 @@
 #include <QToolButton>
+#include <QLabel>
 #include "materials_view.h"
 #include "components/material_icon_button.h"
 #include "components/edit_material_cost_box.h"
@@ -15,14 +16,26 @@ MaterialsView::MaterialsView(MainView* mainView, QWidget* parent) : WidgetViewPa
 
 void MaterialsView::init() {
     auto materials = dynamic_cast<MainController*>(controller)->findAllMaterials();
-    gridLayout = new QGridLayout(this);
+    QVBoxLayout* vbox = new QVBoxLayout;
+    auto title = new QLabel("Click on the materials to edit the price");
+    title->setAlignment(Qt::AlignCenter);
+    QFont font = QFont();
+    font.setPointSize(13);
+    title->setMargin(20);
+    title->setFont(font);
+
+    vbox->addWidget(title);
+    gridLayout = new QGridLayout;
     gridLayout->setAlignment(Qt::AlignCenter);
-    gridLayout->setSpacing(60);
+    gridLayout->setSpacing(50);
+    gridLayout->setVerticalSpacing(30);
+    vbox->addLayout(gridLayout);
+    vbox->setAlignment(Qt::AlignCenter);
+    setLayout(vbox);
     initGrid(materials);
 }
 
 void Views::MaterialsView::initGrid(MaterialsView::MaterialsList materials) {
-
     int row = 0, col = 0;
 
     for (auto material: materials) {
