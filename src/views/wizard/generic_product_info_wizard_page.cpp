@@ -33,7 +33,7 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
     codeLineEdit->setPlaceholderText("Product Code");
     codeLineEdit->setMaxLength(10);
     codeLineEdit->setValidator(alphaNumericUnderscoresValidator);
-    registerField("code*", codeLineEdit);
+    registerField("code", codeLineEdit);
     layout->addRow("Code", codeLineEdit);
 
     colorButton = new SelectColorButton(nullptr, "Choose color");
@@ -74,8 +74,6 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
 
     if (parentWizard->getMode() == ProductWizardView::Edit) {
         Product* product = parentWizard->getProduct();
-        //FIXME: seg fault
-        qInfo() << QString::fromStdString(product->getCode());
         codeLineEdit->setText(QString::fromStdString(product->getCode()));
         codeLineEdit->setDisabled(true);
         colorButton->setColor(QString::fromStdString(product->getColor()));

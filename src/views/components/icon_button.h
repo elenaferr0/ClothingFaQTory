@@ -21,7 +21,11 @@ class IconButton : public QPushButton {
         Product::ProductType productType;
 
     public:
-        IconButton(const QString& path, const QString& objName, Product* id, QTreeWidgetItem* row, Product::ProductType,
+        IconButton(const QString& path,
+                   const QString& objName,
+                   Product* product,
+                   QTreeWidgetItem* row,
+                   Product::ProductType,
                    QWidget* parent);
 
     private slots:
