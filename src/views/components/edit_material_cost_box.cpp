@@ -4,17 +4,19 @@
 #include <QDoubleValidator>
 #include <QFormLayout>
 #include <QLabel>
-#include "edit_material_cost_dialog.h"
-#include <limits>
+#include <QDialogButtonBox>
+#include "edit_material_cost_box.h"
 
-EditMaterialCostDialog::EditMaterialCostDialog(Material* material, QWidget* parent) : QDialog(parent) {
+EditMaterialCostMessageBox::EditMaterialCostMessageBox(Material* material, QWidget* parent)
+        : QDialog(parent), material(material) {
     setWindowTitle("Edit " + QString::fromStdString(material->getNameAsString()).toLower() + " price");
 
-    QFormLayout* layout = new QFormLayout;
+    QFormLayout* layout = new QFormLayout(this);
 
     QLineEdit* priceLineEdit = new QLineEdit;
     priceLineEdit->setText(QString::number(material->getCostPerUnit()));
     priceLineEdit->setPlaceholderText("0000.00");
+    connect(priceLineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(handleTextChanged(const QString &)));
 
     QDoubleValidator* validator = new QDoubleValidator(priceLineEdit);
     validator->setNotation(QDoubleValidator::StandardNotation);
@@ -27,10 +29,17 @@ EditMaterialCostDialog::EditMaterialCostDialog(Material* material, QWidget* pare
 
     QHBoxLayout* hbox = new QHBoxLayout;
     hbox->addWidget(priceLineEdit);
-    hbox->addWidget(new QLabel("$/" +
-                               QString::fromStdString(material->getUnitOfMeasureAsString())));
-
+    hbox->addWidget(new QLabel("$/" + QString::fromStdString(material->getUnitOfMeasureAsString())));
     layout->addRow("New price", hbox);
-    setLayout(layout);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    layout->addWidget(buttonBox);
+
     resize(300, 100);
+}
+
+void EditMaterialCostMessageBox::handleTextChanged(const QString& cost) {
+    material->setCostPerUnit(cost.toDouble());
 }

@@ -44,7 +44,6 @@ namespace Views {
 
             QList<QString> materials;
             QList<QString> sizes;
-            QTreeWidgetItem* rowBeingEdited;
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
 

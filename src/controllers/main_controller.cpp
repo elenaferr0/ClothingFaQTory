@@ -97,5 +97,13 @@ void MainController::findProductsOfType(Product::ProductType productType,
             }
     );
 
-
 }
+
+void Controllers::MainController::saveCostPerUnit(Material* material) {
+    Either<Error, Material*> errorOrMaterial = materialRepository->saveCostPerUnit(material);
+
+    if (errorOrMaterial.isLeft()) {
+        emit databaseError(&errorOrMaterial.forceLeft());
+    }
+}
+

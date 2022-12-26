@@ -16,8 +16,10 @@ class MaterialIconButton : public QToolButton {
     Q_OBJECT
     private:
         Material* material;
+        int row;
+        int col;
     public:
-        MaterialIconButton(Material* material, QWidget* parent = nullptr);
+        MaterialIconButton(Material* material, int row, int col, QWidget* parent = nullptr);
 
     private slots:
 
@@ -25,7 +27,7 @@ class MaterialIconButton : public QToolButton {
 
     signals:
 
-        void clicked(Material*);
+        void clicked(Material*, int, int);
 };
 
 

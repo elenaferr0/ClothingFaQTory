@@ -223,7 +223,6 @@ void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem* r
             this, SLOT(handleProductEditing(Product * , Product::ProductType)));
     editProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     editProductWizard->show();
-    rowBeingEdited = row;
 }
 
 void Views::ProductsView::clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType productType) {

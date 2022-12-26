@@ -84,3 +84,7 @@ string Models::Material::getNameAsString() const {
             return "POLYESTER";
     }
 }
+
+void Models::Material::setCostPerUnit(double costPerUnit) {
+    Material::costPerUnit = costPerUnit;
+}

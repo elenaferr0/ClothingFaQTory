@@ -50,6 +50,8 @@ namespace Controllers {
 
             void deleteProductById(int id);
 
+            void saveCostPerUnit(Material* material);
+
         private:
             HatRepository* hatRepository;
             SizeRepository* sizeRepository;
@@ -63,6 +65,8 @@ namespace Controllers {
 
             template<class T>
             void findProductsOfType(Product::ProductType productType, CRUDRepository<T>* repository, ProductsMap& map);
+
+
     };
 }
 #endif //MAIN_CONTROLLER_H

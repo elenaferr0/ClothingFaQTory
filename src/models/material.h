@@ -47,6 +47,8 @@ namespace Models {
 
             string getUnitOfMeasureAsString() const;
 
+            void setCostPerUnit(double costPerUnit);
+
         private:
             Name name;
             UnitOfMeasure unitOfMeasure;

@@ -26,13 +26,15 @@ namespace Views {
         private:
             QGridLayout* gridLayout;
             static int COLUMN_COUNT;
-            MaterialsList materials;
 
-            void initGrid();
+            QString getButtonText(const Material* material) const;
+
+            void initGrid(MaterialsList materials);
 
         private slots:
 
-            void handleMaterialButtonClicked(Material*);
+            void handleMaterialButtonClicked(Material*, int row, int col);
+
     };
 }
 
