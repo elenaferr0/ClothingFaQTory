@@ -33,9 +33,13 @@ class GenericProductInfoWizardPage : public QWizardPage {
         QComboBox* sizeBox;
         QComboBox* materialBox;
         ProductWizardView* parentWizard;
+
+        void registerProductTypeField(Product::ProductType productType);
+
     public:
-        GenericProductInfoWizardPage(const QList<QString>& = QList<QString>(),
-                                     const QList<QString>& = QList<QString>(),
+        GenericProductInfoWizardPage(const QList<QString>&,
+                                     const QList<QString>&,
+                                     Product::ProductType productType,
                                      QWidget* parent = nullptr);
 
         bool validatePage() override;

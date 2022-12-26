@@ -38,6 +38,8 @@ namespace Views::Wizard {
 
             ClothingItem::Gender getGender();
 
+            void registerProductType(Product::ProductType productType);
+
         public:
             void setProduct(Product* product);
 
@@ -48,7 +50,8 @@ namespace Views::Wizard {
             ProductWizardView(Mode mode, QWidget* parent = nullptr,
                               const QList<QString>& materials = QList<QString>(),
                               const QList<QString>& sizes = QList<QString>(),
-                              Product* = nullptr);
+                              Product* = nullptr,
+                              Product::ProductType productType = Product::Jeans);
 
             Mode getMode() const;
 

@@ -7,9 +7,10 @@ using Views::Wizard::ProductWizardView;
 
 SpecificProductInfoWizardPage::SpecificProductInfoWizardPage(QWidget* parent)
         : QWizardPage(parent),
-          visitor(SpecificProductInfoVisitor()),
-          parentWizard(dynamic_cast<ProductWizardView*>(parent)) {
-    setWindowTitle("Set specific product info");
+          parentWizard(dynamic_cast<ProductWizardView*>(parent)),
+          visitor(SpecificProductInfoVisitor(parentWizard->getMode())) {
+    setWindowTitle(parentWizard->getMode() == ProductWizardView::Create ? "Insert specific product info"
+                                                                        : "Edit specific product info");
 }
 
 void SpecificProductInfoWizardPage::initializePage() {

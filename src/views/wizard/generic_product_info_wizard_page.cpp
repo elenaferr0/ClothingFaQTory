@@ -19,6 +19,7 @@ using Controllers::WizardController;
 
 GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>& materials,
                                                            const QList<QString>& sizes,
+                                                           Product::ProductType productType,
                                                            QWidget* parent)
         : QWizardPage(parent), parentWizard(dynamic_cast<ProductWizardView*>(parent)) {
 
@@ -82,6 +83,7 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
         descriptionTextEdit->setText(QString::fromStdString(product->getDescription()));
         sizeBox->setCurrentIndex(product->getSize().getId() - 1);
         materialBox->setCurrentIndex(product->getMaterial().getId() - 1);
+        registerProductTypeField(productType);
     }
     setLayout(layout);
 
@@ -118,4 +120,12 @@ void GenericProductInfoWizardPage::cleanupPage() {
     sizeBox->setCurrentIndex(0);
     materialBox->setCurrentIndex(0);
     QWizardPage::cleanupPage();
+}
+
+void GenericProductInfoWizardPage::registerProductTypeField(Product::ProductType productType) {
+    // The product type has to be manually registered with a mock widget to
+    // allow reusing the same logic for creation (when editing a product the type cannot be changed)
+    QSpinBox* mockSpinBox = new QSpinBox;
+    mockSpinBox->setValue(productType);
+    registerField("productType", mockSpinBox);
 }

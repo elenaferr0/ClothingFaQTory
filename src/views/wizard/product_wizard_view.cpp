@@ -6,15 +6,18 @@
 using Views::Wizard::ProductWizardView;
 using Views::Wizard::ChooseProductTypeWizardPage;
 
-ProductWizardView::ProductWizardView(Mode mode, QWidget* parent,
+ProductWizardView::ProductWizardView(Mode mode,
+                                     QWidget* parent,
                                      const QList<QString>& materials,
                                      const QList<QString>& sizes,
-                                     Product* product) : QWizard(parent), product(product), mode(mode) {
+                                     Product* product,
+                                     Product::ProductType productType)
+        : QWizard(parent), product(product), mode(mode) {
     controller = new WizardController(this);
     if (mode == Mode::Create) {
         addPage(new ChooseProductTypeWizardPage(this));
     }
-    addPage(new GenericProductInfoWizardPage(materials, sizes, this));
+    addPage(new GenericProductInfoWizardPage(materials, sizes, productType, this));
     addPage(new SpecificProductInfoWizardPage(this));
     setWindowTitle(mode == Create ? "Insert a new product" : "Edit product");
 
@@ -27,6 +30,7 @@ ProductWizardView::ProductWizardView(Mode mode, QWidget* parent,
         connect(this, SIGNAL(completed(Product * , Product::ProductType)),
                 controller, SLOT(handleProductEditing(Product * , Product::ProductType)));
     }
+
 }
 
 void ProductWizardView::setProduct(Product* product) {

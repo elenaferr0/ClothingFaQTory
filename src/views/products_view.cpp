@@ -209,12 +209,13 @@ void Views::ProductsView::handleProductCreation(Product* product, Product::Produ
     buildAndInsertChild(treeWidget->topLevelItem(type), product, type);
 }
 
-void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, Product::ProductType) {
+void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, Product::ProductType productType) {
     ProductWizardView* editProductWizard = new ProductWizardView(ProductWizardView::Edit,
                                                                  this,
                                                                  materials,
                                                                  sizes,
-                                                                 product
+                                                                 product,
+                                                                 productType
     );
     connect(editProductWizard, SIGNAL(completed(Product * , Product::ProductType)),
             this, SLOT(handleProductEditing(Product * , Product::ProductType)));

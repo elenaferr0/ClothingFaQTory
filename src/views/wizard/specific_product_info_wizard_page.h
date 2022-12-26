@@ -27,8 +27,8 @@ namespace Views::Wizard {
     class SpecificProductInfoWizardPage : public QWizardPage {
         Q_OBJECT
         private:
-            SpecificProductInfoVisitor visitor;
             ProductWizardView* parentWizard;
+            SpecificProductInfoVisitor visitor;
 
             void setProductFields(Product* product);
 

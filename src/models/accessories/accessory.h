@@ -10,7 +10,7 @@ namespace Models {
 
         public:
             enum Category {
-                BAGS, JEWELRY, HATS, GENERAL
+                GENERAL, BAGS, JEWELRY, HATS
             };
 
             Accessory(long id = -1,
