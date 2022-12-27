@@ -6,15 +6,15 @@ using Utils::Calculator;
 const double BackPack::BACKPACK_HEIGHT = 30;
 const double BackPack::BACKPACK_WIDTH = 20;
 
-BackPack::BackPack(long id,
-                   string code,
-                   string color,
-                   Material material,
-                   Size size,
+BackPack::BackPack(int id,
+                   const string& code,
+                   const string& color,
+                   const Material& material,
+                   const Size& size,
                    int availableQuantity,
                    int soldQuantity,
-                   string description,
-                   string category,
+                   const string& description,
+                   const string& category,
                    double capacity)
         : Accessory(id,
                     code,

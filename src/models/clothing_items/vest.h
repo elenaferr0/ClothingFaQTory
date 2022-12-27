@@ -16,16 +16,16 @@ namespace Models::ClothingItems {
             static const unsigned int N_BUTTONS;
             static const double BUTTON_DIAMETER;
         public:
-            Vest(long id = -1,
-                 string code = "",
-                 string color = "",
-                 Material material = Material(),
-                 Size size = Size(),
+            Vest(int id = -1,
+                 const string& code = "",
+                 const string& color = "",
+                 const Material& material = Material(),
+                 const Size& size = Size(),
                  int availableQuantity = 0,
                  int soldQuantity = 0,
-                 string description = "",
+                 const string& description = "",
                  bool sustainableMaterials = false,
-                 string gender = "",
+                 const string& gender = "",
                  bool hasButtons = false);
 
             double computePrice() const override;

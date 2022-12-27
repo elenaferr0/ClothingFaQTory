@@ -32,14 +32,14 @@ namespace Models {
 
             static string productTypeToString(Product::ProductType);
 
-            Product(long id = -1,
-                    string code = "",
-                    string color = "",
-                    Material material = Material(),
-                    Size size = Size(),
+            Product(int id = -1,
+                    const string& code = "",
+                    const string& color = "",
+                    const Material& material = Material(),
+                    const Size& size = Size(),
                     int availableQuantity = 0,
                     int soldQuantity = 0,
-                    string description = "");
+                    const string& description = "");
 
             virtual double computePrice() const = 0;
 

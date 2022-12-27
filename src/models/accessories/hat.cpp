@@ -10,15 +10,15 @@ const double Hat::DIAMETER = 13.2;
 const double Hat::VISOR_LENGTH = 6.2;
 const double Hat::VISOR_WIDTH = 3.10;
 
-Hat::Hat(long id,
-         string code,
-         string color,
-         Material material,
-         Size size,
+Hat::Hat(int id,
+         const string& code,
+         const string& color,
+         const Material& material,
+         const Size& size,
          int availableQuantity,
          int soldQuantity,
-         string description,
-         string category,
+         const string& description,
+         const string& category,
          bool isBaseballCap)
         : Accessory(id,
                     code,

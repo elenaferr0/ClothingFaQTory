@@ -11,15 +11,15 @@ namespace Models::Accessories {
             static const double VISOR_LENGTH;
             static const double VISOR_WIDTH;
         public:
-            Hat(long id = -1,
-                string code = "",
-                string color = "",
-                Material material = Material(),
-                Size size = Size(),
+            Hat(int id = -1,
+                const string& code = "",
+                const string& color = "",
+                const Material& material = Material(),
+                const Size& size = Size(),
                 int availableQuantity = 0,
                 int soldQuantity = 0,
-                string description = "",
-                string category = "",
+                const string& description = "",
+                const string& category = "",
                 bool isBaseballCap = false);
 
             Hat* clone() const override;

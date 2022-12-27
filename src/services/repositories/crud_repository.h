@@ -7,6 +7,7 @@
 #include "../../core/errors/either.h"
 #include "../../models/size.h"
 #include "../../models/material.h"
+#include "../../models/fields_getter_visitor.h"
 #include <functional>
 
 using std::function;
@@ -20,30 +21,35 @@ using Core::Containers::LinkedList;
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
-        protected:
-            Either<Error, T*> save(const LinkedList<string>&, QVariantList&, T* entity);
-
+        private:
+            static FieldsGetterVisitor fieldsGetterVisitor;
         public:
             CRUDRepository(const string& table,
                            function<Either<Error, T*>(const QSqlQuery&)> mappingFunction)
-                    : ReadOnlyRepository<T>(table, mappingFunction) {};
+                    : Repository(table), ReadOnlyRepository<T>(table, mappingFunction) {};
 
-            virtual Either<Error, T*> save(T* entity) = 0;
+            Either<Error, T*> save(T* entity);
 
             Either<Error, LinkedList<T*>> saveAll(LinkedList<T*>& entities);
 
             optional<Error> deleteT(const T& entity);
 
-            Either<Error, T*> findById(int id) override;
+            Either<Error, T*> findById(int id) final override;
 
-            Either<Error, LinkedList<T*>> findAll() override;
+            Either<Error, LinkedList<T*>> findAll() final override;
 
     };
 
     template<class T>
-    Either<Error, T*> CRUDRepository<T>::save(const LinkedList<string>& fields, QVariantList& params, T* entity) {
+    FieldsGetterVisitor CRUDRepository<T>::fieldsGetterVisitor;
+
+    template<class T>
+    Either<Error, T*> CRUDRepository<T>::save(T* entity) {
         string sql;
         QSqlQuery query;
+        entity->accept(fieldsGetterVisitor);
+        LinkedList<string> fields = fieldsGetterVisitor.getFields();
+        QVariantList params = fieldsGetterVisitor.getParams();
 
         if (entity->getId() == -1) { // does not exist
             sql = CRUDRepository<T>::queryBuilder
@@ -93,7 +99,7 @@ namespace Services {
     Either<Error, T*> CRUDRepository<T>::findById(int id) {
         string mainEntitySql = Repository::queryBuilder.select()
                 .from(Repository::table)
-                .where(Expr("h.id").equals({"?"}))
+                .where(Expr(Repository::table + ".id").equals({"?"}))
                 .build();
 
         QSqlQuery mainEntityQuery = Repository::exec(mainEntitySql, QVariant::fromValue<int>(id));

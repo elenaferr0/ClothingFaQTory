@@ -21,15 +21,15 @@ namespace Models::Accessories {
 
             double capacity; // in liters
         public:
-            BackPack(long id = -1,
-                     string code = "",
-                     string color = "",
-                     Material material = Material(),
-                     Size size = Size(),
+            BackPack(int id = -1,
+                     const string& code = "",
+                     const string& color = "",
+                     const Material& material = Material(),
+                     const Size& size = Size(),
                      int availableQuantity = 0,
                      int soldQuantity = 0,
-                     string description = "",
-                     string category = "",
+                     const string& description = "",
+                     const string& category = "",
                      double capacity = 0);
 
             BackPack* clone() const override;

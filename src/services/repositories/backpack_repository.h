@@ -21,8 +21,6 @@ namespace Services {
         public:
 
             static BackPackRepository* getInstance();
-
-            Either<Error, BackPack*> save(BackPack* entity) override;
     };
 }
 

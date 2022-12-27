@@ -65,6 +65,8 @@ namespace Views {
 
             void clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType);
 
+            void handleExportJsonButtonClicked(bool);
+
     };
 
 }

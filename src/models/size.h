@@ -16,8 +16,8 @@ namespace Models {
 
             const Name& getName() const;
 
-            Size(long id = -1,
-                 string name = "",
+            Size(int id = -1,
+                 const string& name = "",
                  double extraPercentageOfMaterial = 0);
 
             string getNameAsString() const;

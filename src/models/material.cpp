@@ -8,9 +8,9 @@ const double Material::SILVER_SPECIFIC_WEIGHT = 10.490;
 const double Material::WOOD_SPECIFIC_WEIGHT = 0.750;
 
 Material::Material(
-        long id,
-        string name,
-        string unitOfMeasure,
+        int id,
+        const string& name,
+        const string& unitOfMeasure,
         double costPerUnit)
         : Model(id),
           name(namefromString(name)),

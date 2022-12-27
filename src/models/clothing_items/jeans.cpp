@@ -5,16 +5,16 @@ using Models::ClothingItems::Jeans;
 using Models::Material;
 using Utils::Calculator;
 
-Jeans::Jeans(long id,
-             string code,
-             string color,
-             Material material,
-             Size size,
+Jeans::Jeans(int id,
+             const string& code,
+             const string& color,
+             const Material& material,
+             const Size& size,
              int availableQuantity,
              int soldQuantity,
-             string description,
+             const string& description,
              bool sustainableMaterials,
-             string gender,
+             const string& gender,
              bool shorts)
         : ClothingItem(id,
                        code,

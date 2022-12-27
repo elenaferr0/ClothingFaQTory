@@ -19,16 +19,16 @@ namespace Models::ClothingItems {
             void setShorts(bool shorts);
 
         public:
-            Jeans(long id = -1,
-                  string code = "",
-                  string color = "",
-                  Material material = Material(),
-                  Size size = Size(),
+            Jeans(int id = -1,
+                  const string& code = "",
+                  const string& color = "",
+                  const Material& material = Material(),
+                  const Size& size = Size(),
                   int availableQuantity = 0,
                   int soldQuantity = 0,
-                  string description = "",
+                  const string& description = "",
                   bool sustainableMaterials = false,
-                  string gender = "",
+                  const string& gender = "",
                   bool shorts = false
             );
 

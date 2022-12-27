@@ -10,16 +10,16 @@ using std::string;
 const unsigned int Vest::N_BUTTONS = 4;
 const double Vest::BUTTON_DIAMETER = 1;
 
-Vest::Vest(long id,
-           string code,
-           string color,
-           Material material,
-           Size size,
+Vest::Vest(int id,
+           const string& code,
+           const string& color,
+           const Material& material,
+           const Size& size,
            int availableQuantity,
            int soldQuantity,
-           string description,
+           const string& description,
            bool sustainableMaterials,
-           string gender,
+           const string& gender,
            bool hasButtons)
         : ClothingItem(id,
                        code,

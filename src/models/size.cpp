@@ -2,8 +2,8 @@
 
 using Models::Size;
 
-Size::Size(long id,
-           string name,
+Size::Size(int id,
+           const string& name,
            double extraPercentageOfMaterial)
         : Model(id),
           name(nameFromString(name)),

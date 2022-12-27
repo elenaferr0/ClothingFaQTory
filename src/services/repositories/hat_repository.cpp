@@ -7,36 +7,8 @@ using Services::HatRepository;
 HatRepository* HatRepository::instance;
 
 HatRepository::HatRepository()
-        : Repository("hat"), CRUDRepository("hat", EntityMapper::hat) {};
+        : Repository("hat"), CRUDRepository<Hat>("hat", EntityMapper::hat) {};
 
-
-Either<Error, Hat*> HatRepository::save(Hat* entity) {
-    LinkedList<string> fields = {
-            "code",
-            "color",
-            "size_id",
-            "available_quantity",
-            "sold_quantity",
-            "description",
-            "category",
-            "is_baseball_hat",
-            "material_id"
-    };
-
-    QVariantList params; // id will later be added only if the entity should be updated
-    params << QString::fromStdString(entity->getCode())
-           << QString::fromStdString(entity->getColor())
-           << entity->getSize().getId()
-           << entity->getAvailableQuantity()
-           << entity->getSoldQuantity()
-           << QString::fromStdString(entity->getDescription())
-           << QString::fromStdString(Hat::getCategoryAsString(entity->getCategory()))
-           << entity->isBaseballCap()
-           << entity->getMaterial().getId();
-
-
-    return CRUDRepository<Hat>::save(fields, params, entity);
-}
 
 HatRepository* Services::HatRepository::getInstance() {
     if (instance == nullptr) {

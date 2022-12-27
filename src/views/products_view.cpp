@@ -6,9 +6,11 @@
 #include "components/product_icon_button.h"
 #include <algorithm>
 #include <QPainter>
-#include <QPushButton>
+#include <algorithm>
 #include <QMessageBox>
+#include <QJsonObject>
 
+using std::for_each;
 using std::transform;
 using std::inserter;
 using std::pair;
@@ -64,7 +66,14 @@ void ProductsView::init(const ProductsMap& productsByType) {
 //    connect(searchButton, SIGNAL(clicked(bool)), this, SLOT(showNewProduct::ProductTypeChooserWindow(bool)));
     toolBar->addWidget(searchButton);
 
-    toolBar->setIconSize(QSize(15, 15));
+    QToolButton* exportButton = new QToolButton;
+    exportButton->setIcon(QIcon(":/assets/icons/export_json.png"));
+    exportButton->setText(tr("&Export to JSON"));
+    exportButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
+    connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(handleExportJsonButtonClicked(bool)));
+    toolBar->addWidget(exportButton);
+
+    toolBar->setIconSize(QSize(20, 20));
 
     layout->addWidget(toolBar);
     layout->addWidget(treeWidget);
@@ -245,4 +254,13 @@ void Views::ProductsView::clickedDeleteButton(Product*, QTreeWidgetItem* row, Pr
 
 void Views::ProductsView::handleProductEditing(Product*, Product::ProductType) {
     rebuildTreeView();
+}
+
+void Views::ProductsView::handleExportJsonButtonClicked(bool) {
+    ProductsMap productsMap = dynamic_cast<MainController*>(controller)->findAllProductsByType();
+
+    QJsonObject jsonObject;
+    for (auto it = productsMap.cbegin(); it != productsMap.cend(); it++) {
+
+    }
 }

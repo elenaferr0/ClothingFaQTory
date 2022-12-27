@@ -21,8 +21,6 @@ namespace Services {
         public:
 
             static BraceletRepository* getInstance();
-
-            Either<Error, Bracelet*> save(Bracelet* entity) override;
     };
 }
 
