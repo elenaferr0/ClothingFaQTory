@@ -263,31 +263,47 @@ void Views::ProductsView::handleProductEditing(Product*, Product::ProductType) {
 }
 
 void Views::ProductsView::handleExportJsonButtonClicked(bool) {
-    ProductsMap productsMap = dynamic_cast<MainController*>(controller)->findAllProductsByType();
-
-    QJsonObject jsonObject;
-    for (auto pt = productsMap.cbegin(); pt != productsMap.cend(); pt++) {
-        QJsonArray jsonArray;
-        QString productTypeKey = QString::fromStdString(Product::productTypeToString((*pt).first));
-        LinkedList<Product*> products = (*pt).second;
-        for (auto p = products.begin(); p != products.end(); p++) {
-            JSONExportableDecorator decorator(*(*p));
-            jsonArray.append(decorator.exportData());
-        }
-        jsonObject.insert(productTypeKey, jsonArray);
-    }
-
     // Save to file
-    QString directory = QFileDialog::getExistingDirectory(nullptr, "Save File", QDir::homePath());
-    if (!directory.isEmpty()) {
-        QDateTime currentTime = QDateTime::currentDateTime();
-        QString fileName = "/clothing_faqtory_export_" + currentTime.toString(Qt::DateFormat::ISODate) + ".json";
-        QFile file(directory + fileName);
+//    QString path = QFileDialog::getExistingDirectory(nullptr, "Save File", QDir::homePath());
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QString defaultFileName = "/clothing_faqtory_export_" + currentTime.toString(Qt::DateFormat::ISODate) + ".json";
+
+    QString path = QFileDialog::getSaveFileName(nullptr, "Save As", QDir::homePath() + defaultFileName,
+                                                tr("JSON Files (*.json);;All Files (*)"));
+
+    if (!path.isEmpty()) {
+
+        QFile file(path);
+
+        QMessageBox* resultBox = new QMessageBox(this);
+        resultBox->setStandardButtons(QMessageBox::Ok);
+        resultBox->setDefaultButton(QMessageBox::Ok);
+
         if (file.open(QIODevice::WriteOnly)) {
+            ProductsMap productsMap = dynamic_cast<MainController*>(controller)->findAllProductsByType();
+
+            QJsonObject jsonObject;
+            for (auto pt = productsMap.cbegin(); pt != productsMap.cend(); pt++) {
+                QJsonArray jsonArray;
+                QString productTypeKey = QString::fromStdString(Product::productTypeToString((*pt).first));
+                LinkedList<Product*> products = (*pt).second;
+                for (auto p = products.begin(); p != products.end(); p++) {
+                    JSONExportableDecorator decorator(*(*p));
+                    jsonArray.append(decorator.exportData());
+                }
+                jsonObject.insert(productTypeKey, jsonArray);
+            }
             QJsonDocument jsonDoc(jsonObject);
             file.write(jsonDoc.toJson());
             file.close();
+            resultBox->setText("File saved successfully in " + path);
+            resultBox->setIcon(QMessageBox::Information);
+        } else {
+            resultBox->setText("Something went wrong while saving the file");
+            resultBox->setIcon(QMessageBox::Critical);
         }
+
+        resultBox->show();
     }
 
 }

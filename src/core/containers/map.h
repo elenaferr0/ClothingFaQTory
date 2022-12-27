@@ -196,7 +196,7 @@ namespace Core::Containers {
 
     template<class K, class V>
     void Map<K, V>::destroy(Node* node) {  // Must always be called from the root
-        if (node == TNULL) {
+        if (node == TNULL || !node) {
             return;
         }
 
