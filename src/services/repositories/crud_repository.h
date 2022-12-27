@@ -3,87 +3,88 @@
 
 #include "readonly_repository.h"
 #include "../../core/errors/error.h"
+#include "../../core/containers/linked_list.h"
 #include "../../core/errors/either.h"
 #include "../../models/size.h"
 #include "../../models/material.h"
+#include "../../models/fields_getter_visitor.h"
 #include <functional>
-#include <memory>
 
-using std::shared_ptr;
 using std::function;
 using Services::ReadOnlyRepository;
 using Core::Error;
 using Core::Either;
 using Models::Size;
 using Models::Material;
+using Core::Containers::LinkedList;
+using Models::FieldsGetterVisitor;
 
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
-        protected:
-            Either<Error, T> save(const list<string>&, QVariantList&, T& entity);
-
+        private:
+            static FieldsGetterVisitor fieldsGetterVisitor;
         public:
             CRUDRepository(const string& table,
-                           function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction)
-                    : ReadOnlyRepository<T>(table, mappingFunction) {};
+                           function<Either<Error, T*>(const QSqlQuery&)> mappingFunction)
+                    : Repository(table), ReadOnlyRepository<T>(table, mappingFunction) {};
 
-            virtual Either<Error, T> save(T& entity) = 0;
+            Either<Error, T*> save(T* entity);
 
-            Either<Error, list<T>> saveAll(list<T>& entities);
+            Either<Error, LinkedList<T*>> saveAll(LinkedList<T*>& entities);
 
             optional<Error> deleteT(const T& entity);
 
-            optional<Error> deleteById(int id);
+            Either<Error, T*> findById(int id) final override;
 
-            Either<Error, shared_ptr<T>> findById(int id) override;
-
-            Either<Error, list<shared_ptr<T>>> findAll() override;
+            Either<Error, LinkedList<T*>> findAll() final override;
 
     };
 
     template<class T>
-    Either<Error, T> CRUDRepository<T>::save(const list<string>& fields, QVariantList& params, T& entity) {
+    FieldsGetterVisitor CRUDRepository<T>::fieldsGetterVisitor;
+
+    template<class T>
+    Either<Error, T*> CRUDRepository<T>::save(T* entity) {
         string sql;
         QSqlQuery query;
+        entity->accept(fieldsGetterVisitor);
+        Map<string, QVariant> fields = fieldsGetterVisitor.getFields();
 
-        if (entity.getId() == -1) { // does not exist => create a new BackPack
+        if (entity->getId() == -1) { // does not exist
             sql = CRUDRepository<T>::queryBuilder
-                    .insertInto(CRUDRepository<T>::table, fields).build();
+                    .insertInto(CRUDRepository<T>::table, fields.keys()).build();
 
-            query = CRUDRepository<T>::exec(sql, params);
+            query = CRUDRepository<T>::exec(sql, fields.values());
             query.next();
-            entity.setId(query.lastInsertId().toInt());
+            entity->setId(query.lastInsertId().toInt());
         } else {
-            // exists => should update all the fields
+            // exists => should update all the fieldNames
             sql = CRUDRepository<T>::queryBuilder.update(CRUDRepository<T>::table)
-                    .set(fields)
+                    .set(fields.keys())
                     .where(Expr("id").equals({"?"}))
                     .build();
-
-            params << entity.getId();
-            query = CRUDRepository<T>::exec(sql, params);
+            fields.put("id", entity->getId());
+            query = CRUDRepository<T>::exec(sql, fields.values());
             query.next();
         }
 
         optional<Error> hasError = CRUDRepository::hasError(query);
 
         if (hasError.has_value()) {
-            QSqlDatabase::database().rollback();
             qCritical() << QString::fromStdString(hasError.value().getCause());
-            return Either<Error, T>::ofLeft(hasError.value());
+            return Either<Error, T*>::ofLeft(hasError.value());
         }
 
-        QSqlDatabase::database().commit();
         return entity;
     }
 
     template<class T>
-    Either<Error, list<T>> CRUDRepository<T>::saveAll(list<T>& entities) {
+    Either<Error, LinkedList<T*>> CRUDRepository<T>::saveAll(LinkedList<T*>& entities) {
         for (auto en = entities.begin(); en != entities.end(); en++) {
-            Either<Error, T> entityOrError = save(*en);
+            Either<Error, T*> entityOrError = save(*en);
             if (entityOrError.isLeft()) {
-                entityOrError.forceLeft().setUserMessage("Error while fetching " + ReadOnlyRepository<T>::table);
+                entityOrError.forceLeft().setUserMessage("Error while fetching " + Repository::table);
                 qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
                 return entityOrError.forceLeft();
             }
@@ -94,19 +95,18 @@ namespace Services {
     }
 
     template<class T>
-    Either<Error, shared_ptr<T>> CRUDRepository<T>::findById(int id) {
-        string mainEntitySql = ReadOnlyRepository<T>::queryBuilder.select()
-                .from(ReadOnlyRepository<T>::table)
-                .where(Expr("h.id").equals({"?"}))
+    Either<Error, T*> CRUDRepository<T>::findById(int id) {
+        string mainEntitySql = Repository::queryBuilder.select()
+                .from(Repository::table)
+                .where(Expr(Repository::table + ".id").equals({"?"}))
                 .build();
 
-        QSqlQuery mainEntityQuery = ReadOnlyRepository<T>::exec(mainEntitySql, QVariant::fromValue<int>(id));
+        QSqlQuery mainEntityQuery = Repository::exec(mainEntitySql, QVariant::fromValue<int>(id));
         mainEntityQuery.next();
-        Either<Error, shared_ptr<T>> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
+        Either<Error, T*> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
         if (errorOrEntity.isLeft()) {
             qCritical() << QString::fromStdString(
                     errorOrEntity.forceLeft().getCause());
-            QSqlDatabase::database().rollback();
             return errorOrEntity; // return the error
         }
 
@@ -114,19 +114,19 @@ namespace Services {
     }
 
     template<class T>
-    Either<Error, list<shared_ptr<T>>> CRUDRepository<T>::findAll() {
-        string sql = ReadOnlyRepository<T>::queryBuilder.select()
-                .from(ReadOnlyRepository<T>::table)
+    Either<Error, LinkedList<T*>> CRUDRepository<T>::findAll() {
+        string sql = Repository::queryBuilder.select()
+                .from(Repository::table)
                 .build();
-        QSqlQuery query = ReadOnlyRepository<T>::exec(sql);
-        list<shared_ptr<T>> entities;
+        QSqlQuery query = Repository::exec(sql);
+        LinkedList<T*> entities;
         while (query.next()) {
-            Either<Error, shared_ptr<T>> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
+            Either<Error, T*> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
             if (entityOrError.isLeft()) {
                 qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
                 return entityOrError.forceLeft();
             }
-            entities.push_back(entityOrError.forceRight());
+            entities.pushBack(entityOrError.forceRight());
         }
         return entities;
     }
@@ -134,25 +134,6 @@ namespace Services {
     template<class T>
     optional<Error> CRUDRepository<T>::deleteT(const T& entity) {
         return deleteById(entity.getId());
-    }
-
-    template<class T>
-    optional<Error> CRUDRepository<T>::deleteById(int id) {
-        string sql = ReadOnlyRepository<T>::queryBuilder.deleteT()
-                .from(CRUDRepository<T>::table)
-                .where(Expr("id").equals({"?"}))
-                .build();
-
-        QSqlQuery query = ReadOnlyRepository<T>::exec(sql, QVariant::fromValue<int>(id));
-        query.next();
-
-        optional<Error> hasError = ReadOnlyRepository<T>::hasError(query);
-
-        if (hasError.has_value()) {
-            qCritical() << QString::fromStdString(
-                    hasError.value().getCause());
-        }
-        return hasError;
     }
 
 

@@ -8,19 +8,19 @@ namespace Models {
     class ClothingItem : public Product {
         public:
             enum Gender {
-                MEN, WOMEN, UNISEX
+                UNISEX, MEN, WOMEN
             };
 
-            ClothingItem(long id = -1,
-                         string code = "",
-                         string color = "",
-                         Material material = Material(),
-                         Size size = Size(),
+            ClothingItem(int id = -1,
+                         const string& code = "",
+                         const string& color = "",
+                         const Material& material = Material(),
+                         const Size& size = Size(),
                          int availableQuantity = 0,
                          int soldQuantity = 0,
-                         string description = "",
+                         const string& description = "",
                          bool sustainableMaterials = false,
-                         string gender = "");
+                         const string& gender = "");
 
 
             static string getGenderAsString(Gender);
@@ -33,9 +33,9 @@ namespace Models {
 
             void setSustainableMaterials(bool sustainableMaterials);
 
-            bool isSustainableMaterials() const;
-
             Gender getGender() const;
+
+            void setGender(Gender gender);
 
         protected:
             double computeLegLength() const;

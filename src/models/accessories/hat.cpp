@@ -1,10 +1,8 @@
 #include "hat.h"
 #include "../../utils/calculator.h"
 #include <string>
-#include <list>
 
 using std::string;
-using std::list;
 using Models::Accessories::Hat;
 using Utils::Calculator;
 
@@ -12,15 +10,15 @@ const double Hat::DIAMETER = 13.2;
 const double Hat::VISOR_LENGTH = 6.2;
 const double Hat::VISOR_WIDTH = 3.10;
 
-Hat::Hat(long id,
-         string code,
-         string color,
-         Material material,
-         Size size,
+Hat::Hat(int id,
+         const string& code,
+         const string& color,
+         const Material& material,
+         const Size& size,
          int availableQuantity,
          int soldQuantity,
-         string description,
-         string category,
+         const string& description,
+         const string& category,
          bool isBaseballCap)
         : Accessory(id,
                     code,
@@ -32,10 +30,6 @@ Hat::Hat(long id,
                     description,
                     category),
           baseballCap(isBaseballCap) {};
-
-Hat* Hat::clone() const {
-    return new Hat(*this);
-}
 
 double Hat::computePrice() const {
     // the cost of the hat is estimated through the surface of half a sphere
@@ -56,4 +50,8 @@ const bool& Hat::isBaseballCap() const {
 
 void Hat::accept(VisitorInterface& visitor) {
     visitor.visitHat(*this);
+}
+
+void Hat::setBaseballCap(bool baseballCap) {
+    this->baseballCap = baseballCap;
 }

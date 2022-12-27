@@ -2,8 +2,8 @@
 
 using Models::Size;
 
-Size::Size(long id,
-           string name,
+Size::Size(int id,
+           const string& name,
            double extraPercentageOfMaterial)
         : Model(id),
           name(nameFromString(name)),
@@ -15,10 +15,6 @@ const double& Size::getExtraPercentageOfMaterial() const {
 
 const Size::Name& Size::getName() const {
     return name;
-}
-
-Size* Size::clone() const {
-    return new Size(*this);
 }
 
 string Size::getNameAsString() const {
@@ -57,4 +53,8 @@ Size::Name Size::nameFromString(const string& name) {
     } else {
         return ONE_SIZE;
     }
+}
+
+void Models::Size::accept(VisitorInterface& visitor) {
+    visitor.visitSize(*this);
 }

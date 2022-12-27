@@ -25,7 +25,6 @@ namespace Services {
 
             static OverallsRepository* getInstance();
 
-            Either<Error, Overalls> save(Overalls& entity) override;
     };
 };
 

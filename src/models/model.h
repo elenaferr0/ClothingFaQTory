@@ -2,20 +2,17 @@
 #define MODEL_H
 
 #include <string>
-#include <list>
 #include "../core/visitor_interface.h"
-#include "../core/observer_interface.h"
+#include "../core/containers/linked_list.h"
 
 using std::string;
-using std::list;
+using Core::Containers::LinkedList;
 using Core::VisitorInterface;
-using Core::ObserverInterface;
 
 namespace Models {
     class Model {
         private:
             int id;
-            list<ObserverInterface*> observers;
         public:
             Model(int id = -1) : id(id) {};
 
@@ -23,15 +20,12 @@ namespace Models {
 
             void setId(int id);
 
-            virtual Model* clone() const = 0;
-
             bool found() const;
 
             virtual ~Model() = default;
 
-            void registerObserver(ObserverInterface* observer);
+            virtual void accept(VisitorInterface& visitor) = 0;
 
-            void notifyAll();
     };
 }
 

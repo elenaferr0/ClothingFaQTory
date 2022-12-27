@@ -24,6 +24,7 @@ using Services::JeansRepository;
 using Services::OverallsRepository;
 using Services::MaterialRepository;
 using Services::SizeRepository;
+using Services::DeleteOnlyRepository;
 
 namespace Views {
     class View;
@@ -35,9 +36,9 @@ namespace Controllers {
 
     class MainController : public Controller {
         Q_OBJECT
-            typedef list<shared_ptr<Material>> MaterialsList;
-            typedef Map<Product::ProductType, list<shared_ptr<Product>>> ProductsMap;
-            typedef list<shared_ptr<Size>> SizesList;
+            typedef LinkedList<Material*> MaterialsList;
+            typedef Map<Product::ProductType, LinkedList<Product*>> ProductsMap;
+            typedef LinkedList<Size*> SizesList;
         public:
             MainController(View*);
 
@@ -46,6 +47,10 @@ namespace Controllers {
             MaterialsList findAllMaterials();
 
             SizesList findAllSizes();
+
+            void deleteProductById(int id);
+
+            void saveCostPerUnit(Material* material);
 
         private:
             HatRepository* hatRepository;
@@ -56,10 +61,12 @@ namespace Controllers {
             JeansRepository* jeansRepository;
             OverallsRepository* overallsRepository;
             MaterialRepository* materialRepository;
-
+            DeleteOnlyRepository* productRepository;
 
             template<class T>
             void findProductsOfType(Product::ProductType productType, CRUDRepository<T>* repository, ProductsMap& map);
+
+
     };
 }
 #endif //MAIN_CONTROLLER_H

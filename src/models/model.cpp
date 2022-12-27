@@ -13,13 +13,3 @@ void Model::setId(int id) {
 bool Models::Model::found() const {
     return id != -1;
 }
-
-void Model::registerObserver(ObserverInterface* observer) {
-    observers.push_back(observer);
-}
-
-void Model::notifyAll() {
-    for (auto it = observers.begin(); it != observers.end(); it++) {
-        (*it)->notify(this);
-    }
-}

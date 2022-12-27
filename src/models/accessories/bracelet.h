@@ -21,21 +21,23 @@ namespace Models::Accessories {
 
         public:
             Bracelet(
-                    long id = -1,
-                    string code = "",
-                    string color = "",
-                    Material material = Material(),
-                    Size size = Size(),
+                    int id = -1,
+                    const string& code = "",
+                    const string& color = "",
+                    const Material& material = Material(),
+                    const Size& size = Size(),
                     int availableQuantity = 0,
                     int soldQuantity = 0,
-                    string description = "",
-                    string category = "",
+                    const string& description = "",
+                    const string& category = "",
                     unsigned int pearlNumber = 0,
                     double pearlDiameter = 0.75);
 
-            Bracelet* clone() const override;
-
             double computePrice() const override;
+
+            void setPearlNumber(unsigned int pearlNumber);
+
+            void setPearlDiameter(double pearlDiameter);
 
             void accept(VisitorInterface& visitor) override;
     };

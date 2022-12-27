@@ -9,6 +9,7 @@ SelectColorButton::SelectColorButton(QWidget* parent, const QString& title)
         : QPushButton(parent) {
     connect(this, SIGNAL(clicked()), this, SLOT(updateColor()));
     connect(this, SIGNAL(clicked()), this, SLOT(updateBackground()));
+    setToolTip("Click to choose color");
     QPushButton::setText(title);
 }
 
@@ -18,6 +19,7 @@ void SelectColorButton::updateBackground() {
     } else {
         setStyleSheet("color: black; background-color: " + color.name());
     }
+    setText(color.name());
 }
 
 void SelectColorButton::updateColor() {

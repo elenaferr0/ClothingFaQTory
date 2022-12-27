@@ -6,15 +6,15 @@ using Models::Product;
 using std::string;
 
 Accessory::Accessory(
-        long id,
-        string code,
-        string color,
-        Material material,
-        Size size,
+        int id,
+        const string& code,
+        const string& color,
+        const Material& material,
+        const Size& size,
         int availableQuantity,
         int soldQuantity,
-        string description,
-        string category)
+        const string& description,
+        const string& category)
         : Product(id,
                   code,
                   color,

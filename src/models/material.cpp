@@ -8,18 +8,14 @@ const double Material::SILVER_SPECIFIC_WEIGHT = 10.490;
 const double Material::WOOD_SPECIFIC_WEIGHT = 0.750;
 
 Material::Material(
-        long id,
-        string name,
-        string unitOfMeasure,
+        int id,
+        const string& name,
+        const string& unitOfMeasure,
         double costPerUnit)
         : Model(id),
           name(namefromString(name)),
           unitOfMeasure(unitOfMeasureFromString(unitOfMeasure)),
           costPerUnit(costPerUnit) {};
-
-Material* Material::clone() const {
-    return new Material(*this);
-}
 
 const Material::Name& Material::getName() const {
     return name;
@@ -83,4 +79,12 @@ string Models::Material::getNameAsString() const {
         default:
             return "POLYESTER";
     }
+}
+
+void Models::Material::setCostPerUnit(double costPerUnit) {
+    Material::costPerUnit = costPerUnit;
+}
+
+void Models::Material::accept(VisitorInterface& visitor) {
+    visitor.visitMaterial(*this);
 }

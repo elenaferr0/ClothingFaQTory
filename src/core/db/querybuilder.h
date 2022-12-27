@@ -22,7 +22,7 @@ namespace Core::Db {
                 ASC, DESC
             };
 
-            friend string operator+(string, const list<string>&);
+            friend string operator+(string, const LinkedList<string>&);
 
             QueryBuilder() : query() {};
 
@@ -32,7 +32,7 @@ namespace Core::Db {
             QueryBuilder& count(string field = "*");
 
             // qb.select({("username", "u"), ("email", "e")});
-            // takes fields with aliases as input (the alias can also be empty)
+            // takes fieldNames with aliases as input (the alias can also be empty)
             QueryBuilder& select(const Map <string, string>& fields);
 
             // does not override previous select
@@ -45,13 +45,13 @@ namespace Core::Db {
             QueryBuilder& update(string entity);
 
             // qb.insertInto("username");
-            QueryBuilder& insertInto(string entity, const list<string>& fieldNames);
+            QueryBuilder& insertInto(string entity, const LinkedList<string>& fieldNames);
 
             // qb.set("u.username", "foo");
             QueryBuilder& set(string field);
 
             // qb.set({("username", "u"), ("email", "e")})
-            QueryBuilder& set(const list<string>& fieldNames);
+            QueryBuilder& set(const LinkedList<string>& fieldNames);
 
             // qb.from("User", "u");
             QueryBuilder& from(string from, string alias = "");

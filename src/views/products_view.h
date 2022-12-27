@@ -5,26 +5,25 @@
 #include "../models/product.h"
 #include "../core/containers/map.h"
 #include "../core/errors/error.h"
-#include "wizard/create_product_wizard_view.h"
+#include "wizard/product_wizard_view.h"
 #include "view.h"
-#include <memory>
+#include "main_view.h"
 #include <QToolBar>
 #include <QTreeWidgetItem>
 #include <QTreeWidget>
 
-using std::shared_ptr;
 using Models::Product;
 using Core::Containers::Map;
 using Core::Error;
 
 namespace Views {
-    class ProductsView : public ObserverWidgetView {
+    class MainView;
+
+    class ProductsView : public WidgetViewParent {
         Q_OBJECT
         private:
-            typedef Map <Product::ProductType, list<shared_ptr < Product>>>
-            ProductsMap;
-
-            ProductsMap productsByType;
+            typedef Map<Product::ProductType, LinkedList<Product*>>
+                    ProductsMap;
 
             static int COLUMN_COUNT;
 
@@ -33,14 +32,22 @@ namespace Views {
 
             QTreeWidgetItem* getHeaders() const;
 
-            void initTreeView();
+            void initTreeView(const ProductsMap& productsByType);
 
+            QIcon drawColorIcon(const string& hex);
+
+            static const int COLOR_ICON_SIZE = 20;
+
+            void buildAndInsertChild(QTreeWidgetItem*, Product*, Product::ProductType);
+
+            QStringList getColumnsFromProduct(const Product* product) const;
+
+            QList<QString> materials;
+            QList<QString> sizes;
         public:
-            ProductsView(QWidget* parent = nullptr);
+            ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
             void init(const ProductsMap& productsByType);
-
-            void notify(Model*) override;
 
         public slots:
 
@@ -48,7 +55,18 @@ namespace Views {
 
         private slots:
 
-            void showWizard(bool);
+            void handleProductCreation(Product*, Product::ProductType);
+
+            void handleProductEditing(Product*, Product::ProductType);
+
+            void showCreateProductWizard(bool);
+
+            void clickedEditButton(Product*, QTreeWidgetItem* row, Product::ProductType);
+
+            void clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType);
+
+            void handleExportJsonButtonClicked(bool);
+
     };
 
 }

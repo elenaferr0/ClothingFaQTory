@@ -6,15 +6,15 @@ using Models::Accessories::Bracelet;
 using Utils::Calculator;
 
 Bracelet::Bracelet(
-        long id,
-        string code,
-        string color,
-        Material material,
-        Size size,
+        int id,
+        const string& code,
+        const string& color,
+        const Material& material,
+        const Size& size,
         int availableQuantity,
         int soldQuantity,
-        string description,
-        string category,
+        const string& description,
+        const string& category,
         unsigned int pearlNumber,
         double pearlDiameter)
         : Accessory(id,
@@ -28,10 +28,6 @@ Bracelet::Bracelet(
                     category),
           pearlNumber(pearlNumber),
           pearlDiameter(pearlDiameter) {}
-
-Bracelet* Bracelet::clone() const {
-    return new Bracelet(*this);
-}
 
 double Bracelet::computePrice() const {
     double pearlVolume = Calculator::computeSphereVolume(pearlDiameter / 2);
@@ -67,4 +63,12 @@ const double& Bracelet::getPearlDiameter() const {
 
 void Bracelet::accept(VisitorInterface& visitor) {
     visitor.visitBracelet(*this);
+}
+
+void Models::Accessories::Bracelet::setPearlNumber(unsigned int pearlNumber) {
+    this->pearlNumber = pearlNumber;
+}
+
+void Models::Accessories::Bracelet::setPearlDiameter(double pearlDiameter) {
+    this->pearlDiameter = pearlDiameter;
 }

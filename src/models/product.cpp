@@ -6,14 +6,14 @@ using std::string;
 using Models::Product;
 using Models::Material;
 
-Product::Product(long id,
-                 string code,
-                 string color,
-                 Material material,
-                 Size size,
+Product::Product(int id,
+                 const string& code,
+                 const string& color,
+                 const Material& material,
+                 const Size& size,
                  int availableQuantity,
                  int soldQuantity,
-                 string description)
+                 const string& description)
         : Model(id),
           color(color),
           material(material),

@@ -16,8 +16,8 @@ MainController::MainController(View* view)
           vestRepository(VestRepository::getInstance()),
           jeansRepository(JeansRepository::getInstance()),
           overallsRepository(OverallsRepository::getInstance()),
-          materialRepository(MaterialRepository::getInstance()) {
-    connect(this, SIGNAL(databaseError(Error * )), dynamic_cast<MainView*>(view), SLOT(handleDatabaseError(Error * )));
+          materialRepository(MaterialRepository::getInstance()),
+          productRepository(DeleteOnlyRepository::getInstance("product")) {
 };
 
 MainController::ProductsMap MainController::findAllProductsByType() {
@@ -61,12 +61,19 @@ MainController::SizesList MainController::findAllSizes() {
     );
 }
 
+void Controllers::MainController::deleteProductById(int id) {
+    optional<Error> error = productRepository->deleteById(id);
+    if (error.has_value()) {
+        emit databaseError(&error.value());
+    }
+}
+
 template<class T>
 void MainController::findProductsOfType(Product::ProductType productType,
                                         CRUDRepository<T>* repository,
                                         MainController::ProductsMap& map) {
 
-    Either<Error, list<shared_ptr<T>>> entitiesOrError = repository->findAll();
+    Either<Error, LinkedList<T*>> entitiesOrError = repository->findAll();
 
     entitiesOrError.template fold<void>(
             [&]() {
@@ -74,24 +81,29 @@ void MainController::findProductsOfType(Product::ProductType productType,
                 emit databaseError(&entitiesOrError.forceLeft());
             },
             [&, this]() {
-                list<shared_ptr<T>> entities = entitiesOrError.forceRight();
-                list<shared_ptr<Product>> products(entities.size());
+                LinkedList<T*> entities = entitiesOrError.forceRight();
+                LinkedList<Product*> products;
 
-                /*the list wouldn't be implicitly converted to list<shared_ptr<Product>>
-                  therefore transform is needed. In this situation the observer is also
-                  registered*/
-                transform(entities.begin(),
-                          entities.end(),
-                          products.begin(),
-                          [this](shared_ptr<T> entity) {
-                              shared_ptr<Product> product = shared_ptr<Product>(entity);
-                              product->registerObserver(dynamic_cast<MainView*>(view)->getProductsView());
-                              return product;
-                          }
+                /*the list wouldn't be implicitly converted to list<Product*>
+                  therefore for_each is needed*/
+
+                std::for_each(entities.begin(),
+                              entities.end(),
+                              [&products](T* product) {
+                                  products.pushBack(product);
+                              }
                 );
                 map.put(productType, products);
             }
     );
 
-
 }
+
+void Controllers::MainController::saveCostPerUnit(Material* material) {
+    Either<Error, Material*> errorOrMaterial = materialRepository->saveCostPerUnit(material);
+
+    if (errorOrMaterial.isLeft()) {
+        emit databaseError(&errorOrMaterial.forceLeft());
+    }
+}
+

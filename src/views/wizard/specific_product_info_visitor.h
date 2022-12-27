@@ -4,24 +4,28 @@
 #include <QFormLayout>
 #include <QMap>
 #include "../../core/visitor_interface.h"
+#include "product_wizard_view.h"
 
 using Core::VisitorInterface;
+using Views::Wizard::ProductWizardView;
 
 class SpecificProductInfoVisitor : public VisitorInterface {
     private:
+        static const int FORM_ICON_SIZE = 25;
         QFormLayout* layout;
 
-        void buildAccessory();
+        void buildAccessory(Accessory::Category category);
 
-        void buildClothingItem();
+        void buildClothingItem(ClothingItem::Gender gender, bool sustainableMaterials);
 
-        void buildJeans();
+        void buildJeans(bool areShorts);
 
-        void buildVest();
+        void buildVest(bool hasButtons);
 
         QMap<QString, QWidget*> fieldsToRegister;
+        bool fillFields;
     public:
-        SpecificProductInfoVisitor();
+        SpecificProductInfoVisitor(ProductWizardView::Mode mode);
 
         void visitBracelet(Bracelet& bracelet) override;
 
@@ -35,9 +39,15 @@ class SpecificProductInfoVisitor : public VisitorInterface {
 
         void visitOveralls(Overalls& overalls) override;
 
+        void visitMaterial(Material& material) override;
+
+        void visitSize(Size& size) override;
+
         QFormLayout* getLayout() const;
 
         const QMap<QString, QWidget*>& getFieldsToRegister() const;
+
+        void clean();
 
 };
 

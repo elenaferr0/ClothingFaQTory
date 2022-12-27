@@ -12,22 +12,20 @@ using Models::Size;
 namespace Models::ClothingItems {
     class Overalls : public Vest, public Jeans {
         public:
-            Overalls(long id = -1,
-                     string code = "",
-                     string color = "",
-                     Material material = Material(),
-                     Size size = Size(),
+            Overalls(int id = -1,
+                     const string& code = "",
+                     const string& color = "",
+                     const Material& material = Material(),
+                     const Size& size = Size(),
                      int availableQuantity = 0,
                      int soldQuantity = 0,
-                     string description = "",
+                     const string& description = "",
                      bool sustainableMaterials = false,
-                     string gender = "",
+                     const string& gender = "",
                      bool shorts = false,
                      bool hasButtons = false);
 
             double computePrice() const override;
-
-            Overalls* clone() const override;
 
             void accept(VisitorInterface& visitor) override;
     };

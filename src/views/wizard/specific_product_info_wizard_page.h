@@ -13,7 +13,7 @@
 #include "../../models/accessories/hat.h"
 #include "../../models/accessories/bracelet.h"
 #include "../../models/accessories/backpack.h"
-#include "create_product_wizard_view.h"
+#include "product_wizard_view.h"
 
 using Models::Product;
 using Models::Accessories::Hat;
@@ -27,17 +27,17 @@ namespace Views::Wizard {
     class SpecificProductInfoWizardPage : public QWizardPage {
         Q_OBJECT
         private:
+            ProductWizardView* parentWizard;
             SpecificProductInfoVisitor visitor;
-            CreateProductWizardView* parentWizard;
 
-            void setFields(Product*);
+            void setProductFields(Product* product);
 
         public:
             SpecificProductInfoWizardPage(QWidget* parent = nullptr);
 
-            void initializePage() override;
+            void cleanupPage() override;
 
-            bool validatePage() override;
+            void initializePage() override;
     };
 
 }

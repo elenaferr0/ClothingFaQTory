@@ -12,16 +12,16 @@ const double ClothingItem::SMALLEST_SIZE_LEG_WIDTH = 20;
 const double ClothingItem::SMALLEST_SIZE_LEG_LENGTH = 100;
 
 ClothingItem::ClothingItem(
-        long id,
-        string code,
-        string color,
-        Material material,
-        Size size,
+        int id,
+        const string& code,
+        const string& color,
+        const Material& material,
+        const Size& size,
         int availableQuantity,
         int soldQuantity,
-        string description,
+        const string& description,
         bool sustainableMaterials,
-        string gender)
+        const string& gender)
         : Product(id,
                   code,
                   color,
@@ -86,10 +86,10 @@ void Models::ClothingItem::setSustainableMaterials(bool sustainableMaterials) {
     ClothingItem::sustainableMaterials = sustainableMaterials;
 }
 
-bool Models::ClothingItem::isSustainableMaterials() const {
-    return sustainableMaterials;
-}
-
 ClothingItem::Gender Models::ClothingItem::getGender() const {
     return gender;
+}
+
+void Models::ClothingItem::setGender(ClothingItem::Gender gender) {
+    this->gender = gender;
 }

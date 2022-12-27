@@ -54,7 +54,7 @@ QueryBuilder& QueryBuilder::addSelect(string field, string alias) {
     return *this;
 }
 
-QueryBuilder& QueryBuilder::insertInto(string entity, const list<string>& fieldNames) {
+QueryBuilder& QueryBuilder::insertInto(string entity, const LinkedList<string>& fieldNames) {
     query = "INSERT INTO " + entity; // + "()"
     string names = "(", values = "(";
 
@@ -88,8 +88,8 @@ QueryBuilder& QueryBuilder::set(string field) {
     return *this;
 }
 
-QueryBuilder& QueryBuilder::set(const list<string>& fieldNames) {
-    if (fieldNames.empty()) {
+QueryBuilder& QueryBuilder::set(const LinkedList<string>& fieldNames) {
+    if (fieldNames.isEmpty()) {
         return *this;
     }
 

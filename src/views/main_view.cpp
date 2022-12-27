@@ -4,6 +4,7 @@
 #include "main_view.h"
 #include "../services/connectivity_manager.h"
 #include "no_connection.h"
+#include "products_view.h"
 
 using Views::ProductsView;
 using Views::NoConnection;
@@ -32,13 +33,15 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
 
     MainController* controller = new MainController(this);
     setController(controller);
-    productsView = new ProductsView(tabWidget);
-    materialsView = new MaterialsView(tabWidget);
+    productsView = new ProductsView(this, tabWidget);
+    materialsView = new MaterialsView(this, tabWidget);
 
     ProductsMap products = controller->findAllProductsByType();
     productsView->init(products);
 
     materialsView->init();
+
+    connect(materialsView, SIGNAL(materialCostChanged()), productsView, SLOT(rebuildTreeView()));
 
     tabWidget->addTab(productsView, "Products");
     QIcon clothingIcon(":/assets/icons/tshirt.png");
@@ -51,6 +54,7 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     tabWidget->setIconSize(QSize(35, 35));
 
     setCentralWidget(tabWidget);
+    setWindowIcon(clothingIcon);
 }
 
 ProductsView* MainView::getProductsView() const {

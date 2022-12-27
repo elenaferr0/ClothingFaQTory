@@ -24,6 +24,12 @@
         <file>assets/icons/wood.png</file>
         <file>assets/icons/wool.png</file>
         <file>assets/icons/denim.png</file>
+        <file>assets/icons/sustainable.png</file>
+        <file>assets/icons/buttons.png</file>
+        <file>assets/icons/delete.png</file>
+        <file>assets/icons/edit.png</file>
+        <file>assets/icons/dices.png</file>
+        <file>assets/icons/export_json.png</file>
         <file>fonts/inter.ttf</file>
     </qresource>
 </RCC>

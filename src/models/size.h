@@ -16,19 +16,19 @@ namespace Models {
 
             const Name& getName() const;
 
-            Size(long id = -1,
-                 string name = "",
+            Size(int id = -1,
+                 const string& name = "",
                  double extraPercentageOfMaterial = 0);
 
             string getNameAsString() const;
 
             static Name nameFromString(const string&);
 
+            void accept(VisitorInterface& visitor) override;
+
         private:
             Name name;
             double extraPercentageOfMaterial;
-
-            Size* clone() const override;
     };
 }
 

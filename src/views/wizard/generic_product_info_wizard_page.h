@@ -5,9 +5,12 @@
 #include "../../controllers/wizard_controller.h"
 #include <QWizardPage>
 #include <QLineEdit>
+#include <QSpinBox>
+#include <QTextEdit>
+#include <QComboBox>
 #include <QSet>
 #include <limits>
-#include "select_color_button.h"
+#include "../components/select_color_button.h"
 
 QT_BEGIN_NAMESPACE
 namespace Views::Wizard { class InsertProductInfoWizardPage; }
@@ -15,6 +18,7 @@ QT_END_NAMESPACE
 
 using Models::Product;
 using Controllers::WizardController;
+using Views::Wizard::ProductWizardView;
 
 class GenericProductInfoWizardPage : public QWizardPage {
     Q_OBJECT
@@ -23,16 +27,30 @@ class GenericProductInfoWizardPage : public QWizardPage {
         static const int SPIN_BOX_STEP = 100;
         QLineEdit* codeLineEdit;
         SelectColorButton* colorButton;
+        QSpinBox* soldQuantitySpinBox;
+        QSpinBox* availableQuantitySpinBox;
+        QTextEdit* descriptionTextEdit;
+        QComboBox* sizeBox;
+        QComboBox* materialBox;
+        ProductWizardView* parentWizard;
+
+        void registerProductTypeField(Product::ProductType productType);
+
     public:
-        GenericProductInfoWizardPage(const QList<QString>& = QList<QString>(),
-                                     const QList<QString>& = QList<QString>(),
+        GenericProductInfoWizardPage(const QList<QString>&,
+                                     const QList<QString>&,
+                                     Product::ProductType productType,
                                      QWidget* parent = nullptr);
 
         bool validatePage() override;
 
+        void cleanupPage() override;
+
     private slots:
 
         void handleColorChange(const QString&);
+
+        void handleRandomCodeButtonPressed(bool);
 };
 
 

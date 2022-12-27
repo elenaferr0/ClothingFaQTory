@@ -10,16 +10,16 @@ using std::string;
 const unsigned int Vest::N_BUTTONS = 4;
 const double Vest::BUTTON_DIAMETER = 1;
 
-Vest::Vest(long id,
-           string code,
-           string color,
-           Material material,
-           Size size,
+Vest::Vest(int id,
+           const string& code,
+           const string& color,
+           const Material& material,
+           const Size& size,
            int availableQuantity,
            int soldQuantity,
-           string description,
+           const string& description,
            bool sustainableMaterials,
-           string gender,
+           const string& gender,
            bool hasButtons)
         : ClothingItem(id,
                        code,
@@ -32,10 +32,6 @@ Vest::Vest(long id,
                        sustainableMaterials,
                        gender),
           hasButtons(hasButtons) {}
-
-Vest* Vest::clone() const {
-    return new Vest(*this);
-}
 
 double Vest::computePrice() const {
     double trunkLength = computeTrunkLength();
@@ -63,4 +59,8 @@ const bool& Vest::getHasButtons() const {
 
 void Vest::accept(VisitorInterface& visitor) {
     visitor.visitVest(*this);
+}
+
+void Models::ClothingItems::Vest::setHasButtons(bool hasButtons) {
+    this->hasButtons = hasButtons;
 }

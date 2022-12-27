@@ -28,12 +28,10 @@ namespace Models {
             static const double SILVER_SPECIFIC_WEIGHT;
             static const double WOOD_SPECIFIC_WEIGHT;
 
-            Material(long id = -1,
-                     string name = "",
-                     string unitOfMeasure = "",
+            Material(int id = -1,
+                     const string& name = "",
+                     const string& unitOfMeasure = "",
                      double costPerUnit = 0);
-
-            Material* clone() const override;
 
             const Name& getName() const;
 
@@ -46,6 +44,10 @@ namespace Models {
             static UnitOfMeasure unitOfMeasureFromString(const string&);
 
             string getUnitOfMeasureAsString() const;
+
+            void setCostPerUnit(double costPerUnit);
+
+            void accept(VisitorInterface& visitor) override;
 
         private:
             Name name;

@@ -2,16 +2,16 @@
 
 using Models::ClothingItems::Overalls;
 
-Overalls::Overalls(long id,
-                   string code,
-                   string color,
-                   Material material,
-                   Size size,
+Overalls::Overalls(int id,
+                   const string& code,
+                   const string& color,
+                   const Material& material,
+                   const Size& size,
                    int availableQuantity,
                    int soldQuantity,
-                   string description,
+                   const string& description,
                    bool sustainableMaterials,
-                   string gender,
+                   const string& gender,
                    bool shorts,
                    bool hasButtons)
         : Vest(id,
@@ -36,10 +36,6 @@ Overalls::Overalls(long id,
                 sustainableMaterials,
                 gender,
                 shorts) {};
-
-Overalls* Overalls::clone() const {
-    return new Overalls(*this);
-}
 
 double Overalls::computePrice() const {
     return Jeans::computePrice() + Vest::computePrice();

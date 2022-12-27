@@ -3,35 +3,42 @@
 #define MATERIALS_VIEW_H
 
 #include <QGridLayout>
-#include <memory>
-#include <list>
+
 #include "observer_widget_view.h"
 #include "../controllers/main_controller.h"
-
+#include "main_view.h"
 #include "../models/material.h"
 
-using std::shared_ptr;
 using Models::Material;
-using std::list;
+
 
 namespace Views {
-    class MaterialsView : public ObserverWidgetView {
+    class MainView;
+
+    class MaterialsView : public WidgetViewParent {
         Q_OBJECT
-            typedef list<shared_ptr < Material>> MaterialsList;
+            typedef LinkedList<Material*> MaterialsList;
         public:
-            MaterialsView(QWidget* parent = nullptr);
+            MaterialsView(MainView* mainView, QWidget* parent = nullptr);
 
             void init();
 
         private:
             QGridLayout* gridLayout;
             static int COLUMN_COUNT;
-            MaterialsList materials;
 
-            void initGrid();
+            QString getButtonText(const Material* material) const;
 
-        public:
-            void notify(Model* model) override;
+            void initGrid(MaterialsList materials);
+
+        private slots:
+
+            void handleMaterialButtonClicked(Material*);
+
+        signals:
+
+            void materialCostChanged();
+
     };
 }
 

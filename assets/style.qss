@@ -53,3 +53,9 @@ QToolButton#materialButton {
 QToolButton#materialButton:hover {
     background-color: #f0f0f0;
 }
+
+QPushButton#editButton, QPushButton#deleteButton, QPushButton#randomCodeButton {
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}

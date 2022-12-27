@@ -18,15 +18,10 @@ namespace Services {
     class HatRepository : public CRUDRepository<Hat> {
         private:
             HatRepository();
-
         protected:
-
-
             static HatRepository* instance;
         public:
             static HatRepository* getInstance();
-
-            Either<Error, Hat> save(Hat& entity) override;
     };
 }
 #endif // HATREPOSITORY_H

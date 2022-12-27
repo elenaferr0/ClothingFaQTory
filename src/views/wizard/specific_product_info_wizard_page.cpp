@@ -1,15 +1,16 @@
 #include <QVariant>
 #include "specific_product_info_wizard_page.h"
-#include "create_product_wizard_view.h"
+#include "product_wizard_view.h"
 
 using Views::Wizard::SpecificProductInfoWizardPage;
-using Views::Wizard::CreateProductWizardView;
+using Views::Wizard::ProductWizardView;
 
 SpecificProductInfoWizardPage::SpecificProductInfoWizardPage(QWidget* parent)
         : QWizardPage(parent),
-          visitor(SpecificProductInfoVisitor()),
-          parentWizard(dynamic_cast<CreateProductWizardView*>(parent)) {
-    setWindowTitle("Set specific product info");
+          parentWizard(dynamic_cast<ProductWizardView*>(parent)),
+          visitor(SpecificProductInfoVisitor(parentWizard->getMode())) {
+    setWindowTitle(parentWizard->getMode() == ProductWizardView::Create ? "Insert specific product info"
+                                                                        : "Edit specific product info");
 }
 
 void SpecificProductInfoWizardPage::initializePage() {
@@ -18,42 +19,46 @@ void SpecificProductInfoWizardPage::initializePage() {
     // this allows using the visitor pattern to create a different page
     // based on the product type
 
-    switch (productType) { // set
-        case Product::Jeans: {
-            Jeans* jeans = new Jeans;
-            setFields(jeans);
-            parentWizard->setProduct(jeans);
-            break;
-        }
-        case Product::Overalls: {
-            Overalls* overalls = new Overalls;
-            setFields(overalls);
-            parentWizard->setProduct(overalls);
-            break;
-        }
-        case Product::Hat: {
-            Hat* hat = new Hat;
-            setFields(hat);
-            parentWizard->setProduct(hat);
-            break;
-        }
-        case Product::Bracelet: {
-            Bracelet* bracelet = new Bracelet;
-            setFields(bracelet);
-            parentWizard->setProduct(bracelet);
-            break;
-        }
-        case Product::Vest: {
-            Vest* vest = new Vest;
-            setFields(vest);
-            parentWizard->setProduct(vest);
-            break;
-        }
-        case Product::BackPack: {
-            BackPack* backpack = new BackPack;
-            setFields(backpack);
-            parentWizard->setProduct(backpack);
-            break;
+    if (parentWizard->getMode() == ProductWizardView::Edit) {
+        setProductFields(parentWizard->getProduct());
+    } else {
+        switch (productType) {
+            case Product::Jeans: {
+                Jeans* jeans = new Jeans;
+                setProductFields(jeans);
+                parentWizard->setProduct(jeans);
+                break;
+            }
+            case Product::Overalls: {
+                Overalls* overalls = new Overalls;
+                setProductFields(overalls);
+                parentWizard->setProduct(overalls);
+                break;
+            }
+            case Product::Hat: {
+                Hat* hat = new Hat;
+                setProductFields(hat);
+                parentWizard->setProduct(hat);
+                break;
+            }
+            case Product::Bracelet: {
+                Bracelet* bracelet = new Bracelet;
+                setProductFields(bracelet);
+                parentWizard->setProduct(bracelet);
+                break;
+            }
+            case Product::Vest: {
+                Vest* vest = new Vest;
+                setProductFields(vest);
+                parentWizard->setProduct(vest);
+                break;
+            }
+            case Product::BackPack: {
+                BackPack* backpack = new BackPack;
+                setProductFields(backpack);
+                parentWizard->setProduct(backpack);
+                break;
+            }
         }
     }
 
@@ -67,20 +72,22 @@ void SpecificProductInfoWizardPage::initializePage() {
     QWizardPage::initializePage();
 }
 
-void SpecificProductInfoWizardPage::setFields(Product* product) {
+void SpecificProductInfoWizardPage::setProductFields(Product* product) {
     product->setCode(field("code").toString().toStdString());
     product->setColor(field("color").toString().toStdString());
     product->setSoldQuantity(field("soldQuantity").toInt());
     product->setAvailableQuantity(field("availableQuantity").toInt());
     product->setDescription(field("description").toString().toStdString());
 
-    QString sizeName = field("size").toString();
-    product->setSize(*parentWizard->getController()->findSizeByName(sizeName));
+    int sizeId = field("size").toInt() + 1; // in the combobox the ids start from 0
+    product->setSize(*parentWizard->getController()->findSizeById(sizeId));
 
-    QString materialName = field("material").toString();
-    product->setMaterial(*parentWizard->getController()->findMaterialByName(materialName));
+    int materialId = field("material").toInt() + 1;
+    product->setMaterial(*parentWizard->getController()->findMaterialById(materialId));
 }
 
-bool Views::Wizard::SpecificProductInfoWizardPage::validatePage() {
-    return QWizardPage::validatePage();
+void Views::Wizard::SpecificProductInfoWizardPage::cleanupPage() {
+    visitor.clean();
+    QWizardPage::cleanupPage();
 }
+

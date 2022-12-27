@@ -4,17 +4,15 @@
 #include "./material.h"
 #include "./size.h"
 #include "model.h"
-#include "../core/observer_interface.h"
 #include "../core/visitor_interface.h"
 
 #include<string>
-#include<list>
+
 
 using std::string;
-using std::list;
+
 using Models::Model;
 using Core::VisitorInterface;
-using Core::ObserverInterface;
 
 namespace Models {
     class Product : public Model {
@@ -27,8 +25,6 @@ namespace Models {
             string description;
             string code;
 
-            void notifyAll();
-
         public:
             enum ProductType {
                 Jeans, Vest, Overalls, Bracelet, BackPack, Hat
@@ -36,14 +32,14 @@ namespace Models {
 
             static string productTypeToString(Product::ProductType);
 
-            Product(long id = -1,
-                    string code = "",
-                    string color = "",
-                    Material material = Material(),
-                    Size size = Size(),
+            Product(int id = -1,
+                    const string& code = "",
+                    const string& color = "",
+                    const Material& material = Material(),
+                    const Size& size = Size(),
                     int availableQuantity = 0,
                     int soldQuantity = 0,
-                    string description = "");
+                    const string& description = "");
 
             virtual double computePrice() const = 0;
 
@@ -63,8 +59,6 @@ namespace Models {
 
             const string& getCode() const;
 
-            virtual void accept(VisitorInterface& visitor) = 0;
-
             void setColor(const string& color);
 
             void setMaterial(const Material& material);
@@ -78,7 +72,6 @@ namespace Models {
             void setDescription(const string& description);
 
             void setCode(const string& code);
-
     };
 }
 #endif // PRODUCT_H

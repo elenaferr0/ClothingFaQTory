@@ -14,7 +14,6 @@
 #include "../models/clothing_items/jeans.h"
 #include "../models/clothing_items/vest.h"
 #include "../models/clothing_items/overalls.h"
-#include <memory>
 
 using Models::Size;
 using Models::Product;
@@ -30,10 +29,6 @@ using Models::ClothingItems::Vest;
 using Core::Either;
 using Core::Error;
 
-
-using std::shared_ptr;
-using std::make_unique;
-
 namespace Services {
     class EntityMapper {
         private:
@@ -42,21 +37,21 @@ namespace Services {
             static Either<Error, QSqlRecord> checkQuery(const QSqlQuery&);
 
         public:
-            static Either<Error, shared_ptr<Size>> size(const QSqlQuery&);
+            static Either<Error, Size*> size(const QSqlQuery&);
 
-            static Either<Error, shared_ptr<Material>> material(const QSqlQuery&);
+            static Either<Error, Material*> material(const QSqlQuery&);
 
-            static Either<Error, shared_ptr<BackPack>> backPack(const QSqlQuery&);
+            static Either<Error, BackPack*> backPack(const QSqlQuery&);
 
-            static Either<Error, shared_ptr<Hat>> hat(const QSqlQuery&);
+            static Either<Error, Hat*> hat(const QSqlQuery&);
 
-            static Either<Error, shared_ptr<Vest>> vest(const QSqlQuery&);
+            static Either<Error, Vest*> vest(const QSqlQuery&);
 
-            static Either<Error, shared_ptr<Bracelet>> bracelet(const QSqlQuery&);
+            static Either<Error, Bracelet*> bracelet(const QSqlQuery&);
 
-            static Either<Error, shared_ptr<Jeans>> jeans(const QSqlQuery&);
+            static Either<Error, Jeans*> jeans(const QSqlQuery&);
 
-            static Either<Error, shared_ptr<Overalls>> overalls(const QSqlQuery&);
+            static Either<Error, Overalls*> overalls(const QSqlQuery&);
 
     };
 }
