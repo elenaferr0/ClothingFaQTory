@@ -37,10 +37,6 @@ Overalls::Overalls(int id,
                 gender,
                 shorts) {};
 
-Overalls* Overalls::clone() const {
-    return new Overalls(*this);
-}
-
 double Overalls::computePrice() const {
     return Jeans::computePrice() + Vest::computePrice();
 }

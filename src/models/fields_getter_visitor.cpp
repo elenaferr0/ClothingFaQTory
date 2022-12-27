@@ -2,24 +2,22 @@
 
 #include "fields_getter_visitor.h"
 
+using Models::FieldsGetterVisitor;
+
 void FieldsGetterVisitor::visitBracelet(Bracelet& bracelet) {
     visitAccessory(bracelet);
-    fields.pushBack("pearl_number");
-    params << bracelet.getPearlNumber();
-    fields.pushBack("pearl_diameter");
-    params << bracelet.getPearlDiameter();
+    fields.put("pearl_number", bracelet.getPearlNumber());
+    fields.put("pearl_diameter", bracelet.getPearlDiameter());
 }
 
 void FieldsGetterVisitor::visitBackPack(BackPack& backPack) {
     visitAccessory(backPack);
-    fields.pushBack("capacity");
-    params << backPack.getCapacity();
+    fields.put("capacity", backPack.getCapacity());
 }
 
 void FieldsGetterVisitor::visitHat(Hat& hat) {
     visitAccessory(hat);
-    fields.pushBack("is_baseball_cap");
-    params << hat.isBaseballCap();
+    fields.put("is_baseball_cap", hat.isBaseballCap());
 }
 
 void FieldsGetterVisitor::visitJeans(Jeans& jeans) {
@@ -38,53 +36,46 @@ void FieldsGetterVisitor::visitOveralls(Overalls& overalls) {
     jeansFields(overalls);
 }
 
-const LinkedList<string>& FieldsGetterVisitor::getFields() const {
-    return fields;
-}
-
-const QVariantList& FieldsGetterVisitor::getParams() const {
-    return params;
-}
-
 void FieldsGetterVisitor::visitAccessory(const Accessory& accessory) {
     visitProduct(accessory);
-    fields.pushBack("category");
-    params << QString::fromStdString(Accessory::getCategoryAsString(accessory.getCategory()));
+    fields.put("category", QString::fromStdString(Accessory::getCategoryAsString(accessory.getCategory())));
 }
 
 void FieldsGetterVisitor::visitClothingItem(const ClothingItem& clothingItem) {
     visitProduct(clothingItem);
-    fields.pushBack("sustainable_materials");
-    params << clothingItem.hasSustainableMaterials();
-
-    fields.pushBack("gender");
-    params << QString::fromStdString(ClothingItem::getGenderAsString(clothingItem.getGender()));
+    fields.put("sustainable_materials", clothingItem.hasSustainableMaterials());
+    fields.put("gender", QString::fromStdString(ClothingItem::getGenderAsString(clothingItem.getGender())));
 }
 
 void FieldsGetterVisitor::visitProduct(const Product& product) {
-    fields = {"code",
-              "color",
-              "sold_quantity",
-              "available_quantity",
-              "description",
-              "size_id",
-              "material_id"};
-
-    params << QString::fromStdString(product.getCode())
-           << QString::fromStdString(product.getColor())
-           << product.getSoldQuantity()
-           << product.getAvailableQuantity()
-           << QString::fromStdString(product.getDescription())
-           << product.getSize().getId()
-           << product.getMaterial().getId();
+    fields.put("code", QString::fromStdString(product.getCode()));
+    fields.put("color", QString::fromStdString(product.getColor()));
+    fields.put("sold_quantity", product.getSoldQuantity());
+    fields.put("available_quantity", product.getAvailableQuantity());
+    fields.put("description", QString::fromStdString(product.getDescription()));
+    fields.put("size_id", product.getSize().getId());
+    fields.put("material_id", product.getMaterial().getId());
 }
 
 void FieldsGetterVisitor::vestFields(const Vest& vest) {
-    fields.pushBack("has_buttons");
-    params << vest.getHasButtons();
+    fields.put("has_buttons", vest.getHasButtons());
 }
 
 void FieldsGetterVisitor::jeansFields(const Jeans& jeans) {
-    fields.pushBack("shorts");
-    params << jeans.areShorts();
+    fields.put("shorts", jeans.areShorts());
+}
+
+void Models::FieldsGetterVisitor::visitMaterial(Material& material) {
+    fields.put("name", QString::fromStdString(material.getNameAsString()));
+    fields.put("cost_per_unit", material.getCostPerUnit());
+    fields.put("unit_of_measure", QString::fromStdString(material.getUnitOfMeasureAsString()));
+}
+
+void Models::FieldsGetterVisitor::visitSize(Size& size) {
+    fields.put("name", QString::fromStdString(size.getNameAsString()));
+    fields.put("extra_percentage_of_material", size.getExtraPercentageOfMaterial());
+}
+
+const Map<string, QVariant>& Models::FieldsGetterVisitor::getFields() const {
+    return fields;
 }

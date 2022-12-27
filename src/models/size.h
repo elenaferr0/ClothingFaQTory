@@ -24,11 +24,11 @@ namespace Models {
 
             static Name nameFromString(const string&);
 
+            void accept(VisitorInterface& visitor) override;
+
         private:
             Name name;
             double extraPercentageOfMaterial;
-
-            Size* clone() const override;
     };
 }
 

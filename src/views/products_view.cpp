@@ -9,6 +9,10 @@
 #include <algorithm>
 #include <QMessageBox>
 #include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QFileDialog>
+#include "../services/file_export/json_exportable_decorator.h"
 
 using std::for_each;
 using std::transform;
@@ -18,6 +22,7 @@ using Views::ProductsView;
 using Views::Wizard::ProductWizardView;
 using Controllers::WizardController;
 using Controllers::MainController;
+using Services::FileExport::JSONExportableDecorator;
 
 int ProductsView::COLUMN_COUNT = 7;
 
@@ -260,7 +265,28 @@ void Views::ProductsView::handleExportJsonButtonClicked(bool) {
     ProductsMap productsMap = dynamic_cast<MainController*>(controller)->findAllProductsByType();
 
     QJsonObject jsonObject;
-    for (auto it = productsMap.cbegin(); it != productsMap.cend(); it++) {
-
+    for (auto pt = productsMap.cbegin(); pt != productsMap.cend(); pt++) {
+        QJsonArray jsonArray;
+        QString productTypeKey = QString::fromStdString(Product::productTypeToString((*pt).first));
+        LinkedList<Product*> products = (*pt).second;
+        for (auto p = products.begin(); p != products.end(); p++) {
+            JSONExportableDecorator decorator(*(*p));
+            jsonArray.append(decorator.exportData());
+        }
+        jsonObject.insert(productTypeKey, jsonArray);
     }
+
+    // Save to file
+    QString directory = QFileDialog::getExistingDirectory(nullptr, "Save File", QDir::homePath());
+    if (!directory.isEmpty()) {
+        QDateTime currentTime = QDateTime::currentDateTime();
+        QString fileName = "/clothing_faqtory_export_" + currentTime.toString(Qt::DateFormat::ISODate) + ".json";
+        QFile file(directory + fileName);
+        if (file.open(QIODevice::WriteOnly)) {
+            QJsonDocument jsonDoc(jsonObject);
+            file.write(jsonDoc.toJson());
+            file.close();
+        }
+    }
+
 }

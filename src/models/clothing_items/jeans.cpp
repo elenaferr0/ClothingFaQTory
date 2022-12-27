@@ -28,10 +28,6 @@ Jeans::Jeans(int id,
                        gender),
           shorts(shorts) {}
 
-Jeans* Jeans::clone() const {
-    return new Jeans(*this);
-}
-
 double Jeans::computePrice() const {
     // the surface of jeans is estimated with 2 cilinders
     double computedLength = computeLegLength();

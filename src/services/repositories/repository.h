@@ -29,7 +29,7 @@ namespace Services {
             string table;
             static QueryBuilder queryBuilder;
 
-            static QSqlQuery exec(const string&, const QVariantList&);
+            static QSqlQuery exec(const string&, const LinkedList<QVariant>&);
 
             static QSqlQuery exec(const string&, const QVariant&);
 

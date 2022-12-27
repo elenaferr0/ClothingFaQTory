@@ -17,6 +17,7 @@ using Core::Either;
 using Models::Size;
 using Models::Material;
 using Core::Containers::LinkedList;
+using Models::FieldsGetterVisitor;
 
 namespace Services {
     template<class T>
@@ -48,25 +49,23 @@ namespace Services {
         string sql;
         QSqlQuery query;
         entity->accept(fieldsGetterVisitor);
-        LinkedList<string> fields = fieldsGetterVisitor.getFields();
-        QVariantList params = fieldsGetterVisitor.getParams();
+        Map<string, QVariant> fields = fieldsGetterVisitor.getFields();
 
         if (entity->getId() == -1) { // does not exist
             sql = CRUDRepository<T>::queryBuilder
-                    .insertInto(CRUDRepository<T>::table, fields).build();
+                    .insertInto(CRUDRepository<T>::table, fields.keys()).build();
 
-            query = CRUDRepository<T>::exec(sql, params);
+            query = CRUDRepository<T>::exec(sql, fields.values());
             query.next();
             entity->setId(query.lastInsertId().toInt());
         } else {
-            // exists => should update all the fields
+            // exists => should update all the fieldNames
             sql = CRUDRepository<T>::queryBuilder.update(CRUDRepository<T>::table)
-                    .set(fields)
+                    .set(fields.keys())
                     .where(Expr("id").equals({"?"}))
                     .build();
-
-            params << entity->getId();
-            query = CRUDRepository<T>::exec(sql, params);
+            fields.put("id", entity->getId());
+            query = CRUDRepository<T>::exec(sql, fields.values());
             query.next();
         }
 

@@ -30,8 +30,6 @@ namespace Models::ClothingItems {
 
             double computePrice() const override;
 
-            Vest* clone() const override;
-
             void accept(VisitorInterface& visitor) override;
     };
 

@@ -34,8 +34,6 @@ namespace Models::ClothingItems {
 
             double computePrice() const override;
 
-            Jeans* clone() const override;
-
             void accept(VisitorInterface& visitor) override;
     };
 }

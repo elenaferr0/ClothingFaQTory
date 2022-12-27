@@ -31,10 +31,6 @@ Hat::Hat(int id,
                     category),
           baseballCap(isBaseballCap) {};
 
-Hat* Hat::clone() const {
-    return new Hat(*this);
-}
-
 double Hat::computePrice() const {
     // the cost of the hat is estimated through the surface of half a sphere
     // if it's a baseball hat, the cost of the visor part surface is added.

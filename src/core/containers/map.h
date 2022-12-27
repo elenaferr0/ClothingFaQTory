@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <optional>
+#include "linked_list.h"
 
 using std::string;
 using std::ostream;
@@ -79,6 +80,10 @@ namespace Core::Containers {
 
             static Node* successor(Node* x);
 
+            void keysHelper(Node* node, LinkedList<K>& keys) const;
+
+            void valuesHelper(Node* node, LinkedList<V>& values) const;
+
         public:
             Map() : root(TNULL), size(0) {};
 
@@ -137,8 +142,47 @@ namespace Core::Containers {
             ConstIterator cbegin() const;
 
             ConstIterator cend() const;
+
+            LinkedList<K> keys() const;
+
+            LinkedList<V> values() const;
     };
 
+    template<class K, class V>
+    void Map<K, V>::keysHelper(Map::Node* node, LinkedList<K>& keys) const {
+        if (node->left) {
+            keysHelper(node->left, keys);
+        }
+        keys.pushBack(node->key);
+        if (node->right) {
+            keysHelper(node->right, keys);
+        }
+    }
+
+    template<class K, class V>
+    void Map<K, V>::valuesHelper(Map::Node* node, LinkedList<V>& values) const {
+        if (node->left) {
+            valuesHelper(node->left, values);
+        }
+        values.pushBack(node->value);
+        if (node->right) {
+            valuesHelper(node->right, values);
+        }
+    }
+
+    template<class K, class V>
+    LinkedList<K> Map<K, V>::keys() const {
+        LinkedList<K> keys = LinkedList<K>();
+        keysHelper(root, keys);
+        return keys;
+    }
+
+    template<class K, class V>
+    LinkedList<V> Map<K, V>::values() const {
+        LinkedList<V> values = LinkedList<V>();
+        valuesHelper(root, values);
+        return values;
+    }
 
     template<class K, class V>
     typename Map<K, V>::Node* const Map<K, V>::TNULL = new Node();

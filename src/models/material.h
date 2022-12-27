@@ -33,8 +33,6 @@ namespace Models {
                      const string& unitOfMeasure = "",
                      double costPerUnit = 0);
 
-            Material* clone() const override;
-
             const Name& getName() const;
 
             string getNameAsString() const;
@@ -48,6 +46,8 @@ namespace Models {
             string getUnitOfMeasureAsString() const;
 
             void setCostPerUnit(double costPerUnit);
+
+            void accept(VisitorInterface& visitor) override;
 
         private:
             Name name;

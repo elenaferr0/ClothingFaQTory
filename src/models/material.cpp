@@ -17,10 +17,6 @@ Material::Material(
           unitOfMeasure(unitOfMeasureFromString(unitOfMeasure)),
           costPerUnit(costPerUnit) {};
 
-Material* Material::clone() const {
-    return new Material(*this);
-}
-
 const Material::Name& Material::getName() const {
     return name;
 }
@@ -87,4 +83,8 @@ string Models::Material::getNameAsString() const {
 
 void Models::Material::setCostPerUnit(double costPerUnit) {
     Material::costPerUnit = costPerUnit;
+}
+
+void Models::Material::accept(VisitorInterface& visitor) {
+    visitor.visitMaterial(*this);
 }

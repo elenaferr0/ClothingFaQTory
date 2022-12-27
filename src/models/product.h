@@ -59,8 +59,6 @@ namespace Models {
 
             const string& getCode() const;
 
-            virtual void accept(VisitorInterface& visitor) = 0;
-
             void setColor(const string& color);
 
             void setMaterial(const Material& material);

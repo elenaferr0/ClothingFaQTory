@@ -32,7 +32,7 @@ namespace Core::Db {
             QueryBuilder& count(string field = "*");
 
             // qb.select({("username", "u"), ("email", "e")});
-            // takes fields with aliases as input (the alias can also be empty)
+            // takes fieldNames with aliases as input (the alias can also be empty)
             QueryBuilder& select(const Map <string, string>& fields);
 
             // does not override previous select

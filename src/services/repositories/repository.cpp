@@ -4,11 +4,12 @@ using Services::Repository;
 
 QueryBuilder Services::Repository::queryBuilder;
 
-QSqlQuery Repository::exec(const string& sql, const QVariantList& params) {
+QSqlQuery Repository::exec(const string& sql, const LinkedList<QVariant>& params) {
     QSqlQuery query;
     query.prepare(QString::fromStdString(sql));
-    for (int i = 0; i < params.count(); i++) {
-        query.bindValue(i, params.at(i));
+    int i = 0;
+    for (auto p = params.begin(); p != params.end(); p++, i++) {
+        query.bindValue(i, *p);
     }
     query.exec();
     qInfo() << query.lastQuery();

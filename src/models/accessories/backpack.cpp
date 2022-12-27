@@ -27,10 +27,6 @@ BackPack::BackPack(int id,
                     category),
           capacity(capacity) {};
 
-BackPack* BackPack::clone() const {
-    return new BackPack(*this);
-}
-
 double BackPack::computePrice() const {
     // calculate the depth dividing the volume (capacity) by height and width
     double backpackDepth = capacity / (BACKPACK_HEIGHT * BACKPACK_WIDTH);

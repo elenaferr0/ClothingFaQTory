@@ -183,3 +183,7 @@ void SpecificProductInfoVisitor::clean() {
     }
     fieldsToRegister.clear();
 }
+
+void SpecificProductInfoVisitor::visitMaterial(Material&) {}
+
+void SpecificProductInfoVisitor::visitSize(Size&) {}

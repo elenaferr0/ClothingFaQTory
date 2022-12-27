@@ -20,13 +20,12 @@ namespace Models {
 
             void setId(int id);
 
-            virtual Model* clone() const = 0;
-
             bool found() const;
 
             virtual ~Model() = default;
 
-            void notifyAll();
+            virtual void accept(VisitorInterface& visitor) = 0;
+
     };
 }
 

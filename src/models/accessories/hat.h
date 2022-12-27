@@ -22,8 +22,6 @@ namespace Models::Accessories {
                 const string& category = "",
                 bool isBaseballCap = false);
 
-            Hat* clone() const override;
-
             double computePrice() const override;
 
             const bool& isBaseballCap() const;

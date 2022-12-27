@@ -33,8 +33,6 @@ namespace Models::Accessories {
                     unsigned int pearlNumber = 0,
                     double pearlDiameter = 0.75);
 
-            Bracelet* clone() const override;
-
             double computePrice() const override;
 
             void setPearlNumber(unsigned int pearlNumber);

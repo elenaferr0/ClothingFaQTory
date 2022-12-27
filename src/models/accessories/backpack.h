@@ -32,8 +32,6 @@ namespace Models::Accessories {
                      const string& category = "",
                      double capacity = 0);
 
-            BackPack* clone() const override;
-
             double computePrice() const override;
 
             const double& getCapacity() const;

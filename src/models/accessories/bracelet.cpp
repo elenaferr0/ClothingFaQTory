@@ -29,10 +29,6 @@ Bracelet::Bracelet(
           pearlNumber(pearlNumber),
           pearlDiameter(pearlDiameter) {}
 
-Bracelet* Bracelet::clone() const {
-    return new Bracelet(*this);
-}
-
 double Bracelet::computePrice() const {
     double pearlVolume = Calculator::computeSphereVolume(pearlDiameter / 2);
 

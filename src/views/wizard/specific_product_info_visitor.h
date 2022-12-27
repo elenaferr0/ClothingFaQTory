@@ -39,6 +39,10 @@ class SpecificProductInfoVisitor : public VisitorInterface {
 
         void visitOveralls(Overalls& overalls) override;
 
+        void visitMaterial(Material& material) override;
+
+        void visitSize(Size& size) override;
+
         QFormLayout* getLayout() const;
 
         const QMap<QString, QWidget*>& getFieldsToRegister() const;

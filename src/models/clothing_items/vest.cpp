@@ -33,10 +33,6 @@ Vest::Vest(int id,
                        gender),
           hasButtons(hasButtons) {}
 
-Vest* Vest::clone() const {
-    return new Vest(*this);
-}
-
 double Vest::computePrice() const {
     double trunkLength = computeTrunkLength();
     double trunkWidth = computeTrunkWidth();
