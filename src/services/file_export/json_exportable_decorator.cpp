@@ -6,8 +6,6 @@
 using Models::Model;
 using Services::FileExport::JSONExportableDecorator;
 
-FieldsGetterVisitor JSONExportableDecorator::fieldsGetterVisitor;
-
 JSONExportableDecorator::JSONExportableDecorator(Model& model)
         : ExportableDecoratorInterface(model) {
     model.accept(fieldsGetterVisitor);

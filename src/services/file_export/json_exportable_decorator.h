@@ -14,7 +14,7 @@ using Models::Model;
 namespace Services::FileExport {
     class JSONExportableDecorator : public ExportableDecoratorInterface {
         private:
-            static FieldsGetterVisitor fieldsGetterVisitor;
+            FieldsGetterVisitor fieldsGetterVisitor;
             QJsonObject jsonObject;
 
             // overriding accept is necessary to make JSONExportableDecorator concrete
