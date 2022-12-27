@@ -239,7 +239,8 @@ void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, 
     editProductWizard->show();
 }
 
-void Views::ProductsView::clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType productType) {
+void
+Views::ProductsView::clickedDeleteButton(Product* product, QTreeWidgetItem* row, Product::ProductType productType) {
     QMessageBox* errorBox = new QMessageBox;
     errorBox->setWindowTitle("Delete product");
     errorBox->setText("### Do you really want to delete this product?");
@@ -252,7 +253,7 @@ void Views::ProductsView::clickedDeleteButton(Product*, QTreeWidgetItem* row, Pr
     int result = errorBox->exec();
 
     if (result == QMessageBox::Yes) {
-        dynamic_cast<MainController*>(controller)->deleteProductById(id);
+        dynamic_cast<MainController*>(controller)->deleteProductById(product->getId());
         treeWidget->topLevelItem(productType)->removeChild(row);
     }
 }
