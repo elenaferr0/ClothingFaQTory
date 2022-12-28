@@ -39,6 +39,10 @@ namespace Core::Containers {
             friend ostream& operator
             <<<>(ostream&, const LinkedList<T>&);
 
+            Node* getLastElement() const;
+
+            void quickSortHelper(Node*, Node*);
+
         public:
 
             LinkedList() : head(nullptr), size(0) {};
@@ -108,11 +112,50 @@ namespace Core::Containers {
 
             void popElement(T&);
 
+            void sort();
+
     };
 
     template<class T>
+    void LinkedList<T>::quickSortHelper(LinkedList::Node* first, LinkedList::Node* last) {
+        if (first == nullptr || first == last) {
+            return;
+        }
+        Node * pivot = first;
+        Node * current = first->next;
+        Node * tail = first;
+        while (current != last) {
+            if (current->value < pivot->value) {
+                tail = tail->next;
+                std::swap(current->value, tail->value);
+            }
+            current = current->next;
+        }
+        std::swap(pivot->value, tail->value);
+        quicksort(first, tail);
+        quicksort(tail->next, last);
+    }
+
+    template<class T>
+    typename LinkedList<T>::Node* LinkedList<T>::getLastElement() const {
+        if (head == nullptr) {
+            return nullptr;
+        }
+        Node * current = head;
+        while (current->next != nullptr) {
+            current = current->next;
+        }
+        return current;
+    }
+
+    template<class T>
+    void LinkedList<T>::sort() {
+        quickSortHelper(head, getLastElement());
+    }
+
+    template<class T>
     bool LinkedList<T>::contains(T value) const {
-        Node* current = head;
+        Node * current = head;
         while (current != nullptr) {
             if (current->value == value) {
                 return true;
@@ -124,8 +167,8 @@ namespace Core::Containers {
 
     template<class T>
     LinkedList<T> LinkedList<T>::findCommonElements(const LinkedList<T>& other) const {
-        LinkedList<T> common;
-        Node* currentListIndex = head;
+        LinkedList < T > common;
+        Node * currentListIndex = head;
         Node* otherListIndex = other.head;
 
         while (currentListIndex != nullptr && otherListIndex != nullptr) {
@@ -339,7 +382,7 @@ namespace Core::Containers {
 
     template<class T>
     void LinkedList<T>::pushFront(T item) {
-        LinkedList<T>::Node* temp = new Node(item);
+        LinkedList < T > ::Node * temp = new Node(item);
         temp->next = head;
         head = temp;
         size++;

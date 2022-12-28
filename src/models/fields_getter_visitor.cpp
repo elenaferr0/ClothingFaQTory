@@ -53,8 +53,13 @@ void FieldsGetterVisitor::visitProduct(const Product& product) {
     fields.put("sold_quantity", product.getSoldQuantity());
     fields.put("available_quantity", product.getAvailableQuantity());
     fields.put("description", QString::fromStdString(product.getDescription()));
-    fields.put("size_id", product.getSize().getId());
-    fields.put("material_id", product.getMaterial().getId());
+    if (useNameForForeignKeys) {
+        fields.put("size", QString::fromStdString(product.getSize().getNameAsString()));
+        fields.put("material", QString::fromStdString(product.getMaterial().getNameAsString()));
+    } else {
+        fields.put("size_id", product.getSize().getId());
+        fields.put("material_id", product.getMaterial().getId());
+    }
 }
 
 void FieldsGetterVisitor::vestFields(const Vest& vest) {
@@ -80,6 +85,12 @@ const Map<string, QVariant>& Models::FieldsGetterVisitor::getFields() const {
     return fields;
 }
 
-Models::FieldsGetterVisitor::FieldsGetterVisitor() : fields(Map<string, QVariant>()) {
+Models::FieldsGetterVisitor::FieldsGetterVisitor(bool useNameForForeignKeys)
+        : fields(Map<string, QVariant>()),
+          useNameForForeignKeys(useNameForForeignKeys) {
 
+}
+
+void Models::FieldsGetterVisitor::clear() {
+    fields.eraseAll();
 }
