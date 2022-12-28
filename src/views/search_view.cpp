@@ -16,6 +16,9 @@
 
 using Controllers::SearchController;
 using Views::SearchDialog;
+using std::for_each;
+
+QVector<QString> SearchDialog::sortableFields = {"Code", "Available quantity", "Sold quantity"};
 
 SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     setWindowTitle("Search for a Product");
@@ -121,15 +124,16 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
 
     fieldSortLayout->addWidget(new QLabel("Field"));
 
-    QComboBox* fieldComboBox = new QComboBox;
-    fieldComboBox->addItem("Code");
-    fieldComboBox->addItem("Available Quantity");
-    fieldComboBox->addItem("Sold quantity");
-    fieldSortLayout->addWidget(fieldComboBox);
+    sortFieldComboBox = new QComboBox;
+    for (int i = 0; i < sortableFields.size(); ++i) {
+        sortFieldComboBox->addItem(sortableFields.value(i));
+    }
+
+    fieldSortLayout->addWidget(sortFieldComboBox);
 
     fieldSortLayout->addWidget(new QLabel("Order"));
 
-    QComboBox* orderComboBox = new QComboBox;
+    orderComboBox = new QComboBox;
     orderComboBox->addItem("Ascendant");
     orderComboBox->addItem("Descendant");
     fieldSortLayout->addWidget(orderComboBox);
@@ -144,7 +148,7 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     buttonBox->addButton(QDialogButtonBox::Cancel);
     vbox->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(validate()));
+    connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(completed()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
@@ -191,4 +195,41 @@ void Views::SearchDialog::validate() {
 
 void Views::SearchDialog::handleLineEditChanged(const QString&) {
     validate();
+}
+
+void Views::SearchDialog::completed() {
+    LinkedList<QString> productTypes;
+    if (productTypeGroupBox->isChecked()) {
+        for_each(
+                productTypeCheckboxes.begin(),
+                productTypeCheckboxes.end(),
+                [&](QCheckBox* checkBox) {
+                    if (checkBox->isChecked()) {
+                        productTypes.pushBack(checkBox->text());
+                    }
+                }
+        );
+    }
+
+    QString code;
+    if (codeGroupBox->isChecked()) {
+        code = codeLineEdit->text();
+    }
+
+    QPair<double, double> priceRange;
+    if (priceRangeGroupBox->isChecked()) {
+        priceRange = QPair(minPriceLineEdit->text().toDouble(), maxPriceLineEdit->text().toDouble());
+    } else {
+        priceRange = QPair(0, INT_MAX);
+    }
+
+    if (sortGroupBox->isChecked()) {
+        QPair<QString, QueryBuilder::Order> sorting;
+        sorting = QPair(sortFieldComboBox->currentIndex(),
+                        static_cast<QueryBuilder::Order>(orderComboBox->currentIndex()));
+        emit startSearch(Filters(productTypes, code, priceRange, sorting));
+        return;
+    }
+
+    emit startSearch(Filters(productTypes, code, priceRange));
 }

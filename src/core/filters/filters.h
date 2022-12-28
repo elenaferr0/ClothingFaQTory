@@ -11,23 +11,24 @@ using Models::Product;
 using Core::Db::QueryBuilder;
 
 namespace Core {
-    class Filter {
+    class Filters {
         private:
             static QueryBuilder queryBuilder;
+
             typedef Product::ProductType PType;
 
-            LinkedList<string> productTypeNames;
+            LinkedList<QString> productTypes;
             QString code;
             QPair<double, double> priceRange;
             QPair<QString, QueryBuilder::Order> orderByField;
 
         public:
-            Filter(const LinkedList<PType>& productTypes,
-                   const QString& code,
-                   const QPair<double, double>& priceRange = QPair(0, INT_MAX),
-                   const QPair<QString, QueryBuilder::Order>& orderByField = QPair("code", QueryBuilder::ASC));
+            Filters(const LinkedList<QString>& productTypes = LinkedList<QString>(),
+                    const QString& code = "",
+                    const QPair<double, double>& priceRange = QPair(0, INT_MAX),
+                    const QPair<QString, QueryBuilder::Order>& orderByField = QPair("code", QueryBuilder::ASC));
 
-            Filter() = default;
+            Filters() = default;
 
             string createQuery();
     };

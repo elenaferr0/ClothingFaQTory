@@ -10,15 +10,16 @@
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QDoubleValidator>
-#include "../core/filters/filter.h"
+#include "../core/filters/filters.h"
 
-using Core::Filter;
+using Core::Filters;
 namespace Views {
     class MainView;
 
     class SearchDialog : public QDialog {
         Q_OBJECT
         private:
+            static QVector<QString> sortableFields;
             QDoubleValidator* maxValidator;
 
             QGroupBox* productTypeGroupBox;
@@ -27,6 +28,8 @@ namespace Views {
             QLineEdit* minPriceLineEdit;
             QLineEdit* maxPriceLineEdit;
             QGroupBox* sortGroupBox;
+            QComboBox* sortFieldComboBox;
+            QComboBox* orderComboBox;
 
             QPushButton* searchButton;
             QLineEdit* codeLineEdit;
@@ -41,7 +44,7 @@ namespace Views {
 
         signals:
 
-            void searchStarted(Filter);
+            void startSearch(Filters filters);
 
         private slots:
 
@@ -50,6 +53,8 @@ namespace Views {
             void handleLineEditChanged(const QString& price);
 
             void validate();
+
+            void completed();
     };
 }
 

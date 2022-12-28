@@ -1,22 +1,20 @@
 #include <algorithm>
-#include "filter.h"
+#include "filters.h"
 
-using Core::Filter;
+using Core::Filters;
 using std::for_each;
 
-QueryBuilder Filter::queryBuilder = QueryBuilder();
+QueryBuilder Filters::queryBuilder = QueryBuilder();
 
-Core::Filter::Filter(const LinkedList<PType>& productTypes, const QString& code,
-                     const QPair<double, double>& priceRange, const QPair<QString, QueryBuilder::Order>& orderByField)
+Core::Filters::Filters(const LinkedList<QString>& productTypes, const QString& code,
+                       const QPair<double, double>& priceRange, const QPair<QString, QueryBuilder::Order>& orderByField)
         : code(code),
           priceRange(priceRange),
+          productTypes(productTypes),
           orderByField(orderByField) {
-    for (auto p = productTypes.begin(); p != productTypes.end(); p++) {
-        productTypeNames.pushBack(Product::productTypeToString(*p));
-    }
 }
 
-string Core::Filter::createQuery() {
+string Core::Filters::createQuery() {
     code = "%" + code + "%";
 
     return queryBuilder.select("*")
