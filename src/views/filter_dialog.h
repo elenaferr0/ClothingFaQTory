@@ -1,13 +1,14 @@
 
 
-#ifndef SEARCH_VIEW_H
-#define SEARCH_VIEW_H
+#ifndef FILTER_DIALOG_H
+#define FILTER_DIALOG_H
 
 #include "widget_view_parent.h"
 #include "main_view.h"
 #include <QGroupBox>
 #include <QLabel>
 #include <QComboBox>
+#include <QMap>
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QDoubleValidator>
@@ -17,10 +18,10 @@ using Core::Filters;
 namespace Views {
     class MainView;
 
-    class SearchDialog : public QDialog {
+    class FilterDialog : public QDialog {
         Q_OBJECT
         private:
-            static QVector<QString> sortableFields;
+            static QMap<QString, QString> sortableFields;
             QDoubleValidator* maxValidator;
 
             QGroupBox* productTypeGroupBox;
@@ -32,7 +33,7 @@ namespace Views {
             QComboBox* sortFieldComboBox;
             QComboBox* orderComboBox;
 
-            QPushButton* searchButton;
+            QPushButton* filterButton;
             QLineEdit* codeLineEdit;
             LinkedList<QCheckBox*> productTypeCheckboxes;
 
@@ -42,11 +43,12 @@ namespace Views {
 
         public:
             static const int MAX_PRICE;
-            SearchDialog(QWidget* parent = nullptr);
+
+            FilterDialog(QWidget* parent = nullptr);
 
         signals:
 
-            void startSearch(Filters filters);
+            void startFiltering(Filters filters);
 
         private slots:
 
@@ -60,4 +62,4 @@ namespace Views {
     };
 }
 
-#endif //SEARCH_VIEW_H
+#endif //FILTER_DIALOG_H

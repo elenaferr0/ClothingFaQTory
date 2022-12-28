@@ -7,7 +7,7 @@
 #include "../core/errors/error.h"
 #include "wizard/product_wizard_view.h"
 #include "view.h"
-#include "search_dialog.h"
+#include "filter_dialog.h"
 #include "main_view.h"
 #include <QToolBar>
 #include <QTreeWidgetItem>
@@ -20,7 +20,7 @@ using Core::Error;
 namespace Views {
     class MainView;
 
-    class SearchDialog;
+    class FilterDialog;
 
     class ProductsView : public WidgetViewParent {
         Q_OBJECT
@@ -47,7 +47,7 @@ namespace Views {
 
             QList<QString> materials;
             QList<QString> sizes;
-            SearchDialog* searchDialog;
+            FilterDialog* filterDialog;
             QToolButton* clearFiltersButton;
 
             QPair<double, double> priceRangeFilter;
@@ -77,9 +77,9 @@ namespace Views {
 
             void handleClearFilterButtonClicked();
 
-            void handleSearchButtonClicked();
+            void handleFilterButtonClicked();
 
-            void handleSearchDialogCompleted(Filters filters);
+            void handleFilterDialogCompleted(Filters filters);
 
     };
 

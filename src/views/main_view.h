@@ -18,11 +18,11 @@ namespace Views {
 
     class MaterialsView;
 
-    class SearchDialog;
+    class FilterDialog;
 }
 using Views::ProductsView;
 using Views::MaterialsView;
-using Views::SearchDialog;
+using Views::FilterDialog;
 
 
 namespace Views {

@@ -11,16 +11,18 @@
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QMessageBox>
-#include "search_dialog.h"
+#include "filter_dialog.h"
 
-using Views::SearchDialog;
+using Views::FilterDialog;
 using std::for_each;
 
-const int SearchDialog::MAX_PRICE = 99999999;
-QVector<QString> SearchDialog::sortableFields = {"Code", "Available quantity", "Sold quantity"};
+const int FilterDialog::MAX_PRICE = 99999999;
+QMap<QString, QString> FilterDialog::sortableFields = {{"Code", "code"},
+                                                       {"Available quantity", "available_quantity"},
+                                                       {"Sold quantity", "sold_quantity"}};
 
-SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
-    setWindowTitle("Search for a Product");
+FilterDialog::FilterDialog(QWidget* parent) : QDialog(parent) {
+    setWindowTitle("Filter products");
     resize(500, 600);
     QVBoxLayout* vbox = new QVBoxLayout(this);
 
@@ -125,7 +127,7 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
 
     sortFieldComboBox = new QComboBox;
     for (int i = 0; i < sortableFields.size(); ++i) {
-        sortFieldComboBox->addItem(sortableFields.value(i));
+        sortFieldComboBox->addItem(sortableFields.keys().value(i), sortableFields.values().value(i));
     }
 
     fieldSortLayout->addWidget(sortFieldComboBox);
@@ -140,10 +142,10 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     vbox->addWidget(sortGroupBox);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox();
-    searchButton = new QPushButton(tr("&Search"));
-    searchButton->setIcon(QIcon(":/assets/icons/search.png"));
-    searchButton->setDisabled(true);
-    buttonBox->addButton(searchButton, QDialogButtonBox::ButtonRole::AcceptRole);
+    filterButton = new QPushButton(tr("&Filter"));
+    filterButton->setIcon(QIcon(":/assets/icons/filter.png"));
+    filterButton->setDisabled(true);
+    buttonBox->addButton(filterButton, QDialogButtonBox::ButtonRole::AcceptRole);
     buttonBox->addButton(QDialogButtonBox::Cancel);
     vbox->addWidget(buttonBox);
 
@@ -151,7 +153,7 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-void Views::SearchDialog::handleMinPriceTextChanged(const QString& price) {
+void Views::FilterDialog::handleMinPriceTextChanged(const QString& price) {
     if (price == "") {
         maxPriceLineEdit->setDisabled(true);
     } else {
@@ -160,7 +162,7 @@ void Views::SearchDialog::handleMinPriceTextChanged(const QString& price) {
     }
 }
 
-void Views::SearchDialog::validate() {
+void Views::FilterDialog::validate() {
     // check if at least a product type is checked
     bool atLeastOneChecked = false;
     for (auto p = productTypeCheckboxes.begin(); p != productTypeCheckboxes.end(); p++) {
@@ -186,17 +188,17 @@ void Views::SearchDialog::validate() {
     // set visible only if is checked and not valid
     priceError->setVisible(!validPrice && priceRangeGroupBox->isChecked());
 
-    searchButton->setEnabled(validProductType ||
+    filterButton->setEnabled(validProductType ||
                              validCode ||
                              validPrice ||
                              sortGroupBox->isChecked());
 }
 
-void Views::SearchDialog::handleLineEditChanged(const QString&) {
+void Views::FilterDialog::handleLineEditChanged(const QString&) {
     validate();
 }
 
-void Views::SearchDialog::completed() {
+void Views::FilterDialog::completed() {
     LinkedList<QString> productTypes;
     if (productTypeGroupBox->isChecked()) {
         for_each(
@@ -224,13 +226,13 @@ void Views::SearchDialog::completed() {
 
     if (sortGroupBox->isChecked()) {
         QPair<QString, QueryBuilder::Order> sorting;
-        sorting = QPair(sortFieldComboBox->currentIndex(),
+        sorting = QPair(sortFieldComboBox->currentData().toString(),
                         static_cast<QueryBuilder::Order>(orderComboBox->currentIndex()));
         emit accept();
-        emit startSearch(Filters(productTypes, code, priceRange, sorting));
+        emit startFiltering(Filters(productTypes, code, priceRange, sorting));
         return;
     }
 
     emit accept();
-    emit startSearch(Filters(productTypes, code, priceRange));
+    emit startFiltering(Filters(productTypes, code, priceRange));
 }

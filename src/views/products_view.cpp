@@ -12,16 +12,16 @@
 #include <QJsonArray>
 #include <QFileDialog>
 #include "../services/file_export/json_exportable_decorator.h"
-#include "search_dialog.h"
+#include "filter_dialog.h"
 
-using Views::SearchDialog;
+using Views::FilterDialog;
 
 using std::for_each;
 using std::transform;
 using std::inserter;
 using std::pair;
 using Views::ProductsView;
-using Views::SearchDialog;
+using Views::FilterDialog;
 using Views::Wizard::ProductWizardView;
 using Controllers::WizardController;
 using Controllers::MainController;
@@ -30,7 +30,7 @@ using Services::FileExport::JSONExportableDecorator;
 const int ProductsView::COLUMN_COUNT = 9;
 
 ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
-                                                                  priceRangeFilter(0, Views::SearchDialog::MAX_PRICE) {
+                                                                  priceRangeFilter(0, Views::FilterDialog::MAX_PRICE) {
     setController(new MainController(this));
     connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
 }
@@ -69,12 +69,12 @@ void ProductsView::init(const ProductsMap& productsByType) {
     connect(createButton, SIGNAL(clicked()), this, SLOT(showCreateProductWizard()));
     toolBar->addWidget(createButton);
 
-    QToolButton* searchButton = new QToolButton;
-    searchButton->setIcon(QIcon(":/assets/icons/search.png"));
-    searchButton->setText(tr("&Search"));
-    searchButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    connect(searchButton, SIGNAL(clicked()), this, SLOT(handleSearchButtonClicked()));
-    toolBar->addWidget(searchButton);
+    QToolButton* filterButton = new QToolButton;
+    filterButton->setIcon(QIcon(":/assets/icons/filter.png"));
+    filterButton->setText(tr("&Filter"));
+    filterButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
+    connect(filterButton, SIGNAL(clicked()), this, SLOT(handleFilterButtonClicked()));
+    toolBar->addWidget(filterButton);
 
     QToolButton* exportButton = new QToolButton;
     exportButton->setIcon(QIcon(":/assets/icons/export_json.png"));
@@ -244,7 +244,7 @@ void ProductsView::showCreateProductWizard() {
 
 void Views::ProductsView::rebuildTreeView() {
     treeWidget->clear();
-    priceRangeFilter = QPair(0, Views::SearchDialog::MAX_PRICE);
+    priceRangeFilter = QPair(0, Views::FilterDialog::MAX_PRICE);
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType());
 }
 
@@ -348,13 +348,13 @@ void Views::ProductsView::handleExportJsonButtonClicked() {
 
 }
 
-void Views::ProductsView::handleSearchButtonClicked() {
-    searchDialog = new SearchDialog(this);
-    connect(searchDialog, SIGNAL(startSearch(Filters)), this, SLOT(handleSearchDialogCompleted(Filters)));
-    searchDialog->exec();
+void Views::ProductsView::handleFilterButtonClicked() {
+    filterDialog = new FilterDialog(this);
+    connect(filterDialog, SIGNAL(startFiltering(Filters)), this, SLOT(handleFilterDialogCompleted(Filters)));
+    filterDialog->exec();
 }
 
-void Views::ProductsView::handleSearchDialogCompleted(Filters filters) {
+void Views::ProductsView::handleFilterDialogCompleted(Filters filters) {
     treeWidget->clear();
     priceRangeFilter = QPair(filters.getPriceRange());
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType(&filters));
