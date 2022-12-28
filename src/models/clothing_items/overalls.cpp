@@ -1,4 +1,5 @@
 #include "overalls.h"
+#include <QDebug>
 
 using Models::ClothingItems::Overalls;
 
@@ -14,7 +15,17 @@ Overalls::Overalls(int id,
                    const string& gender,
                    bool shorts,
                    bool hasButtons)
-        : Vest(id,
+        : ClothingItem(id,
+                       code,
+                       color,
+                       material,
+                       size,
+                       availableQuantity,
+                       soldQuantity,
+                       description,
+                       sustainableMaterials,
+                       gender),
+          Vest(id,
                code,
                color,
                material,

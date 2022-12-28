@@ -27,8 +27,6 @@ namespace Models {
 
             static Gender genderFromString(const string&);
 
-            ClothingItem& operator=(const ClothingItem&) = default; // needed because it's a virtual base
-
             const bool& hasSustainableMaterials() const;
 
             void setSustainableMaterials(bool sustainableMaterials);
