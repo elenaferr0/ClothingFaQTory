@@ -7,6 +7,7 @@
 #include "main_view.h"
 #include <QGroupBox>
 #include <QLabel>
+#include <QComboBox>
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QDoubleValidator>

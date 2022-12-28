@@ -23,7 +23,7 @@ namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
         private:
-            static FieldsGetterVisitor fieldsGetterVisitor;
+            FieldsGetterVisitor fieldsGetterVisitor;
         public:
             CRUDRepository(const string& table,
                            function<Either<Error, T*>(const QSqlQuery&)> mappingFunction)
@@ -40,9 +40,6 @@ namespace Services {
             Either<Error, LinkedList<T*>> findAll() final override;
 
     };
-
-    template<class T>
-    FieldsGetterVisitor CRUDRepository<T>::fieldsGetterVisitor;
 
     template<class T>
     Either<Error, T*> CRUDRepository<T>::save(T* entity) {

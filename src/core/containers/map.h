@@ -150,22 +150,22 @@ namespace Core::Containers {
 
     template<class K, class V>
     void Map<K, V>::keysHelper(Map::Node* node, LinkedList<K>& keys) const {
-        if (node->left) {
+        if (node->left != TNULL) {
             keysHelper(node->left, keys);
         }
         keys.pushBack(node->key);
-        if (node->right) {
+        if (node->right != TNULL) {
             keysHelper(node->right, keys);
         }
     }
 
     template<class K, class V>
     void Map<K, V>::valuesHelper(Map::Node* node, LinkedList<V>& values) const {
-        if (node->left) {
+        if (node->left != TNULL) {
             valuesHelper(node->left, values);
         }
         values.pushBack(node->value);
-        if (node->right) {
+        if (node->right != TNULL) {
             valuesHelper(node->right, values);
         }
     }
@@ -382,7 +382,7 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    // fix the insertion (balance the red-black colors)
+// fix the insertion (balance the red-black colors)
     void Map<K, V>::fixPut(Node* k) {
         Node* u;
         while (k->parent->color == Node::RED) {
@@ -694,6 +694,7 @@ namespace Core::Containers {
 
         return copy;
     }
+
 }
 
 #endif // MAP_H
