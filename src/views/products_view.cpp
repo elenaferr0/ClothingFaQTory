@@ -27,7 +27,7 @@ using Controllers::WizardController;
 using Controllers::MainController;
 using Services::FileExport::JSONExportableDecorator;
 
-const int ProductsView::COLUMN_COUNT = 7;
+const int ProductsView::COLUMN_COUNT = 9;
 
 ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
                                                                   priceRangeFilter(0, INT_MAX) {
@@ -49,8 +49,9 @@ void ProductsView::init(const ProductsMap& productsByType) {
         initTreeView(productsByType);
     }
 
+    vector<int> colWidths = {170, 100, 300, 100, 110, 110, 150};
     for (int i = 0; i < COLUMN_COUNT - 2; ++i) {
-        treeWidget->setColumnWidth(i, 170);
+        treeWidget->setColumnWidth(i, colWidths.at(i));
     }
     treeWidget->setColumnWidth(COLUMN_COUNT - 2, 50);
     treeWidget->setColumnWidth(COLUMN_COUNT - 1, 50);
@@ -114,6 +115,8 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
                                                                  << "Color"
                                                                  << "Description"
                                                                  << "Size"
+                                                                 << "Available qt"
+                                                                 << "Sold qt"
                                                                  << "Calculated price"
                                                                  << "Edit"
                                                                  << "Delete");
@@ -205,6 +208,8 @@ QStringList ProductsView::getColumnsFromProduct(const Product* product) const {
            << QString::fromStdString(product->getColor())
            << QString::fromStdString(product->getDescription())
            << QString::fromStdString(product->getSize().getNameAsString())
+           << QString::number(product->getAvailableQuantity())
+           << QString::number(product->getSoldQuantity())
            << QString::number(product->computePrice(), 'f', 2) + "$";
     return values;
 }
