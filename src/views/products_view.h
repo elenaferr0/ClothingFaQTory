@@ -48,6 +48,7 @@ namespace Views {
             QList<QString> materials;
             QList<QString> sizes;
             SearchDialog* searchDialog;
+            QToolButton* clearFiltersButton;
 
             QPair<double, double> priceRangeFilter;
 
@@ -66,15 +67,17 @@ namespace Views {
 
             void handleProductEditing(Product*, Product::ProductType);
 
-            void showCreateProductWizard(bool);
+            void showCreateProductWizard();
 
             void clickedEditButton(Product*, QTreeWidgetItem* row, Product::ProductType);
 
             void clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType);
 
-            void handleExportJsonButtonClicked(bool);
+            void handleExportJsonButtonClicked();
 
-            void handleSearchButtonClicked(bool);
+            void handleClearFilterButtonClicked();
+
+            void handleSearchButtonClicked();
 
             void handleSearchDialogCompleted(Filters filters);
 

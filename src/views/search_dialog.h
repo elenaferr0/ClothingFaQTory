@@ -21,7 +21,6 @@ namespace Views {
         Q_OBJECT
         private:
             static QVector<QString> sortableFields;
-            static const int MAX_PRICE;
             QDoubleValidator* maxValidator;
 
             QGroupBox* productTypeGroupBox;
@@ -42,6 +41,7 @@ namespace Views {
             QLabel* priceError;
 
         public:
+            static const int MAX_PRICE;
             SearchDialog(QWidget* parent = nullptr);
 
         signals:

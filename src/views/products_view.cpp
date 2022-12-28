@@ -30,7 +30,7 @@ using Services::FileExport::JSONExportableDecorator;
 const int ProductsView::COLUMN_COUNT = 9;
 
 ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
-                                                                  priceRangeFilter(0, INT_MAX) {
+                                                                  priceRangeFilter(0, Views::SearchDialog::MAX_PRICE) {
     setController(new MainController(this));
     connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
 }
@@ -66,22 +66,39 @@ void ProductsView::init(const ProductsMap& productsByType) {
     createButton->setIcon(QIcon(":/assets/icons/add.png"));
     createButton->setText(tr("Create &New"));
     createButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    connect(createButton, SIGNAL(clicked(bool)), this, SLOT(showCreateProductWizard(bool)));
+    connect(createButton, SIGNAL(clicked()), this, SLOT(showCreateProductWizard()));
     toolBar->addWidget(createButton);
 
     QToolButton* searchButton = new QToolButton;
     searchButton->setIcon(QIcon(":/assets/icons/search.png"));
     searchButton->setText(tr("&Search"));
     searchButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    connect(searchButton, SIGNAL(clicked(bool)), this, SLOT(handleSearchButtonClicked(bool)));
+    connect(searchButton, SIGNAL(clicked()), this, SLOT(handleSearchButtonClicked()));
     toolBar->addWidget(searchButton);
 
     QToolButton* exportButton = new QToolButton;
     exportButton->setIcon(QIcon(":/assets/icons/export_json.png"));
     exportButton->setText(tr("&Export to JSON"));
     exportButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(handleExportJsonButtonClicked(bool)));
+    connect(exportButton, SIGNAL(clicked()), this, SLOT(handleExportJsonButtonClicked()));
     toolBar->addWidget(exportButton);
+
+    // create a totally right aligned (invisible) button that clears all the filters
+    QWidget* rightAlignedWidget = new QWidget;
+    QHBoxLayout* rightAlignedLayout = new QHBoxLayout;
+    rightAlignedWidget->setLayout(rightAlignedLayout);
+
+    clearFiltersButton = new QToolButton;
+    clearFiltersButton->setIcon(QIcon(":/assets/icons/clear_filters.png"));
+    clearFiltersButton->setObjectName("clearFiltersButton");
+    clearFiltersButton->setText(tr("&Clear filters"));
+    clearFiltersButton->setVisible(false);
+    clearFiltersButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextBesideIcon);
+    connect(clearFiltersButton, SIGNAL(clicked()), this, SLOT(handleClearFilterButtonClicked()));
+
+    rightAlignedLayout->addStretch();
+    rightAlignedLayout->addWidget(clearFiltersButton);
+    toolBar->addWidget(rightAlignedWidget);
 
     toolBar->setIconSize(QSize(20, 20));
 
@@ -214,7 +231,7 @@ QStringList ProductsView::getColumnsFromProduct(const Product* product) const {
     return values;
 }
 
-void ProductsView::showCreateProductWizard(bool) {
+void ProductsView::showCreateProductWizard() {
     ProductWizardView* createProductWizard = new ProductWizardView(ProductWizardView::Create,
                                                                    this,
                                                                    materials,
@@ -227,7 +244,7 @@ void ProductsView::showCreateProductWizard(bool) {
 
 void Views::ProductsView::rebuildTreeView() {
     treeWidget->clear();
-    priceRangeFilter = QPair(0, INT_MAX);
+    priceRangeFilter = QPair(0, Views::SearchDialog::MAX_PRICE);
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType());
 }
 
@@ -286,7 +303,7 @@ void Views::ProductsView::handleProductEditing(Product*, Product::ProductType) {
     rebuildTreeView();
 }
 
-void Views::ProductsView::handleExportJsonButtonClicked(bool) {
+void Views::ProductsView::handleExportJsonButtonClicked() {
     // Save to file
     QDateTime currentTime = QDateTime::currentDateTime();
     QString defaultFileName = "/clothing_faqtory_export_" + currentTime.toString(Qt::DateFormat::ISODate) + ".json";
@@ -331,7 +348,7 @@ void Views::ProductsView::handleExportJsonButtonClicked(bool) {
 
 }
 
-void Views::ProductsView::handleSearchButtonClicked(bool) {
+void Views::ProductsView::handleSearchButtonClicked() {
     searchDialog = new SearchDialog(this);
     connect(searchDialog, SIGNAL(startSearch(Filters)), this, SLOT(handleSearchDialogCompleted(Filters)));
     searchDialog->exec();
@@ -341,4 +358,10 @@ void Views::ProductsView::handleSearchDialogCompleted(Filters filters) {
     treeWidget->clear();
     priceRangeFilter = QPair(filters.getPriceRange());
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType(&filters));
+    clearFiltersButton->setVisible(true);
+}
+
+void Views::ProductsView::handleClearFilterButtonClicked() {
+    clearFiltersButton->setVisible(false);
+    rebuildTreeView();
 }
