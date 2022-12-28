@@ -21,6 +21,7 @@ namespace Views {
         Q_OBJECT
         private:
             static QVector<QString> sortableFields;
+            static const int MAX_PRICE;
             QDoubleValidator* maxValidator;
 
             QGroupBox* productTypeGroupBox;

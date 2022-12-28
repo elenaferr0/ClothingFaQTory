@@ -16,6 +16,7 @@
 using Views::SearchDialog;
 using std::for_each;
 
+const int SearchDialog::MAX_PRICE = 99999999;
 QVector<QString> SearchDialog::sortableFields = {"Code", "Available quantity", "Sold quantity"};
 
 SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
@@ -90,7 +91,7 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
 
     QDoubleValidator* minValidator = new QDoubleValidator;
     minValidator->setNotation(QDoubleValidator::StandardNotation);
-    minValidator->setRange(0, INT_MAX, 2);
+    minValidator->setRange(0, MAX_PRICE, 2);
     minPriceLineEdit->setValidator(minValidator);
     connect(minPriceLineEdit, SIGNAL(textChanged(const QString &)), this,
             SLOT(handleMinPriceTextChanged(const QString &)));
@@ -155,7 +156,7 @@ void Views::SearchDialog::handleMinPriceTextChanged(const QString& price) {
         maxPriceLineEdit->setDisabled(true);
     } else {
         maxPriceLineEdit->setEnabled(true);
-        maxValidator->setRange(price.toDouble(), INT_MAX, 2);
+        maxValidator->setRange(price.toDouble(), MAX_PRICE, 2);
     }
 }
 
@@ -218,7 +219,7 @@ void Views::SearchDialog::completed() {
     if (priceRangeGroupBox->isChecked()) {
         priceRange = QPair(minPriceLineEdit->text().toDouble(), maxPriceLineEdit->text().toDouble());
     } else {
-        priceRange = QPair(0, INT_MAX);
+        priceRange = QPair(0, MAX_PRICE);
     }
 
     if (sortGroupBox->isChecked()) {

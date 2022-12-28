@@ -28,7 +28,7 @@ namespace Views {
             typedef Map<Product::ProductType, LinkedList<Product*>>
                     ProductsMap;
 
-            static int COLUMN_COUNT;
+            static const int COLUMN_COUNT;
 
             QTreeWidget* treeWidget;
             QToolBar* toolBar;

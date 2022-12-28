@@ -27,7 +27,7 @@ using Controllers::WizardController;
 using Controllers::MainController;
 using Services::FileExport::JSONExportableDecorator;
 
-int ProductsView::COLUMN_COUNT = 7;
+const int ProductsView::COLUMN_COUNT = 7;
 
 ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
                                                                   priceRangeFilter(0, INT_MAX) {
