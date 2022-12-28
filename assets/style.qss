@@ -59,3 +59,7 @@ QPushButton#editButton, QPushButton#deleteButton, QPushButton#randomCodeButton {
     border: none;
     text-align: left;
 }
+
+QLabel#errorLabel {
+    color: #e01d1d;
+}

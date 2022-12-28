@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QDialogButtonBox>
+#include <QMessageBox>
 #include "search_view.h"
 #include "../controllers/search_controller.h"
 
@@ -18,7 +19,7 @@ using Views::SearchDialog;
 
 SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     setWindowTitle("Search for a Product");
-    resize(400, 500);
+    resize(500, 600);
     QVBoxLayout* vbox = new QVBoxLayout(this);
 
     productTypeGroupBox = new QGroupBox("Product Type");
@@ -27,6 +28,10 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     connect(productTypeGroupBox, SIGNAL(clicked()), this, SLOT(validate()));
 
     QFormLayout* productTypeFormLayout = new QFormLayout;
+    productTypeError = new QLabel("Check at least one product type");
+    productTypeError->setVisible(false);
+    productTypeError->setObjectName("errorLabel");
+    productTypeFormLayout->addWidget(productTypeError);
     productTypeGroupBox->setLayout(productTypeFormLayout);
 
     for (int i = Product::ProductType::Jeans; i != Product::ProductType::Hat + 1; i++) {
@@ -44,7 +49,10 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     codeGroupBox->setCheckable(true);
     codeGroupBox->setChecked(false);
     QFormLayout* codeFormLayout = new QFormLayout;
-    codeGroupBox->setLayout(codeFormLayout);
+    codeError = new QLabel("Code should not be empty");
+    codeError->setVisible(false);
+    codeError->setObjectName("errorLabel");
+    codeFormLayout->addWidget(codeError);
     connect(codeGroupBox, SIGNAL(clicked()), this, SLOT(validate()));
 
     QRegularExpression regex("^[a-zA-Z0-9_-]*$");
@@ -53,9 +61,11 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     codeLineEdit = new QLineEdit;
     codeLineEdit->setPlaceholderText("Product Code");
     codeLineEdit->setValidator(alphaNumericUnderscoresValidator);
+    codeGroupBox->setLayout(codeFormLayout);
     connect(codeLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(handleLineEditChanged(const QString&)));
 
     codeFormLayout->addRow("(also partial)", codeLineEdit);
+    codeFormLayout->setAlignment(Qt::AlignLeft);
     vbox->addWidget(codeGroupBox);
 
     priceRangeGroupBox = new QGroupBox("Price range");
@@ -63,7 +73,11 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     priceRangeGroupBox->setChecked(false);
     connect(priceRangeGroupBox, SIGNAL(clicked()), this, SLOT(validate()));
 
-    QHBoxLayout* priceRangeLayout = new QHBoxLayout;
+    QVBoxLayout* priceRangeLayout = new QVBoxLayout;
+    priceError = new QLabel("Both values are mandatory and min price must be smaller than max price");
+    priceError->setVisible(false);
+    priceError->setObjectName("errorLabel");
+    priceRangeLayout->addWidget(priceError);
     priceRangeGroupBox->setLayout(priceRangeLayout);
 
     minPriceLineEdit = new QLineEdit;
@@ -87,11 +101,13 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     connect(minPriceLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(handleLineEditChanged(const QString&)));
     connect(maxPriceLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(handleLineEditChanged(const QString&)));
 
-    priceRangeLayout->addWidget(minPriceLineEdit);
-    priceRangeLayout->addWidget(new QLabel("$ to"));
-    priceRangeLayout->addWidget(maxPriceLineEdit);
-    priceRangeLayout->addWidget(new QLabel("$"));
-    priceRangeLayout->setAlignment(Qt::AlignCenter);
+    QHBoxLayout* priceInputLayout = new QHBoxLayout;
+    priceInputLayout->addWidget(minPriceLineEdit);
+    priceInputLayout->addWidget(new QLabel("$ to"));
+    priceInputLayout->addWidget(maxPriceLineEdit);
+    priceInputLayout->addWidget(new QLabel("$"));
+    priceInputLayout->setAlignment(Qt::AlignCenter);
+    priceRangeLayout->addLayout(priceInputLayout);
     vbox->addWidget(priceRangeGroupBox);
 
     sortGroupBox = new QGroupBox("Sorting");
@@ -100,6 +116,7 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     connect(sortGroupBox, SIGNAL(clicked()), this, SLOT(validate()));
 
     QHBoxLayout* fieldSortLayout = new QHBoxLayout;
+    fieldSortLayout->setAlignment(Qt::AlignLeft);
     sortGroupBox->setLayout(fieldSortLayout);
 
     fieldSortLayout->addWidget(new QLabel("Field"));
@@ -151,9 +168,11 @@ void Views::SearchDialog::validate() {
     }
 
     bool validProductType = productTypeGroupBox->isChecked() && atLeastOneChecked;
+    productTypeError->setVisible(!atLeastOneChecked && productTypeGroupBox->isChecked());
 
     // check if the code contains at least a letter
     bool validCode = codeGroupBox->isChecked() && codeLineEdit->text().size() > 0;
+    codeError->setVisible(codeLineEdit->text().size() == 0 && codeGroupBox->isChecked());
 
     // check if the price range was inserted and is acceptable
     bool validPrice = priceRangeGroupBox->isChecked() &&
@@ -161,13 +180,13 @@ void Views::SearchDialog::validate() {
                       minPriceLineEdit->hasAcceptableInput() &&
                       maxPriceLineEdit->text().size() > 0 &&
                       maxPriceLineEdit->hasAcceptableInput();
+    // set visible only if is checked and not valid
+    priceError->setVisible(!validPrice && priceRangeGroupBox->isChecked());
 
-    searchButton->setEnabled(
-            validProductType ||
-            validCode ||
-            validPrice ||
-            sortGroupBox->isChecked()
-    );
+    searchButton->setEnabled(validProductType ||
+                             validCode ||
+                             validPrice ||
+                             sortGroupBox->isChecked());
 }
 
 void Views::SearchDialog::handleLineEditChanged(const QString&) {

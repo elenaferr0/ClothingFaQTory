@@ -6,6 +6,7 @@
 #include "widget_view_parent.h"
 #include "main_view.h"
 #include <QGroupBox>
+#include <QLabel>
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QDoubleValidator>
@@ -30,6 +31,11 @@ namespace Views {
             QPushButton* searchButton;
             QLineEdit* codeLineEdit;
             LinkedList<QCheckBox*> productTypeCheckboxes;
+
+            QLabel* productTypeError;
+            QLabel* codeError;
+            QLabel* priceError;
+
         public:
             SearchDialog(QWidget* parent = nullptr);
 
