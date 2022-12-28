@@ -7,6 +7,7 @@
 #include "main_view.h"
 #include <QGroupBox>
 #include <QLineEdit>
+#include <QCheckBox>
 #include <QDoubleValidator>
 #include "../core/filters/filter.h"
 
@@ -17,13 +18,18 @@ namespace Views {
     class SearchDialog : public QDialog {
         Q_OBJECT
         private:
+            QDoubleValidator* maxValidator;
+
             QGroupBox* productTypeGroupBox;
             QGroupBox* codeGroupBox;
+            QGroupBox* priceRangeGroupBox;
             QLineEdit* minPriceLineEdit;
             QLineEdit* maxPriceLineEdit;
-            QDoubleValidator* maxValidator;
             QGroupBox* sortGroupBox;
-            Filter filters;
+
+            QPushButton* searchButton;
+            QLineEdit* codeLineEdit;
+            LinkedList<QCheckBox*> productTypeCheckboxes;
         public:
             SearchDialog(QWidget* parent = nullptr);
 
@@ -34,6 +40,10 @@ namespace Views {
         private slots:
 
             void handleMinPriceTextChanged(const QString& price);
+
+            void handleLineEditChanged(const QString& price);
+
+            void validate();
     };
 }
 

@@ -48,7 +48,7 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     tabWidget->setTabIcon(0, clothingIcon);
 
     tabWidget->addTab(materialsView, "Materials Cost");
-    QIcon materialsIcon(":/assets/icons/materials_cost.png");
+    QIcon materialsIcon(":/assets/icons/money.png");
     tabWidget->setTabIcon(1, materialsIcon);
 
     tabWidget->setIconSize(QSize(35, 35));
