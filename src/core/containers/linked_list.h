@@ -71,6 +71,10 @@ namespace Core::Containers {
 
             int getSize() const;
 
+            LinkedList<T> findCommonElements(const LinkedList<T>&) const;
+
+            bool contains(T value) const;
+
             class ConstIterator {
                     friend class LinkedList<T>;
 
@@ -107,6 +111,38 @@ namespace Core::Containers {
     };
 
     template<class T>
+    bool LinkedList<T>::contains(T value) const {
+        Node* current = head;
+        while (current != nullptr) {
+            if (current->value == value) {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
+    }
+
+    template<class T>
+    LinkedList<T> LinkedList<T>::findCommonElements(const LinkedList<T>& other) const {
+        LinkedList<T> common;
+        Node* currentListIndex = head;
+        Node* otherListIndex = other.head;
+
+        while (currentListIndex != nullptr && otherListIndex != nullptr) {
+            if (currentListIndex->value == otherListIndex->value) {
+                common.pushBack(currentListIndex->value);
+                currentListIndex = currentListIndex->next;
+                otherListIndex = otherListIndex->next;
+            } else if (currentListIndex->value < otherListIndex->value) {
+                currentListIndex = currentListIndex->next;
+            } else {
+                otherListIndex = otherListIndex->next;
+            }
+        }
+        return common;
+    }
+
+    template<class T>
     void LinkedList<T>::popElement(LinkedList::ConstIterator& it) {
         size--;
         // Check if the iterator is at the head of the list
@@ -133,7 +169,7 @@ namespace Core::Containers {
     template<class T>
     void LinkedList<T>::popElement(T& element) {
         // Check if the element is at the head of the list
-        if (head != nullptr && head->data == element) {
+        if (head != nullptr && head->value == element) {
             Node* temp = head;
             head = head->next;
             delete temp;
@@ -145,7 +181,7 @@ namespace Core::Containers {
         Node* prev = head;
         Node* curr = head->next;
         while (curr != nullptr) {
-            if (curr->data == element) {
+            if (curr->value == element) {
                 // Remove the element from the list
                 prev->next = curr->next;
                 delete curr;
@@ -163,7 +199,7 @@ namespace Core::Containers {
     }
 
     template<class T>
-    LinkedList<T>::LinkedList(std::initializer_list<T> init) : head(nullptr), size(init.size()) {
+    LinkedList<T>::LinkedList(std::initializer_list<T> init) : head(nullptr), size(0) {
         for (auto it = init.begin(); it != init.end(); it++) {
             pushBack(*it);
         }
@@ -204,14 +240,14 @@ namespace Core::Containers {
         // Add the elements from this linked list to the result
         Node* p = head;
         while (p != nullptr) {
-            result.insert(p->data);
+            result.insert(p->value);
             p = p->next;
         }
 
         // Add the elements from the other linked list to the result
         p = other.head;
         while (p != nullptr) {
-            result.insert(p->data);
+            result.insert(p->value);
             p = p->next;
         }
 

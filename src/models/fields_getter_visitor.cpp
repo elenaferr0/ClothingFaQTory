@@ -79,3 +79,7 @@ void Models::FieldsGetterVisitor::visitSize(Size& size) {
 const Map<string, QVariant>& Models::FieldsGetterVisitor::getFields() const {
     return fields;
 }
+
+Models::FieldsGetterVisitor::FieldsGetterVisitor() : fields(Map<string, QVariant>()) {
+
+}

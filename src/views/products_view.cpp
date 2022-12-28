@@ -12,6 +12,7 @@
 #include <QJsonArray>
 #include <QFileDialog>
 #include "../services/file_export/json_exportable_decorator.h"
+#include "search_dialog.h"
 
 using Views::SearchDialog;
 
@@ -28,7 +29,8 @@ using Services::FileExport::JSONExportableDecorator;
 
 int ProductsView::COLUMN_COUNT = 7;
 
-ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent) {
+ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
+                                                                  priceRangeFilter(0, INT_MAX) {
     setController(new MainController(this));
     connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
 }
@@ -127,6 +129,8 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
 }
 
 void ProductsView::initTreeView(const ProductsMap& productsByType) {
+    double minPrice = 0;
+    double maxPrice = 0;
     for (auto type = productsByType.cbegin(); type != productsByType.cend(); type++) {
         Product::ProductType productType = (*type).first;
         LinkedList<Product*> products = (*type).second;
@@ -149,7 +153,18 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
         }
 
         for (auto p = products.begin(); p != products.end(); p++) {
-            buildAndInsertChild(topLevelItemWidget, *p, productType);
+            double price = (*p)->computePrice();
+
+            if (price >= priceRangeFilter.first && price <= priceRangeFilter.second) {
+                buildAndInsertChild(topLevelItemWidget, *p, productType);
+            }
+            if (price < minPrice) {
+                minPrice = price;
+            }
+
+            if (price > maxPrice) {
+                maxPrice = price;
+            }
         }
 
         QIcon productIcon(":/assets/icons/" + productTypeName.toLower() + ".png");
@@ -159,6 +174,7 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
             treeWidget->addTopLevelItem(topLevelItemWidget);
         }
     }
+    priceRangeFilter = QPair(minPrice, maxPrice);
 }
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
@@ -206,6 +222,7 @@ void ProductsView::showCreateProductWizard(bool) {
 
 void Views::ProductsView::rebuildTreeView() {
     treeWidget->clear();
+    priceRangeFilter = QPair(0, INT_MAX);
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType());
 }
 
@@ -311,5 +328,12 @@ void Views::ProductsView::handleExportJsonButtonClicked(bool) {
 
 void Views::ProductsView::handleSearchButtonClicked(bool) {
     searchDialog = new SearchDialog(this);
-    searchDialog->show();
+    connect(searchDialog, SIGNAL(startSearch(Filters)), this, SLOT(handleSearchDialogCompleted(Filters)));
+    searchDialog->exec();
+}
+
+void Views::ProductsView::handleSearchDialogCompleted(Filters filters) {
+    treeWidget->clear();
+    priceRangeFilter = QPair(filters.getPriceRange());
+    initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType(&filters));
 }

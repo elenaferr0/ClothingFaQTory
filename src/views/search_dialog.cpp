@@ -11,10 +11,8 @@
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QMessageBox>
-#include "search_view.h"
-#include "../controllers/search_controller.h"
+#include "search_dialog.h"
 
-using Controllers::SearchController;
 using Views::SearchDialog;
 using std::for_each;
 
@@ -148,7 +146,7 @@ SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) {
     buttonBox->addButton(QDialogButtonBox::Cancel);
     vbox->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(completed()));
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(completed()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
@@ -227,9 +225,11 @@ void Views::SearchDialog::completed() {
         QPair<QString, QueryBuilder::Order> sorting;
         sorting = QPair(sortFieldComboBox->currentIndex(),
                         static_cast<QueryBuilder::Order>(orderComboBox->currentIndex()));
+        emit accept();
         emit startSearch(Filters(productTypes, code, priceRange, sorting));
         return;
     }
 
+    emit accept();
     emit startSearch(Filters(productTypes, code, priceRange));
 }

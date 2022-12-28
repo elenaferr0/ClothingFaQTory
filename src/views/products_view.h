@@ -7,7 +7,7 @@
 #include "../core/errors/error.h"
 #include "wizard/product_wizard_view.h"
 #include "view.h"
-#include "search_view.h"
+#include "search_dialog.h"
 #include "main_view.h"
 #include <QToolBar>
 #include <QTreeWidgetItem>
@@ -49,6 +49,8 @@ namespace Views {
             QList<QString> sizes;
             SearchDialog* searchDialog;
 
+            QPair<double, double> priceRangeFilter;
+
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
@@ -73,6 +75,8 @@ namespace Views {
             void handleExportJsonButtonClicked(bool);
 
             void handleSearchButtonClicked(bool);
+
+            void handleSearchDialogCompleted(Filters filters);
 
     };
 

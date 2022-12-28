@@ -42,7 +42,7 @@ namespace Controllers {
         public:
             MainController(View*);
 
-            ProductsMap findAllProductsByType();
+            ProductsMap findAllProductsByType(Filters* filters = nullptr);
 
             MaterialsList findAllMaterials();
 
@@ -64,8 +64,10 @@ namespace Controllers {
             DeleteOnlyRepository* productRepository;
 
             template<class T>
-            void findProductsOfType(Product::ProductType productType, CRUDRepository<T>* repository, ProductsMap& map);
-
+            void findAllProductsByTypeHelper(Product::ProductType productType,
+                                             CRUDRepository<T>* repository,
+                                             ProductsMap& map,
+                                             Filters* filters = nullptr);
 
     };
 }

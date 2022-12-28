@@ -45,7 +45,7 @@ namespace Models {
             void jeansFields(const Jeans&);
 
         public:
-            FieldsGetterVisitor() = default;
+            FieldsGetterVisitor();
 
             const Map <string, QVariant>& getFields() const;
 

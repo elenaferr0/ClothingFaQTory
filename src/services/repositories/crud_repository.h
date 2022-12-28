@@ -113,7 +113,7 @@ namespace Services {
     template<class T>
     Either<Error, LinkedList<T*>> CRUDRepository<T>::findAll() {
         string sql = Repository::queryBuilder.select()
-                .from(Repository::table)
+                .from("ONLY " + Repository::table)
                 .build();
         QSqlQuery query = Repository::exec(sql);
         LinkedList<T*> entities;

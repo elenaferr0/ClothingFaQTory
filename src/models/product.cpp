@@ -97,3 +97,19 @@ void Models::Product::setDescription(const string& description) {
 void Models::Product::setCode(const string& code) {
     Product::code = code;
 }
+
+Product::ProductType Models::Product::productTypeFromString(const string& productType) {
+    if (productType == "Jeans") {
+        return Jeans;
+    } else if (productType == "Overalls") {
+        return Overalls;
+    } else if (productType == "Hat") {
+        return Hat;
+    } else if (productType == "Bracelet") {
+        return Bracelet;
+    } else if (productType == "Vest") {
+        return Vest;
+    } else {
+        return BackPack;
+    }
+}

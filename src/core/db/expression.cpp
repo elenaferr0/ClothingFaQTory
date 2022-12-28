@@ -81,6 +81,6 @@ Expr& Expr::isNotNull() {
 }
 
 Expr& Expr::ilike(string s) {
-    expression = "(" + expression + " ILIKE " + s + ")";
+    expression = "(" + expression + " ILIKE '" + s + "')";
     return *this;
 }

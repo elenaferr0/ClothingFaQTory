@@ -87,6 +87,8 @@ namespace Core::Containers {
         public:
             Map() : root(TNULL), size(0) {};
 
+            Map(initializer_list<pair<const K, V>> list);
+
             Map(const Map<K, V>& map) : root(inOrderCopy(map.root)), size(map.size) {};
 
             ~Map();
@@ -147,6 +149,13 @@ namespace Core::Containers {
 
             LinkedList<V> values() const;
     };
+
+    template<class K, class V>
+    Map<K, V>::Map(initializer_list<pair<const K, V>> list) : root(TNULL), size(0) {
+        for (auto in = list.begin(); in != list.end(); in++) {
+            put((*in).first, (*in).second);
+        }
+    }
 
     template<class K, class V>
     void Map<K, V>::keysHelper(Map::Node* node, LinkedList<K>& keys) const {

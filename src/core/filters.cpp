@@ -14,14 +14,18 @@ Core::Filters::Filters(const LinkedList<QString>& productTypes, const QString& c
           orderByField(orderByField) {
 }
 
-string Core::Filters::createQuery() {
-    code = "%" + code + "%";
+const LinkedList<QString>& Core::Filters::getProductTypes() const {
+    return productTypes;
+}
 
-    return queryBuilder.select("*")
-            .from("product")
-            .join(QueryBuilder::RIGHT, "{table}", Expr("{table}.id").equals({"product.id"}))
-            .where(Expr("code").ilike(code.toStdString()))
-            .orderBy(orderByField.first.toStdString(), orderByField.second)
-            .build();
+const QString& Core::Filters::getCode() const {
+    return code;
+}
 
+const QPair<double, double>& Core::Filters::getPriceRange() const {
+    return priceRange;
+}
+
+const QPair<QString, QueryBuilder::Order>& Core::Filters::getOrderByField() const {
+    return orderByField;
 }

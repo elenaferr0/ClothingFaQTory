@@ -32,6 +32,8 @@ namespace Models {
 
             static string productTypeToString(Product::ProductType);
 
+            static ProductType productTypeFromString(const string&);
+
             Product(int id = -1,
                     const string& code = "",
                     const string& color = "",

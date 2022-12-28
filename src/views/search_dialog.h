@@ -11,7 +11,7 @@
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QDoubleValidator>
-#include "../core/filters/filters.h"
+#include "../core/filters.h"
 
 using Core::Filters;
 namespace Views {

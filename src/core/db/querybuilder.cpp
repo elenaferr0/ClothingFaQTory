@@ -109,10 +109,6 @@ QueryBuilder& QueryBuilder::from(string from, string alias) {
         return *this;
     }
 
-    if (alias == "") {
-        alias = from;
-    }
-
     query += "FROM " + from + " " + alias + " ";
     return *this;
 }
