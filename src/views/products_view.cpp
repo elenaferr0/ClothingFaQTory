@@ -6,7 +6,6 @@
 #include "components/product_icon_button.h"
 #include <algorithm>
 #include <QPainter>
-#include <algorithm>
 #include <QMessageBox>
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -14,11 +13,14 @@
 #include <QFileDialog>
 #include "../services/file_export/json_exportable_decorator.h"
 
+using Views::SearchDialog;
+
 using std::for_each;
 using std::transform;
 using std::inserter;
 using std::pair;
 using Views::ProductsView;
+using Views::SearchDialog;
 using Views::Wizard::ProductWizardView;
 using Controllers::WizardController;
 using Controllers::MainController;
@@ -68,7 +70,7 @@ void ProductsView::init(const ProductsMap& productsByType) {
     searchButton->setIcon(QIcon(":/assets/icons/search.png"));
     searchButton->setText(tr("&Search"));
     searchButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-//    connect(searchButton, SIGNAL(clicked(bool)), this, SLOT(showNewProduct::ProductTypeChooserWindow(bool)));
+    connect(searchButton, SIGNAL(clicked(bool)), this, SLOT(handleSearchButtonClicked(bool)));
     toolBar->addWidget(searchButton);
 
     QToolButton* exportButton = new QToolButton;
@@ -264,7 +266,6 @@ void Views::ProductsView::handleProductEditing(Product*, Product::ProductType) {
 
 void Views::ProductsView::handleExportJsonButtonClicked(bool) {
     // Save to file
-//    QString path = QFileDialog::getExistingDirectory(nullptr, "Save File", QDir::homePath());
     QDateTime currentTime = QDateTime::currentDateTime();
     QString defaultFileName = "/clothing_faqtory_export_" + currentTime.toString(Qt::DateFormat::ISODate) + ".json";
 
@@ -306,4 +307,9 @@ void Views::ProductsView::handleExportJsonButtonClicked(bool) {
         resultBox->show();
     }
 
+}
+
+void Views::ProductsView::handleSearchButtonClicked(bool) {
+    searchDialog = new SearchDialog(this);
+    searchDialog->show();
 }

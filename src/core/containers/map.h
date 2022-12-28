@@ -596,8 +596,8 @@ namespace Core::Containers {
         if (this != &map) {
             destroy(root);
             root = inOrderCopy(map.root);
+            size = map.size;
         }
-        size = map.size;
         return *this;
     }
 

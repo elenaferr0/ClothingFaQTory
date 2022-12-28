@@ -7,7 +7,7 @@ using Views::Wizard::ChooseProductTypeWizardPage;
 
 ChooseProductTypeWizardPage::ChooseProductTypeWizardPage(QWidget* parent)
         : QWizardPage(parent), comboBox(new QComboBox) {
-    setTitle("Which type of product would you like to insert?");
+    setTitle("Which type of product would you ilike to insert?");
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setAlignment(Qt::AlignCenter);

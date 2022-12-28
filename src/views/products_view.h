@@ -1,12 +1,13 @@
 #ifndef PRODUCT_VIEW_H
 #define PRODUCT_VIEW_H
 
-#include "observer_widget_view.h"
+#include "widget_view_parent.h"
 #include "../models/product.h"
 #include "../core/containers/map.h"
 #include "../core/errors/error.h"
 #include "wizard/product_wizard_view.h"
 #include "view.h"
+#include "search_view.h"
 #include "main_view.h"
 #include <QToolBar>
 #include <QTreeWidgetItem>
@@ -18,6 +19,8 @@ using Core::Error;
 
 namespace Views {
     class MainView;
+
+    class SearchDialog;
 
     class ProductsView : public WidgetViewParent {
         Q_OBJECT
@@ -44,6 +47,8 @@ namespace Views {
 
             QList<QString> materials;
             QList<QString> sizes;
+            SearchDialog* searchDialog;
+
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
 
@@ -66,6 +71,8 @@ namespace Views {
             void clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType);
 
             void handleExportJsonButtonClicked(bool);
+
+            void handleSearchButtonClicked(bool);
 
     };
 

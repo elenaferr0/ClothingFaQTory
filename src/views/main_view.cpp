@@ -57,10 +57,6 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     setWindowIcon(clothingIcon);
 }
 
-ProductsView* MainView::getProductsView() const {
-    return productsView;
-}
-
 void MainView::handleDatabaseError(Error* e) {
 
     QMessageBox* errorBox = new QMessageBox;

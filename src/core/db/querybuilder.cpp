@@ -32,7 +32,7 @@ QueryBuilder& QueryBuilder::select(const Map<string, string>& fields) {
 
         query += (*f).first;
         // create automatically the alias if the second parameter is not present
-        query += " " + (*f).second == "" ? to_string((*f).first[0]) : (*f).second;
+        query += " " + (*f).second == "" ? (*f).first : (*f).second;
         query += ", ";
     }
 
@@ -47,7 +47,7 @@ QueryBuilder& QueryBuilder::addSelect(string field, string alias) {
     }
 
     if (alias == "") {
-        alias = field[0];
+        alias = field;
     }
 
     query += ", " + field + " " + alias + " ";
@@ -110,7 +110,7 @@ QueryBuilder& QueryBuilder::from(string from, string alias) {
     }
 
     if (alias == "") {
-        alias = from[0];
+        alias = from;
     }
 
     query += "FROM " + from + " " + alias + " ";
@@ -120,7 +120,7 @@ QueryBuilder& QueryBuilder::from(string from, string alias) {
 
 QueryBuilder& QueryBuilder::join(Join type, string table, const Expr& x) {
     if (table != "") {
-        query += toString(type) + " JOIN " + table + " " + table[0] + " ON " + x + " ";
+        query += toString(type) + " JOIN " + table + " ON " + x + " ";
     }
     return *this;
 }
