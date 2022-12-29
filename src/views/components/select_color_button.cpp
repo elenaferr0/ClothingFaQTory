@@ -33,7 +33,6 @@ void SelectColorButton::updateColor() {
 void SelectColorButton::setColor(const QColor& color) {
     this->color = color;
     updateBackground();
-    emit colorChanged(color.name());
 }
 
 const QColor& SelectColorButton::getColor() const {
