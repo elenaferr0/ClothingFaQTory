@@ -10,6 +10,7 @@
 #include "filter_dialog.h"
 #include "main_view.h"
 #include "components/empty_state.h"
+#include "info_dialog_visitor.h"
 #include <QToolBar>
 #include <QTreeWidgetItem>
 #include <QTreeWidget>
@@ -40,10 +41,6 @@ namespace Views {
             QTreeWidgetItem* getHeaders() const;
 
             void initTreeView(const ProductsMap& productsByType);
-
-            QIcon drawColorIcon(const string& hex);
-
-            static const int COLOR_ICON_SIZE = 20;
 
             void buildAndInsertChild(QTreeWidgetItem*, Product*, Product::ProductType);
 
@@ -76,6 +73,8 @@ namespace Views {
             void clickedEditButton(Product*, QTreeWidgetItem* row, Product::ProductType);
 
             void clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType);
+
+            void clickedInfoButton(Product*, QTreeWidgetItem* row, Product::ProductType);
 
             void handleExportJsonButtonClicked();
 

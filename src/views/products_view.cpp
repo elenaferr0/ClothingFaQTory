@@ -13,6 +13,8 @@
 #include <QFileDialog>
 #include "../services/file_export/json_exportable_decorator.h"
 #include "filter_dialog.h"
+#include "components/color_icon.h"
+#include "info_dialog.h"
 
 using Views::FilterDialog;
 
@@ -27,7 +29,7 @@ using Controllers::WizardController;
 using Controllers::MainController;
 using Services::FileExport::JSONExportableDecorator;
 
-const int ProductsView::COLUMN_COUNT = 9;
+const int ProductsView::COLUMN_COUNT = 10;
 
 ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
                                                                   priceRangeFilter(0, Views::FilterDialog::MAX_PRICE) {
@@ -55,13 +57,10 @@ void ProductsView::init(const ProductsMap& productsByType) {
     exportButton = new QToolButton;
     initTreeView(productsByType);
 
-    vector<int> colWidths = {170, 100, 300, 100, 110, 110, 150};
-    for (int i = 0; i < COLUMN_COUNT - 2; ++i) {
+    vector<int> colWidths = {170, 100, 300, 100, 110, 110, 150, 50, 50, 50};
+    for (int i = 0; i < COLUMN_COUNT; ++i) {
         treeWidget->setColumnWidth(i, colWidths.at(i));
     }
-    treeWidget->setColumnWidth(COLUMN_COUNT - 2, 50);
-    treeWidget->setColumnWidth(COLUMN_COUNT - 1, 50);
-
 
     layout->setAlignment(Qt::AlignTop);
 
@@ -138,7 +137,8 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
                                                                  << "Sold qt."
                                                                  << "Calculated price"
                                                                  << "Edit"
-                                                                 << "Delete");
+                                                                 << "Delete"
+                                                                 << "Info");
     QFont font = QFont();
     font.setBold(true);
 
@@ -213,20 +213,32 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
     QTreeWidgetItem* row = new QTreeWidgetItem(values);
     topLevelItemWidget->addChild(row);
 
-    ProductIconButton* editButton = new ProductIconButton(":/assets/icons/edit.png", "editButton", product,
-                                                          row, productType, this);
-    treeWidget->setItemWidget(row, COLUMN_COUNT - 2, editButton);
+    ProductIconButton* editButton = new ProductIconButton(product, row, productType, this);
+    editButton->setIcon(QIcon(":/assets/icons/edit.png"));
+    editButton->setObjectName("editButton");
+
+    treeWidget->setItemWidget(row, COLUMN_COUNT - 3, editButton);
     connect(editButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
             SLOT(clickedEditButton(Product * , QTreeWidgetItem * , Product::ProductType)));
 
-    ProductIconButton* deleteButton = new ProductIconButton(":/assets/icons/delete.png", "deleteButton", product,
-                                                            row, productType, this);
+    ProductIconButton* deleteButton = new ProductIconButton(product, row, productType, this);
 
-    treeWidget->setItemWidget(row, COLUMN_COUNT - 1, deleteButton);
+    deleteButton->setIcon(QIcon(":/assets/icons/delete.png"));
+    deleteButton->setObjectName("deleteButton");
+
+    treeWidget->setItemWidget(row, COLUMN_COUNT - 2, deleteButton);
     connect(deleteButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
             SLOT(clickedDeleteButton(Product * , QTreeWidgetItem * , Product::ProductType)));
 
-    row->setIcon(1, drawColorIcon(product->getColor()));
+    ProductIconButton* infoButton = new ProductIconButton(product, row, productType, this);
+    infoButton->setIcon(QIcon(":/assets/icons/info.png"));
+    infoButton->setObjectName("infoButton");
+    treeWidget->setItemWidget(row, COLUMN_COUNT - 1, infoButton);
+
+    connect(infoButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedInfoButton(Product * , QTreeWidgetItem * , Product::ProductType)));
+
+    row->setIcon(1, ColorIcon(product->getColor())); // icon representing the product's color
 }
 
 QStringList ProductsView::getColumnsFromProduct(const Product* product) const {
@@ -256,20 +268,6 @@ void Views::ProductsView::rebuildTreeView() {
     treeWidget->clear();
     priceRangeFilter = QPair(0, Views::FilterDialog::MAX_PRICE);
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType());
-}
-
-QIcon Views::ProductsView::drawColorIcon(const string& hex) {
-    const QColor color(QString::fromStdString(hex));
-    QPixmap pixmap(COLOR_ICON_SIZE, COLOR_ICON_SIZE);
-    pixmap.fill(color);
-    QPainter painter(&pixmap);
-    QPen pen;
-    pen.setWidth(3);
-    pen.setColor(Qt::black);
-    painter.setPen(pen);
-    painter.drawRect(0, 0, COLOR_ICON_SIZE, COLOR_ICON_SIZE);
-    QIcon icon(pixmap);
-    return icon;
 }
 
 void Views::ProductsView::handleProductCreation(Product* product, Product::ProductType type) {
@@ -374,4 +372,9 @@ void Views::ProductsView::handleFilterDialogCompleted(Filters filters) {
 void Views::ProductsView::handleClearFilterButtonClicked() {
     clearFiltersButton->setVisible(false);
     rebuildTreeView();
+}
+
+void Views::ProductsView::clickedInfoButton(Product* product, QTreeWidgetItem*, Product::ProductType) {
+    InfoDialog* infoDialog = new InfoDialog(product);
+    infoDialog->show();
 }

@@ -32,6 +32,7 @@
         <file>assets/icons/export_json.png</file>
         <file>assets/icons/clear_filters.png</file>
         <file>assets/empty_state.svg</file>
+        <file>assets/icons/info.png</file>
         <file>fonts/inter.ttf</file>
     </qresource>
 </RCC>
