@@ -43,9 +43,7 @@ Either<Error, Material*> Services::MaterialRepository::findByName(const Material
 
 Either<Error, Material*> MaterialRepository::saveCostPerUnit(Material* entity) {
 
-    QVariantList params;
-    params << entity->getCostPerUnit()
-           << entity->getId();
+    LinkedList<QVariant> params = {entity->getCostPerUnit(), entity->getId()};
 
     string sql = queryBuilder.update(table)
             .set("cost_per_unit")
