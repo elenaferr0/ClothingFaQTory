@@ -5,7 +5,7 @@
 
 EmptyState::EmptyState(QWidget* parent) : QWidget(parent) {
     QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->setMargin(30);
+    layout->setContentsMargins(30, 30, 30, 30);
     layout->setSpacing(30);
 
     QLabel* image = new QLabel;

@@ -6,7 +6,7 @@
 #include <QObject>
 #include "db/querybuilder.h"
 #include "../models/product.h"
-
+#include <climits>
 using Models::Product;
 using Core::Db::QueryBuilder;
 
