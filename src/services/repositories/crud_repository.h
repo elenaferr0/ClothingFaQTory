@@ -22,8 +22,6 @@ using Models::FieldsGetterVisitor;
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
-        private:
-            FieldsGetterVisitor fieldsGetterVisitor;
         public:
             CRUDRepository(const string& table,
                            function<Either<Error, T*>(const QSqlQuery&)> mappingFunction)
@@ -45,6 +43,7 @@ namespace Services {
     Either<Error, T*> CRUDRepository<T>::save(T* entity) {
         string sql;
         QSqlQuery query;
+        FieldsGetterVisitor fieldsGetterVisitor;
         entity->accept(fieldsGetterVisitor);
         Map<string, QVariant> fields = fieldsGetterVisitor.getFields();
         LinkedList<string> keys = fields.keys();
