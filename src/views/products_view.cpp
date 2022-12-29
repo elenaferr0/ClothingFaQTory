@@ -58,7 +58,7 @@ void ProductsView::init(const ProductsMap& productsByType) {
     exportButton = new QToolButton;
     initTreeView(productsByType);
 
-    vector<int> colWidths = {170, 100, 300, 100, 110, 110, 150, 50, 50, 50};
+    vector<int> colWidths = {170, 100, 300, 100, 110, 110, 150, 50, 70, 50};
     for (int i = 0; i < COLUMN_COUNT; ++i) {
         treeWidget->setColumnWidth(i, colWidths.at(i));
     }
