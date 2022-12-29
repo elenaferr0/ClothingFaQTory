@@ -210,8 +210,15 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
                                        Product* product, Product::ProductType productType) {
+    treeWidget->setVisible(true);
+    emptyState->setVisible(false);
     QStringList values = getColumnsFromProduct(product);
     QTreeWidgetItem* row = new QTreeWidgetItem(values);
+
+    if (topLevelItemWidget->childCount() == 0) {
+        QTreeWidgetItem* headers = getHeaders();
+        topLevelItemWidget->addChild(headers);
+    }
     topLevelItemWidget->addChild(row);
 
     ProductIconButton* editButton = new ProductIconButton(product, row, productType, this);
@@ -307,6 +314,9 @@ Views::ProductsView::clickedDeleteButton(Product* product, QTreeWidgetItem* row,
     if (result == QMessageBox::Yes) {
         dynamic_cast<MainController*>(controller)->deleteProductById(product->getId());
         treeWidget->topLevelItem(productType)->removeChild(row);
+        if (treeWidget->topLevelItem(productType)->childCount() == 1) { // has only the header
+            treeWidget->topLevelItem(productType)->removeChild(treeWidget->topLevelItem(productType)->child(0));
+        }
     }
 }
 

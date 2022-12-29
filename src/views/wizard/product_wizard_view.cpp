@@ -92,6 +92,7 @@ void ProductWizardView::done(int result) {
         emit completed(product,
                        static_cast<Product::ProductType>(field("productType").toInt()));
     }
+    delete product;
     QWizard::done(result);
 }
 
