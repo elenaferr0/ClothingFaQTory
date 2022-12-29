@@ -80,7 +80,7 @@ Expr& Expr::isNotNull() {
     return *this;
 }
 
-Expr& Expr::like(string s) {
-    expression = "(" + expression + " LIKE " + s + ")";
+Expr& Expr::ilike(string s) {
+    expression = "(" + expression + " ILIKE '" + s + "')";
     return *this;
 }

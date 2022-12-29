@@ -22,9 +22,7 @@ class ProductIconButton : public QPushButton {
         Product::ProductType productType;
 
     public:
-        ProductIconButton(const QString& path,
-                          const QString& objName,
-                          Product* product,
+        ProductIconButton(Product* product,
                           QTreeWidgetItem* row,
                           Product::ProductType,
                           QWidget* parent);

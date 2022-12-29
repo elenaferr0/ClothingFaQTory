@@ -13,6 +13,7 @@
 #include "../../core/db/querybuilder.h"
 #include "../../core/errors/either.h"
 #include "../../core/errors/error.h"
+#include "../../core/filters.h"
 #include "../../core/containers/linked_list.h"
 #include "../entity_mapper.h"
 #include "delete_only_repository.h"
@@ -24,6 +25,7 @@ using std::string;
 using std::to_string;
 using Core::Db::QueryBuilder;
 using Core::Either;
+using Core::Filters;
 using Core::Error;
 using std::function;
 using Services::EntityMapper;
@@ -50,7 +52,34 @@ namespace Services {
 
             virtual Either<Error, LinkedList<T*>> findAll();
 
+            virtual Either<Error, LinkedList<T*>> findAllWithFilters(Filters filters);
+
+            Either<Error, LinkedList<T*>> findEntities(const string& sql) const;
     };
+
+    template<class T>
+    Either<Error, LinkedList<T*>> ReadOnlyRepository<T>::findAllWithFilters(Filters filters) {
+        QString correspondingProductType = QString::fromStdString(table).at(0).toUpper() +
+                                           QString::fromStdString(table.substr(1));
+        if (filters.getProductTypes().getSize() != 0 && !filters.getProductTypes().contains(correspondingProductType)) {
+            return LinkedList<T*>();
+        }
+
+        auto tempQueryBuilder = queryBuilder
+                .select("*")
+                .from("ONLY " + table);
+
+        if (filters.getCode() != "") {
+            tempQueryBuilder = tempQueryBuilder.where(Expr("code").ilike("%" + filters.getCode().toStdString() + "%"));
+        }
+
+        if (filters.getOrderByField().first != "") {
+            tempQueryBuilder = tempQueryBuilder.orderBy(filters.getOrderByField().first.toStdString(),
+                                                        filters.getOrderByField().second);
+        }
+
+        return findEntities(tempQueryBuilder.build());
+    }
 
     template<class T>
     Either<Error, LinkedList<T*>> ReadOnlyRepository<T>::findAll() {
@@ -58,13 +87,18 @@ namespace Services {
                 .from(Repository::table)
                 .orderBy("id", QueryBuilder::Order::ASC)
                 .build();
-        QSqlQuery query = Repository::exec(sql);
+        return findEntities(sql);
+    }
+
+    template<class T>
+    Either<Error, LinkedList<T*>> ReadOnlyRepository<T>::findEntities(const string& sql) const {
+        QSqlQuery query = exec(sql);
         LinkedList<T*> entities;
         while (query.next()) {
-            Either<Error, T*> errorOrEntity = mappingFunction(query);
+            Core::Either<Error, T*> errorOrEntity = mappingFunction(query);
             if (errorOrEntity.isLeft()) {
                 qCritical() << QString::fromStdString(errorOrEntity.forceLeft().getCause());
-                errorOrEntity.forceLeft().setUserMessage("Error while fetching " + Repository::table);
+                errorOrEntity.forceLeft().setUserMessage("Error while fetching " + table);
                 return errorOrEntity.forceLeft();
             }
             entities.pushBack(errorOrEntity.forceRight());

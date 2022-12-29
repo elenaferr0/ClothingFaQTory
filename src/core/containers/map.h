@@ -87,6 +87,8 @@ namespace Core::Containers {
         public:
             Map() : root(TNULL), size(0) {};
 
+            Map(initializer_list<pair<const K, V>> list);
+
             Map(const Map<K, V>& map) : root(inOrderCopy(map.root)), size(map.size) {};
 
             ~Map();
@@ -149,23 +151,30 @@ namespace Core::Containers {
     };
 
     template<class K, class V>
+    Map<K, V>::Map(initializer_list<pair<const K, V>> list) : root(TNULL), size(0) {
+        for (auto in = list.begin(); in != list.end(); in++) {
+            put((*in).first, (*in).second);
+        }
+    }
+
+    template<class K, class V>
     void Map<K, V>::keysHelper(Map::Node* node, LinkedList<K>& keys) const {
-        if (node->left) {
+        if (node->left != TNULL) {
             keysHelper(node->left, keys);
         }
         keys.pushBack(node->key);
-        if (node->right) {
+        if (node->right != TNULL) {
             keysHelper(node->right, keys);
         }
     }
 
     template<class K, class V>
     void Map<K, V>::valuesHelper(Map::Node* node, LinkedList<V>& values) const {
-        if (node->left) {
+        if (node->left != TNULL) {
             valuesHelper(node->left, values);
         }
         values.pushBack(node->value);
-        if (node->right) {
+        if (node->right != TNULL) {
             valuesHelper(node->right, values);
         }
     }
@@ -196,7 +205,7 @@ namespace Core::Containers {
 
     template<class K, class V>
     void Map<K, V>::destroy(Node* node) {  // Must always be called from the root
-        if (node == TNULL) {
+        if (node == TNULL || !node) {
             return;
         }
 
@@ -382,7 +391,7 @@ namespace Core::Containers {
     }
 
     template<class K, class V>
-    // fix the insertion (balance the red-black colors)
+// fix the insertion (balance the red-black colors)
     void Map<K, V>::fixPut(Node* k) {
         Node* u;
         while (k->parent->color == Node::RED) {
@@ -596,8 +605,8 @@ namespace Core::Containers {
         if (this != &map) {
             destroy(root);
             root = inOrderCopy(map.root);
+            size = map.size;
         }
-        size = map.size;
         return *this;
     }
 
@@ -694,6 +703,7 @@ namespace Core::Containers {
 
         return copy;
     }
+
 }
 
 #endif // MAP_H

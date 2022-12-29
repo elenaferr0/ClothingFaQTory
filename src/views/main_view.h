@@ -17,9 +17,12 @@ namespace Views {
     class ProductsView;
 
     class MaterialsView;
+
+    class FilterDialog;
 }
 using Views::ProductsView;
 using Views::MaterialsView;
+using Views::FilterDialog;
 
 
 namespace Views {
@@ -29,8 +32,6 @@ namespace Views {
 
         public:
             MainView(QWidget* parent = nullptr);
-
-            ProductsView* getProductsView() const;
 
         private:
             ProductsView* productsView;

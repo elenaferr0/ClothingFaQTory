@@ -33,6 +33,7 @@ namespace Models {
     class FieldsGetterVisitor : public VisitorInterface {
         private:
             Map <string, QVariant> fields;
+            bool useNameForForeignKeys;
 
             void visitProduct(const Product& product);
 
@@ -45,7 +46,7 @@ namespace Models {
             void jeansFields(const Jeans&);
 
         public:
-            FieldsGetterVisitor() = default;
+            FieldsGetterVisitor(bool useNameForForeignKeys = false);
 
             const Map <string, QVariant>& getFields() const;
 
@@ -64,6 +65,8 @@ namespace Models {
             void visitMaterial(Material& material) override;
 
             void visitSize(Size& size) override;
+
+            void clear();
     };
 
 }

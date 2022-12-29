@@ -33,6 +33,7 @@ class GenericProductInfoWizardPage : public QWizardPage {
         QComboBox* sizeBox;
         QComboBox* materialBox;
         ProductWizardView* parentWizard;
+        QLineEdit* mockColorLineEdit;
 
         void registerProductTypeField(Product::ProductType productType);
 

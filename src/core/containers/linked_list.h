@@ -39,6 +39,10 @@ namespace Core::Containers {
             friend ostream& operator
             <<<>(ostream&, const LinkedList<T>&);
 
+            Node* getLastElement() const;
+
+            void quickSortHelper(Node*, Node*);
+
         public:
 
             LinkedList() : head(nullptr), size(0) {};
@@ -70,6 +74,10 @@ namespace Core::Containers {
             bool isEmpty() const;
 
             int getSize() const;
+
+            LinkedList<T> findCommonElements(const LinkedList<T>&) const;
+
+            bool contains(T value) const;
 
             class ConstIterator {
                     friend class LinkedList<T>;
@@ -104,7 +112,78 @@ namespace Core::Containers {
 
             void popElement(T&);
 
+            void sort();
+
     };
+
+    template<class T>
+    void LinkedList<T>::quickSortHelper(LinkedList::Node* first, LinkedList::Node* last) {
+        if (first == nullptr || first == last) {
+            return;
+        }
+        Node* pivot = first;
+        Node* current = first->next;
+        Node* tail = first;
+        while (current != last) {
+            if (current->value < pivot->value) {
+                tail = tail->next;
+                std::swap(current->value, tail->value);
+            }
+            current = current->next;
+        }
+        std::swap(pivot->value, tail->value);
+        quicksort(first, tail);
+        quicksort(tail->next, last);
+    }
+
+    template<class T>
+    typename LinkedList<T>::Node* LinkedList<T>::getLastElement() const {
+        if (head == nullptr) {
+            return nullptr;
+        }
+        Node* current = head;
+        while (current->next != nullptr) {
+            current = current->next;
+        }
+        return current;
+    }
+
+    template<class T>
+    void LinkedList<T>::sort() {
+        quickSortHelper(head, getLastElement());
+    }
+
+    template<class T>
+    bool LinkedList<T>::contains(T value) const {
+        Node* current = head;
+        while (current != nullptr) {
+            if (current->value == value) {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
+    }
+
+    template<class T>
+    LinkedList<T> LinkedList<T>::findCommonElements(const LinkedList<T>& other) const {
+        LinkedList<T> common;
+        Node* currentListIndex = head;
+        Node* otherListIndex = other.head;
+
+        while (currentListIndex != nullptr && otherListIndex != nullptr) {
+            if (currentListIndex->value == otherListIndex->value) {
+                common.pushBack(currentListIndex->value);
+                currentListIndex = currentListIndex->next;
+                otherListIndex = otherListIndex->next;
+            } else if (currentListIndex->value < otherListIndex->value) {
+                currentListIndex = currentListIndex->next;
+            } else {
+                otherListIndex = otherListIndex->next;
+            }
+        }
+        return common;
+    }
 
     template<class T>
     void LinkedList<T>::popElement(LinkedList::ConstIterator& it) {
@@ -133,7 +212,7 @@ namespace Core::Containers {
     template<class T>
     void LinkedList<T>::popElement(T& element) {
         // Check if the element is at the head of the list
-        if (head != nullptr && head->data == element) {
+        if (head != nullptr && head->value == element) {
             Node* temp = head;
             head = head->next;
             delete temp;
@@ -145,7 +224,7 @@ namespace Core::Containers {
         Node* prev = head;
         Node* curr = head->next;
         while (curr != nullptr) {
-            if (curr->data == element) {
+            if (curr->value == element) {
                 // Remove the element from the list
                 prev->next = curr->next;
                 delete curr;
@@ -163,7 +242,7 @@ namespace Core::Containers {
     }
 
     template<class T>
-    LinkedList<T>::LinkedList(std::initializer_list<T> init) : head(nullptr), size(init.size()) {
+    LinkedList<T>::LinkedList(std::initializer_list<T> init) : head(nullptr), size(0) {
         for (auto it = init.begin(); it != init.end(); it++) {
             pushBack(*it);
         }
@@ -204,14 +283,14 @@ namespace Core::Containers {
         // Add the elements from this linked list to the result
         Node* p = head;
         while (p != nullptr) {
-            result.insert(p->data);
+            result.insert(p->value);
             p = p->next;
         }
 
         // Add the elements from the other linked list to the result
         p = other.head;
         while (p != nullptr) {
-            result.insert(p->data);
+            result.insert(p->value);
             p = p->next;
         }
 
@@ -258,7 +337,7 @@ namespace Core::Containers {
         if (p == nullptr) {
             return nullptr;
         }
-        Node * result = new Node(p->value);
+        Node* result = new Node(p->value);
         result->next = copy(p->next);
         return result;
     }

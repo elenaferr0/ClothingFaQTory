@@ -4,7 +4,7 @@
 
 #include <QGridLayout>
 
-#include "observer_widget_view.h"
+#include "widget_view_parent.h"
 #include "../controllers/main_controller.h"
 #include "main_view.h"
 #include "../models/material.h"

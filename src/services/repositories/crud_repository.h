@@ -22,8 +22,6 @@ using Models::FieldsGetterVisitor;
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
-        private:
-            static FieldsGetterVisitor fieldsGetterVisitor;
         public:
             CRUDRepository(const string& table,
                            function<Either<Error, T*>(const QSqlQuery&)> mappingFunction)
@@ -42,30 +40,32 @@ namespace Services {
     };
 
     template<class T>
-    FieldsGetterVisitor CRUDRepository<T>::fieldsGetterVisitor;
-
-    template<class T>
     Either<Error, T*> CRUDRepository<T>::save(T* entity) {
         string sql;
         QSqlQuery query;
+        FieldsGetterVisitor fieldsGetterVisitor;
         entity->accept(fieldsGetterVisitor);
         Map<string, QVariant> fields = fieldsGetterVisitor.getFields();
+        LinkedList<string> keys = fields.keys();
+        LinkedList<QVariant> values = fields.values();
 
         if (entity->getId() == -1) { // does not exist
             sql = CRUDRepository<T>::queryBuilder
-                    .insertInto(CRUDRepository<T>::table, fields.keys()).build();
+                    .insertInto(CRUDRepository<T>::table, keys).build();
 
-            query = CRUDRepository<T>::exec(sql, fields.values());
+            query = CRUDRepository<T>::exec(sql, values);
             query.next();
             entity->setId(query.lastInsertId().toInt());
-        } else {
-            // exists => should update all the fieldNames
+        } else {// exists => should update all the fieldNames
+
             sql = CRUDRepository<T>::queryBuilder.update(CRUDRepository<T>::table)
-                    .set(fields.keys())
+                    .set(keys)
                     .where(Expr("id").equals({"?"}))
                     .build();
-            fields.put("id", entity->getId());
-            query = CRUDRepository<T>::exec(sql, fields.values());
+            keys.pushBack("id");
+            values.pushBack(entity->getId());
+
+            query = CRUDRepository<T>::exec(sql, values);
             query.next();
         }
 
@@ -116,7 +116,7 @@ namespace Services {
     template<class T>
     Either<Error, LinkedList<T*>> CRUDRepository<T>::findAll() {
         string sql = Repository::queryBuilder.select()
-                .from(Repository::table)
+                .from("ONLY " + Repository::table)
                 .build();
         QSqlQuery query = Repository::exec(sql);
         LinkedList<T*> entities;

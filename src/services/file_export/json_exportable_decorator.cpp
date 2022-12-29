@@ -6,10 +6,8 @@
 using Models::Model;
 using Services::FileExport::JSONExportableDecorator;
 
-FieldsGetterVisitor JSONExportableDecorator::fieldsGetterVisitor;
-
 JSONExportableDecorator::JSONExportableDecorator(Model& model)
-        : ExportableDecoratorInterface(model) {
+        : ExportableDecoratorInterface(model), fieldsGetterVisitor(FieldsGetterVisitor(true)) {
     model.accept(fieldsGetterVisitor);
     Map<string, QVariant> fields = fieldsGetterVisitor.getFields();
 

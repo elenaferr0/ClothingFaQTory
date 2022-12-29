@@ -48,7 +48,7 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     tabWidget->setTabIcon(0, clothingIcon);
 
     tabWidget->addTab(materialsView, "Materials Cost");
-    QIcon materialsIcon(":/assets/icons/materials_cost.png");
+    QIcon materialsIcon(":/assets/icons/money.png");
     tabWidget->setTabIcon(1, materialsIcon);
 
     tabWidget->setIconSize(QSize(35, 35));
@@ -57,20 +57,15 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     setWindowIcon(clothingIcon);
 }
 
-ProductsView* MainView::getProductsView() const {
-    return productsView;
-}
-
 void MainView::handleDatabaseError(Error* e) {
 
     QMessageBox* errorBox = new QMessageBox;
     errorBox->setWindowTitle(QString::fromStdString(e->getType()));
     errorBox->setText(QString::fromStdString(e->getUserMessage()));
-    errorBox->setStandardButtons(QMessageBox::Retry | QMessageBox::Abort);
-    errorBox->setDefaultButton(QMessageBox::Retry);
-    errorBox->setAttribute(Qt::WA_DeleteOnClose);
+    errorBox->setStandardButtons(QMessageBox::Abort);
+    errorBox->setIcon(QMessageBox::Critical);
+    errorBox->setDefaultButton(QMessageBox::Abort);
     errorBox->resize(300, 200);
     errorBox->exec();
     qFatal("Aborting due to database error.");
-
 }

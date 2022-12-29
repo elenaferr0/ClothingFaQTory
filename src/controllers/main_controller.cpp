@@ -20,15 +20,15 @@ MainController::MainController(View* view)
           productRepository(DeleteOnlyRepository::getInstance("product")) {
 };
 
-MainController::ProductsMap MainController::findAllProductsByType() {
+MainController::ProductsMap MainController::findAllProductsByType(Filters* filters) {
     ProductsMap map = ProductsMap();
 
-    findProductsOfType(Product::Hat, hatRepository, map);
-    findProductsOfType(Product::Bracelet, braceletRepository, map);
-    findProductsOfType(Product::BackPack, backPackRepository, map);
-    findProductsOfType(Product::Vest, vestRepository, map);
-    findProductsOfType(Product::Jeans, jeansRepository, map);
-    findProductsOfType(Product::Overalls, overallsRepository, map);
+    findAllProductsByTypeHelper(Product::Hat, hatRepository, map, filters);
+    findAllProductsByTypeHelper(Product::Bracelet, braceletRepository, map, filters);
+    findAllProductsByTypeHelper(Product::BackPack, backPackRepository, map, filters);
+    findAllProductsByTypeHelper(Product::Vest, vestRepository, map, filters);
+    findAllProductsByTypeHelper(Product::Jeans, jeansRepository, map, filters);
+    findAllProductsByTypeHelper(Product::Overalls, overallsRepository, map, filters);
 
     return map;
 }
@@ -69,18 +69,25 @@ void Controllers::MainController::deleteProductById(int id) {
 }
 
 template<class T>
-void MainController::findProductsOfType(Product::ProductType productType,
-                                        CRUDRepository<T>* repository,
-                                        MainController::ProductsMap& map) {
+void MainController::findAllProductsByTypeHelper(Product::ProductType productType,
+                                                 CRUDRepository<T>* repository,
+                                                 MainController::ProductsMap& map,
+                                                 Filters* filters) {
 
-    Either<Error, LinkedList<T*>> entitiesOrError = repository->findAll();
+    Either<Error, LinkedList<T*>> entitiesOrError = LinkedList<T*>();
+
+    if (filters) {
+        entitiesOrError = repository->findAllWithFilters(*filters);
+    } else {
+        entitiesOrError = repository->findAll();
+    }
 
     entitiesOrError.template fold<void>(
             [&]() {
                 map.eraseAll();
                 emit databaseError(&entitiesOrError.forceLeft());
             },
-            [&, this]() {
+            [&]() {
                 LinkedList<T*> entities = entitiesOrError.forceRight();
                 LinkedList<Product*> products;
 
@@ -106,4 +113,3 @@ void Controllers::MainController::saveCostPerUnit(Material* material) {
         emit databaseError(&errorOrMaterial.forceLeft());
     }
 }
-

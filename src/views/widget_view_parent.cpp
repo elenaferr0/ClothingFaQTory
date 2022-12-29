@@ -1,6 +1,6 @@
 
 
-#include "observer_widget_view.h"
+#include "widget_view_parent.h"
 
 using Views::WidgetViewParent;
 

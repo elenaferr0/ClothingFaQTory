@@ -39,7 +39,7 @@ namespace Core::Db {
 
             Expr& isNotNull();
 
-            Expr& like(string);
+            Expr& ilike(string s);
     };
 }
 

@@ -54,9 +54,13 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
     }
 
     colorButton = new SelectColorButton(nullptr, "Choose color");
-    registerField("color", this, "color", SIGNAL(&SelectColorButton::colorChanged));
     colorButton->setAutoDefault(false);
     colorButton->setDefault(true);
+    // using mockColorLineEdit to register the color field
+    mockColorLineEdit = new QLineEdit;
+    mockColorLineEdit->setVisible(false);
+    registerField("color", mockColorLineEdit);
+
     connect(colorButton, SIGNAL(colorChanged(const QString &)), this, SLOT(handleColorChange(const QString &)));
     layout->addRow("Color", colorButton);
 
@@ -93,7 +97,9 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
         Product* product = parentWizard->getProduct();
         codeLineEdit->setText(QString::fromStdString(product->getCode()));
         codeLineEdit->setDisabled(true);
-        colorButton->setColor(QString::fromStdString(product->getColor()));
+        QString hex = QString::fromStdString(product->getColor());
+        mockColorLineEdit->setText(hex);
+        colorButton->setColor(hex);
         soldQuantitySpinBox->setValue(product->getSoldQuantity());
         availableQuantitySpinBox->setValue(product->getAvailableQuantity());
         descriptionTextEdit->setText(QString::fromStdString(product->getDescription()));
@@ -124,7 +130,7 @@ bool GenericProductInfoWizardPage::validatePage() {
 }
 
 void GenericProductInfoWizardPage::handleColorChange(const QString& hex) {
-    wizard()->setField("color", hex);
+    mockColorLineEdit->setText(hex);
 }
 
 void GenericProductInfoWizardPage::cleanupPage() {

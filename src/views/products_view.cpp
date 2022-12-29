@@ -6,33 +6,39 @@
 #include "components/product_icon_button.h"
 #include <algorithm>
 #include <QPainter>
-#include <algorithm>
 #include <QMessageBox>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QFileDialog>
 #include "../services/file_export/json_exportable_decorator.h"
+#include "filter_dialog.h"
+#include "components/color_icon.h"
+#include "info_dialog.h"
+
+using Views::FilterDialog;
 
 using std::for_each;
 using std::transform;
 using std::inserter;
 using std::pair;
 using Views::ProductsView;
+using Views::FilterDialog;
 using Views::Wizard::ProductWizardView;
 using Controllers::WizardController;
 using Controllers::MainController;
 using Services::FileExport::JSONExportableDecorator;
 
-int ProductsView::COLUMN_COUNT = 7;
+const int ProductsView::COLUMN_COUNT = 10;
 
-ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent) {
+ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
+                                                                  priceRangeFilter(0, Views::FilterDialog::MAX_PRICE),
+                                                                  mainView(mainView) {
     setController(new MainController(this));
     connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
 }
 
 void ProductsView::init(const ProductsMap& productsByType) {
-
     treeWidget = new QTreeWidget;
     treeWidget->setHeaderHidden(true);
     treeWidget->setAnimated(true);
@@ -41,46 +47,64 @@ void ProductsView::init(const ProductsMap& productsByType) {
     treeWidget->setColumnCount(COLUMN_COUNT);
     treeWidget->setSelectionMode(QAbstractItemView::NoSelection);
 
-    if (productsByType.getSize() > 0) {
-        initTreeView(productsByType);
-    }
-
-    for (int i = 0; i < COLUMN_COUNT - 2; ++i) {
-        treeWidget->setColumnWidth(i, 170);
-    }
-    treeWidget->setColumnWidth(COLUMN_COUNT - 2, 50);
-    treeWidget->setColumnWidth(COLUMN_COUNT - 1, 50);
-
     QVBoxLayout* layout = new QVBoxLayout(this);
+    toolBar = new QToolBar(this);
+    layout->addWidget(toolBar);
+
+    emptyState = new EmptyState;
+    layout->addWidget(emptyState);
+
+    filterButton = new QToolButton;
+    exportButton = new QToolButton;
+    initTreeView(productsByType);
+
+    vector<int> colWidths = {170, 100, 300, 100, 110, 110, 150, 50, 50, 50};
+    for (int i = 0; i < COLUMN_COUNT; ++i) {
+        treeWidget->setColumnWidth(i, colWidths.at(i));
+    }
+
     layout->setAlignment(Qt::AlignTop);
 
-    toolBar = new QToolBar(this);
     toolBar->setMovable(false);
 
     QToolButton* createButton = new QToolButton;
     createButton->setIcon(QIcon(":/assets/icons/add.png"));
     createButton->setText(tr("Create &New"));
     createButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    connect(createButton, SIGNAL(clicked(bool)), this, SLOT(showCreateProductWizard(bool)));
+    connect(createButton, SIGNAL(clicked()), this, SLOT(showCreateProductWizard()));
     toolBar->addWidget(createButton);
 
-    QToolButton* searchButton = new QToolButton;
-    searchButton->setIcon(QIcon(":/assets/icons/search.png"));
-    searchButton->setText(tr("&Search"));
-    searchButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-//    connect(searchButton, SIGNAL(clicked(bool)), this, SLOT(showNewProduct::ProductTypeChooserWindow(bool)));
-    toolBar->addWidget(searchButton);
+    filterButton->setIcon(QIcon(":/assets/icons/filter.png"));
+    filterButton->setText(tr("&Filter"));
+    filterButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
+    connect(filterButton, SIGNAL(clicked()), this, SLOT(handleFilterButtonClicked()));
+    toolBar->addWidget(filterButton);
 
-    QToolButton* exportButton = new QToolButton;
     exportButton->setIcon(QIcon(":/assets/icons/export_json.png"));
     exportButton->setText(tr("&Export to JSON"));
     exportButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    connect(exportButton, SIGNAL(clicked(bool)), this, SLOT(handleExportJsonButtonClicked(bool)));
+    connect(exportButton, SIGNAL(clicked()), this, SLOT(handleExportJsonButtonClicked()));
     toolBar->addWidget(exportButton);
+
+    // create a totally right aligned (invisible) button that clears all the filters
+    QWidget* rightAlignedWidget = new QWidget;
+    QHBoxLayout* rightAlignedLayout = new QHBoxLayout;
+    rightAlignedWidget->setLayout(rightAlignedLayout);
+
+    clearFiltersButton = new QToolButton;
+    clearFiltersButton->setIcon(QIcon(":/assets/icons/clear_filters.png"));
+    clearFiltersButton->setObjectName("clearFiltersButton");
+    clearFiltersButton->setText(tr("&Clear filters"));
+    clearFiltersButton->setVisible(false);
+    clearFiltersButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextBesideIcon);
+    connect(clearFiltersButton, SIGNAL(clicked()), this, SLOT(handleClearFilterButtonClicked()));
+
+    rightAlignedLayout->addStretch();
+    rightAlignedLayout->addWidget(clearFiltersButton);
+    toolBar->addWidget(rightAlignedWidget);
 
     toolBar->setIconSize(QSize(20, 20));
 
-    layout->addWidget(toolBar);
     layout->addWidget(treeWidget);
 
     // fetch all materials and sizes and store them to reuse them
@@ -110,9 +134,12 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
                                                                  << "Color"
                                                                  << "Description"
                                                                  << "Size"
+                                                                 << "Available qt."
+                                                                 << "Sold qt."
                                                                  << "Calculated price"
                                                                  << "Edit"
-                                                                 << "Delete");
+                                                                 << "Delete"
+                                                                 << "Info");
     QFont font = QFont();
     font.setBold(true);
 
@@ -125,9 +152,14 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
 }
 
 void ProductsView::initTreeView(const ProductsMap& productsByType) {
+    bool areAllEmpty = true;
+
     for (auto type = productsByType.cbegin(); type != productsByType.cend(); type++) {
         Product::ProductType productType = (*type).first;
         LinkedList<Product*> products = (*type).second;
+        if (!products.isEmpty()) {
+            areAllEmpty = false;
+        }
         QString productTypeName = QString::fromStdString(Product::productTypeToString(productType));
         QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(productType);
 
@@ -147,7 +179,11 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
         }
 
         for (auto p = products.begin(); p != products.end(); p++) {
-            buildAndInsertChild(topLevelItemWidget, *p, productType);
+            double price = (*p)->computePrice();
+
+            if (price >= priceRangeFilter.first && price <= priceRangeFilter.second) {
+                buildAndInsertChild(topLevelItemWidget, *p, productType);
+            }
         }
 
         QIcon productIcon(":/assets/icons/" + productTypeName.toLower() + ".png");
@@ -157,28 +193,60 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
             treeWidget->addTopLevelItem(topLevelItemWidget);
         }
     }
+
+    if (areAllEmpty) {
+        emptyState->setVisible(true);
+        treeWidget->setVisible(false);
+        filterButton->setDisabled(true);
+        exportButton->setDisabled(true);
+    } else {
+        emptyState->setVisible(false);
+        treeWidget->setVisible(true);
+        filterButton->setEnabled(true);
+        exportButton->setEnabled(true);
+    }
+
 }
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
                                        Product* product, Product::ProductType productType) {
+    treeWidget->setVisible(true);
+    emptyState->setVisible(false);
     QStringList values = getColumnsFromProduct(product);
     QTreeWidgetItem* row = new QTreeWidgetItem(values);
+
+    if (topLevelItemWidget->childCount() == 0) {
+        QTreeWidgetItem* headers = getHeaders();
+        topLevelItemWidget->addChild(headers);
+    }
     topLevelItemWidget->addChild(row);
 
-    ProductIconButton* editButton = new ProductIconButton(":/assets/icons/edit.png", "editButton", product,
-                                                          row, productType, this);
-    treeWidget->setItemWidget(row, COLUMN_COUNT - 2, editButton);
+    ProductIconButton* editButton = new ProductIconButton(product, row, productType, this);
+    editButton->setIcon(QIcon(":/assets/icons/edit.png"));
+    editButton->setObjectName("editButton");
+
+    treeWidget->setItemWidget(row, COLUMN_COUNT - 3, editButton);
     connect(editButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
             SLOT(clickedEditButton(Product * , QTreeWidgetItem * , Product::ProductType)));
 
-    ProductIconButton* deleteButton = new ProductIconButton(":/assets/icons/delete.png", "deleteButton", product,
-                                                            row, productType, this);
+    ProductIconButton* deleteButton = new ProductIconButton(product, row, productType, this);
 
-    treeWidget->setItemWidget(row, COLUMN_COUNT - 1, deleteButton);
+    deleteButton->setIcon(QIcon(":/assets/icons/delete.png"));
+    deleteButton->setObjectName("deleteButton");
+
+    treeWidget->setItemWidget(row, COLUMN_COUNT - 2, deleteButton);
     connect(deleteButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
             SLOT(clickedDeleteButton(Product * , QTreeWidgetItem * , Product::ProductType)));
 
-    row->setIcon(1, drawColorIcon(product->getColor()));
+    ProductIconButton* infoButton = new ProductIconButton(product, row, productType, this);
+    infoButton->setIcon(QIcon(":/assets/icons/info.png"));
+    infoButton->setObjectName("infoButton");
+    treeWidget->setItemWidget(row, COLUMN_COUNT - 1, infoButton);
+
+    connect(infoButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedInfoButton(Product * , QTreeWidgetItem * , Product::ProductType)));
+
+    row->setIcon(1, ColorIcon(product->getColor())); // icon representing the product's color
 }
 
 QStringList ProductsView::getColumnsFromProduct(const Product* product) const {
@@ -187,12 +255,15 @@ QStringList ProductsView::getColumnsFromProduct(const Product* product) const {
            << QString::fromStdString(product->getColor())
            << QString::fromStdString(product->getDescription())
            << QString::fromStdString(product->getSize().getNameAsString())
+           << QString::number(product->getAvailableQuantity())
+           << QString::number(product->getSoldQuantity())
            << QString::number(product->computePrice(), 'f', 2) + "$";
     return values;
 }
 
-void ProductsView::showCreateProductWizard(bool) {
+void ProductsView::showCreateProductWizard() {
     ProductWizardView* createProductWizard = new ProductWizardView(ProductWizardView::Create,
+                                                                   mainView,
                                                                    this,
                                                                    materials,
                                                                    sizes);
@@ -204,21 +275,8 @@ void ProductsView::showCreateProductWizard(bool) {
 
 void Views::ProductsView::rebuildTreeView() {
     treeWidget->clear();
+    priceRangeFilter = QPair(0, Views::FilterDialog::MAX_PRICE);
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType());
-}
-
-QIcon Views::ProductsView::drawColorIcon(const string& hex) {
-    const QColor color(QString::fromStdString(hex));
-    QPixmap pixmap(COLOR_ICON_SIZE, COLOR_ICON_SIZE);
-    pixmap.fill(color);
-    QPainter painter(&pixmap);
-    QPen pen;
-    pen.setWidth(3);
-    pen.setColor(Qt::black);
-    painter.setPen(pen);
-    painter.drawRect(0, 0, COLOR_ICON_SIZE, COLOR_ICON_SIZE);
-    QIcon icon(pixmap);
-    return icon;
 }
 
 void Views::ProductsView::handleProductCreation(Product* product, Product::ProductType type) {
@@ -227,6 +285,7 @@ void Views::ProductsView::handleProductCreation(Product* product, Product::Produ
 
 void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, Product::ProductType productType) {
     ProductWizardView* editProductWizard = new ProductWizardView(ProductWizardView::Edit,
+                                                                 mainView,
                                                                  this,
                                                                  materials,
                                                                  sizes,
@@ -255,6 +314,9 @@ Views::ProductsView::clickedDeleteButton(Product* product, QTreeWidgetItem* row,
     if (result == QMessageBox::Yes) {
         dynamic_cast<MainController*>(controller)->deleteProductById(product->getId());
         treeWidget->topLevelItem(productType)->removeChild(row);
+        if (treeWidget->topLevelItem(productType)->childCount() == 1) { // has only the header
+            treeWidget->topLevelItem(productType)->removeChild(treeWidget->topLevelItem(productType)->child(0));
+        }
     }
 }
 
@@ -262,32 +324,70 @@ void Views::ProductsView::handleProductEditing(Product*, Product::ProductType) {
     rebuildTreeView();
 }
 
-void Views::ProductsView::handleExportJsonButtonClicked(bool) {
-    ProductsMap productsMap = dynamic_cast<MainController*>(controller)->findAllProductsByType();
-
-    QJsonObject jsonObject;
-    for (auto pt = productsMap.cbegin(); pt != productsMap.cend(); pt++) {
-        QJsonArray jsonArray;
-        QString productTypeKey = QString::fromStdString(Product::productTypeToString((*pt).first));
-        LinkedList<Product*> products = (*pt).second;
-        for (auto p = products.begin(); p != products.end(); p++) {
-            JSONExportableDecorator decorator(*(*p));
-            jsonArray.append(decorator.exportData());
-        }
-        jsonObject.insert(productTypeKey, jsonArray);
-    }
-
+void Views::ProductsView::handleExportJsonButtonClicked() {
     // Save to file
-    QString directory = QFileDialog::getExistingDirectory(nullptr, "Save File", QDir::homePath());
-    if (!directory.isEmpty()) {
-        QDateTime currentTime = QDateTime::currentDateTime();
-        QString fileName = "/clothing_faqtory_export_" + currentTime.toString(Qt::DateFormat::ISODate) + ".json";
-        QFile file(directory + fileName);
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QString defaultFileName = "/clothing_faqtory_export_" + currentTime.toString(Qt::DateFormat::ISODate) + ".json";
+
+    QString path = QFileDialog::getSaveFileName(nullptr, "Save As", QDir::homePath() + defaultFileName,
+                                                tr("JSON Files (*.json);;All Files (*)"));
+
+    if (!path.isEmpty()) {
+
+        QFile file(path);
+
+        QMessageBox* resultBox = new QMessageBox(this);
+        resultBox->setStandardButtons(QMessageBox::Ok);
+        resultBox->setDefaultButton(QMessageBox::Ok);
+
         if (file.open(QIODevice::WriteOnly)) {
+            ProductsMap productsMap = dynamic_cast<MainController*>(controller)->findAllProductsByType();
+
+            QJsonObject jsonObject;
+            for (auto pt = productsMap.cbegin(); pt != productsMap.cend(); pt++) {
+                QJsonArray jsonArray;
+                QString productTypeKey = QString::fromStdString(Product::productTypeToString((*pt).first));
+                LinkedList<Product*> products = (*pt).second;
+                for (auto p = products.begin(); p != products.end(); p++) {
+                    JSONExportableDecorator decorator(*(*p));
+                    jsonArray.append(decorator.exportData());
+                }
+                jsonObject.insert(productTypeKey, jsonArray);
+            }
             QJsonDocument jsonDoc(jsonObject);
             file.write(jsonDoc.toJson());
             file.close();
+            resultBox->setText("File saved successfully in " + path);
+            resultBox->setIcon(QMessageBox::Information);
+        } else {
+            resultBox->setText("Something went wrong while saving the file");
+            resultBox->setIcon(QMessageBox::Critical);
         }
+
+        resultBox->show();
     }
 
+}
+
+void Views::ProductsView::handleFilterButtonClicked() {
+    filterDialog = new FilterDialog(this);
+    connect(filterDialog, SIGNAL(startFiltering(Filters)), this, SLOT(handleFilterDialogCompleted(Filters)));
+    filterDialog->exec();
+}
+
+void Views::ProductsView::handleFilterDialogCompleted(Filters filters) {
+    treeWidget->clear();
+    priceRangeFilter = QPair(filters.getPriceRange());
+    initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType(&filters));
+    clearFiltersButton->setVisible(true);
+}
+
+void Views::ProductsView::handleClearFilterButtonClicked() {
+    clearFiltersButton->setVisible(false);
+    rebuildTreeView();
+}
+
+void Views::ProductsView::clickedInfoButton(Product* product, QTreeWidgetItem*, Product::ProductType) {
+    InfoDialog* infoDialog = new InfoDialog(product);
+    infoDialog->show();
 }
