@@ -15,9 +15,9 @@ namespace Core {
         private:
             static QueryBuilder queryBuilder;
 
-            LinkedList<QString> productTypes;
             QString code;
             QPair<double, double> priceRange;
+            LinkedList<QString> productTypes;
             QPair<QString, QueryBuilder::Order> orderByField;
 
         public:

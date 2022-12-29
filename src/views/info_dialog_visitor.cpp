@@ -60,9 +60,9 @@ void Views::InfoDialogVisitor::buildVest(Vest& vest) {
     }
 }
 
-void Views::InfoDialogVisitor::visitMaterial(Material& material) {}
+void Views::InfoDialogVisitor::visitMaterial(Material&) {}
 
-void Views::InfoDialogVisitor::visitSize(Size& size) {}
+void Views::InfoDialogVisitor::visitSize(Size&) {}
 
 
 void Views::InfoDialogVisitor::visitProduct(Product& product) {

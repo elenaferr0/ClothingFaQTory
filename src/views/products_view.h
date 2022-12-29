@@ -12,6 +12,7 @@
 #include "components/empty_state.h"
 #include "info_dialog_visitor.h"
 #include <QToolBar>
+#include <QToolButton>
 #include <QTreeWidgetItem>
 #include <QTreeWidget>
 
@@ -31,7 +32,11 @@ namespace Views {
                     ProductsMap;
 
             static const int COLUMN_COUNT;
-
+            QList<QString> materials;
+            QList<QString> sizes;
+            FilterDialog* filterDialog;
+            QToolButton* clearFiltersButton;
+            QPair<double, double> priceRangeFilter;
             QTreeWidget* treeWidget;
             QToolButton* filterButton;
             QToolButton* exportButton;
@@ -47,12 +52,7 @@ namespace Views {
 
             QStringList getColumnsFromProduct(const Product* product) const;
 
-            QList<QString> materials;
-            QList<QString> sizes;
-            FilterDialog* filterDialog;
-            QToolButton* clearFiltersButton;
 
-            QPair<double, double> priceRangeFilter;
 
         public:
             ProductsView(MainView* mainView, QWidget* parent = nullptr);
