@@ -9,6 +9,7 @@
 #include "view.h"
 #include "filter_dialog.h"
 #include "main_view.h"
+#include "components/empty_state.h"
 #include <QToolBar>
 #include <QTreeWidgetItem>
 #include <QTreeWidget>
@@ -31,6 +32,9 @@ namespace Views {
             static const int COLUMN_COUNT;
 
             QTreeWidget* treeWidget;
+            QToolButton* filterButton;
+            QToolButton* exportButton;
+            EmptyState* emptyState;
             QToolBar* toolBar;
 
             QTreeWidgetItem* getHeaders() const;

@@ -8,7 +8,7 @@
 #include "../../models/material.h"
 
 QT_BEGIN_NAMESPACE
-namespace Components { class MaterialIconButton; };
+namespace Views::Components { class MaterialIconButton; };
 QT_END_NAMESPACE
 
 

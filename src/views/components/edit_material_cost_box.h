@@ -7,6 +7,10 @@
 #include <QMessageBox>
 #include "../../models/material.h"
 
+QT_BEGIN_NAMESPACE
+namespace Views::Components { class EditMaterialCostMessageBox; };
+QT_END_NAMESPACE
+
 class EditMaterialCostMessageBox : public QDialog {
     Q_OBJECT
     private:

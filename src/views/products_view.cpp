@@ -36,7 +36,6 @@ ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewPare
 }
 
 void ProductsView::init(const ProductsMap& productsByType) {
-
     treeWidget = new QTreeWidget;
     treeWidget->setHeaderHidden(true);
     treeWidget->setAnimated(true);
@@ -45,9 +44,16 @@ void ProductsView::init(const ProductsMap& productsByType) {
     treeWidget->setColumnCount(COLUMN_COUNT);
     treeWidget->setSelectionMode(QAbstractItemView::NoSelection);
 
-    if (productsByType.getSize() > 0) {
-        initTreeView(productsByType);
-    }
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    toolBar = new QToolBar(this);
+    layout->addWidget(toolBar);
+
+    emptyState = new EmptyState;
+    layout->addWidget(emptyState);
+
+    filterButton = new QToolButton;
+    exportButton = new QToolButton;
+    initTreeView(productsByType);
 
     vector<int> colWidths = {170, 100, 300, 100, 110, 110, 150};
     for (int i = 0; i < COLUMN_COUNT - 2; ++i) {
@@ -56,10 +62,9 @@ void ProductsView::init(const ProductsMap& productsByType) {
     treeWidget->setColumnWidth(COLUMN_COUNT - 2, 50);
     treeWidget->setColumnWidth(COLUMN_COUNT - 1, 50);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+
     layout->setAlignment(Qt::AlignTop);
 
-    toolBar = new QToolBar(this);
     toolBar->setMovable(false);
 
     QToolButton* createButton = new QToolButton;
@@ -69,14 +74,12 @@ void ProductsView::init(const ProductsMap& productsByType) {
     connect(createButton, SIGNAL(clicked()), this, SLOT(showCreateProductWizard()));
     toolBar->addWidget(createButton);
 
-    QToolButton* filterButton = new QToolButton;
     filterButton->setIcon(QIcon(":/assets/icons/filter.png"));
     filterButton->setText(tr("&Filter"));
     filterButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
     connect(filterButton, SIGNAL(clicked()), this, SLOT(handleFilterButtonClicked()));
     toolBar->addWidget(filterButton);
 
-    QToolButton* exportButton = new QToolButton;
     exportButton->setIcon(QIcon(":/assets/icons/export_json.png"));
     exportButton->setText(tr("&Export to JSON"));
     exportButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
@@ -102,7 +105,6 @@ void ProductsView::init(const ProductsMap& productsByType) {
 
     toolBar->setIconSize(QSize(20, 20));
 
-    layout->addWidget(toolBar);
     layout->addWidget(treeWidget);
 
     // fetch all materials and sizes and store them to reuse them
@@ -132,8 +134,8 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
                                                                  << "Color"
                                                                  << "Description"
                                                                  << "Size"
-                                                                 << "Available qt"
-                                                                 << "Sold qt"
+                                                                 << "Available qt."
+                                                                 << "Sold qt."
                                                                  << "Calculated price"
                                                                  << "Edit"
                                                                  << "Delete");
@@ -149,11 +151,14 @@ QTreeWidgetItem* ProductsView::getHeaders() const {
 }
 
 void ProductsView::initTreeView(const ProductsMap& productsByType) {
-    double minPrice = 0;
-    double maxPrice = 0;
+    bool areAllEmpty = true;
+
     for (auto type = productsByType.cbegin(); type != productsByType.cend(); type++) {
         Product::ProductType productType = (*type).first;
         LinkedList<Product*> products = (*type).second;
+        if (!products.isEmpty()) {
+            areAllEmpty = false;
+        }
         QString productTypeName = QString::fromStdString(Product::productTypeToString(productType));
         QTreeWidgetItem* topLevelItemWidget = treeWidget->topLevelItem(productType);
 
@@ -178,13 +183,6 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
             if (price >= priceRangeFilter.first && price <= priceRangeFilter.second) {
                 buildAndInsertChild(topLevelItemWidget, *p, productType);
             }
-            if (price < minPrice) {
-                minPrice = price;
-            }
-
-            if (price > maxPrice) {
-                maxPrice = price;
-            }
         }
 
         QIcon productIcon(":/assets/icons/" + productTypeName.toLower() + ".png");
@@ -194,7 +192,19 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
             treeWidget->addTopLevelItem(topLevelItemWidget);
         }
     }
-    priceRangeFilter = QPair(minPrice, maxPrice);
+
+    if (areAllEmpty) {
+        emptyState->setVisible(true);
+        treeWidget->setVisible(false);
+        filterButton->setDisabled(true);
+        exportButton->setDisabled(true);
+    } else {
+        emptyState->setVisible(false);
+        treeWidget->setVisible(true);
+        filterButton->setEnabled(true);
+        exportButton->setEnabled(true);
+    }
+
 }
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
