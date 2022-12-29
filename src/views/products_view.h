@@ -37,6 +37,7 @@ namespace Views {
             QToolButton* exportButton;
             EmptyState* emptyState;
             QToolBar* toolBar;
+            MainView* mainView;
 
             QTreeWidgetItem* getHeaders() const;
 

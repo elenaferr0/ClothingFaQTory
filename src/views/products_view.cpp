@@ -32,7 +32,8 @@ using Services::FileExport::JSONExportableDecorator;
 const int ProductsView::COLUMN_COUNT = 10;
 
 ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
-                                                                  priceRangeFilter(0, Views::FilterDialog::MAX_PRICE) {
+                                                                  priceRangeFilter(0, Views::FilterDialog::MAX_PRICE),
+                                                                  mainView(mainView) {
     setController(new MainController(this));
     connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
 }
@@ -255,6 +256,7 @@ QStringList ProductsView::getColumnsFromProduct(const Product* product) const {
 
 void ProductsView::showCreateProductWizard() {
     ProductWizardView* createProductWizard = new ProductWizardView(ProductWizardView::Create,
+                                                                   mainView,
                                                                    this,
                                                                    materials,
                                                                    sizes);
@@ -276,6 +278,7 @@ void Views::ProductsView::handleProductCreation(Product* product, Product::Produ
 
 void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, Product::ProductType productType) {
     ProductWizardView* editProductWizard = new ProductWizardView(ProductWizardView::Edit,
+                                                                 mainView,
                                                                  this,
                                                                  materials,
                                                                  sizes,

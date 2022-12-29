@@ -80,8 +80,11 @@ void Views::InfoDialogVisitor::visitProduct(Product& product) {
 
     layout->addRow("Color", colorLayout);
     layout->addRow("Sold quantity", new QLabel(QString::number(product.getSoldQuantity())));
-    layout->addRow("Available quantity", new QLabel(QString::number(product.getSoldQuantity())));
-    layout->addRow("Description", new QLabel(QString::fromStdString(product.getDescription())));
+    layout->addRow("Available quantity", new QLabel(QString::number(product.getAvailableQuantity())));
+
+    if (product.getDescription() != "") {
+        layout->addRow("Description", new QLabel(QString::fromStdString(product.getDescription())));
+    }
     layout->addRow("Size", new QLabel(QString::fromStdString(product.getSize().getNameAsString())));
     layout->addRow("Material", new QLabel(QString::fromStdString(product.getMaterial().getNameAsString())));
     layout->addRow("Calculated price", new QLabel(QString::number(product.computePrice(), 'f', 2) + "$"));

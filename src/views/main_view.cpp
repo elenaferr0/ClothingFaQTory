@@ -65,9 +65,7 @@ void MainView::handleDatabaseError(Error* e) {
     errorBox->setStandardButtons(QMessageBox::Abort);
     errorBox->setIcon(QMessageBox::Critical);
     errorBox->setDefaultButton(QMessageBox::Abort);
-    errorBox->setAttribute(Qt::WA_DeleteOnClose);
     errorBox->resize(300, 200);
-    errorBox->show();
+    errorBox->exec();
     qFatal("Aborting due to database error.");
-
 }

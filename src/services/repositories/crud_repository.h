@@ -47,22 +47,26 @@ namespace Services {
         QSqlQuery query;
         entity->accept(fieldsGetterVisitor);
         Map<string, QVariant> fields = fieldsGetterVisitor.getFields();
+        LinkedList<string> keys = fields.keys();
+        LinkedList<QVariant> values = fields.values();
 
         if (entity->getId() == -1) { // does not exist
             sql = CRUDRepository<T>::queryBuilder
-                    .insertInto(CRUDRepository<T>::table, fields.keys()).build();
+                    .insertInto(CRUDRepository<T>::table, keys).build();
 
-            query = CRUDRepository<T>::exec(sql, fields.values());
+            query = CRUDRepository<T>::exec(sql, values);
             query.next();
             entity->setId(query.lastInsertId().toInt());
-        } else {
-            // exists => should update all the fieldNames
+        } else {// exists => should update all the fieldNames
+
             sql = CRUDRepository<T>::queryBuilder.update(CRUDRepository<T>::table)
-                    .set(fields.keys())
+                    .set(keys)
                     .where(Expr("id").equals({"?"}))
                     .build();
-            fields.put("id", entity->getId());
-            query = CRUDRepository<T>::exec(sql, fields.values());
+            keys.pushBack("id");
+            values.pushBack(entity->getId());
+
+            query = CRUDRepository<T>::exec(sql, values);
             query.next();
         }
 

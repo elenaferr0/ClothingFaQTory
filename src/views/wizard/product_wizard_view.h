@@ -7,11 +7,16 @@
 #include "../view.h"
 #include "../../models/product.h"
 #include "../../controllers/wizard_controller.h"
+#include "../main_view.h"
+
+namespace Views {
+    class MainView;
+}
 
 namespace Controllers {
     class WizardController;
 }
-
+using Views::MainView;
 using Models::Product;
 using Controllers::WizardController;
 
@@ -45,7 +50,7 @@ namespace Views::Wizard {
 
             WizardController* getController() const;
 
-            ProductWizardView(Mode mode, QWidget* parent = nullptr,
+            ProductWizardView(Mode mode, MainView* mainView, QWidget* parent = nullptr,
                               const QList<QString>& materials = QList<QString>(),
                               const QList<QString>& sizes = QList<QString>(),
                               Product* = nullptr,

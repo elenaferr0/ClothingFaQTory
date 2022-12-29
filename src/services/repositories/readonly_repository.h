@@ -67,7 +67,7 @@ namespace Services {
 
         auto tempQueryBuilder = queryBuilder
                 .select("*")
-                .from(table);
+                .from("ONLY " + table);
 
         if (filters.getCode() != "") {
             tempQueryBuilder = tempQueryBuilder.where(Expr("code").ilike("%" + filters.getCode().toStdString() + "%"));

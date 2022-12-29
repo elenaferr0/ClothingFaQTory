@@ -7,6 +7,7 @@ using Views::Wizard::ProductWizardView;
 using Views::Wizard::ChooseProductTypeWizardPage;
 
 ProductWizardView::ProductWizardView(Mode mode,
+                                     MainView* mainView,
                                      QWidget* parent,
                                      const QList<QString>& materials,
                                      const QList<QString>& sizes,
@@ -14,6 +15,8 @@ ProductWizardView::ProductWizardView(Mode mode,
                                      Product::ProductType productType)
         : QWizard(parent), mode(mode), product(product) {
     controller = new WizardController(this);
+    connect(controller, SIGNAL(databaseError(Error * )), mainView, SLOT(handleDatabaseError(Error * )));
+
     if (mode == Mode::Create) {
         addPage(new ChooseProductTypeWizardPage(this));
     }

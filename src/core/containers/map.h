@@ -159,9 +159,6 @@ namespace Core::Containers {
 
     template<class K, class V>
     void Map<K, V>::keysHelper(Map::Node* node, LinkedList<K>& keys) const {
-        if (!node) {
-            return;
-        }
         if (node->left != TNULL) {
             keysHelper(node->left, keys);
         }
@@ -173,9 +170,6 @@ namespace Core::Containers {
 
     template<class K, class V>
     void Map<K, V>::valuesHelper(Map::Node* node, LinkedList<V>& values) const {
-        if (!node) {
-            return;
-        }
         if (node->left != TNULL) {
             valuesHelper(node->left, values);
         }

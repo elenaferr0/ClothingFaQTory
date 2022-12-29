@@ -121,9 +121,9 @@ namespace Core::Containers {
         if (first == nullptr || first == last) {
             return;
         }
-        Node * pivot = first;
-        Node * current = first->next;
-        Node * tail = first;
+        Node* pivot = first;
+        Node* current = first->next;
+        Node* tail = first;
         while (current != last) {
             if (current->value < pivot->value) {
                 tail = tail->next;
@@ -141,7 +141,7 @@ namespace Core::Containers {
         if (head == nullptr) {
             return nullptr;
         }
-        Node * current = head;
+        Node* current = head;
         while (current->next != nullptr) {
             current = current->next;
         }
@@ -155,7 +155,7 @@ namespace Core::Containers {
 
     template<class T>
     bool LinkedList<T>::contains(T value) const {
-        Node * current = head;
+        Node* current = head;
         while (current != nullptr) {
             if (current->value == value) {
                 return true;
@@ -167,8 +167,8 @@ namespace Core::Containers {
 
     template<class T>
     LinkedList<T> LinkedList<T>::findCommonElements(const LinkedList<T>& other) const {
-        LinkedList < T > common;
-        Node * currentListIndex = head;
+        LinkedList<T> common;
+        Node* currentListIndex = head;
         Node* otherListIndex = other.head;
 
         while (currentListIndex != nullptr && otherListIndex != nullptr) {
@@ -337,7 +337,7 @@ namespace Core::Containers {
         if (p == nullptr) {
             return nullptr;
         }
-        Node * result = new Node(p->value);
+        Node* result = new Node(p->value);
         result->next = copy(p->next);
         return result;
     }
@@ -382,7 +382,7 @@ namespace Core::Containers {
 
     template<class T>
     void LinkedList<T>::pushFront(T item) {
-        LinkedList < T > ::Node * temp = new Node(item);
+        LinkedList<T>::Node* temp = new Node(item);
         temp->next = head;
         head = temp;
         size++;
