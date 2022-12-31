@@ -91,3 +91,4 @@ cmake-build-debug/*
 *synctex.gz
 *.fdb_latexmk
 *.Rhistory
+/docs/*
