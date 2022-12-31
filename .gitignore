@@ -92,3 +92,5 @@ cmake-build-debug/*
 *.fdb_latexmk
 *.Rhistory
 /docs/*
+ClothingFaQTory
+moc_*.h
