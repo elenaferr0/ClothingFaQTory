@@ -2,7 +2,9 @@
 #include "choose_product_type_wizard_page.h"
 #include "generic_product_info_wizard_page.h"
 #include "specific_product_info_wizard_page.h"
+#include <memory>
 
+using std::dynamic_pointer_cast;
 using Views::Wizard::ProductWizardView;
 using Views::Wizard::ChooseProductTypeWizardPage;
 
@@ -11,7 +13,7 @@ ProductWizardView::ProductWizardView(Mode mode,
                                      QWidget* parent,
                                      const QList<QString>& materials,
                                      const QList<QString>& sizes,
-                                     Product* product,
+                                     shared_ptr<Product> product,
                                      Product::ProductType productType)
         : QWizard(parent), mode(mode), product(product) {
     controller = new WizardController(this);
@@ -26,12 +28,12 @@ ProductWizardView::ProductWizardView(Mode mode,
 
     setDefaultProperty("QTextEdit", "plainText", "textChanged");
 
-    connect(this, SIGNAL(completed(Product * , Product::ProductType)),
-            controller, SLOT(handleProductEditAndCreate(Product * , Product::ProductType)));
+    connect(this, SIGNAL(completed(shared_ptr < Product > , Product::ProductType)),
+            controller, SLOT(handleProductEditAndCreate(shared_ptr < Product > , Product::ProductType)));
 
 }
 
-void ProductWizardView::setProduct(Product* product) {
+void ProductWizardView::setProduct(shared_ptr<Product> product) {
     this->product = product;
 }
 
@@ -39,7 +41,7 @@ WizardController* ProductWizardView::getController() const {
     return dynamic_cast<WizardController*>(controller);
 }
 
-Product* ProductWizardView::getProduct() const {
+shared_ptr<Product> ProductWizardView::getProduct() const {
     return product;
 }
 
@@ -48,14 +50,14 @@ void ProductWizardView::done(int result) {
         Product::ProductType productType = static_cast<Product::ProductType>(field("productType").toInt());
         switch (productType) {
             case Product::Jeans: {
-                Jeans* jeans = dynamic_cast<Jeans*>(product);
+                shared_ptr<Jeans> jeans = dynamic_pointer_cast<Jeans>(product);
                 jeans->setSustainableMaterials(getSustainableMaterials());
                 jeans->setGender(getGender());
                 jeans->setShorts(field("shorts").toBool());
                 break;
             }
             case Product::Overalls: {
-                Overalls* overalls = dynamic_cast<Overalls*>(product);
+                shared_ptr<Overalls> overalls = dynamic_pointer_cast<Overalls>(product);
                 overalls->setSustainableMaterials(getSustainableMaterials());
                 overalls->setGender(getGender());
                 overalls->setShorts(field("shorts").toBool());
@@ -63,27 +65,27 @@ void ProductWizardView::done(int result) {
                 break;
             }
             case Product::Hat: {
-                Hat* hat = dynamic_cast<Hat*>(product);
+                shared_ptr<Hat> hat = dynamic_pointer_cast<Hat>(product);
                 hat->setCategory(getCategory());
                 hat->setBaseballCap(field("baseballCap").toBool());
                 break;
             }
             case Product::Bracelet: {
-                Bracelet* bracelet = dynamic_cast<Bracelet*>(product);
+                shared_ptr<Bracelet> bracelet = dynamic_pointer_cast<Bracelet>(product);
                 bracelet->setCategory(getCategory());
                 bracelet->setPearlDiameter(field("pearlDiameter").toDouble());
                 bracelet->setPearlNumber(field("pearlNumber").toInt());
                 break;
             }
             case Product::Vest: {
-                Vest* vest = dynamic_cast<Vest*>(product);
+                shared_ptr<Vest> vest = dynamic_pointer_cast<Vest>(product);
                 vest->setSustainableMaterials(getSustainableMaterials());
                 vest->setGender(getGender());
                 vest->setHasButtons(field("hasButtons").toBool());
                 break;
             }
             case Product::BackPack: {
-                BackPack* backpack = dynamic_cast<BackPack*>(product);
+                shared_ptr<BackPack> backpack = dynamic_pointer_cast<BackPack>(product);
                 backpack->setCategory(getCategory());
                 backpack->setCapacity(field("capacity").toDouble());
                 break;
@@ -92,7 +94,8 @@ void ProductWizardView::done(int result) {
         emit completed(product,
                        static_cast<Product::ProductType>(field("productType").toInt()));
     }
-    delete product;
+
+    product = nullptr;
     QWizard::done(result);
 }
 

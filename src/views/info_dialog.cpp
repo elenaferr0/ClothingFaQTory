@@ -4,7 +4,7 @@
 
 using Views::InfoDialogVisitor;
 
-InfoDialog::InfoDialog(Product* product, QWidget* parent) : QDialog(parent) {
+InfoDialog::InfoDialog(shared_ptr<Product> product, QWidget* parent) : QDialog(parent) {
     resize(300, 200);
     setWindowTitle("Product info");
     InfoDialogVisitor infoDialogVisitor;

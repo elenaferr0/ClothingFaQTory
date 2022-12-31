@@ -17,7 +17,7 @@ namespace Views {
 
     class MaterialsView : public WidgetViewParent {
         Q_OBJECT
-            typedef LinkedList<Material*> MaterialsList;
+            typedef LinkedList<shared_ptr<Material>> MaterialsList;
         public:
             MaterialsView(MainView* mainView, QWidget* parent = nullptr);
 
@@ -27,13 +27,13 @@ namespace Views {
             QGridLayout* gridLayout;
             static int COLUMN_COUNT;
 
-            QString getButtonText(const Material* material) const;
+            QString getButtonText(const shared_ptr<Material> material) const;
 
             void initGrid(MaterialsList materials);
 
         private slots:
 
-            void handleMaterialButtonClicked(Material*);
+            void handleMaterialButtonClicked(shared_ptr<Material>);
 
         signals:
 

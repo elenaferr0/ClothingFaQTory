@@ -28,7 +28,7 @@ namespace Views {
     class ProductsView : public WidgetViewParent {
         Q_OBJECT
         private:
-            typedef Map<Product::ProductType, LinkedList<Product*>>
+            typedef Map<Product::ProductType, LinkedList<shared_ptr<Product>>>
                     ProductsMap;
 
             static const int COLUMN_COUNT;
@@ -48,9 +48,9 @@ namespace Views {
 
             void initTreeView(const ProductsMap& productsByType);
 
-            void buildAndInsertChild(QTreeWidgetItem*, Product*, Product::ProductType);
+            void buildAndInsertChild(QTreeWidgetItem*, shared_ptr<Product>, Product::ProductType);
 
-            QStringList getColumnsFromProduct(const Product* product) const;
+            QStringList getColumnsFromProduct(const shared_ptr<Product> product) const;
 
 
 
@@ -65,17 +65,17 @@ namespace Views {
 
         private slots:
 
-            void handleProductCreation(Product*, Product::ProductType);
+            void handleProductCreation(shared_ptr<Product>, Product::ProductType);
 
-            void handleProductEditing(Product*, Product::ProductType);
+            void handleProductEditing(shared_ptr<Product>, Product::ProductType);
 
             void showCreateProductWizard();
 
-            void clickedEditButton(Product*, QTreeWidgetItem* row, Product::ProductType);
+            void clickedEditButton(shared_ptr<Product>, QTreeWidgetItem* row, Product::ProductType);
 
-            void clickedDeleteButton(Product*, QTreeWidgetItem* row, Product::ProductType);
+            void clickedDeleteButton(shared_ptr<Product>, QTreeWidgetItem* row, Product::ProductType);
 
-            void clickedInfoButton(Product*, QTreeWidgetItem* row, Product::ProductType);
+            void clickedInfoButton(shared_ptr<Product>, QTreeWidgetItem* row, Product::ProductType);
 
             void handleExportJsonButtonClicked();
 

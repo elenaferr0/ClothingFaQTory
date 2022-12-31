@@ -108,8 +108,8 @@ void ProductsView::init(const ProductsMap& productsByType) {
     layout->addWidget(treeWidget);
 
     // fetch all materials and sizes and store them to reuse them
-    LinkedList<Material*> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
-    LinkedList<Size*> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
+    LinkedList<shared_ptr<Material>> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
+    LinkedList<shared_ptr<Size>> dbSizes = dynamic_cast<MainController*>(controller)->findAllSizes();
 
     materials = QList<QString>();
     sizes = QList<QString>();
@@ -117,14 +117,14 @@ void ProductsView::init(const ProductsMap& productsByType) {
     transform(dbMaterials.begin(),
               dbMaterials.end(),
               inserter(materials, materials.end()),
-              [](const Material* material) {
+              [](const shared_ptr<Material> material) {
                   return QString::fromStdString(material->getNameAsString());
               });
 
     transform(dbSizes.begin(),
               dbSizes.end(),
               inserter(sizes, sizes.end()),
-              [](const Size* size) {
+              [](const shared_ptr<Size> size) {
                   return QString::fromStdString(size->getNameAsString());
               });
 }
@@ -156,7 +156,7 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
 
     for (auto type = productsByType.cbegin(); type != productsByType.cend(); type++) {
         Product::ProductType productType = (*type).first;
-        LinkedList<Product*> products = (*type).second;
+        LinkedList<shared_ptr<Product>> products = (*type).second;
         if (!products.isEmpty()) {
             areAllEmpty = false;
         }
@@ -209,7 +209,7 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
 }
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
-                                       Product* product, Product::ProductType productType) {
+                                       shared_ptr<Product> product, Product::ProductType productType) {
     treeWidget->setVisible(true);
     emptyState->setVisible(false);
     QStringList values = getColumnsFromProduct(product);
@@ -226,8 +226,8 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
     editButton->setObjectName("editButton");
 
     treeWidget->setItemWidget(row, COLUMN_COUNT - 3, editButton);
-    connect(editButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
-            SLOT(clickedEditButton(Product * , QTreeWidgetItem * , Product::ProductType)));
+    connect(editButton, SIGNAL(clicked(shared_ptr<Product>, QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedEditButton(shared_ptr<Product>, QTreeWidgetItem * , Product::ProductType)));
 
     ProductIconButton* deleteButton = new ProductIconButton(product, row, productType, this);
 
@@ -235,21 +235,21 @@ void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
     deleteButton->setObjectName("deleteButton");
 
     treeWidget->setItemWidget(row, COLUMN_COUNT - 2, deleteButton);
-    connect(deleteButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
-            SLOT(clickedDeleteButton(Product * , QTreeWidgetItem * , Product::ProductType)));
+    connect(deleteButton, SIGNAL(clicked(shared_ptr<Product>, QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedDeleteButton(shared_ptr<Product>, QTreeWidgetItem * , Product::ProductType)));
 
     ProductIconButton* infoButton = new ProductIconButton(product, row, productType, this);
     infoButton->setIcon(QIcon(":/assets/icons/info.png"));
     infoButton->setObjectName("infoButton");
     treeWidget->setItemWidget(row, COLUMN_COUNT - 1, infoButton);
 
-    connect(infoButton, SIGNAL(clicked(Product * , QTreeWidgetItem * , Product::ProductType)), this,
-            SLOT(clickedInfoButton(Product * , QTreeWidgetItem * , Product::ProductType)));
+    connect(infoButton, SIGNAL(clicked(shared_ptr<Product>, QTreeWidgetItem * , Product::ProductType)), this,
+            SLOT(clickedInfoButton(shared_ptr<Product>, QTreeWidgetItem * , Product::ProductType)));
 
     row->setIcon(1, ColorIcon(product->getColor())); // icon representing the product's color
 }
 
-QStringList ProductsView::getColumnsFromProduct(const Product* product) const {
+QStringList ProductsView::getColumnsFromProduct(const shared_ptr<Product> product) const {
     QStringList values;
     values << QString::fromStdString(product->getCode())
            << QString::fromStdString(product->getColor())
@@ -267,8 +267,8 @@ void ProductsView::showCreateProductWizard() {
                                                                    this,
                                                                    materials,
                                                                    sizes);
-    connect(createProductWizard, SIGNAL(completed(Product * , Product::ProductType)),
-            this, SLOT(handleProductCreation(Product * , Product::ProductType)));
+    connect(createProductWizard, SIGNAL(completed(shared_ptr<Product>, Product::ProductType)),
+            this, SLOT(handleProductCreation(shared_ptr<Product>, Product::ProductType)));
     createProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     createProductWizard->show();
 }
@@ -279,11 +279,12 @@ void Views::ProductsView::rebuildTreeView() {
     initTreeView(dynamic_cast<MainController*>(controller)->findAllProductsByType());
 }
 
-void Views::ProductsView::handleProductCreation(Product* product, Product::ProductType type) {
+void Views::ProductsView::handleProductCreation(shared_ptr<Product> product, Product::ProductType type) {
     buildAndInsertChild(treeWidget->topLevelItem(type), product, type);
 }
 
-void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, Product::ProductType productType) {
+void Views::ProductsView::clickedEditButton(shared_ptr<Product> product, QTreeWidgetItem*,
+                                            Product::ProductType productType) {
     ProductWizardView* editProductWizard = new ProductWizardView(ProductWizardView::Edit,
                                                                  mainView,
                                                                  this,
@@ -292,14 +293,15 @@ void Views::ProductsView::clickedEditButton(Product* product, QTreeWidgetItem*, 
                                                                  product,
                                                                  productType
     );
-    connect(editProductWizard, SIGNAL(completed(Product * , Product::ProductType)),
-            this, SLOT(handleProductEditing(Product * , Product::ProductType)));
+    connect(editProductWizard, SIGNAL(completed(shared_ptr<Product>, Product::ProductType)),
+            this, SLOT(handleProductEditing(shared_ptr<Product>, Product::ProductType)));
     editProductWizard->setAttribute(Qt::WA_DeleteOnClose);
     editProductWizard->show();
 }
 
 void
-Views::ProductsView::clickedDeleteButton(Product* product, QTreeWidgetItem* row, Product::ProductType productType) {
+Views::ProductsView::clickedDeleteButton(shared_ptr<Product> product, QTreeWidgetItem* row,
+                                         Product::ProductType productType) {
     QMessageBox* errorBox = new QMessageBox;
     errorBox->setWindowTitle("Delete product");
     errorBox->setText("### Do you really want to delete this product?");
@@ -320,7 +322,7 @@ Views::ProductsView::clickedDeleteButton(Product* product, QTreeWidgetItem* row,
     }
 }
 
-void Views::ProductsView::handleProductEditing(Product*, Product::ProductType) {
+void Views::ProductsView::handleProductEditing(shared_ptr<Product>, Product::ProductType) {
     rebuildTreeView();
 }
 
@@ -347,7 +349,7 @@ void Views::ProductsView::handleExportJsonButtonClicked() {
             for (auto pt = productsMap.cbegin(); pt != productsMap.cend(); pt++) {
                 QJsonArray jsonArray;
                 QString productTypeKey = QString::fromStdString(Product::productTypeToString((*pt).first));
-                LinkedList<Product*> products = (*pt).second;
+                LinkedList<shared_ptr<Product>> products = (*pt).second;
                 for (auto p = products.begin(); p != products.end(); p++) {
                     JSONExportableDecorator decorator(*(*p));
                     jsonArray.append(decorator.exportData());
@@ -387,7 +389,7 @@ void Views::ProductsView::handleClearFilterButtonClicked() {
     rebuildTreeView();
 }
 
-void Views::ProductsView::clickedInfoButton(Product* product, QTreeWidgetItem*, Product::ProductType) {
+void Views::ProductsView::clickedInfoButton(shared_ptr<Product> product, QTreeWidgetItem*, Product::ProductType) {
     InfoDialog* infoDialog = new InfoDialog(product);
     infoDialog->show();
 }

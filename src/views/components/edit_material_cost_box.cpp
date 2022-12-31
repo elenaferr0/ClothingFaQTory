@@ -7,7 +7,7 @@
 #include <QDialogButtonBox>
 #include "edit_material_cost_box.h"
 
-EditMaterialCostMessageBox::EditMaterialCostMessageBox(Material* material, QWidget* parent)
+EditMaterialCostMessageBox::EditMaterialCostMessageBox(shared_ptr<Material> material, QWidget* parent)
         : QDialog(parent), material(material) {
     setWindowTitle("Edit " + QString::fromStdString(material->getNameAsString()).toLower() + " price");
 

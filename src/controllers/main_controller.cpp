@@ -74,7 +74,7 @@ void MainController::findAllProductsByTypeHelper(Product::ProductType productTyp
                                                  MainController::ProductsMap& map,
                                                  Filters* filters) {
 
-    Either<Error, LinkedList<T*>> entitiesOrError = LinkedList<T*>();
+    Either<Error, LinkedList<shared_ptr<T>>> entitiesOrError = LinkedList<shared_ptr<T>>();
 
     if (filters) {
         entitiesOrError = repository->findAllWithFilters(*filters);
@@ -88,26 +88,21 @@ void MainController::findAllProductsByTypeHelper(Product::ProductType productTyp
                 emit databaseError(&entitiesOrError.forceLeft());
             },
             [&]() {
-                LinkedList<T*> entities = entitiesOrError.forceRight();
-                LinkedList<Product*> products;
+                LinkedList<shared_ptr<T>> entities = entitiesOrError.forceRight();
+                LinkedList<shared_ptr<Product>> products;
 
-                /*the list wouldn't be implicitly converted to list<Product*>
-                  therefore for_each is needed*/
-
-                std::for_each(entities.begin(),
-                              entities.end(),
-                              [&products](T* product) {
-                                  products.pushBack(product);
-                              }
-                );
+                for (auto it = entities.begin(); it != entities.end(); it++) {
+                    shared_ptr<Product> product = std::static_pointer_cast<Product>(*it);
+                    products.pushBack(product);
+                }
                 map.put(productType, products);
             }
     );
 
 }
 
-void Controllers::MainController::saveCostPerUnit(Material* material) {
-    Either<Error, Material*> errorOrMaterial = materialRepository->saveCostPerUnit(material);
+void Controllers::MainController::saveCostPerUnit(shared_ptr<Material> material) {
+    Either<Error, shared_ptr<Material>> errorOrMaterial = materialRepository->saveCostPerUnit(material);
 
     if (errorOrMaterial.isLeft()) {
         emit databaseError(&errorOrMaterial.forceLeft());

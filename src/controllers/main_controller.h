@@ -36,9 +36,9 @@ namespace Controllers {
 
     class MainController : public Controller {
         Q_OBJECT
-            typedef LinkedList<Material*> MaterialsList;
-            typedef Map<Product::ProductType, LinkedList<Product*>> ProductsMap;
-            typedef LinkedList<Size*> SizesList;
+            typedef LinkedList<shared_ptr<Material>> MaterialsList;
+            typedef Map<Product::ProductType, LinkedList<shared_ptr<Product>>> ProductsMap;
+            typedef LinkedList<shared_ptr<Size>> SizesList;
         public:
             MainController(View*);
 
@@ -50,7 +50,7 @@ namespace Controllers {
 
             void deleteProductById(int id);
 
-            void saveCostPerUnit(Material* material);
+            void saveCostPerUnit(shared_ptr<Material> material);
 
         private:
             HatRepository* hatRepository;

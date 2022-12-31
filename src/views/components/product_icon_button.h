@@ -8,7 +8,9 @@
 #include <QTreeWidgetItem>
 #include "../../models/product.h"
 
+
 using Models::Product;
+using std::shared_ptr;
 
 QT_BEGIN_NAMESPACE
 namespace Views::Components { class IconButton; }
@@ -17,12 +19,12 @@ QT_END_NAMESPACE
 class ProductIconButton : public QPushButton {
     Q_OBJECT
     private:
-        Product* product;
+        shared_ptr<Product> product;
         QTreeWidgetItem* row;
         Product::ProductType productType;
 
     public:
-        ProductIconButton(Product* product,
+        ProductIconButton(shared_ptr<Product> product,
                           QTreeWidgetItem* row,
                           Product::ProductType,
                           QWidget* parent);
@@ -33,7 +35,7 @@ class ProductIconButton : public QPushButton {
 
     signals:
 
-        void clicked(Product*, QTreeWidgetItem*, Product::ProductType);
+        void clicked(shared_ptr<Product>, QTreeWidgetItem*, Product::ProductType);
 };
 
 

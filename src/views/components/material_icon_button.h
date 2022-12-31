@@ -7,6 +7,8 @@
 #include <QToolButton>
 #include "../../models/material.h"
 
+
+using std::shared_ptr;
 QT_BEGIN_NAMESPACE
 namespace Views::Components { class MaterialIconButton; };
 QT_END_NAMESPACE
@@ -15,9 +17,9 @@ QT_END_NAMESPACE
 class MaterialIconButton : public QToolButton {
     Q_OBJECT
     private:
-        Material* material;
+        shared_ptr<Material> material;
     public:
-        MaterialIconButton(Material* material, QWidget* parent = nullptr);
+        MaterialIconButton(shared_ptr<Material> material, QWidget* parent = nullptr);
 
     private slots:
 
@@ -25,7 +27,7 @@ class MaterialIconButton : public QToolButton {
 
     signals:
 
-        void clicked(Material*);
+        void clicked(shared_ptr<Material>);
 };
 
 

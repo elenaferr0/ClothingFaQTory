@@ -15,19 +15,19 @@ MaterialRepository* MaterialRepository::instance;
 MaterialRepository::MaterialRepository()
         : Repository("material"), ReadOnlyRepository("material", EntityMapper::material) {};
 
-Either<Error, Material*> MaterialRepository::findById(int id) {
+Either<Error, shared_ptr<Material>> MaterialRepository::findById(int id) {
     if (cachedMaterials.hasKey(id)) {
         return cachedMaterials.get(id).value();
     }
 
-    Either<Error, Material*> errorOrMaterial = ReadOnlyRepository::findById(id);
+    Either<Error, shared_ptr<Material>> errorOrMaterial = ReadOnlyRepository::findById(id);
 
     cachedMaterials.put(id, errorOrMaterial.forceRight());
     return errorOrMaterial;
 }
 
-Either<Error, LinkedList<Material*>> MaterialRepository::findAll() {
-    Either<Error, LinkedList<Material*>> materialsOrError = ReadOnlyRepository::findAll();
+Either<Error, LinkedList<shared_ptr<Material>>> MaterialRepository::findAll() {
+    Either<Error, LinkedList<shared_ptr<Material>>> materialsOrError = ReadOnlyRepository::findAll();
     if (materialsOrError.isRight()) {
         for (auto m: materialsOrError.forceRight()) {
             cachedMaterials.put(m->getId(), m);
@@ -36,12 +36,12 @@ Either<Error, LinkedList<Material*>> MaterialRepository::findAll() {
     return materialsOrError;
 }
 
-Either<Error, Material*> Services::MaterialRepository::findByName(const Material::Name& name) {
+Either<Error, shared_ptr<Material>> Services::MaterialRepository::findByName(const Material::Name& name) {
     return findById(name);
 }
 
 
-Either<Error, Material*> MaterialRepository::saveCostPerUnit(Material* entity) {
+Either<Error, shared_ptr<Material>> MaterialRepository::saveCostPerUnit(shared_ptr<Material> entity) {
 
     LinkedList<QVariant> params = {entity->getCostPerUnit(), entity->getId()};
 
@@ -58,7 +58,7 @@ Either<Error, Material*> MaterialRepository::saveCostPerUnit(Material* entity) {
     if (hasError.has_value()) {
         qCritical() << QString::fromStdString(
                 hasError.value().getCause());
-        return Either<Error, Material*>::ofLeft(hasError.value());
+        return Either<Error, shared_ptr<Material>>::ofLeft(hasError.value());
     }
 
     if (cachedMaterials.hasKey(entity->getId())) {
@@ -72,10 +72,4 @@ MaterialRepository* Services::MaterialRepository::getInstance() {
         instance = new MaterialRepository();
     }
     return instance;
-}
-
-Services::MaterialRepository::~MaterialRepository() {
-    for (auto it = cachedMaterials.cbegin(); it != cachedMaterials.cend(); it++) {
-        delete (*it).second;
-    }
 }

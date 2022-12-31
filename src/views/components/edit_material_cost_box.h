@@ -7,6 +7,9 @@
 #include <QMessageBox>
 #include "../../models/material.h"
 
+
+using std::shared_ptr;
+
 QT_BEGIN_NAMESPACE
 namespace Views::Components { class EditMaterialCostMessageBox; };
 QT_END_NAMESPACE
@@ -14,9 +17,9 @@ QT_END_NAMESPACE
 class EditMaterialCostMessageBox : public QDialog {
     Q_OBJECT
     private:
-        Material* material;
+        shared_ptr<Material> material;
     public:
-        EditMaterialCostMessageBox(Material* material, QWidget* parent = nullptr);
+        EditMaterialCostMessageBox(shared_ptr<Material> material, QWidget* parent = nullptr);
 
     private slots:
 

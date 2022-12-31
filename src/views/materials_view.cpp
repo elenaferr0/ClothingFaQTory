@@ -49,8 +49,8 @@ void Views::MaterialsView::initGrid(MaterialsView::MaterialsList materials) {
         button->setIconSize(QSize(50, 50));
         button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
         button->setObjectName("materialButton"); // for stylesheet
-        connect(button, SIGNAL(clicked(Material * )), this,
-                SLOT(handleMaterialButtonClicked(Material * )));
+        connect(button, SIGNAL(clicked(shared_ptr<Material>)), this,
+                SLOT(handleMaterialButtonClicked(shared_ptr<Material>)));
 
         gridLayout->addWidget(button, row, col);
 
@@ -63,7 +63,7 @@ void Views::MaterialsView::initGrid(MaterialsView::MaterialsList materials) {
 
 }
 
-QString Views::MaterialsView::getButtonText(const Material* material) const {
+QString Views::MaterialsView::getButtonText(const shared_ptr<Material> material) const {
     string materialName = material->getNameAsString();
 
     QString capitalizedName = QString::fromStdString(materialName).at(0).toUpper() +
@@ -75,7 +75,7 @@ QString Views::MaterialsView::getButtonText(const Material* material) const {
     return text;
 }
 
-void Views::MaterialsView::handleMaterialButtonClicked(Material* material) {
+void Views::MaterialsView::handleMaterialButtonClicked(shared_ptr<Material> material) {
     EditMaterialCostMessageBox* materialCostMessageBox = new EditMaterialCostMessageBox(material, this);
     materialCostMessageBox->setAttribute(Qt::WA_DeleteOnClose);
     int result = materialCostMessageBox->exec();
