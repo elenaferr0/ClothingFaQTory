@@ -194,5 +194,17 @@ described mechanism is inspired by Java's
 \href{https://hibernate.org/}{Hibernate} library.
 
 \subsubsection{Error handling}
+The mapping function mentioned earlier also checks the query for errors. Being
+the use of exceptions highly debated in C++, I preferred to implement a
+functional-languages-inspired error handling strategy: each one of those
+function returns \texttt{Either<Error, Entity>}, which contains
+an \texttt{Error} if it has occurred, otherwise the requested entity. The
+\texttt{Either} class offers methods to check if the contained value (stored in
+a \texttt{std::variant}) is right (thus the query was successfull) or left (the
+query resulted in an error) and the method \texttt{fold}, which accepts two
+lambda functions, \texttt{ifLeft} and \texttt{ifRight}.
 
+If an error was detected, the controller which called the repository method
+will take care of handling it, emitting a \texttt{databaseError} signal, 
+received by the \texttt{View}.
 \end{document}
