@@ -6,13 +6,13 @@
 #include <QJsonDocument>
 #include "../../models/fields_getter_visitor.h"
 #include "../../models/model.h"
-#include "exportable_decorator_interface.h"
+#include "decorator_interface.h"
 
 using Models::FieldsGetterVisitor;
 using Models::Model;
 
 namespace Services::FileExport {
-    class JSONExportableDecorator : public ExportableDecoratorInterface {
+    class JSONExportableDecorator : public DecoratorInterface {
         private:
             FieldsGetterVisitor fieldsGetterVisitor;
             QJsonObject jsonObject;
