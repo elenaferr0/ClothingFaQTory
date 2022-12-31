@@ -36,6 +36,9 @@ using std::shared_ptr;
 namespace Services {
     template<class T>
     class ReadOnlyRepository : virtual public Repository {
+        private:
+            Either<Error, LinkedList<shared_ptr<T>>> findEntities(const string& sql) const;
+
         protected:
             function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction;
 
@@ -54,64 +57,32 @@ namespace Services {
 
             virtual Either<Error, LinkedList<shared_ptr<T>>> findAll();
 
-            virtual Either<Error, LinkedList<shared_ptr<T>>> findAllWithFilters(Filters filters);
+            virtual Either<Error, LinkedList<shared_ptr<T>>> findAllWithFilters(const Filters& filters);
 
-            Either<Error, LinkedList<shared_ptr<T>>> findEntities(const string& sql) const;
     };
 
     template<class T>
-    Either<Error, LinkedList<shared_ptr<T>>> ReadOnlyRepository<T>::findAllWithFilters(Filters
-                                                                                       filters) {
+    Either<Error, LinkedList<shared_ptr<T>>> ReadOnlyRepository<T>::findAllWithFilters(const Filters& filters) {
         QString correspondingProductType = QString::fromStdString(table).at(0).toUpper() +
                                            QString::fromStdString(table.substr(1));
-        if (filters.
-
-                        getProductTypes()
-
-                    .
-
-                            getSize()
-
-            != 0 && !filters.
-
-                        getProductTypes()
-
-                .
-                        contains(correspondingProductType)
-                ) {
-            return
-
-                    LinkedList<shared_ptr<T>>();
+        if (filters.getProductTypes().getSize() != 0 && !filters.getProductTypes().contains(correspondingProductType)) {
+            return LinkedList<shared_ptr<T>>();
         }
 
         auto tempQueryBuilder = queryBuilder
                 .select("*")
                 .from("ONLY " + table);
 
-        if (filters.
-
-                getCode()
-
-            != "") {
+        if (filters.getCode() != "") {
             tempQueryBuilder = tempQueryBuilder.where(Expr("code").ilike("%" + filters.getCode().toStdString() + "%"));
         }
 
-        if (filters.
-
-                        getOrderByField()
-
-                    .first != "") {
+        if (filters.getOrderByField().first != "") {
             tempQueryBuilder = tempQueryBuilder.orderBy(filters.getOrderByField().first.toStdString(),
                                                         filters.getOrderByField().second);
         }
 
-        return
-                findEntities(tempQueryBuilder
-                                     .
-
-                                             build()
-
-                );
+        return findEntities(tempQueryBuilder.build());
     }
 
     template<class T>
