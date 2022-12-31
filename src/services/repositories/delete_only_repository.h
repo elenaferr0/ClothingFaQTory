@@ -22,7 +22,6 @@ namespace Services {
         private:
             DeleteOnlyRepository(const string& table);
 
-        protected:
             static DeleteOnlyRepository* instance;
 
             DeleteOnlyRepository(DeleteOnlyRepository&) = delete;
