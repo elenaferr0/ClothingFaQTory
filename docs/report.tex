@@ -1,0 +1,198 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper, total={6.9in, 9.4in}]{geometry}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\graphicspath{ {./images/} }
+\begin{document}
+
+\begin{titlepage}
+
+    \begin{center}
+        \vspace*{1cm}
+        \Huge
+        \textbf{Clothing FaQTory}\\
+        \LARGE
+        \textbf{Object Oriented Programming Project}\\
+        \vspace{1cm}
+        \Large
+        Elena Ferro\\
+        \large
+        2042328
+
+        \vspace{10cm}
+
+        \includegraphics[width=0.25\textwidth]{img/unipd.png}
+
+        \Large
+        \vspace{1cm}
+        University of Padua\\
+        \vspace{0.3cm}
+        {\large Computer Science\\}
+        \vspace{0.3cm}
+        Academic year 2023/23
+
+    \end{center}
+\end{titlepage}
+% \tableofcontents
+% \newpage
+\pagestyle{fancy}
+\fancyhead[R]{Elena Ferro - 2042328}
+\fancyhead[L]{Clothing FaQTory}
+\section{Introduction}
+ClothingFaQTory is a management software designed for a company that produces
+clothing items and accessories. The core functionalities it provides are
+managing an inventory of the different types of products and calculating their
+production cost. Its aim is to help managers and business analysts to establish
+the final selling price of the aforementioned items.
+
+The calculation is based on the cost of the prime materials per unit (such as
+the price of denim per meter) which is then multiplied by the approximate
+surface of the final product, in order to estimate the quantity of material
+needed.
+
+The price is not stored with all the other information: the cost of the
+materials is rather dynamic over time, being influenced by economy and other
+factors. Therefore, the software allows to easily change the cost of the prime
+materials and obtain an immediate recalculation of the product prices, without
+having to update all the records in the database. In a real world scenario,
+with possibly thousands of products, this operation would be really onerous.
+
+I chose this topic because the calculation of the price for each concrete
+product is the perfect circumstance to adopt polymorphism.
+
+\section{Logic model}
+The logic model is subdivided in two parts: the products hierarchy itself,
+whose diagram is shown in Figure \ref{fig:accessoriesUML} and Figure
+\ref{fig:clothingItemsUML} (splitted for reasons of space), and all the classes
+to interact with the database and handle errors, that will be described later
+in the data persistance section. \\\linebreak The products hierarchy represents
+all the items that the company sells. Each of them has generic information,
+such as color, description, size\dots. An alphanumeric code is also associated
+to each product. The code is not unique, since the software offers the
+possibility to store different variations of the same product (for example, two
+items with the same code could be manufactured in different colors).
+
+The product can be either an \texttt{Accessory} or a \texttt{ClothingItem}.
+Both of them are implemented by three concrete classes, each of which has
+additional data to compute the final price (this data can either be a static
+constant, such as the \texttt{DIAMETER} of the \texttt{Hat} class, or a dynamic
+and instance-dependant value, such as the \texttt{capacity} in liters of a
+\texttt{BackPack}). A very basic case of this calculation is the price of
+\texttt{Jeans}, obtained with the sum of the lateral area of two cilinders. On
+the other hand, a more elaborated example would be the \texttt{Bracelet} (which
+is composed of a number of X pearls, each with a diameter of Y). Its cost is
+computed through the volume of each pearl (approximately a sphere) multiplied
+by the specific weight of the pearl's material.
+
+A diamond inheritance case has been inserted in the hierarchy: the price of
+\texttt{Overalls} is considered to be composed by the top part (a
+\texttt{Vest}) and the bottom part (a pair of \texttt{Jeans}). Hence, the final
+price comprises the sum of both its parents price.
+
+The \texttt{Size} of the product affects the final price too: a clothing item
+of larger size obviously requires more material than a smaller one and
+therefore the manufacturing cost is higher. The way this logic is integrated in
+the price calculation is assigning a percentage, named
+\texttt{extraPercentageOfMaterial}, to each size. This represents how much
+extra material is needed to fabricate an element of that size compared to the
+smallest size. For example, if the field \texttt{extraPercentageOfMaterial} for
+the size \texttt{M} is set to 0.20, it means that a clothing item of size
+\texttt{M} requires $20\%$ more material to be produced than one of size
+\texttt{XS} (which is the smallest). This percentage is supposed to be constant
+over time.
+
+\texttt{Product},
+\texttt{Size} and \texttt{Material} all extend the \texttt{Model} class, which
+represents a generic database entity and only exposes the \texttt{id} field.
+The \texttt{id} is set to -1 by default, which is to mean that the record has
+not been created yet. The Decorator design pattern has been implemented through
+the \texttt{JSONExportableDecorator} class, which enriches the \texttt{Model}
+class adding the functionality to export a model as a \texttt{QJsonObject},
+while keeping the hierarchy itself totally independent from any QT class (and
+thus potentially reusable with another framework).
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.15]{img/accessories_uml.png}
+    \caption{Logic model class UML (Accessories part)}
+    \label{fig:accessoriesUML}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.155]{img/clothing_items_uml.png}
+    \caption{Logic model class UML (ClothingItems part)}
+    \label{fig:clothingItemsUML}
+\end{figure}
+\pagebreak
+
+\section{Polymorphism}
+One of the uses of polymorphism is the implementation of the Visitor design
+pattern, through the \texttt{VisitorInterface} class, in order to allow
+performing different operations on the hierarchy, depending on their dynamic
+type. This interface is extended by three different concrete classes. Two of
+them are used to build different UI layouts: \texttt{InfoDialogVisitor}, to
+display a dialog with the complete product information, and
+\texttt{SpecificProductInfoVisitor} to populate the form to create and edit the
+items. The third usage is the \texttt{FieldGetterVisitor}, which takes in a
+\texttt{Product} subclass and creates a key-value map between the field names
+and their current value. This comes in handy in different circumstances: in the
+aforementioned dialog to show the product information, but also to export the
+entities as JSON (coupled with the forenamed Decorator pattern implementation)
+and to dynamically build the database \texttt{INSERT} queries.
+
+Other examples of polymorphism are the computation of the product price,
+different for each concrete class, and the implementation of the Repository
+pattern (illustrated in the next section), whose purpose is providing an
+abstraction layer between the data storage and the business logic.
+
+\section{Data persistance}
+The chosen method for data persistance is a PostgreSQL database, currently
+hosted in a cloud server and running in a Docker container. The primary
+motivation for this choice is that Postgres natively supports both single and
+multiple hierarchy between tables, furthermore is generally more efficient than
+other DBMS, such as MySQL.
+
+The database structure is therefore symmetrical to the C++ hierarchy, having
+the table \texttt{product} as a parent to all the others, with two foreign keys
+referencing the \texttt{size} and \texttt{material} tables.
+
+The Entity-Relationship diagram and the schema of the database can both be
+found in the project files, inside the \texttt{docs} directory.
+
+\subsection{Repository pattern}
+In order to interact with the database, the Repository pattern has been
+implemented. A UML class diagram for this pattern can be found inside the
+\texttt{docs} directory.
+
+The \texttt{Repository} class is abstract, and only exposes static utility
+functions to execute queries and check for errors. It is then extended by
+\texttt{ReadOnlyRepository<T>} and \texttt{DeleteOnlyRepository}, whose common
+child is \texttt{CRUDRepository<T>}.
+
+This structure supports having different types of concrete repositories. For
+instance, since its records will not be modified, \texttt{SizeRepository} is
+read-only. The \texttt{DeleteOnlyRepository} is useful when performing delete
+operations on the product hierarchy. Being product abstract, it would not be
+possible to instanciate a \texttt{CRUDRepository<Product>}, hence it is
+possible to use \texttt{DeleteOnlyRepository} which is not templetized.
+
+Repositories for each \texttt{Product} subclass have to support CRUD
+operations. Consequently, a concrete repository extending and specializing at
+the same time \texttt{CRUDRepository<T>} has been implemented for each one of
+them. A utility class, \texttt{EntityMapper}, implements mapping functions
+between QT's \texttt{QSqlQuery} and the query result. This mapping function is
+then passed as an argument to the \texttt{ReadOnlyRepository}, which applies
+this function every time an entity should be returned by a query.
+
+The concrete repository instantiations take care of passing the correct table
+name and mapping function to its parents. Furthermore, in an hypothetical
+extension of this project, it might become necessary to have a specific query
+for a given entity. Having separated concrete repositories, allows simply
+implementing this method in the corresponding concrete class. This last
+described mechanism is inspired by Java's
+\href{https://hibernate.org/}{Hibernate} library.
+
+\subsubsection{Error handling}
+
+\end{document}
