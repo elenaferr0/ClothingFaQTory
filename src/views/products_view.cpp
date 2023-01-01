@@ -177,12 +177,19 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
             topLevelItemWidget->addChild(headers);
         }
 
+        bool hasChildrenInRange = false;
         for (auto p = products.begin(); p != products.end(); p++) {
             double price = (*p)->computePrice();
 
             if (price >= priceRangeFilter.first && price <= priceRangeFilter.second) {
                 buildAndInsertChild(topLevelItemWidget, *p, productType);
+                hasChildrenInRange = true;
             }
+        }
+
+        auto headers = topLevelItemWidget->child(0);
+        if (!hasChildrenInRange && headers) {
+            topLevelItemWidget->removeChild(headers);// remove the header
         }
 
         QIcon productIcon(":/assets/icons/" + productTypeName.toLower() + ".png");
