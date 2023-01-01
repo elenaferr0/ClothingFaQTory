@@ -160,4 +160,5 @@ void GenericProductInfoWizardPage::handleRandomCodeButtonPressed(bool) {
         randomString.append(QChar(randomInt));
     }
     codeLineEdit->setText(randomString);
+    codeLineEdit->setStyleSheet("color: black");
 }
