@@ -7,6 +7,7 @@
 using std::ostream;
 using std::endl;
 using std::initializer_list;
+using std::string;
 
 namespace Core::Containers {
     template<class T>
@@ -58,6 +59,8 @@ namespace Core::Containers {
             LinkedList<T> operator+(const LinkedList<T>& other) const;
 
             ~LinkedList();
+
+            string join(const string& separator) const;
 
             void pushBack(T item);
 
@@ -115,6 +118,20 @@ namespace Core::Containers {
             void sort();
 
     };
+
+    template<class T>
+    string LinkedList<T>::join(const string& separator) const {
+        string result;
+        Node* current = head;
+        while (current) {
+            result += current->value;
+            if (current->next) {
+                result += separator;
+            }
+            current = current->next;
+        }
+        return result;
+    }
 
     template<class T>
     void LinkedList<T>::quickSortHelper(LinkedList::Node* first, LinkedList::Node* last) {

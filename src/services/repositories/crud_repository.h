@@ -115,8 +115,23 @@ namespace Services {
 
     template<class T>
     Either<Error, LinkedList<shared_ptr<T>>> CRUDRepository<T>::findAll() {
-        string sql = Repository::queryBuilder.select()
+        static T mockEntity;
+
+        FieldsGetterVisitor fieldsGetterVisitor(FieldsGetterVisitor::USE_ID_FOR_FOREIGN_KEYS,
+                                                FieldsGetterVisitor::INCLUDE_TABLE_NAME,
+                                                FieldsGetterVisitor::INCLUDE_ID);
+
+        mockEntity.accept(fieldsGetterVisitor);
+
+        string entityFields = fieldsGetterVisitor.getFields().keys().join(", ");
+        fieldsGetterVisitor.clear();
+
+        string sql = Repository::queryBuilder.select(
+                        entityFields + ", size.name as size_name, material.name as material_name, size.*, material.*")
                 .from("ONLY " + Repository::table)
+                .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
+                .join(QueryBuilder::INNER, "material",
+                      Expr({Repository::table + ".material_id"}).equals({"material.id"}))
                 .build();
         QSqlQuery query = Repository::exec(sql);
         LinkedList<shared_ptr<T>> entities;

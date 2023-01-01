@@ -33,7 +33,7 @@ namespace Core::Db {
 
             // qb.select({("username", "u"), ("email", "e")});
             // takes fieldNames with aliases as input (the alias can also be empty)
-            QueryBuilder& select(const Map <string, string>& fields);
+            QueryBuilder& select(const LinkedList<string>& fields);
 
             // does not override previous select
             QueryBuilder& addSelect(string field = "*", string alias = "");

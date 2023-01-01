@@ -37,6 +37,10 @@ namespace Services {
 
             static Either<Error, QSqlRecord> checkQuery(const QSqlQuery&);
 
+            static Material materialFromRecord(const QSqlRecord&);
+
+            static Size sizeFromRecord(const QSqlRecord&);
+
         public:
             static Either<Error, shared_ptr<Size>> size(const QSqlQuery&);
 

@@ -21,19 +21,15 @@ QueryBuilder& QueryBuilder::count(string field) {
     return *this;
 }
 
-QueryBuilder& QueryBuilder::select(const Map<string, string>& fields) {
-    if (fields.empty()) {
+QueryBuilder& QueryBuilder::select(const LinkedList<string>& fields) {
+    if (fields.isEmpty()) {
         return *this;
     }
 
     query = "SELECT ";
 
-    for (auto f = fields.cbegin(); f != fields.cend(); ++f) {
-
-        query += (*f).first;
-        // create automatically the alias if the second parameter is not present
-        query += " " + (*f).second == "" ? (*f).first : (*f).second;
-        query += ", ";
+    for (auto f = fields.begin(); f != fields.end(); ++f) {
+        query += (*f) + ", ";
     }
 
     // remove the last comma

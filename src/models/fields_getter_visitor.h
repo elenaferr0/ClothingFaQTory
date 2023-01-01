@@ -34,19 +34,29 @@ namespace Models {
         private:
             Map <string, QVariant> fields;
             bool useNameForForeignKeys;
+            bool includeTableName;
+            bool includeId;
 
-            void visitProduct(const Product& product);
+            void visitProduct(const Product& product, const string& table);
 
-            void visitAccessory(const Accessory&);
+            void visitAccessory(const Accessory&, const string& table);
 
-            void visitClothingItem(const ClothingItem&);
+            void visitClothingItem(const ClothingItem&, const string& table);
 
-            void vestFields(const Vest&);
+            void vestFields(const Vest&, const string& table);
 
-            void jeansFields(const Jeans&);
+            void jeansFields(const Jeans&, const string& table);
 
         public:
-            FieldsGetterVisitor(bool useNameForForeignKeys = false);
+            static const bool USE_NAME_FOR_FOREIGN_KEYS = true;
+            static const bool USE_ID_FOR_FOREIGN_KEYS = false;
+            static const bool INCLUDE_TABLE_NAME = true;
+            static const bool EXCLUDE_TABLE_NAME = false;
+            static const bool EXCLUDE_ID = false;
+            static const bool INCLUDE_ID = true;
+
+            FieldsGetterVisitor(bool useNameForForeignKeys = false, bool includeTableName = false,
+                                bool includeId = false);
 
             const Map <string, QVariant>& getFields() const;
 
