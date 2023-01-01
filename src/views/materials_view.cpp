@@ -16,22 +16,10 @@ MaterialsView::MaterialsView(MainView* mainView, QWidget* parent) : WidgetViewPa
 
 void MaterialsView::init() {
     auto materials = dynamic_cast<MainController*>(controller)->findAllMaterials();
-    QVBoxLayout* vbox = new QVBoxLayout;
-    auto title = new QLabel("Click on the materials to edit the price");
-    title->setAlignment(Qt::AlignCenter);
-    QFont font = QFont();
-    font.setPointSize(13);
-    title->setMargin(20);
-    title->setFont(font);
-
-    vbox->addWidget(title);
-    gridLayout = new QGridLayout;
+    gridLayout = new QGridLayout(this);
     gridLayout->setAlignment(Qt::AlignCenter);
     gridLayout->setSpacing(50);
     gridLayout->setVerticalSpacing(30);
-    vbox->addLayout(gridLayout);
-    vbox->setAlignment(Qt::AlignCenter);
-    setLayout(vbox);
     initGrid(materials);
 }
 
@@ -44,14 +32,15 @@ void Views::MaterialsView::initGrid(MaterialsView::MaterialsList materials) {
         QString text = getButtonText(material);
 
         button->setText(text);
+        QString name = QString::fromStdString(material->getNameAsString()).toLower();
         button->setIcon(
-                QIcon(":/assets/icons/" + QString::fromStdString(material->getNameAsString()).toLower() + ".png"));
+                QIcon(":/assets/icons/" + name + ".png"));
         button->setIconSize(QSize(50, 50));
         button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
         button->setObjectName("materialButton"); // for stylesheet
-        connect(button, SIGNAL(clicked(Material * )), this,
-                SLOT(handleMaterialButtonClicked(Material * )));
-
+        connect(button, SIGNAL(clicked(shared_ptr<Material>)), this,
+                SLOT(handleMaterialButtonClicked(shared_ptr<Material>)));
+        button->setToolTip("Click to edit " + name + " price");
         gridLayout->addWidget(button, row, col);
 
         col++;
@@ -63,7 +52,7 @@ void Views::MaterialsView::initGrid(MaterialsView::MaterialsList materials) {
 
 }
 
-QString Views::MaterialsView::getButtonText(const Material* material) const {
+QString Views::MaterialsView::getButtonText(const shared_ptr<Material> material) const {
     string materialName = material->getNameAsString();
 
     QString capitalizedName = QString::fromStdString(materialName).at(0).toUpper() +
@@ -75,7 +64,7 @@ QString Views::MaterialsView::getButtonText(const Material* material) const {
     return text;
 }
 
-void Views::MaterialsView::handleMaterialButtonClicked(Material* material) {
+void Views::MaterialsView::handleMaterialButtonClicked(shared_ptr<Material> material) {
     EditMaterialCostMessageBox* materialCostMessageBox = new EditMaterialCostMessageBox(material, this);
     materialCostMessageBox->setAttribute(Qt::WA_DeleteOnClose);
     int result = materialCostMessageBox->exec();

@@ -94,7 +94,7 @@ GenericProductInfoWizardPage::GenericProductInfoWizardPage(const QList<QString>&
     layout->addRow("Material", materialBox);
 
     if (parentWizard->getMode() == ProductWizardView::Edit) {
-        Product* product = parentWizard->getProduct();
+        shared_ptr<Product> product = parentWizard->getProduct();
         codeLineEdit->setText(QString::fromStdString(product->getCode()));
         codeLineEdit->setDisabled(true);
         QString hex = QString::fromStdString(product->getColor());
@@ -160,4 +160,5 @@ void GenericProductInfoWizardPage::handleRandomCodeButtonPressed(bool) {
         randomString.append(QChar(randomInt));
     }
     codeLineEdit->setText(randomString);
+    codeLineEdit->setStyleSheet("color: black");
 }

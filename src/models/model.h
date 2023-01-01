@@ -20,8 +20,6 @@ namespace Models {
 
             void setId(int id);
 
-            bool found() const;
-
             virtual ~Model() = default;
 
             virtual void accept(VisitorInterface& visitor) = 0;

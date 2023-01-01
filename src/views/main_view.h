@@ -28,7 +28,7 @@ using Views::FilterDialog;
 namespace Views {
     class MainView : public QMainWindow, public View {
         Q_OBJECT
-            typedef Map<Product::ProductType, LinkedList<Product*>> ProductsMap;
+            typedef Map<Product::ProductType, LinkedList<shared_ptr<Product>>> ProductsMap;
 
         public:
             MainView(QWidget* parent = nullptr);

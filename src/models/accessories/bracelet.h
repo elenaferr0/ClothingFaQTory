@@ -11,15 +11,9 @@ namespace Models::Accessories {
     class Bracelet : public Accessory {
         protected:
             unsigned int pearlNumber;
-        public:
-            const unsigned int& getPearlNumber() const;
-
-            const double& getPearlDiameter() const;
-
-        protected:
             double pearlDiameter;
-
         public:
+
             Bracelet(
                     int id = -1,
                     const string& code = "",
@@ -32,6 +26,10 @@ namespace Models::Accessories {
                     const string& category = "",
                     unsigned int pearlNumber = 0,
                     double pearlDiameter = 0.75);
+
+            const unsigned int& getPearlNumber() const;
+
+            const double& getPearlDiameter() const;
 
             double computePrice() const override;
 

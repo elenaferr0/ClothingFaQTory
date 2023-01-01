@@ -24,23 +24,23 @@ namespace Services {
     class CRUDRepository : public ReadOnlyRepository<T> {
         public:
             CRUDRepository(const string& table,
-                           function<Either<Error, T*>(const QSqlQuery&)> mappingFunction)
+                           function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction)
                     : Repository(table), ReadOnlyRepository<T>(table, mappingFunction) {};
 
-            Either<Error, T*> save(T* entity);
+            Either<Error, shared_ptr<T>> save(shared_ptr<T> entity);
 
-            Either<Error, LinkedList<T*>> saveAll(LinkedList<T*>& entities);
+            Either<Error, LinkedList<shared_ptr<T>>> saveAll(LinkedList<shared_ptr<T>>& entities);
 
             optional<Error> deleteT(const T& entity);
 
-            Either<Error, T*> findById(int id) final override;
+            Either<Error, shared_ptr<T>> findById(int id) final override;
 
-            Either<Error, LinkedList<T*>> findAll() final override;
+            Either<Error, LinkedList<shared_ptr<T>>> findAll() final override;
 
     };
 
     template<class T>
-    Either<Error, T*> CRUDRepository<T>::save(T* entity) {
+    Either<Error, shared_ptr<T>> CRUDRepository<T>::save(shared_ptr<T> entity) {
         string sql;
         QSqlQuery query;
         FieldsGetterVisitor fieldsGetterVisitor;
@@ -73,16 +73,16 @@ namespace Services {
 
         if (hasError.has_value()) {
             qCritical() << QString::fromStdString(hasError.value().getCause());
-            return Either<Error, T*>::ofLeft(hasError.value());
+            return Either<Error, shared_ptr<T>>::ofLeft(hasError.value());
         }
 
         return entity;
     }
 
     template<class T>
-    Either<Error, LinkedList<T*>> CRUDRepository<T>::saveAll(LinkedList<T*>& entities) {
+    Either<Error, LinkedList<shared_ptr<T>>> CRUDRepository<T>::saveAll(LinkedList<shared_ptr<T>>& entities) {
         for (auto en = entities.begin(); en != entities.end(); en++) {
-            Either<Error, T*> entityOrError = save(*en);
+            Either<Error, shared_ptr<T>> entityOrError = save(*en);
             if (entityOrError.isLeft()) {
                 entityOrError.forceLeft().setUserMessage("Error while fetching " + Repository::table);
                 qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
@@ -95,7 +95,7 @@ namespace Services {
     }
 
     template<class T>
-    Either<Error, T*> CRUDRepository<T>::findById(int id) {
+    Either<Error, shared_ptr<T>> CRUDRepository<T>::findById(int id) {
         string mainEntitySql = Repository::queryBuilder.select()
                 .from(Repository::table)
                 .where(Expr(Repository::table + ".id").equals({"?"}))
@@ -103,7 +103,7 @@ namespace Services {
 
         QSqlQuery mainEntityQuery = Repository::exec(mainEntitySql, QVariant::fromValue<int>(id));
         mainEntityQuery.next();
-        Either<Error, T*> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
+        Either<Error, shared_ptr<T>> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
         if (errorOrEntity.isLeft()) {
             qCritical() << QString::fromStdString(
                     errorOrEntity.forceLeft().getCause());
@@ -114,14 +114,29 @@ namespace Services {
     }
 
     template<class T>
-    Either<Error, LinkedList<T*>> CRUDRepository<T>::findAll() {
-        string sql = Repository::queryBuilder.select()
+    Either<Error, LinkedList<shared_ptr<T>>> CRUDRepository<T>::findAll() {
+        static T mockEntity;
+
+        FieldsGetterVisitor fieldsGetterVisitor(FieldsGetterVisitor::USE_ID_FOR_FOREIGN_KEYS,
+                                                FieldsGetterVisitor::INCLUDE_TABLE_NAME,
+                                                FieldsGetterVisitor::INCLUDE_ID);
+
+        mockEntity.accept(fieldsGetterVisitor);
+
+        string entityFields = fieldsGetterVisitor.getFields().keys().join(", ");
+        fieldsGetterVisitor.clear();
+
+        string sql = Repository::queryBuilder.select(
+                        entityFields + ", size.name as size_name, material.name as material_name, size.*, material.*")
                 .from("ONLY " + Repository::table)
+                .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
+                .join(QueryBuilder::INNER, "material",
+                      Expr({Repository::table + ".material_id"}).equals({"material.id"}))
                 .build();
         QSqlQuery query = Repository::exec(sql);
-        LinkedList<T*> entities;
+        LinkedList<shared_ptr<T>> entities;
         while (query.next()) {
-            Either<Error, T*> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
+            Either<Error, shared_ptr<T>> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
             if (entityOrError.isLeft()) {
                 qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
                 return entityOrError.forceLeft();

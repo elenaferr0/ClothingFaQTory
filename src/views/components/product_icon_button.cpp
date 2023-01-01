@@ -2,7 +2,7 @@
 #include <QTreeWidgetItem>
 #include "product_icon_button.h"
 
-ProductIconButton::ProductIconButton(Product* product,
+ProductIconButton::ProductIconButton(shared_ptr<Product> product,
                                      QTreeWidgetItem* row,
                                      Product::ProductType productType,
                                      QWidget* parent)

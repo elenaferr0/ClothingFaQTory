@@ -20,19 +20,17 @@ namespace Services {
 
         protected:
             static SizeRepository* instance;
-            Map<int, Size*> cachedSizes; // not static since there's only an instance
+            Map<int, shared_ptr<Size>> cachedSizes; // not static since there's only an instance
 
         public:
 
-            Either<Error, Size*> findById(int id) override;
+            Either<Error, shared_ptr<Size>> findById(int id) override;
 
-            Either<Error, Size*> findByName(const Size::Name&);
+            Either<Error, shared_ptr<Size>> findByName(const Size::Name&);
 
-            Either<Error, LinkedList<Size*>> findAll() override;
+            Either<Error, LinkedList<shared_ptr<Size>>> findAll() override;
 
             static SizeRepository* getInstance();
-
-            ~SizeRepository();
 
     };
 }

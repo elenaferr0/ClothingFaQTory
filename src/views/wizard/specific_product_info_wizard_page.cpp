@@ -1,7 +1,10 @@
 #include <QVariant>
 #include "specific_product_info_wizard_page.h"
 #include "product_wizard_view.h"
+#include <memory>
 
+using std::make_shared;
+using std::static_pointer_cast;
 using Views::Wizard::SpecificProductInfoWizardPage;
 using Views::Wizard::ProductWizardView;
 
@@ -15,51 +18,49 @@ SpecificProductInfoWizardPage::SpecificProductInfoWizardPage(QWidget* parent)
 
 void SpecificProductInfoWizardPage::initializePage() {
     Product::ProductType productType = static_cast<Product::ProductType>(field("productType").toInt());
-    // create a Product* which has a type value of one of the concrete classes.
+    // create a shared_ptr<Product> which has a type value of one of the concrete classes.
     // this allows using the visitor pattern to create a different page
     // based on the product type
 
     if (parentWizard->getMode() == ProductWizardView::Edit) {
         setProductFields(parentWizard->getProduct());
     } else {
+        shared_ptr<Product> product;
+
         switch (productType) {
             case Product::Jeans: {
-                Jeans* jeans = new Jeans;
-                setProductFields(jeans);
-                parentWizard->setProduct(jeans);
+                shared_ptr<Jeans> jeans = make_shared<Jeans>();
+                product = static_pointer_cast<Product>(jeans);
                 break;
             }
             case Product::Overalls: {
-                Overalls* overalls = new Overalls;
-                setProductFields(overalls);
-                parentWizard->setProduct(overalls);
+                shared_ptr<Overalls> overalls = make_shared<Overalls>();
+                product = static_pointer_cast<Product>(overalls);
                 break;
             }
             case Product::Hat: {
-                Hat* hat = new Hat;
-                setProductFields(hat);
-                parentWizard->setProduct(hat);
+                shared_ptr<Hat> hat = make_shared<Hat>();
+                product = static_pointer_cast<Product>(hat);
                 break;
             }
             case Product::Bracelet: {
-                Bracelet* bracelet = new Bracelet;
-                setProductFields(bracelet);
-                parentWizard->setProduct(bracelet);
+                shared_ptr<Bracelet> bracelet = make_shared<Bracelet>();
+                product = static_pointer_cast<Product>(bracelet);
                 break;
             }
             case Product::Vest: {
-                Vest* vest = new Vest;
-                setProductFields(vest);
-                parentWizard->setProduct(vest);
+                shared_ptr<Vest> vest = make_shared<Vest>();
+                product = static_pointer_cast<Product>(vest);
                 break;
             }
             case Product::BackPack: {
-                BackPack* backpack = new BackPack;
-                setProductFields(backpack);
-                parentWizard->setProduct(backpack);
+                shared_ptr<BackPack> backpack = make_shared<BackPack>();
+                product = static_pointer_cast<Product>(backpack);
                 break;
             }
         }
+        setProductFields(product);
+        parentWizard->setProduct(product);
     }
 
     parentWizard->getProduct()->accept(visitor);
@@ -72,7 +73,7 @@ void SpecificProductInfoWizardPage::initializePage() {
     QWizardPage::initializePage();
 }
 
-void SpecificProductInfoWizardPage::setProductFields(Product* product) {
+void SpecificProductInfoWizardPage::setProductFields(shared_ptr<Product> product) {
     product->setCode(field("code").toString().toStdString());
     product->setColor(field("color").toString().toStdString());
     product->setSoldQuantity(field("soldQuantity").toInt());

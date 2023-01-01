@@ -74,3 +74,23 @@ CMakeLists.txt.user*
 .idea
 /CMakeLists.txt
 cmake-build-debug/*
+
+### LaTeX ###
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.pygtex
+*.cb2
+*synctex.gz
+*.fdb_latexmk
+*.Rhistory
+/docs/*
+ClothingFaQTory
+moc_*.h

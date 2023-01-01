@@ -26,7 +26,7 @@ namespace Core {
 
             optional<reference_wrapper<R>> right();
 
-            // forceLeft() and forceRight() will result in an error if not present (but they allows less verbosity)
+            // forceLeft() and forceRight() will result in an error if not present (but they allow less verbosity)
             // should be used only after checking current value
             L& forceLeft();
 

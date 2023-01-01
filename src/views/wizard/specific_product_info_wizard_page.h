@@ -30,7 +30,7 @@ namespace Views::Wizard {
             ProductWizardView* parentWizard;
             SpecificProductInfoVisitor visitor;
 
-            void setProductFields(Product* product);
+            void setProductFields(shared_ptr<Product> product);
 
         public:
             SpecificProductInfoWizardPage(QWidget* parent = nullptr);

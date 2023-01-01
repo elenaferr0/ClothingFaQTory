@@ -41,29 +41,29 @@ namespace Controllers {
             JeansRepository* jeansRepository;
             OverallsRepository* overallsRepository;
 
-            void save(Jeans*);
+            void save(shared_ptr<Jeans>);
 
-            void save(Hat*);
+            void save(shared_ptr<Hat>);
 
-            void save(Bracelet*);
+            void save(shared_ptr<Bracelet>);
 
-            void save(BackPack*);
+            void save(shared_ptr<BackPack>);
 
-            void save(Vest*);
+            void save(shared_ptr<Vest>);
 
-            void save(Overalls*);
+            void save(shared_ptr<Overalls>);
 
 
         public:
             WizardController(View*);
 
-            Material* findMaterialById(int id);
+            shared_ptr<Material> findMaterialById(int id);
 
-            Size* findSizeById(int id);
+            shared_ptr<Size> findSizeById(int id);
 
         public slots:
 
-            void handleProductEditAndCreate(Product* product, Product::ProductType productType);
+            void handleProductEditAndCreate(shared_ptr<Product> product, Product::ProductType productType);
 
     };
 }

@@ -13,7 +13,6 @@ QSqlQuery Repository::exec(const string& sql, const LinkedList<QVariant>& params
     }
     query.exec();
     qInfo() << query.lastQuery();
-    qInfo() << query.lastError().text();
     return query;
 }
 

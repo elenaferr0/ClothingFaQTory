@@ -17,13 +17,13 @@ using Core::VisitorInterface;
 namespace Models {
     class Product : public Model {
         protected:
-            string color;
-            Material material;
-            Size size;
-            int availableQuantity;
-            int soldQuantity;
-            string description;
-            string code;
+                string color;
+                Material material;
+                Size size;
+                int availableQuantity;
+                int soldQuantity;
+                string description;
+                string code;
 
         public:
             enum ProductType {

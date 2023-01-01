@@ -36,7 +36,7 @@ namespace Views::Wizard {
 
             Mode mode;
         private:
-            Product* product; // product which is being constructed
+            shared_ptr<Product> product; // product which is being constructed
             string getCategory();
 
             bool getSustainableMaterials();
@@ -44,23 +44,23 @@ namespace Views::Wizard {
             ClothingItem::Gender getGender();
 
         public:
-            void setProduct(Product* product);
+            void setProduct(shared_ptr<Product> product);
 
-            Product* getProduct() const;
+            shared_ptr<Product> getProduct() const;
 
             WizardController* getController() const;
 
             ProductWizardView(Mode mode, MainView* mainView, QWidget* parent = nullptr,
                               const QList<QString>& materials = QList<QString>(),
                               const QList<QString>& sizes = QList<QString>(),
-                              Product* = nullptr,
+                              shared_ptr<Product> = nullptr,
                               Product::ProductType productType = Product::Jeans);
 
             Mode getMode() const;
 
         signals:
 
-            void completed(Product* product, Product::ProductType);
+            void completed(shared_ptr<Product> product, Product::ProductType);
 
     };
 }

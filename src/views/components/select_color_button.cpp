@@ -2,8 +2,8 @@
 
 #include "select_color_button.h"
 #include <QColorDialog>
+#include <QDebug>
 
-int SelectColorButton::LIGHTNESS_THRESHOLD = 186;
 
 SelectColorButton::SelectColorButton(QWidget* parent, const QString& title)
         : QPushButton(parent) {
