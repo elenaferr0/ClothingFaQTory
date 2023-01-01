@@ -32,7 +32,7 @@ namespace Views {
             typedef Map<Product::ProductType, LinkedList<shared_ptr<Product>>>
                     ProductsMap;
 
-            static const unsigned int COLUMN_COUNT = 10;
+            static const int COLUMN_COUNT = 10;
             static const unsigned int EMPTY_STATE_IDX = 0;
             static const unsigned int TREE_VIEW_IDX = 1;
             QList<QString> materials;
