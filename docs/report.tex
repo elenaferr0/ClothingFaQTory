@@ -99,7 +99,7 @@ the manufacturing cost is higher. A percentage, named
 \texttt{extraPercentageOfMaterial}, is assigned to each size. This represents
 how much extra material is needed to fabricate an element of that size compared
 to the smallest size. For instance, if the field
-\texttt{extraPercentageOfMaterial} for the size \texttt{M} is set to 0.20, it
+\texttt{extraPercentageOfMaterial} for the size \texttt{M} is set to 20, it
 means that a clothing item of size \texttt{M} requires $20\%$ more material to
 be produced than one of size \texttt{XS} (which is the smallest). This
 percentage is supposed to be constant over time.
@@ -245,7 +245,9 @@ required.
 \subsection{Functional}
 \begin{itemize}
     \item Export entities as JSON, divided by type
-    \item Filter the products by type, code or price range (and combine these filters)
+    \item Filter the products by type, code or price range (and combine these filters).
+          The fields in the filter panel are validated (for instance, the user cannot proceed
+          if the price range is invalid). 
     \item Sort the products by available quantity, sold quantity or code
     \item Estimate the price of the products in the hierarchy
 \end{itemize}
@@ -267,6 +269,7 @@ required.
           icons to edit, delete and view also the specific product information (not shown
           in the main view).
     \item Asking confirmation through a dialog before deleting a product
+    \item Button to clear all the filters (appears only when filters are applied).
     \item Wizard to create and edit the products
           \begin{itemize}
               \item Possibility to generate a random code during the creation process (clicking the
