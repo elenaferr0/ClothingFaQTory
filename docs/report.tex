@@ -19,7 +19,7 @@
         \Large
         Elena Ferro\\
         \large
-        2042328
+        \#2042328
 
         \vspace{10cm}
 
@@ -66,19 +66,21 @@ product is the perfect circumstance to adopt polymorphism.
 The logic model is subdivided in two parts: the products hierarchy itself,
 whose diagram is shown in Figure \ref{fig:accessoriesUML} and Figure
 \ref{fig:clothingItemsUML} (splitted for reasons of space), and all the classes
-to interact with the database and handle errors, that will be described later
-in the data persistance section. \\\linebreak The products hierarchy represents
-all the items that the company sells. Each of them has generic information,
-such as color, description, size\dots. An alphanumeric code is also associated
-to each product. The code is not unique, since the software offers the
-possibility to store different variations of the same product (for example, two
-items with the same code could be manufactured in different colors).
+to interact with the database and handle errors, described in the
+\hyperref[sec:dataPersistance]{data persistance section}.
 
-The product can be either an \texttt{Accessory} or a \texttt{ClothingItem}.
-Both of them are implemented by three concrete classes, each of which has
-additional data to compute the final price (this data can either be a static
-constant, such as the \texttt{DIAMETER} of the \texttt{Hat} class, or a dynamic
-and instance-dependant value, such as the \texttt{capacity} in liters of a
+The products hierarchy represents all the items that the company sells. Each of
+them has generic information, such as \texttt{color}, \texttt{description},
+\texttt{size}, etc. An alphanumeric code is also associated to each product.
+The code is not unique, since the software offers the possibility to store
+different variations of the same product (for instance, two items with the same
+code could be manufactured in different colors).
+
+A product can be either an \texttt{Accessory} or a \texttt{ClothingItem}. Both
+of them are implemented by three concrete classes, each of which has additional
+data to compute the final price (this data can either be a static constant,
+such as the \texttt{DIAMETER} of the \texttt{Hat} class, or a dynamic and
+instance-dependant value, such as the \texttt{capacity} in liters of a
 \texttt{BackPack}). A very basic case of this calculation is the price of
 \texttt{Jeans}, obtained with the sum of the lateral area of two cilinders. On
 the other hand, a more elaborated example would be the \texttt{Bracelet} (which
@@ -86,32 +88,43 @@ is composed of a number of X pearls, each with a diameter of Y). Its cost is
 computed through the volume of each pearl (approximately a sphere) multiplied
 by the specific weight of the pearl's material.
 
-A diamond inheritance case has been inserted in the hierarchy: the price of
-\texttt{Overalls} is considered to be composed by the top part (a
+A diamond inheritance case has been inserted in the hierarchy:
+\texttt{Overalls} are considered to be a composition of the top part (a
 \texttt{Vest}) and the bottom part (a pair of \texttt{Jeans}). Hence, the final
-price comprises the sum of both its parents price.
+price is the sum of both its parents cost.
 
 The \texttt{Size} of the product affects the final price too: a clothing item
-of larger size obviously requires more material than a smaller one and
-therefore the manufacturing cost is higher. The way this logic is integrated in
-the price calculation is assigning a percentage, named
-\texttt{extraPercentageOfMaterial}, to each size. This represents how much
-extra material is needed to fabricate an element of that size compared to the
-smallest size. For example, if the field \texttt{extraPercentageOfMaterial} for
-the size \texttt{M} is set to 0.20, it means that a clothing item of size
-\texttt{M} requires $20\%$ more material to be produced than one of size
-\texttt{XS} (which is the smallest). This percentage is supposed to be constant
-over time.
+of larger size obviously requires more material than a smaller one, therefore
+the manufacturing cost is higher. A percentage, named
+\texttt{extraPercentageOfMaterial}, is assigned to each size. This represents
+how much extra material is needed to fabricate an element of that size compared
+to the smallest size. For instance, if the field
+\texttt{extraPercentageOfMaterial} for the size \texttt{M} is set to 0.20, it
+means that a clothing item of size \texttt{M} requires $20\%$ more material to
+be produced than one of size \texttt{XS} (which is the smallest). This
+percentage is supposed to be constant over time.
 
 \texttt{Product},
 \texttt{Size} and \texttt{Material} all extend the \texttt{Model} class, which
 represents a generic database entity and only exposes the \texttt{id} field.
 The \texttt{id} is set to -1 by default, which is to mean that the record has
-not been created yet. The Decorator design pattern has been implemented through
-the \texttt{JSONExportableDecorator} class, which enriches the \texttt{Model}
-class adding the functionality to export a model as a \texttt{QJsonObject},
-while keeping the hierarchy itself totally independent from any QT class (and
-thus potentially reusable with another framework).
+not been created yet.
+\\\linebreak
+Two custom containers have been created for the hierarchy entities;
+the first one is \texttt{Map<K, V>}, which stores ordered key-value
+pairs. Likewise \texttt{std::map}, it is based on a self-balancing red-black
+tree and thus provides efficient search, insert and delete operations in $O(\log n)$ time.
+Its main usages are holding the products subdivided by their concrete
+type and supporting a rudimentary caching system in \hyperref[sec:repositoryPattern]{\texttt{SizeRepository}
+    and \texttt{MaterialRepository}}, which simply stores in a map the
+entities that have already been retrieved by id, to avoid repeatedly quering
+the database for the same data.
+
+Since some functions of \texttt{Map}, such as \texttt{keys()} and
+\texttt{values()}, needed a list-like container, I also implemented a plain
+\texttt{LinkedList<T>} container, to make \texttt{Map} independent from
+\texttt{std::list}.
+
 \begin{figure}
     \centering
     \includegraphics[scale=0.15]{img/accessories_uml.png}
@@ -128,25 +141,38 @@ thus potentially reusable with another framework).
 
 \section{Polymorphism}
 One of the uses of polymorphism is the implementation of the Visitor design
-pattern, through the \texttt{VisitorInterface} class, in order to allow
-performing different operations on the hierarchy, depending on their dynamic
-type. This interface is extended by three different concrete classes. Two of
-them are used to build different UI layouts: \texttt{InfoDialogVisitor}, to
-display a dialog with the complete product information, and
-\texttt{SpecificProductInfoVisitor} to populate the form to create and edit the
-items. The third usage is the \texttt{FieldGetterVisitor}, which takes in a
-\texttt{Product} subclass and creates a key-value map between the field names
-and their current value. This comes in handy in different circumstances: in the
-aforementioned dialog to show the product information, but also to export the
-entities as JSON (coupled with the forenamed Decorator pattern implementation)
+pattern, through the \texttt{VisitorInterface} class. It allows performing
+different operations on the hierarchy, depending on their dynamic type. This
+interface is extended by three different concrete classes. Two of them are used
+to build different UI layouts: \texttt{InfoDialogVisitor}, to display a dialog
+with the complete product information, and \texttt{SpecificProductInfoVisitor}
+to populate the form for items creation and editing. The third usage is the
+\texttt{FieldGetterVisitor}, which takes a \texttt{Product} subclass as a
+parameter and creates a key-value map between its field names and their current
+value. This comes in handy in different circumstances: in the aforementioned
+dialog to show the product information, but also to export the entities as JSON
 and to dynamically build the database \texttt{INSERT} queries.
 
+With the purpose of dumping data to files, the Decorator design pattern has
+been utilized, coupled with the aforementioned \texttt{FieldGetterVisitor}. The
+\texttt{JSONExportableDecorator} class (extending \texttt{DecoratorInterface})
+enriches the \texttt{Model} class adding the functionality to export an entity
+as a \texttt{QJsonObject}, while keeping the hierarchy itself totally
+independent from any QT class (and thus potentially reusable with another
+framework).
+
 Other examples of polymorphism are the computation of the product price,
-different for each concrete class, and the implementation of the Repository
-pattern (illustrated in the next section), whose purpose is providing an
-abstraction layer between the data storage and the business logic.
+different for each concrete \texttt{Product} class, and the implementation of
+the Repository pattern (illustrated in the \hyperref[sec:dataPersistance]{data
+    persistance section}), whose purpose is providing an abstraction layer between
+the data storage and the business logic. The project is based on a
+Model-View-Controller architecture. Views and Controllers are totally
+independent from the data source, hence the possibility to effortlessly
+substitute the data source (for instance, with an API integration) leaving the
+frontend code entirely untouched.
 
 \section{Data persistance}
+\label{sec:dataPersistance}
 The chosen method for data persistance is a PostgreSQL database, currently
 hosted in a cloud server and running in a Docker container. The primary
 motivation for this choice is that Postgres natively supports both single and
@@ -161,6 +187,7 @@ The Entity-Relationship diagram and the schema of the database can both be
 found in the project files, inside the \texttt{docs} directory.
 
 \subsection{Repository pattern}
+\label{sec:repositoryPattern}
 In order to interact with the database, the Repository pattern has been
 implemented. A UML class diagram for this pattern can be found inside the
 \texttt{docs} directory.
@@ -170,41 +197,112 @@ functions to execute queries and check for errors. It is then extended by
 \texttt{ReadOnlyRepository<T>} and \texttt{DeleteOnlyRepository}, whose common
 child is \texttt{CRUDRepository<T>}.
 
-This structure supports having different types of concrete repositories. For
-instance, since its records will not be modified, \texttt{SizeRepository} is
-read-only. The \texttt{DeleteOnlyRepository} is useful when performing delete
-operations on the product hierarchy. Being product abstract, it would not be
-possible to instanciate a \texttt{CRUDRepository<Product>}, hence it is
-possible to use \texttt{DeleteOnlyRepository} which is not templetized.
+This structure provides different types of concrete repositories. For instance,
+since its records will not be modified, \texttt{SizeRepository} is read-only.
+The \texttt{DeleteOnlyRepository} is useful when performing delete operations
+on the product hierarchy, in fact, being product abstract, it would not be
+possible to instanciate a \texttt{CRUDRepository<Product>}, hence
+\texttt{DeleteOnlyRepository} can be use since is not templetized.
 
-Repositories for each \texttt{Product} subclass have to support CRUD
-operations. Consequently, a concrete repository extending and specializing at
-the same time \texttt{CRUDRepository<T>} has been implemented for each one of
-them. A utility class, \texttt{EntityMapper}, implements mapping functions
-between QT's \texttt{QSqlQuery} and the query result. This mapping function is
-then passed as an argument to the \texttt{ReadOnlyRepository}, which applies
-this function every time an entity should be returned by a query.
+Repositories for each \texttt{Product} subclass must support CRUD operations.
+Consequently, a concrete repository extending and specializing at the same time
+\texttt{CRUDRepository<T>} has been implemented for each one of them. A utility
+class, \texttt{EntityMapper}, places at the disposal mapping methods between
+QT's \texttt{QSqlQuery} and each entity. Those functions are then passed as a
+constructor argument to each one of the \texttt{ReadOnlyRepository}, which
+executes this method every time an entity should be returned by a query.
 
 The concrete repository instantiations take care of passing the correct table
 name and mapping function to its parents. Furthermore, in an hypothetical
 extension of this project, it might become necessary to have a specific query
-for a given entity. Having separated concrete repositories, allows simply
-implementing this method in the corresponding concrete class. This last
-described mechanism is inspired by Java's
-\href{https://hibernate.org/}{Hibernate} library.
+for a given entity. With separated concrete repositories, this method can
+conventiently be implemented in the corresponding concrete class, preserving
+the separation of concerns. This last described mechanism is inspired by Java's
+\href{https://hibernate.org/}{Hibernate} library.\\\linebreak Another layer of
+abstract is added through the \texttt{QueryBuilder} utility. No repository
+class uses directly SQL statements as strings, since this is error-prone, but
+rather composes them chaining calls to the \texttt{QueryBuilder} methods and
+executing \texttt{.build()} in the end (which returns the composed string).
 
 \subsubsection{Error handling}
 The mapping function mentioned earlier also checks the query for errors. Being
 the use of exceptions highly debated in C++, I preferred to implement a
 functional-languages-inspired error handling strategy: each one of those
-function returns \texttt{Either<Error, Entity>}, which contains
-an \texttt{Error} if it has occurred, otherwise the requested entity. The
-\texttt{Either} class offers methods to check if the contained value (stored in
-a \texttt{std::variant}) is right (thus the query was successfull) or left (the
+function returns \texttt{Either<Error, Entity>}, which contains an
+\texttt{Error} if it has occurred, otherwise the requested entity. The
+\texttt{Either} class offers methods to check if the contained value, stored in
+a \texttt{std::variant}, is right (thus the query was successfull) or left (the
 query resulted in an error) and the method \texttt{fold}, which accepts two
 lambda functions, \texttt{ifLeft} and \texttt{ifRight}.
 
 If an error was detected, the controller which called the repository method
-will take care of handling it, emitting a \texttt{databaseError} signal, 
-received by the \texttt{View}.
+will take care of handling it, emitting a \texttt{databaseError} signal,
+received by the respective \texttt{View}.
+
+\section{Implemented functionalities}
+The following list includes additional features, compared to those strictly
+required.
+\subsection{Functional}
+\begin{itemize}
+    \item Export entities as JSON, divided by type
+    \item Filter the products by type, code or price range (and combine these filters)
+    \item Sort the products by available quantity, sold quantity or code
+    \item Estimate the price of the products in the hierarchy
+\end{itemize}
+
+\subsection{Graphical}
+\begin{itemize}
+    \item Usage of a tab bar to distinguish between operations on the \texttt{product}
+          hierarchy and on the \texttt{material} table.
+    \item Usage of a toolbar in the Products tab to provide \texttt{Create new},
+          \texttt{Filter} and \texttt{Export to JSON} functionalities, with the
+          respective keyboard shortcuts.
+    \item Usage of a custom font.
+    \item Usage of a custom stylesheet to personalize the tab bar and the buttons in the
+          materials cost tab.
+    \item Usage of icons in the tab bar, toolbar, products tree view and materials cost
+          tab.
+    \item Usage of a tree view widget to display the products divided by product type.
+          When expanded, the general information for the items is shown, together with
+          icons to edit, delete and view also the specific product information (not shown
+          in the main view).
+    \item Asking confirmation through a dialog before deleting a product
+    \item Wizard to create and edit the products
+          \begin{itemize}
+              \item Possibility to generate a random code during the creation process (clicking the
+                    dices icon beside the code field).
+              \item Select the color with the color picker widget. Once the color is picked a
+                    preview of the color and its hex code will be available, with the button text
+                    adapting to the background, in order to be readable both with dark and light
+                    colors.
+              \item Keyboard shortcuts to navigate the wizard pages.
+              \item Validation of the mandatory form fields, which turn red if the user tries to
+                    click next but they are not filled.
+              \item Based on the chosen product type, the user will be prompted to insert the
+                    specific fields for that product (beside the generic information common to all
+                    concrete classes).
+          \end{itemize}
+
+\end{itemize}
+\newpage
+\section{Hours report}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Activity}                          & \textbf{Planned hours} & \textbf{Actual Hours} \\\hline
+        Planning project structure                 & 5                      & 5                     \\
+        Develop code for models and DB interaction & 12                     & 14                    \\
+        Study QT framework                         & 8                      & 11                    \\
+        UI code development                        & 15                     & 16                    \\
+        Testing and debugging                      & 6                      & 8                     \\
+        Report                                     & 4                      & 4                     \\\hline
+        \textbf{Total}                             & 50                     & \textbf{58}           \\\hline
+    \end{tabular}
+\end{table}
+As shown in the table, the project required 8 extra hours to be completed as
+compared to the initial evaluation. This is attributable to the necessity to
+deepen my knowledge of QT regarding both classes to interact with the database
+and UI widgets, but also to introduce graphical improvements such as custom
+icons and font.
 \end{document}
