@@ -31,7 +31,7 @@ class SelectColorButton : public QPushButton {
         void colorChanged(const QString&);
 
     private:
-        static int LIGHTNESS_THRESHOLD;
+        static const int LIGHTNESS_THRESHOLD = 150;
         QColor color;
 };
 
