@@ -4,7 +4,12 @@
 \usepackage{wrapfig}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
-\graphicspath{ {./images/} }
+\usepackage[font=it]{caption}
+\graphicspath{ {./img/} }
+\usepackage{titlesec}
+\titleformat{\section}[block]
+{\normalfont\Large\bfseries}{\thesection.}{1em}{}
+
 \begin{document}
 
 \begin{titlepage}
@@ -23,7 +28,7 @@
 
         \vspace{10cm}
 
-        \includegraphics[width=0.25\textwidth]{img/unipd.png}
+        \includegraphics[width=0.25\textwidth]{unipd.png}
 
         \Large
         \vspace{1cm}
@@ -35,8 +40,8 @@
 
     \end{center}
 \end{titlepage}
-% \tableofcontents
-% \newpage
+\tableofcontents
+\newpage
 \pagestyle{fancy}
 \fancyhead[R]{Elena Ferro - 2042328}
 \fancyhead[L]{Clothing FaQTory}
@@ -64,10 +69,10 @@ product is the perfect circumstance to adopt polymorphism.
 
 \section{Logic model}
 The logic model is subdivided in two parts: the products hierarchy itself,
-whose diagram is shown in Figure \ref{fig:accessoriesUML} and Figure
-\ref{fig:clothingItemsUML} (splitted for reasons of space), and all the classes
-to interact with the database and handle errors, described in the
-\hyperref[sec:dataPersistance]{data persistance section}.
+whose diagram is shown in \hyperref[fig:accessoriesUML]{Figure 1} and Figure
+\hyperref[fig:clothingItemsUML]{Figure 2} (splitted for reasons of space), and
+all the classes to interact with the database and handle errors, described in
+the \hyperref[sec:dataPersistance]{data persistance section}.
 
 The products hierarchy represents all the items that the company sells. Each of
 them has generic information, such as \texttt{color}, \texttt{description},
@@ -127,13 +132,13 @@ Since some functions of \texttt{Map}, such as \texttt{keys()} and
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.15]{img/accessories_uml.png}
+    \includegraphics[scale=0.155]{accessories_uml.png}
     \caption{Logic model class UML (Accessories part)}
     \label{fig:accessoriesUML}
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics[scale=0.155]{img/clothing_items_uml.png}
+    \includegraphics[scale=0.165]{clothing_items_uml.png}
     \caption{Logic model class UML (ClothingItems part)}
     \label{fig:clothingItemsUML}
 \end{figure}
@@ -239,17 +244,16 @@ If an error was detected, the controller which called the repository method
 will take care of handling it, emitting a \texttt{databaseError} signal,
 received by the respective \texttt{View}.
 
-\section{Implemented functionalities}
+\section{Implemented features}
 The following list includes additional features, compared to those strictly
 required.
 \subsection{Functional}
 \begin{itemize}
     \item Export entities as JSON, divided by type
-    \item Filter the products by type, code or price range (and combine these filters).
-          The fields in the filter panel are validated (for instance, the user cannot proceed
-          if the price range is invalid). 
+    \item Filter the products by type, code or price range (and eventually combine these
+          filters). The fields in the filter panel are validated.
     \item Sort the products by available quantity, sold quantity or code
-    \item Estimate the price of the products in the hierarchy
+    \item Obtain an esteem of the products price
 \end{itemize}
 
 \subsection{Graphical}
@@ -260,30 +264,31 @@ required.
           \texttt{Filter} and \texttt{Export to JSON} functionalities, with the
           respective keyboard shortcuts.
     \item Usage of a custom font.
-    \item Usage of a custom stylesheet to personalize the tab bar and the buttons in the
-          materials cost tab.
+    \item Usage of stylesheet to personalize the tab bar and the buttons in the materials
+          cost tab.
     \item Usage of icons in the tab bar, toolbar, products tree view and materials cost
           tab.
     \item Usage of a tree view widget to display the products divided by product type.
           When expanded, the general information for the items is shown, together with
-          icons to edit, delete and view also the specific product information (not shown
-          in the main view).
+          icon buttons to edit, delete and view also the specific product information
+          (not shown in the main view). A square icon with the preview of the product
+          color is also created for each row.
     \item Asking confirmation through a dialog before deleting a product
     \item Button to clear all the filters (appears only when filters are applied).
     \item Wizard to create and edit the products
           \begin{itemize}
               \item Possibility to generate a random code during the creation process (clicking the
                     dices icon beside the code field).
-              \item Select the color with the color picker widget. Once the color is picked a
-                    preview of the color and its hex code will be available, with the button text
-                    adapting to the background, in order to be readable both with dark and light
-                    colors.
+              \item Select the color of the product with the color picker widget. Once the color is
+                    picked a preview of the color and its hex code will be available, with the
+                    button text adapting to the background, in order to be readable with both dark
+                    and light colors.
               \item Keyboard shortcuts to navigate the wizard pages.
               \item Validation of the mandatory form fields, which turn red if the user tries to
                     click next but they are not filled.
               \item Based on the chosen product type, the user will be prompted to insert the
-                    specific fields for that product (beside the generic information common to all
-                    concrete classes).
+                    specific fields for that product (in addition to the generic information common
+                    to all concrete classes).
           \end{itemize}
 
 \end{itemize}
@@ -307,5 +312,5 @@ As shown in the table, the project required 8 extra hours to be completed as
 compared to the initial evaluation. This is attributable to the necessity to
 deepen my knowledge of QT regarding both classes to interact with the database
 and UI widgets, but also to introduce graphical improvements such as custom
-icons and font.
+icons and font and optimize the mapping of entities from queries.
 \end{document}
