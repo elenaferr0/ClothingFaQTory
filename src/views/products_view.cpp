@@ -29,8 +29,6 @@ using Controllers::WizardController;
 using Controllers::MainController;
 using Services::FileExport::JSONExportableDecorator;
 
-const int ProductsView::COLUMN_COUNT = 10;
-
 ProductsView::ProductsView(MainView* mainView, QWidget* parent) : WidgetViewParent(parent),
                                                                   priceRangeFilter(0, Views::FilterDialog::MAX_PRICE),
                                                                   mainView(mainView) {
@@ -47,12 +45,15 @@ void ProductsView::init(const ProductsMap& productsByType) {
     treeWidget->setColumnCount(COLUMN_COUNT);
     treeWidget->setSelectionMode(QAbstractItemView::NoSelection);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    stack = new QStackedWidget;
+    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
     toolBar = new QToolBar(this);
-    layout->addWidget(toolBar);
+    verticalLayout->addWidget(toolBar);
 
-    emptyState = new EmptyState;
-    layout->addWidget(emptyState);
+    EmptyState* emptyState = new EmptyState;
+    stack->insertWidget(EMPTY_STATE_IDX, emptyState);
+    stack->insertWidget(TREE_VIEW_IDX, treeWidget);
+    verticalLayout->addWidget(stack);
 
     filterButton = new QToolButton;
     exportButton = new QToolButton;
@@ -63,7 +64,7 @@ void ProductsView::init(const ProductsMap& productsByType) {
         treeWidget->setColumnWidth(i, colWidths.at(i));
     }
 
-    layout->setAlignment(Qt::AlignTop);
+    verticalLayout->setAlignment(Qt::AlignTop);
 
     toolBar->setMovable(false);
 
@@ -104,8 +105,6 @@ void ProductsView::init(const ProductsMap& productsByType) {
     toolBar->addWidget(rightAlignedWidget);
 
     toolBar->setIconSize(QSize(20, 20));
-
-    layout->addWidget(treeWidget);
 
     // fetch all materials and sizes and store them to reuse them
     LinkedList<shared_ptr<Material>> dbMaterials = dynamic_cast<MainController*>(controller)->findAllMaterials();
@@ -195,13 +194,11 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
     }
 
     if (areAllEmpty) {
-        emptyState->setVisible(true);
-        treeWidget->setVisible(false);
+        stack->setCurrentIndex(EMPTY_STATE_IDX);
         filterButton->setDisabled(true);
         exportButton->setDisabled(true);
     } else {
-        emptyState->setVisible(false);
-        treeWidget->setVisible(true);
+        stack->setCurrentIndex(TREE_VIEW_IDX);
         filterButton->setEnabled(true);
         exportButton->setEnabled(true);
     }
@@ -210,8 +207,7 @@ void ProductsView::initTreeView(const ProductsMap& productsByType) {
 
 void ProductsView::buildAndInsertChild(QTreeWidgetItem* topLevelItemWidget,
                                        shared_ptr<Product> product, Product::ProductType productType) {
-    treeWidget->setVisible(true);
-    emptyState->setVisible(false);
+    stack->setCurrentIndex(TREE_VIEW_IDX);
     QStringList values = getColumnsFromProduct(product);
     QTreeWidgetItem* row = new QTreeWidgetItem(values);
 
@@ -372,7 +368,8 @@ void Views::ProductsView::handleExportJsonButtonClicked() {
 }
 
 void Views::ProductsView::handleFilterButtonClicked() {
-    filterDialog = new FilterDialog(this);
+    FilterDialog* filterDialog = new FilterDialog(this);
+    filterDialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(filterDialog, SIGNAL(startFiltering(Filters)), this, SLOT(handleFilterDialogCompleted(Filters)));
     filterDialog->exec();
 }
