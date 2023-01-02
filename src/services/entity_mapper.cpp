@@ -39,14 +39,14 @@ Either<Error, shared_ptr<Size>> EntityMapper::size(const QSqlQuery& query) {
 	 * name string
 	 * extra_percentage_of_material double
 	 */
+    if (query.size() == 0) {
+        return shared_ptr<Size>(nullptr);
+    }
+
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
         return recordOrError.forceLeft();
-    }
-
-    if (query.size() == 0) {
-        return make_shared<Size>();
     }
 
     QSqlRecord record = recordOrError.forceRight();
@@ -63,14 +63,14 @@ Either<Error, shared_ptr<Material>> EntityMapper::material(const QSqlQuery& quer
      * unit_of_measure string
      * cost_per_unit double
      */
+    if (query.size() == 0) {
+        return shared_ptr<Material>(nullptr);
+    }
+
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
         return recordOrError.forceLeft();
-    }
-
-    if (query.size() == 0) {
-        return make_shared<Material>();
     }
 
     QSqlRecord record = recordOrError.forceRight();
@@ -94,14 +94,14 @@ Either<Error, shared_ptr<Hat>> EntityMapper::hat(const QSqlQuery& query) {
      * category string
      * is_baseball_cap bool
      */
+    if (query.size() == 0) {
+        return shared_ptr<Hat>(nullptr);
+    }
+
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
         return recordOrError.forceLeft();
-    }
-
-    if (query.size() == 0) {
-        return make_shared<Hat>();
     }
 
     QSqlRecord record = recordOrError.forceRight();
@@ -133,14 +133,14 @@ Either<Error, shared_ptr<Vest>> Services::EntityMapper::vest(const QSqlQuery& qu
      * material_id int
      * has_buttons bool
      */
+    if (query.size() == 0) {
+        return shared_ptr<Vest>(nullptr);
+    }
+
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
         return recordOrError.forceLeft();
-    }
-
-    if (query.size() == 0) {
-        return make_shared<Vest>();
     }
 
     QSqlRecord record = recordOrError.forceRight();
@@ -173,14 +173,14 @@ Either<Error, shared_ptr<BackPack>> EntityMapper::backPack(const QSqlQuery& quer
        * material_id int
        */
 
+    if (query.size() == 0) {
+        return shared_ptr<BackPack>(nullptr);
+    }
+
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
         return recordOrError.forceLeft();
-    }
-
-    if (query.size() == 0) {
-        return make_shared<BackPack>();
     }
 
     QSqlRecord record = recordOrError.forceRight();
@@ -213,14 +213,14 @@ Either<Error, shared_ptr<Bracelet>> Services::EntityMapper::bracelet(const QSqlQ
        * material_id int
        */
 
+    if (query.size() == 0) {
+        return shared_ptr<Bracelet>(nullptr);
+    }
+
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
         return recordOrError.forceLeft();
-    }
-
-    if (query.size() == 0) {
-        return make_shared<Bracelet>();
     }
 
     QSqlRecord record = recordOrError.forceRight();
@@ -254,14 +254,14 @@ Either<Error, shared_ptr<Jeans>> Services::EntityMapper::jeans(const QSqlQuery& 
        * shorts true
        */
 
+    if (query.size() == 0) {
+        return shared_ptr<Jeans>(nullptr);
+    }
+
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
         return recordOrError.forceLeft();
-    }
-
-    if (query.size() == 0) {
-        return make_shared<Jeans>();
     }
 
     QSqlRecord record = recordOrError.forceRight();
@@ -297,14 +297,14 @@ Either<Error, shared_ptr<Overalls>> Services::EntityMapper::overalls(const QSqlQ
     * shorts bool
     */
 
+    if (query.size() == 0) {
+        return shared_ptr<Overalls>(nullptr);
+    }
+
     Either<Error, QSqlRecord> recordOrError = checkQuery(query);
 
     if (recordOrError.isLeft()) {
         return recordOrError.forceLeft();
-    }
-
-    if (query.size() == 0) {
-        return make_shared<Overalls>();
     }
 
     QSqlRecord record = recordOrError.forceRight();

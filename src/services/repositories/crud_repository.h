@@ -22,6 +22,8 @@ using Models::FieldsGetterVisitor;
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
+        private:
+            static T mockEntity;
         public:
             CRUDRepository(const string& table,
                            function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction)
@@ -38,6 +40,9 @@ namespace Services {
             Either<Error, LinkedList<shared_ptr<T>>> findAll() final override;
 
     };
+
+    template<class T>
+    T CRUDRepository<T>::mockEntity = T();
 
     template<class T>
     Either<Error, shared_ptr<T>> CRUDRepository<T>::save(shared_ptr<T> entity) {
@@ -96,26 +101,39 @@ namespace Services {
 
     template<class T>
     Either<Error, shared_ptr<T>> CRUDRepository<T>::findById(int id) {
-        string mainEntitySql = Repository::queryBuilder.select()
-                .from(Repository::table)
+        FieldsGetterVisitor fieldsGetterVisitor(FieldsGetterVisitor::USE_ID_FOR_FOREIGN_KEYS,
+                                                FieldsGetterVisitor::INCLUDE_TABLE_NAME,
+                                                FieldsGetterVisitor::INCLUDE_ID);
+
+        mockEntity.accept(fieldsGetterVisitor);
+
+        string entityFields = fieldsGetterVisitor.getFields().keys().join(", ");
+        fieldsGetterVisitor.clear();
+
+        string sql = Repository::queryBuilder.select(
+                        entityFields + ", size.name as size_name, material.name as material_name, size.*, material.*")
+                .from("ONLY " + Repository::table)
+                .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
+                .join(QueryBuilder::INNER, "material",
+                      Expr({Repository::table + ".material_id"}).equals({"material.id"}))
                 .where(Expr(Repository::table + ".id").equals({"?"}))
                 .build();
 
-        QSqlQuery mainEntityQuery = Repository::exec(mainEntitySql, QVariant::fromValue<int>(id));
-        mainEntityQuery.next();
-        Either<Error, shared_ptr<T>> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
+        QSqlQuery query = Repository::exec(sql, QVariant::fromValue<int>(id));
+        query.next();
+        Either<Error, shared_ptr<T>> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(query);
         if (errorOrEntity.isLeft()) {
             qCritical() << QString::fromStdString(
                     errorOrEntity.forceLeft().getCause());
             return errorOrEntity; // return the error
         }
 
+        fieldsGetterVisitor.clear();
         return errorOrEntity.forceRight();
     }
 
     template<class T>
     Either<Error, LinkedList<shared_ptr<T>>> CRUDRepository<T>::findAll() {
-        static T mockEntity;
 
         FieldsGetterVisitor fieldsGetterVisitor(FieldsGetterVisitor::USE_ID_FOR_FOREIGN_KEYS,
                                                 FieldsGetterVisitor::INCLUDE_TABLE_NAME,
