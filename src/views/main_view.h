@@ -12,6 +12,7 @@
 #include "products_view.h"
 #include "materials_view.h"
 #include "view.h"
+#include "../services/connection/connectivity_manager.h"
 
 namespace Views {
     class ProductsView;
@@ -37,6 +38,8 @@ namespace Views {
             ProductsView* productsView;
             MaterialsView* materialsView;
             QTabWidget* tabWidget;
+            ConnectivityManager* connectivityManager;
+
         public slots:
 
             void handleDatabaseError(Error*);
