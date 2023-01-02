@@ -191,6 +191,12 @@ referencing the \texttt{size} and \texttt{material} tables.
 The Entity-Relationship diagram and the schema of the database can both be
 found in the project files, inside the \texttt{docs} directory.
 
+Postgres connections become idle after a certain timeout of inactivity, which
+obviously results in the inability to use the software. To overcome this
+problem, without having to set an unnecessarily large timeout, the
+\texttt{ConnectivityManager} class regularly pings the database every minute.
+To avoid slowing down the other operations, this is done in a separate thread.
+
 \subsection{Repository pattern}
 \label{sec:repositoryPattern}
 In order to interact with the database, the Repository pattern has been
@@ -201,6 +207,9 @@ The \texttt{Repository} class is abstract, and only exposes static utility
 functions to execute queries and check for errors. It is then extended by
 \texttt{ReadOnlyRepository<T>} and \texttt{DeleteOnlyRepository}, whose common
 child is \texttt{CRUDRepository<T>}.
+
+Each concrete repository implements the Singleton design pattern, which means
+that just a single instance will be created, and then referenced everywhere.
 
 This structure provides different types of concrete repositories. For instance,
 since its records will not be modified, \texttt{SizeRepository} is read-only.
