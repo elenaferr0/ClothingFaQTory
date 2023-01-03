@@ -170,22 +170,28 @@ Other examples of polymorphism are the computation of the product price,
 different for each concrete \texttt{Product} class, and the implementation of
 the Repository pattern (illustrated in the \hyperref[sec:dataPersistance]{data
     persistance section}), whose purpose is providing an abstraction layer between
-the data storage and the business logic. The project is based on a
-Model-View-Controller architecture. Views and Controllers are totally
-independent from the data source, hence the possibility to effortlessly
-substitute the data source (for instance, with an API integration) leaving the
-frontend code entirely untouched.
+the data storage and the business logic.
+
+Another significant example of polymorphism is the Strategy pattern. An
+abstract \texttt{Mapper}\label{txt:Mapper} defines the blueprint for an
+algorithm used to map query results, from \texttt{QSqlQuery} to a generic
+\texttt{Model*}. For each entity, a concrete class extending \texttt{Mapper}
+and overriding \texttt{operator()} has been defined.
+
+The project is based on a Model-View-Controller architecture. Views and
+Controllers are totally independent from the data source, hence the possibility
+to effortlessly substitute the data source (for instance, with an API
+integration) leaving the frontend code entirely untouched.
 
 \section{Data persistance}
 \label{sec:dataPersistance}
-The chosen method for data persistance is a PostgreSQL database, currently
-hosted in a cloud server and running in a Docker container. The primary
+The chosen method for data persistance is a PostgreSQL database. The primary
 motivation for this choice is that Postgres natively supports both single and
-multiple hierarchy between tables, furthermore is generally more efficient than
+multiple hierarchy between tables and is generally more efficient than
 other DBMS, such as MySQL.
 
 The database structure is therefore symmetrical to the C++ hierarchy, having
-the table \texttt{product} as a parent to all the others, with two foreign keys
+the table \texttt{product} as a parent to all the others, with foreign keys
 referencing the \texttt{size} and \texttt{material} tables.
 
 The Entity-Relationship diagram and the schema of the database can both be
@@ -193,7 +199,7 @@ found in the project files, inside the \texttt{docs} directory.
 
 Postgres connections become idle after a certain timeout of inactivity, which
 obviously results in the inability to use the software. To overcome this
-problem, without having to set an unnecessarily large timeout, the
+problem without having to set an unnecessarily large timeout, the
 \texttt{ConnectivityManager} class regularly pings the database every minute.
 To avoid slowing down the other operations, this is done in a separate thread.
 
@@ -208,46 +214,43 @@ functions to execute queries and check for errors. It is then extended by
 \texttt{ReadOnlyRepository<T>} and \texttt{DeleteOnlyRepository}, whose common
 child is \texttt{CRUDRepository<T>}.
 
-Each concrete repository implements the Singleton design pattern, which means
-that just a single instance will be created, and then referenced everywhere.
+Each concrete repository implements the Singleton pattern, which means that
+just a single instance will be created, and then referenced everywhere.
 
 This structure provides different types of concrete repositories. For instance,
-since its records will not be modified, \texttt{SizeRepository} is read-only.
-The \texttt{DeleteOnlyRepository} is useful when performing delete operations
-on the product hierarchy, in fact, being product abstract, it would not be
-possible to instanciate a \texttt{CRUDRepository<Product>}, hence
-\texttt{DeleteOnlyRepository} can be use since is not templetized.
+\texttt{SizeRepository} is read-only since its records will not be modified. Oh
+the other hand, the only operations carried out directly on the
+\texttt{product} table \texttt{DELETE} queries and given that the record can be
+deleted equally from the parent or child table, \texttt{DeleteOnlyRepository}
+is used.
 
 Repositories for each \texttt{Product} subclass must support CRUD operations.
 Consequently, a concrete repository extending and specializing at the same time
-\texttt{CRUDRepository<T>} has been implemented for each one of them. A utility
-class, \texttt{EntityMapper}, places at the disposal mapping methods between
-QT's \texttt{QSqlQuery} and each entity. Those functions are then passed as a
-constructor argument to each one of the \texttt{ReadOnlyRepository}, which
-executes this method every time an entity should be returned by a query.
+\texttt{CRUDRepository<T>} has been implemented for each one of them.
 
 The concrete repository instantiations take care of passing the correct table
-name and mapping function to its parents. Furthermore, in an hypothetical
-extension of this project, it might become necessary to have a specific query
-for a given entity. With separated concrete repositories, this method can
-conventiently be implemented in the corresponding concrete class, preserving
-the separation of concerns. This last described mechanism is inspired by Java's
-\href{https://hibernate.org/}{Hibernate} library.\\\linebreak Another layer of
-abstract is added through the \texttt{QueryBuilder} utility. No repository
-class uses directly SQL statements as strings, since this is error-prone, but
-rather composes them chaining calls to the \texttt{QueryBuilder} methods and
-executing \texttt{.build()} in the end (which returns the composed string).
+name and \hyperref[txt:Mapper]{\texttt{Mapper}} to its parents. Furthermore, in
+an hypothetical extension of this project, it might become necessary to have a
+specific query for a given entity. With separated concrete repositories, this
+method can conventiently be implemented in the corresponding concrete class,
+preserving the separation of concerns. This last described mechanism is
+inspired by Java's \href{https://hibernate.org/}{Hibernate}
+library.\\\linebreak Another layer of abstract is added through the
+\texttt{QueryBuilder} utility. No repository class uses directly SQL statements
+as strings, since this is error-prone, but rather composes them chaining calls
+to the \texttt{QueryBuilder} methods and executing \texttt{.build()} in the end
+(which returns the composed string).
 
 \subsubsection{Error handling}
-The mapping function mentioned earlier also checks the query for errors. Being
-the use of exceptions highly debated in C++, I preferred to implement a
-functional-languages-inspired error handling strategy: each one of those
-function returns \texttt{Either<Error, Entity>}, which contains an
-\texttt{Error} if it has occurred, otherwise the requested entity. The
-\texttt{Either} class offers methods to check if the contained value, stored in
-a \texttt{std::variant}, is right (thus the query was successfull) or left (the
-query resulted in an error) and the method \texttt{fold}, which accepts two
-lambda functions, \texttt{ifLeft} and \texttt{ifRight}.
+Repositories also checks the query for errors. Being the use of exceptions
+highly debated in C++, I preferred to implement a functional-languages-inspired
+error handling strategy: each function returns an object of type
+\texttt{Either<Error, Entity>}, which contains an \texttt{Error} if it has
+occurred, otherwise the requested entity. The \texttt{Either} class offers
+methods to check if the contained value, stored in a \texttt{std::variant}, is
+right (thus the query was successfull) or left (the query resulted in an error)
+and the method \texttt{fold}, which accepts two lambda functions,
+\texttt{ifLeft} and \texttt{ifRight}.
 
 If an error was detected, the controller which called the repository method
 will take care of handling it, emitting a \texttt{databaseError} signal,
@@ -260,9 +263,11 @@ required.
 \begin{itemize}
     \item Export entities as JSON, divided by type
     \item Filter the products by type, code or price range (and eventually combine these
-          filters). The fields in the filter panel are validated.
+          filters)
     \item Sort the products by available quantity, sold quantity or code
     \item Obtain an esteem of the products price
+    \item Validation of all the forms (in the filter panel, in the wizard to create and
+          edit the products and in the dialog to set the material price)
 \end{itemize}
 
 \subsection{Graphical}
@@ -284,10 +289,12 @@ required.
           color is also created for each row.
     \item Asking confirmation through a dialog before deleting a product
     \item Button to clear all the filters (appears only when filters are applied).
-    \item Wizard to create and edit the products
+          \pagebreak
+    \item Wizard to create and edit the products:
           \begin{itemize}
-              \item Possibility to generate a random code during the creation process (clicking the
-                    dices icon beside the code field).
+              \item Possibility to generate a random code during the creation process (clicking
+                    \includegraphics[width=12pt,height=12pt]{dices.png} beside the code
+                    field).
               \item Select the color of the product with the color picker widget. Once the color is
                     picked a preview of the color and its hex code will be available, with the
                     button text adapting to the background, in order to be readable with both dark
@@ -297,7 +304,7 @@ required.
                     click next but they are not filled.
               \item Based on the chosen product type, the user will be prompted to insert the
                     specific fields for that product (in addition to the generic information common
-                    to all concrete classes).
+                    to all the items).
           \end{itemize}
 
 \end{itemize}
