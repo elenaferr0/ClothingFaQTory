@@ -8,7 +8,9 @@
 #include "../../models/size.h"
 #include "../../models/material.h"
 #include "../../models/fields_getter_visitor.h"
+#include "../mappers/hat_mapper.h"
 #include <functional>
+#include <memory>
 
 using std::function;
 using Services::ReadOnlyRepository;
@@ -18,6 +20,7 @@ using Models::Size;
 using Models::Material;
 using Core::Containers::LinkedList;
 using Models::FieldsGetterVisitor;
+using std::dynamic_pointer_cast;
 
 namespace Services {
     template<class T>
@@ -25,9 +28,8 @@ namespace Services {
         private:
             static T mockEntity;
         public:
-            CRUDRepository(const string& table,
-                           function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction)
-                    : Repository(table), ReadOnlyRepository<T>(table, mappingFunction) {};
+            CRUDRepository(const string& table, Mapper* mapper)
+                    : Repository(table), ReadOnlyRepository<T>(table, mapper) {};
 
             Either<Error, shared_ptr<T>> save(shared_ptr<T> entity);
 
@@ -121,15 +123,16 @@ namespace Services {
 
         QSqlQuery query = Repository::exec(sql, QVariant::fromValue<int>(id));
         query.next();
-        Either<Error, shared_ptr<T>> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(query);
-        if (errorOrEntity.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    errorOrEntity.forceLeft().getCause());
-            return errorOrEntity; // return the error
+        Model* model = ReadOnlyRepository<T>::mapper->operator()(query);
+        Error* error = ReadOnlyRepository<T>::mapper->getAndResetError();
+
+        if (error) {
+            qCritical() << QString::fromStdString(error->getCause());
+            return *error; // return the error
         }
 
         fieldsGetterVisitor.clear();
-        return errorOrEntity.forceRight();
+        return {shared_ptr<T>(dynamic_cast<T*>(model))};
     }
 
     template<class T>
@@ -153,13 +156,18 @@ namespace Services {
                 .build();
         QSqlQuery query = Repository::exec(sql);
         LinkedList<shared_ptr<T>> entities;
+
         while (query.next()) {
-            Either<Error, shared_ptr<T>> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
-            if (entityOrError.isLeft()) {
-                qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
-                return entityOrError.forceLeft();
+            Model* model = ReadOnlyRepository<T>::mapper->operator()(query);
+            Error* error = ReadOnlyRepository<T>::mapper->getAndResetError();
+            if (error) {
+                qCritical() << QString::fromStdString(error->getCause());
+                error->setUserMessage("Error while fetching " + ReadOnlyRepository<T>::table);
+                return *error;
+            } else {
+                T* ptr = dynamic_cast<T*>(model);
+                entities.pushBack(shared_ptr<T>(ptr));
             }
-            entities.pushBack(entityOrError.forceRight());
         }
         return entities;
     }

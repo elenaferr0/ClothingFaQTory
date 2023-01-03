@@ -1,5 +1,6 @@
 #include "material_repository.h"
 #include "crud_repository.h"
+#include "../mappers/material_mapper.h"
 #include <QDebug>
 #include <QSqlRecord>
 #include <QSqlQuery>
@@ -13,7 +14,7 @@ using Core::Db::Expr;
 MaterialRepository* MaterialRepository::instance;
 
 MaterialRepository::MaterialRepository()
-        : Repository("material"), ReadOnlyRepository("material", EntityMapper::material) {};
+        : Repository("material"), ReadOnlyRepository("material", new MaterialMapper()) {};
 
 Either<Error, shared_ptr<Material>> MaterialRepository::findById(int id) {
     if (cachedMaterials.hasKey(id)) {
