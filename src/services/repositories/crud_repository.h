@@ -26,10 +26,14 @@ namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
         private:
-            static T mockEntity;
+            static const int COLUMN_NAME_POSITION = 0;
+
+            string getTableColumns();
+
+            string tableColumns;
+
         public:
-            CRUDRepository(const string& table, Mapper* mapper)
-                    : Repository(table), ReadOnlyRepository<T>(table, mapper) {};
+            CRUDRepository(const string& table, Mapper* mapper);
 
             Either<Error, shared_ptr<T>> save(shared_ptr<T> entity);
 
@@ -44,7 +48,33 @@ namespace Services {
     };
 
     template<class T>
-    T CRUDRepository<T>::mockEntity = T();
+    CRUDRepository<T>::CRUDRepository(const string& table, Mapper* mapper)
+            :Repository(table), ReadOnlyRepository<T>(table, mapper) {
+        tableColumns = getTableColumns();
+    }
+
+    template<class T>
+    string CRUDRepository<T>::getTableColumns() {
+        string sql = ReadOnlyRepository<T>::queryBuilder.select("column_name")
+                .from("information_schema.columns")
+                .where(Expr("table_name").equals({"?"}))
+                .build();
+
+        QVariant tableName = QString::fromStdString(ReadOnlyRepository<T>::table);
+        QSqlQuery query = ReadOnlyRepository<T>::exec(sql, tableName);
+        LinkedList<string> informationSchema;
+        while (query.next()) {
+            QSqlRecord record = query.record();
+            informationSchema.pushBack(record.value(COLUMN_NAME_POSITION).toString().toStdString());
+        }
+
+        LinkedList<string> entityFields;
+        for (auto i = informationSchema.begin(); i != informationSchema.end(); i++) {
+            entityFields.pushBack(Services::ReadOnlyRepository<T>::table + "." + (*i));
+        }
+
+        return entityFields.join(", ");
+    }
 
     template<class T>
     Either<Error, shared_ptr<T>> CRUDRepository<T>::save(shared_ptr<T> entity) {
@@ -103,17 +133,9 @@ namespace Services {
 
     template<class T>
     Either<Error, shared_ptr<T>> CRUDRepository<T>::findById(int id) {
-        FieldsGetterVisitor fieldsGetterVisitor(FieldsGetterVisitor::USE_ID_FOR_FOREIGN_KEYS,
-                                                FieldsGetterVisitor::INCLUDE_TABLE_NAME,
-                                                FieldsGetterVisitor::INCLUDE_ID);
-
-        mockEntity.accept(fieldsGetterVisitor);
-
-        string entityFields = fieldsGetterVisitor.getFields().keys().join(", ");
-        fieldsGetterVisitor.clear();
 
         string sql = Repository::queryBuilder.select(
-                        entityFields + ", size.name as size_name, material.name as material_name, size.*, material.*")
+                        tableColumns + ", size.name as size_name, material.name as material_name, size.*, material.*")
                 .from("ONLY " + Repository::table)
                 .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
                 .join(QueryBuilder::INNER, "material",
@@ -131,24 +153,13 @@ namespace Services {
             return *error; // return the error
         }
 
-        fieldsGetterVisitor.clear();
         return {shared_ptr<T>(dynamic_cast<T*>(model))};
     }
 
     template<class T>
     Either<Error, LinkedList<shared_ptr<T>>> CRUDRepository<T>::findAll() {
-
-        FieldsGetterVisitor fieldsGetterVisitor(FieldsGetterVisitor::USE_ID_FOR_FOREIGN_KEYS,
-                                                FieldsGetterVisitor::INCLUDE_TABLE_NAME,
-                                                FieldsGetterVisitor::INCLUDE_ID);
-
-        mockEntity.accept(fieldsGetterVisitor);
-
-        string entityFields = fieldsGetterVisitor.getFields().keys().join(", ");
-        fieldsGetterVisitor.clear();
-
         string sql = Repository::queryBuilder.select(
-                        entityFields + ", size.name as size_name, material.name as material_name, size.*, material.*")
+                        tableColumns + ", size.name as size_name, material.name as material_name, size.*, material.*")
                 .from("ONLY " + Repository::table)
                 .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
                 .join(QueryBuilder::INNER, "material",
