@@ -70,3 +70,12 @@ void MainView::handleDatabaseError(Error* e) {
     errorBox->exec();
     qFatal("Aborting due to database error.");
 }
+
+Views::MainView::~MainView() {
+    QSqlDatabase db = QSqlDatabase::database();
+
+    if (db.isOpen()) {
+        qInfo() << "Closing db connection...";
+        db.close();
+    }
+}

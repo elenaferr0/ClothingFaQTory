@@ -34,6 +34,8 @@ namespace Views {
         public:
             MainView(QWidget* parent = nullptr);
 
+            ~MainView();
+
         private:
             ProductsView* productsView;
             MaterialsView* materialsView;

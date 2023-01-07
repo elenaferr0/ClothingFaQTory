@@ -11,7 +11,7 @@ HEADERS = $$files("src/*.h", true)
 RESOURCES += resources.qrc
 
 # enable or disable qt logging
-CONFIG += develop
+CONFIG += release
 CONFIG(release, develop|release): DEFINES += QT_NO_DEBUG_OUTPUT
 CONFIG(release, develop|release): DEFINES += QT_NO_INFO_OUTPUT
 CONFIG(release, develop|release): DEFINES += QT_NO_WARNING_OUTPUT
