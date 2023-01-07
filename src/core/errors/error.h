@@ -22,6 +22,8 @@ namespace Core {
             const string& getType() const;
 
             void setUserMessage(const string&);
+
+            Error* clone() const;
     };
 }
 

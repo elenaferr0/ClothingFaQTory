@@ -1,4 +1,5 @@
 #include "size_repository.h"
+#include "../mappers/size_mapper.h"
 
 
 using Core::Db::Expr;
@@ -9,7 +10,7 @@ using Services::SizeRepository;
 SizeRepository* SizeRepository::instance;
 
 SizeRepository::SizeRepository()
-        : Repository("size"), ReadOnlyRepository("size", EntityMapper::size) {};
+        : Repository("size"), ReadOnlyRepository("size", new SizeMapper()) {};
 
 SizeRepository* Services::SizeRepository::getInstance() {
     if (instance == nullptr) {

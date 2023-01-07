@@ -135,7 +135,10 @@ void GenericProductInfoWizardPage::handleColorChange(const QString& hex) {
 
 void GenericProductInfoWizardPage::cleanupPage() {
     codeLineEdit->clear();
-    colorButton->setColor(QColor("#ffffff"));
+    if (parentWizard->getMode() == ProductWizardView::Create) {
+        colorButton->setColor(QColor(""));
+        mockColorLineEdit->clear();
+    }
     soldQuantitySpinBox->setValue(0);
     availableQuantitySpinBox->setValue(0);
     descriptionTextEdit->clear();

@@ -20,3 +20,7 @@ void Error::setUserMessage(const string& userMessage) {
 const string& Core::Error::getType() const {
     return type;
 }
+
+Error* Core::Error::clone() const {
+    return new Error(*this);
+}

@@ -2,7 +2,7 @@
 
 #include <QMessageBox>
 #include "main_view.h"
-#include "../services/connectivity_manager.h"
+#include "../services/connection/connectivity_manager.h"
 #include "no_connection.h"
 #include "products_view.h"
 
@@ -21,11 +21,12 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     db.setUserName("qtuser");
     db.setPassword("8rF6*%3t8uQV1jYV6U0m");
 
-    if (!ConnectivityManager::checkConnection() || !db.open()) {
+    if (!ConnectivityManager::internetConnection() || !db.open()) {
         setWindowTitle("Connection Error");
         setCentralWidget(new NoConnection());
         return;
     }
+    connectivityManager = new ConnectivityManager(db);
 
     setWindowTitle("Clothing FaQTory");
 
@@ -68,4 +69,13 @@ void MainView::handleDatabaseError(Error* e) {
     errorBox->resize(300, 200);
     errorBox->exec();
     qFatal("Aborting due to database error.");
+}
+
+Views::MainView::~MainView() {
+    QSqlDatabase db = QSqlDatabase::database();
+
+    if (db.isOpen()) {
+        qInfo() << "Closing db connection...";
+        db.close();
+    }
 }

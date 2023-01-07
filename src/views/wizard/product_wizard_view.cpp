@@ -3,6 +3,8 @@
 #include "generic_product_info_wizard_page.h"
 #include "specific_product_info_wizard_page.h"
 #include <memory>
+#include <QMessageBox>
+#include <QDialogButtonBox>
 
 using std::dynamic_pointer_cast;
 using Views::Wizard::ProductWizardView;
@@ -28,8 +30,8 @@ ProductWizardView::ProductWizardView(Mode mode,
 
     setDefaultProperty("QTextEdit", "plainText", "textChanged");
 
-    connect(this, SIGNAL(completed(shared_ptr < Product > , Product::ProductType)),
-            controller, SLOT(handleProductEditAndCreate(shared_ptr < Product > , Product::ProductType)));
+    connect(this, SIGNAL(completed(shared_ptr<Product>, Product::ProductType)),
+            controller, SLOT(handleProductEditAndCreate(shared_ptr<Product>, Product::ProductType)));
 
 }
 
@@ -123,4 +125,25 @@ void ProductWizardView::cleanupPage(int id) {
 
 ProductWizardView::Mode Views::Wizard::ProductWizardView::getMode() const {
     return mode;
+}
+
+void Views::Wizard::ProductWizardView::reject() {
+    QMessageBox* confirmMessageBox = new QMessageBox;
+    confirmMessageBox->setWindowTitle("Cancel confirmation");
+    confirmMessageBox->setText("### Do you really want to cancel this operation?");
+    confirmMessageBox->setInformativeText("Unsaved changes will not be recoverable");
+    confirmMessageBox->setTextFormat(Qt::MarkdownText);
+
+    QPushButton* confirmButton = new QPushButton(tr("&Confirm"));
+    QPushButton* keepEditingButton = new QPushButton(tr("&Keep editing"));
+    confirmMessageBox->addButton(confirmButton, QMessageBox::ButtonRole::AcceptRole);
+    confirmMessageBox->addButton(keepEditingButton, QMessageBox::ButtonRole::RejectRole);
+
+    confirmMessageBox->setAttribute(Qt::WA_DeleteOnClose);
+    confirmMessageBox->resize(300, 200);
+    int result = confirmMessageBox->exec();
+
+    if (result == QMessageBox::Rejected) {
+        QWizard::reject();
+    }
 }

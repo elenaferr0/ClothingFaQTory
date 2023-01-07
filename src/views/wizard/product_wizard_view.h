@@ -34,6 +34,10 @@ namespace Views::Wizard {
 
             void cleanupPage(int id) override;
 
+        public:
+            void reject() override;
+
+        protected:
             Mode mode;
         private:
             shared_ptr<Product> product; // product which is being constructed

@@ -8,7 +8,9 @@
 #include "../../models/size.h"
 #include "../../models/material.h"
 #include "../../models/fields_getter_visitor.h"
+#include "../mappers/hat_mapper.h"
 #include <functional>
+#include <memory>
 
 using std::function;
 using Services::ReadOnlyRepository;
@@ -18,14 +20,20 @@ using Models::Size;
 using Models::Material;
 using Core::Containers::LinkedList;
 using Models::FieldsGetterVisitor;
+using std::dynamic_pointer_cast;
 
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
+        private:
+            static const int COLUMN_NAME_POSITION = 0;
+
+            string getTableColumns();
+
+            string tableColumns;
+
         public:
-            CRUDRepository(const string& table,
-                           function<Either<Error, shared_ptr<T>>(const QSqlQuery&)> mappingFunction)
-                    : Repository(table), ReadOnlyRepository<T>(table, mappingFunction) {};
+            CRUDRepository(const string& table, Mapper* mapper);
 
             Either<Error, shared_ptr<T>> save(shared_ptr<T> entity);
 
@@ -38,6 +46,35 @@ namespace Services {
             Either<Error, LinkedList<shared_ptr<T>>> findAll() final override;
 
     };
+
+    template<class T>
+    CRUDRepository<T>::CRUDRepository(const string& table, Mapper* mapper)
+            :Repository(table), ReadOnlyRepository<T>(table, mapper) {
+        tableColumns = getTableColumns();
+    }
+
+    template<class T>
+    string CRUDRepository<T>::getTableColumns() {
+        string sql = ReadOnlyRepository<T>::queryBuilder.select("column_name")
+                .from("information_schema.columns")
+                .where(Expr("table_name").equals({"?"}))
+                .build();
+
+        QVariant tableName = QString::fromStdString(ReadOnlyRepository<T>::table);
+        QSqlQuery query = ReadOnlyRepository<T>::exec(sql, tableName);
+        LinkedList<string> informationSchema;
+        while (query.next()) {
+            QSqlRecord record = query.record();
+            informationSchema.pushBack(record.value(COLUMN_NAME_POSITION).toString().toStdString());
+        }
+
+        LinkedList<string> entityFields;
+        for (auto i = informationSchema.begin(); i != informationSchema.end(); i++) {
+            entityFields.pushBack(Services::ReadOnlyRepository<T>::table + "." + (*i));
+        }
+
+        return entityFields.join(", ");
+    }
 
     template<class T>
     Either<Error, shared_ptr<T>> CRUDRepository<T>::save(shared_ptr<T> entity) {
@@ -96,38 +133,33 @@ namespace Services {
 
     template<class T>
     Either<Error, shared_ptr<T>> CRUDRepository<T>::findById(int id) {
-        string mainEntitySql = Repository::queryBuilder.select()
-                .from(Repository::table)
+
+        string sql = Repository::queryBuilder.select(
+                        tableColumns + ", size.name as size_name, material.name as material_name, size.*, material.*")
+                .from("ONLY " + Repository::table)
+                .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
+                .join(QueryBuilder::INNER, "material",
+                      Expr({Repository::table + ".material_id"}).equals({"material.id"}))
                 .where(Expr(Repository::table + ".id").equals({"?"}))
                 .build();
 
-        QSqlQuery mainEntityQuery = Repository::exec(mainEntitySql, QVariant::fromValue<int>(id));
-        mainEntityQuery.next();
-        Either<Error, shared_ptr<T>> errorOrEntity = ReadOnlyRepository<T>::mappingFunction(mainEntityQuery);
-        if (errorOrEntity.isLeft()) {
-            qCritical() << QString::fromStdString(
-                    errorOrEntity.forceLeft().getCause());
-            return errorOrEntity; // return the error
+        QSqlQuery query = Repository::exec(sql, QVariant::fromValue<int>(id));
+        query.next();
+        Model* model = ReadOnlyRepository<T>::mapper->operator()(query);
+        Error* error = ReadOnlyRepository<T>::mapper->getAndResetError();
+
+        if (error) {
+            qCritical() << QString::fromStdString(error->getCause());
+            return *error; // return the error
         }
 
-        return errorOrEntity.forceRight();
+        return {shared_ptr<T>(dynamic_cast<T*>(model))};
     }
 
     template<class T>
     Either<Error, LinkedList<shared_ptr<T>>> CRUDRepository<T>::findAll() {
-        static T mockEntity;
-
-        FieldsGetterVisitor fieldsGetterVisitor(FieldsGetterVisitor::USE_ID_FOR_FOREIGN_KEYS,
-                                                FieldsGetterVisitor::INCLUDE_TABLE_NAME,
-                                                FieldsGetterVisitor::INCLUDE_ID);
-
-        mockEntity.accept(fieldsGetterVisitor);
-
-        string entityFields = fieldsGetterVisitor.getFields().keys().join(", ");
-        fieldsGetterVisitor.clear();
-
         string sql = Repository::queryBuilder.select(
-                        entityFields + ", size.name as size_name, material.name as material_name, size.*, material.*")
+                        tableColumns + ", size.name as size_name, material.name as material_name, size.*, material.*")
                 .from("ONLY " + Repository::table)
                 .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
                 .join(QueryBuilder::INNER, "material",
@@ -135,13 +167,18 @@ namespace Services {
                 .build();
         QSqlQuery query = Repository::exec(sql);
         LinkedList<shared_ptr<T>> entities;
+
         while (query.next()) {
-            Either<Error, shared_ptr<T>> entityOrError = ReadOnlyRepository<T>::mappingFunction(query);
-            if (entityOrError.isLeft()) {
-                qCritical() << QString::fromStdString(entityOrError.forceLeft().getCause());
-                return entityOrError.forceLeft();
+            Model* model = ReadOnlyRepository<T>::mapper->operator()(query);
+            Error* error = ReadOnlyRepository<T>::mapper->getAndResetError();
+            if (error) {
+                qCritical() << QString::fromStdString(error->getCause());
+                error->setUserMessage("Error while fetching " + ReadOnlyRepository<T>::table);
+                return *error;
+            } else {
+                T* ptr = dynamic_cast<T*>(model);
+                entities.pushBack(shared_ptr<T>(ptr));
             }
-            entities.pushBack(entityOrError.forceRight());
         }
         return entities;
     }
