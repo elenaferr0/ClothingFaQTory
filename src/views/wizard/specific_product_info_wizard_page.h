@@ -14,6 +14,7 @@
 #include "../../models/accessories/bracelet.h"
 #include "../../models/accessories/backpack.h"
 #include "product_wizard_view.h"
+#include "../../services/product_factory.h"
 
 using Models::Product;
 using Models::Accessories::Hat;
@@ -28,8 +29,8 @@ namespace Views::Wizard {
         Q_OBJECT
         private:
             ProductWizardView* parentWizard;
-            SpecificProductInfoVisitor visitor;
-
+        SpecificProductInfoVisitor visitor;
+        ProductFactory productFactory;
             void setProductFields(shared_ptr<Product> product);
 
         public:
