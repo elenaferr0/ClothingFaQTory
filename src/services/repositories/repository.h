@@ -23,7 +23,7 @@ namespace Services {
         public:
             Repository(const string& table);
 
-            virtual ~Repository() = default;
+            virtual ~Repository() = 0;
 
         protected:
             string table;

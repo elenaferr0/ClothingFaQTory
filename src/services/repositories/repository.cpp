@@ -4,6 +4,8 @@ using Services::Repository;
 
 QueryBuilder Services::Repository::queryBuilder;
 
+Repository::~Repository() = default;
+
 QSqlQuery Repository::exec(const string& sql, const LinkedList<QVariant>& params) {
     QSqlQuery query;
     query.prepare(QString::fromStdString(sql));
