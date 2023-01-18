@@ -45,6 +45,8 @@ namespace Services {
 
         Either<Error, LinkedList<shared_ptr<T>>> findAll() final override;
 
+        Either<Error, LinkedList<shared_ptr<T>>> findAllWithFilters(const Filters& filters);
+
     };
 
     template<class T>
@@ -156,6 +158,34 @@ namespace Services {
         }
 
         return {shared_ptr<T>(dynamic_cast<T*>(model))};
+    }
+
+    template<class T>
+    Either<Error, LinkedList<shared_ptr<T>>>
+    CRUDRepository<T>::findAllWithFilters(const Filters& filters) {
+        QString correspondingProductType = QString::fromStdString(Repository::table).at(0).toUpper() +
+                                           QString::fromStdString(Repository::table.substr(1));
+        if (filters.getProductTypes().getSize() != 0 && !filters.getProductTypes().contains(correspondingProductType)) {
+            return LinkedList<shared_ptr<T>>();
+        }
+
+        auto tempQueryBuilder = Repository::queryBuilder.select(
+                        tableColumns + ", size.name as size_name, material.name as material_name, size.*, material.*")
+                .from("ONLY " + Repository::table)
+                .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
+                .join(QueryBuilder::INNER, "material",
+                      Expr({Repository::table + ".material_id"}).equals({"material.id"}));
+
+        if (filters.getCode() != "") {
+            tempQueryBuilder = tempQueryBuilder.where(Expr("code").ilike("%" + filters.getCode().toStdString() + "%"));
+        }
+
+        if (filters.getOrderByField().first != "") {
+            tempQueryBuilder = tempQueryBuilder.orderBy(filters.getOrderByField().first.toStdString(),
+                                                        filters.getOrderByField().second);
+        }
+
+        return ReadOnlyRepository<T>::findEntities(tempQueryBuilder.build());
     }
 
     template<class T>
