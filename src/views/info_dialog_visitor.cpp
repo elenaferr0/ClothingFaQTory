@@ -26,7 +26,7 @@ void Views::InfoDialogVisitor::visitHat(Hat& hat) {
     QLabel* icon = new QLabel();
     QString path = ":/assets/icons/";
     path += (hat.isBaseballCap() ? "cap.png" : "hat.png");
-    icon->setPixmap(QPixmap(path));
+    icon->setPixmap(QPixmap(path).scaledToHeight(ICON_SIZE));
     hatTypeLayout->addWidget(icon);
     layout->addRow("Hat type", hatTypeLayout);
 }

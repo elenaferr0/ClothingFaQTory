@@ -32,5 +32,5 @@ Hat* Services::HatMapper::operator()(const QSqlQuery& query) {
                    record.value("hat.sold_quantity").toInt(),
                    record.value("hat.description").toString().toStdString(),
                    record.value("hat.category").toString().toStdString(),
-                   record.value("hat.is_baseball_hat").toBool());
+                   record.value("hat.is_baseball_cap").toBool());
 }

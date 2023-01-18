@@ -26,19 +26,20 @@ using Models::ClothingItems::Vest;
 
 namespace Views::Wizard {
     class SpecificProductInfoWizardPage : public QWizardPage {
-        Q_OBJECT
-        private:
-            ProductWizardView* parentWizard;
+    Q_OBJECT
+    private:
+        ProductWizardView* parentWizard;
         SpecificProductInfoVisitor visitor;
         ProductFactory productFactory;
-            void setProductFields(shared_ptr<Product> product);
 
-        public:
-            SpecificProductInfoWizardPage(QWidget* parent = nullptr);
+        void setProductFields(shared_ptr<Product> product);
 
-            void cleanupPage() override;
+    public:
+        SpecificProductInfoWizardPage(QWidget* parent = nullptr);
 
-            void initializePage() override;
+        void cleanupPage() override;
+
+        void initializePage() override;
     };
 
 }

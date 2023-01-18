@@ -25,25 +25,25 @@ using std::dynamic_pointer_cast;
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
-        private:
-            static const int COLUMN_NAME_POSITION = 0;
+    private:
+        static const int COLUMN_NAME_POSITION = 0;
 
-            string getTableColumns();
+        string getTableColumns();
 
-            string tableColumns;
+        string tableColumns;
 
-        public:
-            CRUDRepository(const string& table, Mapper* mapper);
+    public:
+        CRUDRepository(const string& table, Mapper* mapper);
 
-            Either<Error, shared_ptr<T>> save(shared_ptr<T> entity);
+        Either<Error, shared_ptr<T>> save(shared_ptr<T> entity);
 
-            Either<Error, LinkedList<shared_ptr<T>>> saveAll(LinkedList<shared_ptr<T>>& entities);
+        Either<Error, LinkedList<shared_ptr<T>>> saveAll(LinkedList<shared_ptr<T>>& entities);
 
-            optional<Error> deleteT(const T& entity);
+        optional<Error> deleteT(const T& entity);
 
-            Either<Error, shared_ptr<T>> findById(int id) final override;
+        Either<Error, shared_ptr<T>> findById(int id) final override;
 
-            Either<Error, LinkedList<shared_ptr<T>>> findAll() final override;
+        Either<Error, LinkedList<shared_ptr<T>>> findAll() final override;
 
     };
 
@@ -93,7 +93,7 @@ namespace Services {
             query = CRUDRepository<T>::exec(sql, values);
             query.next();
             entity->setId(query.lastInsertId().toInt());
-        } else {// exists => should update all the fieldNames
+        } else {// exists => should update all the fields
 
             sql = CRUDRepository<T>::queryBuilder.update(CRUDRepository<T>::table)
                     .set(keys)
@@ -101,7 +101,9 @@ namespace Services {
                     .build();
             keys.pushBack("id");
             values.pushBack(entity->getId());
-
+            for (auto i = values.begin(); i != values.end(); i++) {
+                qInfo() << *i << Qt::endl;
+            }
             query = CRUDRepository<T>::exec(sql, values);
             query.next();
         }
