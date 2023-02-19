@@ -16,10 +16,10 @@ MainView::MainView(QWidget* parent) : QMainWindow(parent) {
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
 
     db.setDatabaseName("clothingfaqtory");
-    db.setHostName("129.152.21.9");
+    db.setHostName("");
     db.setPort(5432);
-    db.setUserName("qtuser");
-    db.setPassword("8rF6*%3t8uQV1jYV6U0m");
+    db.setUserName("");
+    db.setPassword("");
 
     if (!ConnectivityManager::internetConnection() || !db.open()) {
         setWindowTitle("Connection Error");
