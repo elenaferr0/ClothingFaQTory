@@ -25,25 +25,27 @@ using std::dynamic_pointer_cast;
 namespace Services {
     template<class T>
     class CRUDRepository : public ReadOnlyRepository<T> {
-        private:
-            static const int COLUMN_NAME_POSITION = 0;
+    private:
+        static const int COLUMN_NAME_POSITION = 0;
 
-            string getTableColumns();
+        string getTableColumns();
 
-            string tableColumns;
+        string tableColumns;
 
-        public:
-            CRUDRepository(const string& table, Mapper* mapper);
+    public:
+        CRUDRepository(const string& table, Mapper* mapper);
 
-            Either<Error, shared_ptr<T>> save(shared_ptr<T> entity);
+        Either<Error, shared_ptr<T>> save(shared_ptr<T> entity);
 
-            Either<Error, LinkedList<shared_ptr<T>>> saveAll(LinkedList<shared_ptr<T>>& entities);
+        Either<Error, LinkedList<shared_ptr<T>>> saveAll(LinkedList<shared_ptr<T>>& entities);
 
-            optional<Error> deleteT(const T& entity);
+        optional<Error> deleteT(const T& entity);
 
-            Either<Error, shared_ptr<T>> findById(int id) final override;
+        Either<Error, shared_ptr<T>> findById(int id) final override;
 
-            Either<Error, LinkedList<shared_ptr<T>>> findAll() final override;
+        Either<Error, LinkedList<shared_ptr<T>>> findAll() final override;
+
+        Either<Error, LinkedList<shared_ptr<T>>> findAllWithFilters(const Filters& filters);
 
     };
 
@@ -93,7 +95,7 @@ namespace Services {
             query = CRUDRepository<T>::exec(sql, values);
             query.next();
             entity->setId(query.lastInsertId().toInt());
-        } else {// exists => should update all the fieldNames
+        } else {// exists => should update all the fields
 
             sql = CRUDRepository<T>::queryBuilder.update(CRUDRepository<T>::table)
                     .set(keys)
@@ -101,7 +103,9 @@ namespace Services {
                     .build();
             keys.pushBack("id");
             values.pushBack(entity->getId());
-
+            for (auto i = values.begin(); i != values.end(); i++) {
+                qInfo() << *i << Qt::endl;
+            }
             query = CRUDRepository<T>::exec(sql, values);
             query.next();
         }
@@ -154,6 +158,34 @@ namespace Services {
         }
 
         return {shared_ptr<T>(dynamic_cast<T*>(model))};
+    }
+
+    template<class T>
+    Either<Error, LinkedList<shared_ptr<T>>>
+    CRUDRepository<T>::findAllWithFilters(const Filters& filters) {
+        QString correspondingProductType = QString::fromStdString(Repository::table).at(0).toUpper() +
+                                           QString::fromStdString(Repository::table.substr(1));
+        if (filters.getProductTypes().getSize() != 0 && !filters.getProductTypes().contains(correspondingProductType)) {
+            return LinkedList<shared_ptr<T>>();
+        }
+
+        auto tempQueryBuilder = Repository::queryBuilder.select(
+                        tableColumns + ", size.name as size_name, material.name as material_name, size.*, material.*")
+                .from("ONLY " + Repository::table)
+                .join(QueryBuilder::INNER, "size", Expr({Repository::table + ".size_id"}).equals({"size.id"}))
+                .join(QueryBuilder::INNER, "material",
+                      Expr({Repository::table + ".material_id"}).equals({"material.id"}));
+
+        if (filters.getCode() != "") {
+            tempQueryBuilder = tempQueryBuilder.where(Expr("code").ilike("%" + filters.getCode().toStdString() + "%"));
+        }
+
+        if (filters.getOrderByField().first != "") {
+            tempQueryBuilder = tempQueryBuilder.orderBy(filters.getOrderByField().first.toStdString(),
+                                                        filters.getOrderByField().second);
+        }
+
+        return ReadOnlyRepository<T>::findEntities(tempQueryBuilder.build());
     }
 
     template<class T>

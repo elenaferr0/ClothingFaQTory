@@ -200,13 +200,20 @@ void Views::FilterDialog::handleLineEditChanged(const QString&) {
 
 void Views::FilterDialog::completed() {
     LinkedList<QString> productTypes;
+
+    for (int i = Product::ProductType::Jeans; i != Product::ProductType::Hat + 1; i++) {
+        auto productType = static_cast<Product::ProductType>(i);
+        QString type = QString::fromStdString(Product::productTypeToString(productType));
+        productTypes.pushBack(type);
+    }
+
     if (productTypeGroupBox->isChecked()) {
         for_each(
                 productTypeCheckboxes.begin(),
                 productTypeCheckboxes.end(),
                 [&](QCheckBox* checkBox) {
-                    if (checkBox->isChecked()) {
-                        productTypes.pushBack(checkBox->text());
+                    if (!checkBox->isChecked()) {
+                        productTypes.remove(checkBox->text());
                     }
                 }
         );

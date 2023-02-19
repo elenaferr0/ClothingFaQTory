@@ -54,27 +54,29 @@ namespace Core::Containers {
 
             LinkedList& operator=(const LinkedList&);
 
-            bool operator==(const LinkedList& other) const;
+        bool operator==(const LinkedList& other) const;
 
-            LinkedList<T> operator+(const LinkedList<T>& other) const;
+        LinkedList<T> operator+(const LinkedList<T>& other) const;
 
-            ~LinkedList();
+        ~LinkedList();
 
-            string join(const string& separator) const;
+        string join(const string& separator) const;
 
-            void pushBack(T item);
+        void pushBack(const T& item);
 
-            void pushFront(T item);
+        void pushFront(const T& item);
 
-            T front();
+        void remove(const T& item);
 
-            T back();
+        T front();
 
-            void popBack();
+        T back();
 
-            void popFront();
+        void popBack();
 
-            bool isEmpty() const;
+        void popFront();
+
+        bool isEmpty() const;
 
             int getSize() const;
 
@@ -379,7 +381,7 @@ namespace Core::Containers {
     }
 
     template<class T>
-    void LinkedList<T>::pushBack(T item) {
+    void LinkedList<T>::pushBack(const T& item) {
         Node* temp = new Node(item);
 
         if (head == nullptr) {
@@ -398,11 +400,33 @@ namespace Core::Containers {
     }
 
     template<class T>
-    void LinkedList<T>::pushFront(T item) {
-        LinkedList<T>::Node* temp = new Node(item);
+    void LinkedList<T>::pushFront(const T& item) {
+        LinkedList < T > ::Node * temp = new Node(item);
         temp->next = head;
         head = temp;
         size++;
+    }
+
+    template<class T>
+    void LinkedList<T>::remove(const T& value) {
+        Node* current = head;
+        Node* prev = nullptr;
+
+        while (current != nullptr) {
+            if (current->value == value) {
+                if (prev != nullptr) {
+                    prev->next = current->next;
+                } else {
+                    head = current->next;
+                }
+
+                delete current;
+                return;
+            }
+
+            prev = current;
+            current = current->next;
+        }
     }
 
     template<class T>

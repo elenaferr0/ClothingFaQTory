@@ -94,4 +94,4 @@ cmake-build-debug/*
 /docs/*
 ClothingFaQTory
 moc_*.h
-docs/report.tex
+report.tex

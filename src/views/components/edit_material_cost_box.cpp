@@ -3,8 +3,8 @@
 #include <QLineEdit>
 #include <QDoubleValidator>
 #include <QFormLayout>
+#include <QPushButton>
 #include <QLabel>
-#include <QDialogButtonBox>
 #include "edit_material_cost_box.h"
 
 EditMaterialCostMessageBox::EditMaterialCostMessageBox(shared_ptr<Material> material, QWidget* parent)
@@ -20,7 +20,8 @@ EditMaterialCostMessageBox::EditMaterialCostMessageBox(shared_ptr<Material> mate
 
     QDoubleValidator* validator = new QDoubleValidator(priceLineEdit);
     validator->setNotation(QDoubleValidator::StandardNotation);
-    validator->setRange(0, INT_MAX, 2);
+    validator->setBottom(0);
+    validator->setDecimals(2);
     priceLineEdit->setValidator(validator);
     QLabel* oldPriceLabel = new QLabel("Old price: " + QString::number(material->getCostPerUnit()) + "$/" +
                                        QString::fromStdString(material->getUnitOfMeasureAsString()));
@@ -32,7 +33,7 @@ EditMaterialCostMessageBox::EditMaterialCostMessageBox(shared_ptr<Material> mate
     hbox->addWidget(new QLabel("$/" + QString::fromStdString(material->getUnitOfMeasureAsString())));
     layout->addRow("New price", hbox);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     layout->addWidget(buttonBox);
@@ -41,5 +42,12 @@ EditMaterialCostMessageBox::EditMaterialCostMessageBox(shared_ptr<Material> mate
 }
 
 void EditMaterialCostMessageBox::handleTextChanged(const QString& cost) {
+    QPushButton* okButton = buttonBox->button(QDialogButtonBox::Ok);
+
+    if (cost == "") {
+        okButton->setDisabled(true);
+    } else {
+        okButton->setEnabled(true);
+    }
     material->setCostPerUnit(cost.toDouble());
 }

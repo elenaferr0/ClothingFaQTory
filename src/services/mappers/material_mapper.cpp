@@ -1,6 +1,6 @@
 
 #include "material_mapper.h"
-
+#include <QDebug>
 using Services::MaterialMapper;
 
 Material* MaterialMapper::operator()(const QSqlQuery& query) {
@@ -21,13 +21,13 @@ Material* MaterialMapper::operator()(const QSqlQuery& query) {
     return new Material(record.value("id").toInt(),
                         record.value("name").toString().toStdString(),
                         record.value("unit_of_measure").toString().toStdString(),
-                        record.value("cost_per_unit").toFloat());
+                        record.value("cost_per_unit").toDouble());
 }
 
 Material Services::MaterialMapper::fromRecord(const QSqlRecord& record) const {
     return Material(record.value("material_id").toInt(),
                     record.value("material.name").toString().toStdString(),
                     record.value("unit_of_measure").toString().toStdString(),
-                    record.value("cost_per_unit").toFloat()
+                    record.value("cost_per_unit").toDouble()
     );
 }

@@ -33,7 +33,7 @@ namespace Views {
     class InfoDialogVisitor : public VisitorInterface {
         private:
             QFormLayout* layout;
-            static const int ICON_SIZE = 25;
+        static const int ICON_SIZE = 30;
 
             void visitProduct(Product& product);
 

@@ -1,4 +1,6 @@
-# Clothing FaQTory
+### Object Oriented Programming Project (University of Padua, 2023/24)
+
+## _ClothingFaQTory_
 
 ---
 
